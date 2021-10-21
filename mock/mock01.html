@@ -1,0 +1,204 @@
+<html>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/close/images/favicon.ico" rel="shortcut icon">
+
+<title>creacom mock</title>
+<!-- Load required Bootstrap and BootstrapVue CSS -->
+
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+<!-- Load fontawesome -->
+<!-- link href="./css/all.css" rel="stylesheet" --> <!--load all styles -->
+<!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+<!-- Load polyfills to support older browsers -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"     crossorigin="anonymous"></script>
+
+<!-- Load Vue followed by BootstrapVue -->
+<script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+<!-- Load the following for BootstrapVueIcons support -->
+<script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"      crossorigin="anonymous"></script>
+
+<!-- 各種便利なツール塁です必要なときに随時使用のこと
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.js"></script>
+<script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
+<script src="./jsQR.js"></script>
+<script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
+-->
+
+<style>
+  .bg {
+    background-color: #e9ecef;
+  }
+</style>
+<!--   mock up here -->
+
+<div id="app">
+  <b-row class="bg pt-2 pb-2">
+    <b-col sm="3" class="h5 ml-2 mt-2 "></a>見積書入力</b-col>
+    <b-col v-else sm="3" class="h5 mt-2 "><a href='/close'><img src='/close/images/HIKOU.gif' width='40'class='mr-2'></a>いまここ!</b-col>
+    </b-col>
+  </b-row>
+
+  <b-row class="mt-5">
+      <b-col></b-col>  <!-- dummy -->
+      <!--- 本体　-->
+      <b-col cols=10>
+          <b-card class="mb-3 text-center" header="見積書入力">
+          <b-row>
+            <b-col>
+
+              <!-- header -->
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="日付" label-for="applyDate">
+                <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
+              </b-form-group>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="見積番号" label-for="applyNumber">
+                <b-form-input v-model="header.applyNumber" id="applyNumber" size="sm"></b-form-input>
+              </b-form-group>
+
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="顧客名" label-for="kokyaku">
+                <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm"></b-form-input>
+              </b-form-group>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="住所" label-for="jyusho">
+                <b-form-input v-model="header.jyusho" id="jyusho" size="sm">
+                </b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"    label="電話番号" label-for="telno">
+                <b-form-input v-model="header.telno"  id="telno" size="sm">
+                </b-form-input>
+              </b-form-group>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="email" label-for="email">
+                <b-form-input v-model="header.email"  id="email" size="sm"></b-form-input>
+              </b-form-group>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="備考" label-for="memo">
+                <b-form-input v-model="header.memo"  id="memo" size="sm"></b-form-input>
+              </b-form-group>
+              <div class="float-right">
+                  <b-button variant="info" @click="alert('更新しました')">更新</b-button>
+                  <b-button class="ml-3" variant="info" @click="isPrint=true">印刷</b-button>
+              </div>
+            </b-col>
+          </b-row> <!-- end header -->
+          </b-card>
+
+
+      <!--  table list & edit -->
+      <b-table hover caption-top bordered small
+    	       id = "htable"
+             sort-by =  "ID"
+             small
+             head-variant="light"
+             label="Table Options"
+             :items= items
+             :fields="[
+                {  key: 'id', label: 'ID',  sortable: true,class:'text-center' },
+                {  key: 'hinmei', label: '商品名' ,  sortable: true},
+                {  key: 'suryo',   label: '数量' },
+                {  key: 'tanka',  label: '単価' },
+                {  key: 'kingaku', label: '金額' }
+              ]"
+        >
+        <template v-slot:cell(hinmei)="data">
+          <b-form-input v-model="data.item.hinmei" size="sm" ></b-form-input>
+        </template>
+        <template v-slot:cell(suryo)="data">
+          <b-form-input v-model="data.item.suryo" type="number"  size="sm" ></b-form-input>
+        </template>
+        <template v-slot:cell(tanka)="data">
+          <b-form-input v-model="data.item.tanka" type="number"  size="sm"></b-form-input>
+        </template>
+
+        <template v-slot:cell(kingaku)="data">
+          <p class="text-right">{{data.item.suryo*data.item.tanka|nf}}</p>
+        </template>
+        <template #table-colgroup="data">
+            <col
+              v-for="field in data.fields"
+              :key = "field.key"
+              :style="{ width: field.key == 'id' ? '2%':
+              field.key == 'hinmei' ? '20%': '5%'}"
+            >
+        </template>
+      </b-table>
+      <b-row>
+        <b-col></b-col>
+        <b-col>
+          <b-table-simple bordered>
+            <b-tr>
+              <b-td variant="light" class="text-right">合計金額</b-td>
+              <b-td class="text-right">{{sum|nf}}</b-td>
+            </b-tr>
+            <b-tr>
+              <b-td  variant="light" class="text-right">内消費税</b-td>
+              <b-td class="text-right">{{parseInt(sum*0.1)|nf}}</b-td>
+            </b-tr>
+          </b-table-simple>
+        </b-col>
+      </b-row>
+
+    </b-col> <!-- 本体 -->
+
+    <b-col>
+    </b-col>
+
+  </b-row>
+</div>
+
+<script>
+Vue.filter('nf', function(val){
+	return val.toLocaleString();
+});
+
+var app=new Vue({
+  el: '#app',
+  data:{
+    header:{
+      applyDate: '2021-10-21',
+      applyNumber: '211021001',
+      kokyaku: 'テスト　太郎',
+      jyusho: '栃木県鹿沼市板荷0000-00',
+      telno: '090-000-0000',
+      email: 'abc@qwertyu.zz',
+      memo: 'これはテストのための備考です',
+    },
+    items:[
+      {id: 1, hinmei:'ラジオ',suryo:1, tanka:1000},
+      {id: 2, hinmei:'電池',suryo:3, tanka:100},
+      {id: 3, hinmei:'イヤホン',suryo:2, tanka:200},
+      {id: 4, hinmei:'鉛筆',suryo:12, tanka:20},
+      {id: 5, hinmei:'',suryo:null, tanka:null},
+      {id: 6, hinmei:'',suryo:null, tanka:null},
+      {id: 7, hinmei:'',suryo:null, tanka:null},
+      {id: 8, hinmei:'',suryo:null, tanka:null},
+      {id: 9, hinmei:'',suryo:null, tanka:null},
+      {id: 10, hinmei:'',suryo:null, tanka:null},
+      {id: 11, hinmei:'',suryo:null, tanka:null},
+    ],
+    isPrint: false,
+  },
+  computed: {
+    // 逐次、数量＊単価の合計をする
+    sum: function(){
+      if ( typeof(this.items) == 'undefined' ){ return 0 }　//初期立ち上がりでのエラー抑制
+      return this.items.map(item => parseInt(item.suryo*item.tanka)).reduce(function(a,b){return a+b},0);
+    }
+  },
+})
+</script>
+
+</html>
