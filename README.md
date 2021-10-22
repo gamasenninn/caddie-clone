@@ -8,7 +8,7 @@
 
 ### [見積書画面](https://gamasenninn.github.io/sohoweb/mock/mock01_dtl.html)
 
-
+とりあえず、ここまで
 
 
 
