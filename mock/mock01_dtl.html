@@ -88,6 +88,9 @@
               <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="備考" label-for="memo">
                 <b-form-input v-model="header.memo"  id="memo" size="sm"></b-form-input>
               </b-form-group>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限" label-for="expiry">
+                <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
+              </b-form-group>
               <div class="float-right">
                   <b-button variant="info" @click="alert('更新しました')">更新</b-button>
                   <b-button class="ml-3" variant="info" @click="isPrint=true">印刷</b-button>
@@ -198,6 +201,7 @@ var app=new Vue({
       telno: '090-000-0000',
       email: 'abc@qwertyu.zz',
       memo: 'これはテストのための備考です',
+      expiry: "2022-01-01",
     },
     items:[
       {id: 1, hinmei:'ラジオ',suryo:1, tanka:1000,genka:700},
