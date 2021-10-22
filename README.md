@@ -1,6 +1,7 @@
 # sohoweb
 
-なるべく簡単に見積書や請求書を出力したい。そういった要望をもとに開発を始めます。
+なるべく簡単に見積書や請求書を出力したい。
+そういった要望をもとに開発を始めます。
 
 ## モックのページ
 
@@ -24,6 +25,3 @@
 
 
 You can use the [editor on GitHub](https://github.com/gamasenninn/sohoweb/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
-
-
-
