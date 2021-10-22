@@ -12,8 +12,8 @@
 ## ABテスト
 
 ### top画面
-[A.top画面: 画像イメージ](https://gamasenninn.github.io/sohoweb/mock/top_A.html)  　
-[B.top画面: イラストイメージ](https://gamasenninn.github.io/sohoweb/mock/top_B.html)
+[A.top画面: 画像イメージ](https://gamasenninn.github.io/sohoweb/mock/top_A.html) <br/>
+[B.top画面: イラストイメージ](https://gamasenninn.github.io/sohoweb/mock/top_B.html)<br/>
 
 とりあえず、ここまで
 
