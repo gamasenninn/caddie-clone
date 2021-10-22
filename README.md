@@ -2,8 +2,13 @@
 
 なるべく簡単に見積書や請求書を出力したい。そういった要望をもとに開発を始めます。
 
+## モックのページ
 
-[モックのページはこちらから](https://gamasenninn.github.io/sohoweb/)
+### [top画面](https://gamasenninn.github.io/sohoweb/mock/top.html)
+
+### [見積書画面](https://gamasenninn.github.io/sohoweb/mock/top.html)
+
+
 
 
 
