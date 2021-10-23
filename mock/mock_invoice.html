@@ -69,8 +69,12 @@
                   <b-nav vertical>
                     <b-button variant="primary" block @click="hide" ><i class="fas fa-building"></i>　得意先</b-button>
                     <b-button variant="primary" block @click="hide"><i class="fas fa-box"></i>　商　品</b-button>
+                    <!--
                     <b-button variant="primary" block @click="hide"><i class="fas fa-copy"></i>　請求書</b-button>
                     <b-button variant="primary" block @click="hide"><i class="far fa-copy"></i>　見積書</b-button>
+                  -->
+                  <b-button variant="primary" block href="mock_invoice.html"><i class="fas fa-copy"></i>　請求書</b-button>
+                  <b-button variant="primary" block href="mock01_dtl.html"><i class="far fa-copy"></i>　見積書</b-button>
                   </b-nav>
                 </nav>
                 <b-button variant="primary" block @click="hide">Close Sidebar</b-button>
@@ -79,7 +83,7 @@
           </b-sidebar>
         </div>
       </template>
-  
+
     <b-row class="mt-3">
         <b-col></b-col>  <!-- dummy -->
         <!--- 本体　-->
@@ -88,7 +92,7 @@
             <b-card border-variant="white" class="mb-3 text-center" header="請求書入力" header-border-variant="light" style="padding: -30px;">
             <b-row>
               <b-col>
-  
+
                 <!-- header -->
                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="日付" label-for="applyDate">
                   <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
@@ -96,7 +100,7 @@
                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="請求番号" label-for="applyNumber">
                   <b-form-input v-model="header.applyNumber" id="applyNumber" size="sm"></b-form-input>
                 </b-form-group>
-  
+
                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="顧客名" label-for="kokyaku">
                   <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm"></b-form-input>
                 </b-form-group>
@@ -126,8 +130,8 @@
               </b-col>
             </b-row> <!-- end header -->
             </b-card>
-  
-  
+
+
         <!--  table list & edit -->
         <b-table hover caption-top bordered small
                  id = "htable"
@@ -153,7 +157,7 @@
           <template v-slot:cell(tanka)="data">
             <b-form-input v-model="data.item.tanka" type="number"  size="sm"></b-form-input>
           </template>
-  
+
           <template v-slot:cell(kingaku)="data">
             <p class="text-right">{{data.item.suryo*data.item.tanka|nf}}</p>
           </template>
@@ -181,12 +185,12 @@
             </b-table-simple>
           </b-col>
         </b-row>
-  
+
       </b-col> <!-- 本体 -->
-  
+
       <b-col>
       </b-col>
-  
+
     </b-row>
   </div>
 
@@ -194,7 +198,7 @@
     Vue.filter('nf', function(val){
         return val.toLocaleString();
     });
-    
+
     var app=new Vue({
       el: '#app',
       data:{
