@@ -43,10 +43,13 @@
   .bg {
     background-color: #e9ecef;
   }
+  [v-cloak]{
+    display: none;
+  }
 </style>
 <!--   mock up here -->
 
-<div id="app">
+<div id="app" v-cloak>
   <b-row class="bg pt-2 pb-2">
     <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'class='mr-2'></a>見積書入力</b-col>
   </b-row>
