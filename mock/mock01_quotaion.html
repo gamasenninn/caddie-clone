@@ -116,7 +116,7 @@
               ]"
         >
         <template v-slot:cell(hinmei)="data">
-          <b-form-input v-model="data.item.hinmei" size="sm" ></b-form-input>
+          <b-form-textarea v-model="data.item.hinmei" size="sm"  rows="1" ></b-form-input>
         </template>
         <template v-slot:cell(suryo)="data">
           <b-form-input v-model="data.item.suryo" type="number"  size="sm" ></b-form-input>
@@ -163,6 +163,7 @@
         <b-col></b-col>
         <b-col>
           <b-table-simple bordered>
+            <b-form-checkbox @change="isTaxExp=true"> 外税</b-form-checkbox>
             <b-tr>
               <b-td variant="light" class="text-right">合計金額</b-td>
               <b-td class="text-right">{{sum|nf}}</b-td>
@@ -215,6 +216,7 @@ var app=new Vue({
       {id: 11, hinmei:'',suryo:null, tanka:null,genka:null},
     ],
     isPrint: false,
+    isTaxExp: false,
   },
   computed: {
     // 逐次、数量＊単価の合計をする
