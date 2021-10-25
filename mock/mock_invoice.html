@@ -115,9 +115,6 @@
                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="email" label-for="email">
                   <b-form-input v-model="header.email"  id="email" size="sm"></b-form-input>
                 </b-form-group>
-                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="備考" label-for="memo">
-                  <b-form-input v-model="header.memo"  id="memo" size="sm"></b-form-input>
-                </b-form-group>
                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求有効期限" label-for="expiry">
                   <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
                 </b-form-group>
@@ -183,6 +180,11 @@
             </b-table-simple>
           </b-col>
         </b-row>
+
+        <!-- 備考欄 -->
+        <b-card border-variant="white" class="mb-3 text-center" header="備考欄" header-border-variant="light">
+          <b-form-textarea v-model="header.memo" id="memo" size="sm" type="text" rows="3"></b-form-textarea>
+        </b-card>
 
       </b-col> <!-- 本体 -->
 
