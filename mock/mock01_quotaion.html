@@ -60,34 +60,25 @@
             <b-col>
 
               <!-- header -->
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="見積番号" label-for="applyNumber">
+                <!-- <b-form-input v-model="header.applyNumber" id="applyNumber" size="sm"></b-form-input> -->
+                <p class="text-left pl-2" id="applyNumber" >{{header.applyNumber}}</p>
+              </b-form-group>
               <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="日付" label-for="applyDate">
                 <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
               </b-form-group>
-              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="見積番号" label-for="applyNumber">
-                <b-form-input v-model="header.applyNumber" id="applyNumber" size="sm"></b-form-input>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限" label-for="expiry">
+                <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
               </b-form-group>
 
+            </b-col>
+            <b-col>
               <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="顧客名" label-for="kokyaku">
                 <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm"></b-form-input>
               </b-form-group>
-              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="住所" label-for="jyusho">
-                <b-form-input v-model="header.jyusho" id="jyusho" size="sm">
-                </b-form-input>
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"    label="電話番号" label-for="telno">
-                <b-form-input v-model="header.telno"  id="telno" size="sm">
-                </b-form-input>
-              </b-form-group>
-              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="email" label-for="email">
-                <b-form-input v-model="header.email"  id="email" size="sm"></b-form-input>
-              </b-form-group>
-              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="備考" label-for="memo">
-                <b-form-input v-model="header.memo"  id="memo" size="sm"></b-form-input>
-              </b-form-group>
-              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限" label-for="expiry">
-                <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"       label="" label-for="jyusho">
+                <!-- <b-form-input v-model="header.jyusho" id="jyusho" size="sm"></b-form-input> -->
+                <p class="text-left" >{{header.jyusho}}<br/>{{header.telno}}<br/>{{header.email}}</p>
               </b-form-group>
               <div class="float-right">
                   <b-button variant="info" @click="alert('更新しました')">更新</b-button>
