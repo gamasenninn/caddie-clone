@@ -8,7 +8,7 @@
 
 ### [top画面](https://gamasenninn.github.io/sohoweb/mock/top.html)
 
-### [見積書画面](https://gamasenninn.github.io/sohoweb/mock/mock01_dtl.html)
+### [見積書画面](https://gamasenninn.github.io/sohoweb/mock/mock01_quotaion.html)
 
 ### [請求書入力画面](https://gamasenninn.github.io/sohoweb/mock/mock_invoice.html)
 
