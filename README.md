@@ -15,13 +15,13 @@
 ## ABテスト (ABのどちらがいいか選んでください)
 
 ### top画面 ・・・画像かイラストか（内容は気にしないでください）？
-[A.top画面: 画像イメージ](https://gamasenninn.github.io/sohoweb/mock/top_A.html) <br/>
-[B.top画面: イラストイメージ](https://gamasenninn.github.io/sohoweb/mock/top_B.html)<br/>
+[A.top画面: 画像イメージ](https://gamasenninn.github.io/sohoweb/mock/AB_test/top_A.html) <br/>
+[B.top画面: イラストイメージ](https://gamasenninn.github.io/sohoweb/mock/AB_test/top_B.html)<br/>
 
 ### メニューの見せ方 ・・・固定メニューかスライドか？
-[A.スライド方式のみ](https://gamasenninn.github.io/sohoweb/mock/mock_invoice_slidebar.html)<br/>
+[A.スライド方式のみ](https://gamasenninn.github.io/sohoweb/mock/AB_test/mock_invoice_slidebar.html)<br/>
 
-[B.固定サイドメニューとスライドの併用](https://gamasenninn.github.io/sohoweb/mock/mock_invoice_fixbar.html)<br/>
+[B.固定サイドメニューとスライドの併用](https://gamasenninn.github.io/sohoweb/mock/AB_test/mock_invoice_fixbar.html)<br/>
 
 
 
