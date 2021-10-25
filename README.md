@@ -12,6 +12,8 @@
 
 ### [請求書入力画面](https://gamasenninn.github.io/sohoweb/mock/mock_invoice.html)
 
+### [参考までにマルチウィンドウ対応](https://gamasenninn.github.io/sohoweb/mock/JSFrame/jfs3.html)
+
 ## ABテスト (ABのどちらがいいか選んでください)
 
 ### top画面 ・・・画像かイラストか（内容は気にしないでください）？
