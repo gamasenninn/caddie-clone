@@ -73,6 +73,9 @@
               <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限" label-for="expiry">
                 <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
               </b-form-group>
+              <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="タイトル" label-for="title">
+                <b-form-input v-model="header.title" id="title" size="sm"></b-form-input>
+              </b-form-group>
 
             </b-col>
             <b-col>
@@ -204,6 +207,7 @@ var app=new Vue({
       email: 'abc@qwertyu.zz',
       memo: 'これはテストのための備考です',
       expiry: "2022-01-01",
+      title: '見積書のタイトル(件名)がここに入る',
     },
     items:[
       {id: 1, hinmei:'ラジオ',suryo:1, tanka:1000,genka:700,unit:'台'},
