@@ -1,0 +1,135 @@
+<html>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <link href="images/favicon.ico" rel="shortcut icon"> -->
+
+<title>creacom mock</title>
+<!-- Load required Bootstrap and BootstrapVue CSS -->
+
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+<!-- Load fontawesome -->
+<!-- link href="./css/all.css" rel="stylesheet" --> <!--load all styles -->
+<!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+<!-- Load polyfills to support older browsers -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"     crossorigin="anonymous"></script>
+
+<!-- Load Vue followed by BootstrapVue -->
+<script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+<!-- Load the following for BootstrapVueIcons support -->
+<script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"      crossorigin="anonymous"></script>
+
+<!-- 各種便利なツール塁です必要なときに随時使用のこと
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.js"></script>
+<script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
+<script src="./jsQR.js"></script>
+<script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
+-->
+
+<style>
+  .bg {
+    background-color: #e9ecef;
+  }
+  [v-cloak]{
+    display: none;
+  }
+  .table-striped>tbody>tr:nth-child(odd)>td,
+  .table-striped>tbody>tr:nth-child(odd)>th {
+      background-color: #F6FFF6; // Choose your own color here
+  }
+
+</style>
+<!--   mock up here -->
+<div id="app">
+  <p class="h1 block text-center">ISSUE管理</p>
+  <b-card>
+      <p>Issues 一覧</p>
+      <b-table
+        striped
+        head-variant="light"
+        :items= gitIssues
+        :fields="[
+          { key: 'updated_at' , label: '更新時間'},
+          { key: 'number' , label: '#'},
+          { key: 'labels[0].name' , label: 'ラベル'},
+          { key: 'user.login' , label: 'User'},
+          { key: 'title' , label: 'タイトル/内容'},
+        ]"
+      >
+        <template v-slot:cell(title)="data">
+          <b-badge variant="info">{{data.item.title}}</b-badge>
+          {{data.item.body}}
+        </template>
+      </b-table>
+  </b-card>
+  <b-card class="mt-5">
+      <p>コメント一覧</p>
+      <b-table
+        head-variant="light"
+        striped
+        :items= gitComments
+        :fields="[
+          { key: 'updated_at' , label: '更新時間'},
+          { key: 'user.login' , label: 'User'},
+          { key: 'body' , label: 'コメント'},
+        ]"
+        sort-by="updated_at"
+        sort-desc=true
+      >
+          <template v-slot:cell(body)="data">
+            {{data.item.body}}
+            <b-badge variant="warning"><a :href="data.item.html_url">Go page</a></b-badge>
+          </template>
+      </b-table>
+    </b-card>
+</div>
+
+<script>
+  var app = new Vue({
+     el:'#app',
+     data:{
+          gitComments : [],
+          gitIssues : [],
+     },
+     methods:{
+       fetchComments: async function(){
+         self = this;
+         endPoint = "https://api.github.com/repos/gamasenninn/sohoweb/issues/comments";
+         await axios.get(endPoint)
+         .then(function(response){
+            self.gitComments = response.data;
+         });
+       },
+       fetchIssues: async function(){
+         self = this;
+         endPoint = "https://api.github.com/repos/gamasenninn/sohoweb/issues";
+         await axios.get(endPoint)
+         .then(function(response){
+            self.gitIssues = response.data;
+         });
+       },
+     },
+     created: function(){
+       this.fetchIssues();
+       this.fetchComments();
+     }
+  });
+
+</script>
+
+
+
+
+</html>
