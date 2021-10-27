@@ -164,10 +164,11 @@
         <b-col></b-col>
         <b-col>
           <b-table-simple bordered>
-            <b-form-checkbox @change="isTaxExp=true"> 外税</b-form-checkbox>
+            <b-form-checkbox v-model="header.isTaxExp">外税</b-form-checkbox>
             <b-tr>
               <b-td variant="light" class="text-right">合計金額</b-td>
-              <b-td class="text-right">{{sum|nf}}</b-td>
+              <b-td v-if="header.isTaxExp" class="text-right">{{sum*1.1|nf}}</b-td>
+              <b-td v-else class="text-right">{{sum|nf}}</b-td>
             </b-tr>
             <b-tr>
               <b-td  variant="light" class="text-right">内消費税</b-td>
@@ -208,6 +209,7 @@ var app=new Vue({
       memo: 'これはテストのための備考です',
       expiry: "2022-01-01",
       title: '見積書のタイトル(件名)がここに入る',
+      isTaxExp: true,
     },
     items:[
       {id: 1, hinmei:'ラジオ',suryo:1, tanka:1000,genka:700,unit:'台'},
@@ -239,7 +241,6 @@ var app=new Vue({
              ],
     },
     isPrint: false,
-    isTaxExp: false,
   },
   computed: {
     // 逐次、数量＊単価の合計をする
