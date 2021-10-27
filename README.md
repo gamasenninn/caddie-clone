@@ -24,7 +24,9 @@
 [A.スライド方式のみ](https://gamasenninn.github.io/sohoweb/mock/AB_test/mock_invoice_slidebar.html)<br/>
 
 [B.固定サイドメニューとスライドの併用](https://gamasenninn.github.io/sohoweb/mock/AB_test/mock_invoice_fixbar.html)<br/>
+## Issue/コメントなどの管理画面 i
 
+[Issueとコメントなどの管理ページです](https://gamasenninn.github.io/sohoweb/gitlist/comments.html)
 
 
 とりあえず、ここまで
