@@ -146,7 +146,7 @@
             <b-row>
               <p class="block">関連ファイル</p>
             </b-row>
-            <b-row> 
+            <b-row>
               <form action="/file-upload"
                   class="dropzone"
                   id="my-awesome-dropzone">
@@ -172,7 +172,9 @@
                 ]"
           >
           <template v-slot:cell(hinmei)="data">
-            <b-form-input v-model="data.item.hinmei" size="sm" ></b-form-input>
+            <b-form-textarea v-model="data.item.hinmei" size="sm" rows=1
+             @change="checkHinmei(data.item.hinmei)">
+           </b-form-textarea>
           </template>
           <template v-slot:cell(suryo)="data">
             <b-form-input v-model="data.item.suryo" type="number"  size="sm" ></b-form-input>
@@ -264,12 +266,24 @@
         ],
         isPrint: false,
       },
+      methods:{
+        checkHinmei: function(val){
+          //if ( typeof(this.items) == 'undefined' ){ return 0 }　//初期立ち上がりでのエラー抑制
+          if ((val.match( new RegExp( "\n","g" ) ) || [] ).length < 2 ){
+            return true;
+          }else{
+            alert("品名の入力は2行までです！");
+            return false;
+          }
+        },
+
+      },
       computed: {
         // 逐次、数量＊単価の合計をする
         sum: function(){
           if ( typeof(this.items) == 'undefined' ){ return 0 }　//初期立ち上がりでのエラー抑制
           return this.items.map(item => parseInt(item.suryo*item.tanka)).reduce(function(a,b){return a+b},0);
-        }
+        },
       },
     })
     </script>
