@@ -42,6 +42,9 @@
 <script src="./jsQR.js"></script>
 <script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
 -->
+<!-- drag & drop file -->
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
 <style>
     .bg {
@@ -132,6 +135,15 @@
                 </div>
               </b-col>
             </b-row> <!-- end header -->
+            <b-row>
+              <p class="block">関連ファイル</p>
+            </b-row>
+            <b-row> 
+              <form action="/file-upload"
+                  class="dropzone"
+                  id="my-awesome-dropzone">
+              </form>
+            </b-row>
             </b-card>
 
 
@@ -223,6 +235,11 @@
           expiry: '2021-01-01',
           title: '請求書のタイトル(件名)がここに入る',
           isTaxExp: true,
+          attachments: [
+            { name: 'customer', path: 'images/mn_customer.png'},
+            { name: 'invoice', path: 'images/mn_invoice.png'}
+          ]
+
         },
         items:[
           {id: 1, hinmei:'ラジオ',suryo:1, tanka:1000},
