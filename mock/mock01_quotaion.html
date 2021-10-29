@@ -258,6 +258,15 @@ var app=new Vue({
     }
   },
 })
+
+window.onload = function () {
+  var tr = document.getElementById("htable").lastElementChild.children;
+  var thead = htable.children[1];
+  thead.style.backgroundColor = 'paleturquoise';
+  for (var i = 1; i < tr.length; i += 2) {
+    tr[i].style.backgroundColor = 'paleturquoise';
+  }
+};
 </script>
 
 </html>
