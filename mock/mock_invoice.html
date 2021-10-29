@@ -47,14 +47,29 @@
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
 <style>
-    .bg {
-        background-color: #e9ecef;
-    }
-    [v-cloak]{
-      display: none;
-    }
-  </style>
+  .bg {
+    background-color: #e9ecef;
+  }
 
+  [v-cloak] {
+    display: none;
+  }
+
+  thead {
+    background-color: rgb(51,103,214);
+  }
+
+  .table-striped>tbody>tr:nth-child(even)>td,
+  .table-striped>tbody>tr:nth-child(even)>th {
+    background-color: #dde9fc;
+    /* Choose your own color here */
+  }
+  .table-striped>tbody>tr:nth-child(odd) {
+    background-color: white;
+  }
+  .table thead th {border: none;}
+  .table thead tr {color: white;}
+  .table thead { font-family:sans-serif;}
 </style>
 
 <div id="app" v-cloak>
@@ -170,10 +185,11 @@
 
 
         <!--  table list & edit -->
-        <b-table hover caption-top bordered small
+        <b-table hover caption-top small
                  id = "htable"
                sort-by =  "ID"
                small
+               striped
                label="Table Options"
                :items= items
                :fields="[
@@ -300,15 +316,15 @@
       },
     })
 
-    window.onload = function(){
-      var tr = document.getElementById("htable").lastElementChild.children;
-      var thead = htable.children[1];
-      // var thead = thead_[1];
-      thead.style.backgroundColor = 'paleturquoise';
-      for(var i=1; i<tr.length; i+=2){
-        tr[i].style.backgroundColor = 'paleturquoise';
-      }
-    };
+    // window.onload = function(){
+    //   var tr = document.getElementById("htable").lastElementChild.children;
+    //   var thead = htable.children[1];
+    //   // var thead = thead_[1];
+    //   thead.style.backgroundColor = 'paleturquoise';
+    //   for(var i=1; i<tr.length; i+=2){
+    //     tr[i].style.backgroundColor = 'paleturquoise';
+    //   }
+    // };
     </script>
 
 </html>
