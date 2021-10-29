@@ -46,6 +46,11 @@
   [v-cloak]{
     display: none;
   }
+  .table-striped>tbody>tr:nth-child(odd)>td,
+  .table-striped>tbody>tr:nth-child(odd)>th {
+      background-color: paleturquoise; 　/* Choose your own color here */
+  }
+
 </style>
 <!--   mock up here -->
 
@@ -108,6 +113,7 @@
     	       id = "htable"
              sort-by =  "ID"
              small
+             striped
              head-variant="light"
              label="Table Options"
              :items= items
@@ -258,7 +264,7 @@ var app=new Vue({
     }
   },
 })
-
+/* CSS対応テストのため一時的にコメントアウト
 window.onload = function () {
   var tr = document.getElementById("htable").lastElementChild.children;
   var thead = htable.children[1];
@@ -267,6 +273,7 @@ window.onload = function () {
     tr[i].style.backgroundColor = 'paleturquoise';
   }
 };
+*/
 </script>
 
 </html>
