@@ -46,11 +46,18 @@
   [v-cloak]{
     display: none;
   }
-  .table-striped>tbody>tr:nth-child(odd)>td,
-  .table-striped>tbody>tr:nth-child(odd)>th {
-      background-color: paleturquoise; 　/* Choose your own color here */
+  thead {background-color: rgb(51,103,214)}
+  .table-striped>tbody>tr:nth-child(even)>td,
+  .table-striped>tbody>tr:nth-child(even)>th {
+    background-color: #dde9fc;
+    /* Choose your own color here */
   }
-
+  .table-striped>tbody>tr:nth-child(odd) {
+    background-color: white;
+  }
+  .table thead th {border: none;}
+  .table thead tr {color: white;}
+  .table thead { font-family:sans-serif;}
 </style>
 <!--   mock up here -->
 
@@ -109,12 +116,11 @@
 
 
       <!--  table list & edit -->
-      <b-table hover caption-top bordered small
+      <b-table hover caption-top small
     	       id = "htable"
              sort-by =  "ID"
              small
              striped
-             head-variant="light"
              label="Table Options"
              :items= items
              :fields="[
