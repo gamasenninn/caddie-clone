@@ -174,7 +174,6 @@
                  id = "htable"
                sort-by =  "ID"
                small
-               head-variant="light"
                label="Table Options"
                :items= items
                :fields="[
@@ -300,6 +299,16 @@
         },
       },
     })
+
+    window.onload = function(){
+      var tr = document.getElementById("htable").lastElementChild.children;
+      var thead = htable.children[1];
+      // var thead = thead_[1];
+      thead.style.backgroundColor = 'paleturquoise';
+      for(var i=1; i<tr.length; i+=2){
+        tr[i].style.backgroundColor = 'paleturquoise';
+      }
+    };
     </script>
 
 </html>
