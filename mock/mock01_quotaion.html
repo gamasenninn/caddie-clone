@@ -39,6 +39,10 @@
 <script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
 -->
 
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+
 <style>
   .bg {
     background-color: #e9ecef;
@@ -180,6 +184,17 @@
             >
         </template>
       </b-table>
+
+      <!-- 商品項目を追加するプラスボタン -->
+      <b-container class="bv-example-row" id="item_add">
+        <b-row class="justify-content-md-center">
+          <b-col col lg="2"></b-col>
+          <b-col cols="12" md="auto">
+            <b-button pill variant="primary">✙</b-button>
+          </b-col>
+          <b-col col lg="2"></b-col>
+        </b-row>
+
       <b-row>
         <b-col></b-col>
         <b-col>
@@ -270,16 +285,14 @@ var app=new Vue({
     }
   },
 })
-/* CSS対応テストのため一時的にコメントアウト
-window.onload = function () {
-  var tr = document.getElementById("htable").lastElementChild.children;
-  var thead = htable.children[1];
-  thead.style.backgroundColor = 'paleturquoise';
-  for (var i = 1; i < tr.length; i += 2) {
-    tr[i].style.backgroundColor = 'paleturquoise';
-  }
-};
-*/
+
+  $(function () {
+    $("#item_add").click(function () {
+      var lastId = app.items[app.items.length - 1].id;
+      app.items.push({ id: lastId + 1, hinmei: '', suryo: null, tanka: null });
+    });
+  });
+
 </script>
 
 </html>
