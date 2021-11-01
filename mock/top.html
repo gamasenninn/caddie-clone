@@ -11,12 +11,14 @@
 <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
 
 <!-- Load fontawesome -->
-<!-- link href="./css/all.css" rel="stylesheet" --> <!--load all styles -->
+<!-- link href="./css/all.css" rel="stylesheet" -->
+<!--load all styles -->
 <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
 <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
 
 <!-- Load polyfills to support older browsers -->
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"     crossorigin="anonymous"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+  crossorigin="anonymous"></script>
 
 <!-- Load Vue followed by BootstrapVue -->
 <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
@@ -27,7 +29,8 @@
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"      crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+  integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 
 <!-- 各種便利なツール塁です必要なときに随時使用のこと
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -53,79 +56,74 @@
 
   <p class="mt-5"></p>
   <b-container fluid>
-      <b-row>
-        <b-col align-self="start" cols=1></b-col>
-        <b-col align-self="center" cols=10>
-            <b-card-group columns >
-              <template v-for="i in [0,2,1,3]">
-                  <b-card
-                      :header="menuItems[i].title"
-                      :img-src="menuItems[i].image"
-                      img-width="150"
-                      class="mt-5"
-                  >
-                    <p>{{menuItems[i].description}}</p>
-                    <b-button :href="menuItems[i].url" ><i :class="menuItems[i].icon"></i></b-button>
+    <b-row>
+      <b-col align-self="start" cols=1></b-col>
+      <b-col align-self="center" cols=10>
+        <b-card-group columns>
+          <template v-for="i in [0,2,1,3]">
+            <b-card :header="menuItems[i].title" :img-src="menuItems[i].image" img-width="150" class="mt-5">
+              <p>{{menuItems[i].description}}</p>
+              <b-button :href="menuItems[i].url"><i :class="menuItems[i].icon"></i></b-button>
 
-                  </b-card>
-              </template>
-            </b-card-group>
-        </b-col>
-        <b-col align-self="end" cols=1></b-col>
-      </b-row>
+            </b-card>
+          </template>
+        </b-card-group>
+      </b-col>
+      <b-col align-self="end" cols=1></b-col>
+    </b-row>
   </b-container>
 
 
 </div>
 
 <script>
-Vue.filter('nf', function(val){
-	return val.toLocaleString();
-});
+  Vue.filter('nf', function (val) {
+    return val.toLocaleString();
+  });
 
-var app=new Vue({
-  el: '#app',
-  data:{
-    maxCol : 2,
-    menuItems:[
-      {
-        title:'得意先',
-        tag:'customer',
-        icon:'far fa-address-card',
-        image:'https://picsum.photos/id/283/500/400',
-        url:'mock01_dtl.html',
-        description:'得意先の登録・参照を行います。',
-      },
-      {
-        title:'商品',
-        tag:'product',
-        icon:'far fa-address-card',
-        image:'https://picsum.photos/id/113/500/400',
-        url:'mock01_dtl.html',
-        description:'商品の登録・参照を行います。',
-      },
-      {
-        title:'見積書',
-        icon:'far fa-address-card',
-        tag:'quotation',
-        image:'images/mn_quotation.png',
-        url:'mock01_dtl.html',
-        description:'見積書の作成・印刷を行います。',
-      },
-      {
-        title:'請求書',
-        icon:'far fa-address-card',
-        tag:'invoice',
-        image:'images/mn_invoice.png',
-        url:'mock_invoice.html',
-        description:'請求書の作成・印刷を行います。',
-      },
-  　],
-    isPrint: false,
-  },
-  computed: {
-  },
-})
+  var app = new Vue({
+    el: '#app',
+    data: {
+      maxCol: 2,
+      menuItems: [
+        {
+          title: '得意先',
+          tag: 'customer',
+          icon: 'far fa-address-card',
+          image: 'https://picsum.photos/id/283/500/400',
+          url: 'mock01_dtl.html',
+          description: '得意先の登録・参照を行います。',
+        },
+        {
+          title: '商品',
+          tag: 'product',
+          icon: 'far fa-address-card',
+          image: 'https://picsum.photos/id/113/500/400',
+          url: 'mock01_dtl.html',
+          description: '商品の登録・参照を行います。',
+        },
+        {
+          title: '見積書',
+          icon: 'far fa-address-card',
+          tag: 'quotation',
+          image: 'images/mn_quotation.png',
+          url: 'mock01_dtl.html',
+          description: '見積書の作成・印刷を行います。',
+        },
+        {
+          title: '請求書',
+          icon: 'far fa-address-card',
+          tag: 'invoice',
+          image: 'images/mn_invoice.png',
+          url: 'mock_invoice.html',
+          description: '請求書の作成・印刷を行います。',
+        },
+      ],
+      isPrint: false,
+    },
+    computed: {
+    },
+  })
 </script>
 
 </html>
