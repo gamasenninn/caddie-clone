@@ -90,16 +90,16 @@
           class='mr-2'></a>見積書入力</b-col>
   </b-row>
 
-  <!-- TODO:画面サイズを小さくするとボタンの配置が崩れるので、後でレスポンシブ対応する -->
+  <!-- 更新・印刷ボタン -->
   <b-row class="mt-3">
-    <b-col cols=9></b-col>
-    <b-col cols=2>
-      <div class="float-right">
+    <b-col></b-col>
+    <b-col cols=10>
+      <div class="d-flex justify-content-end">
         <b-button variant="info" @click="alert('更新しました')">更新</b-button>
         <b-button class="ml-3" variant="info" @click="isPrint=true">印刷</b-button>
       </div>
     </b-col>
-    <b-col cols=1></b-col>
+    <b-col></b-col>
   </b-row>
 
   <b-row class="mt-5">
@@ -232,6 +232,18 @@
     <b-col>
     </b-col>
 
+  </b-row>
+
+  <!-- 更新・印刷ボタン -->
+  <b-row class="mb-5">
+    <b-col></b-col>
+    <b-col cols=10>
+      <div class="d-flex justify-content-end">
+        <b-button variant="info" @click="alert('更新しました')">更新</b-button>
+        <b-button class="ml-3" variant="info" @click="isPrint=true">印刷</b-button>
+      </div>
+    </b-col>
+    <b-col></b-col>
   </b-row>
 </div>
 
