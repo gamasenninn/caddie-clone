@@ -1,0 +1,113 @@
+<html>
+<style>
+    .trim-img {
+        object-fit: cover;
+      }
+
+</style>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+    <link href="images/favicon.ico" rel="shortcut icon">
+    -->
+<title>回覧板</title>
+<!-- Load required Bootstrap and BootstrapVue CSS -->
+
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+<!-- Load fontawesome -->
+<!-- link href="./css/all.css" rel="stylesheet" -->
+<!--load all styles -->
+<!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+<!-- Load polyfills to support older browsers -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+    crossorigin="anonymous"></script>
+
+<!-- Load Vue followed by BootstrapVue -->
+<script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+<!-- Load the following for BootstrapVueIcons support -->
+<script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+
+<!-- 各種便利なツール塁です必要なときに随時使用のこと
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.js"></script>
+    <script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
+    <script src="./jsQR.js"></script>
+    <script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
+    -->
+
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+
+<div id="app">
+
+    <b-form-input type="text" v-model="fileId" ></b-form-input>
+    <b-button @click="getFileList(fileId)" >読込</b-button>
+
+    <b-card style="max-width: 20rem">
+        <form action="http://localhost/upload" class="dropzone" id="my-awesome-dropzone">
+            <input type="text" name="fileId" v-model="fileId" >
+
+            <input hidden type="file" name="file" id="my-awesome-dropzone" multiple>
+        </form>    
+    </b-card>
+
+    <template v-for="f in files">
+        <img :src="f" width="140" height=90 class="trim-img ml-2 mt-2">
+
+    </template>
+    
+</div>
+
+<script>
+    Vue.filter('nf', function (val) {
+        return val.toLocaleString();
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            isList: true,
+            files: [],
+            fileId: '001'
+        },
+        methods: {
+            getFileList: async function (fid) {
+                self = this;
+                //url = "http://localhost/file_list";
+                url = "http://localhost/file_list/"+fid;
+                await axios.get(url)
+                    .then(function (response) {
+                        console.log(response.data);
+                        self.files = response.data.list;
+                    });
+            },
+
+        },
+        mounted: function () {
+           this.getFileList('001');
+
+        }
+    });
+</script>
+
+
+
+
+
+</html >
