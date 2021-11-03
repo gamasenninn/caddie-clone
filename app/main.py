@@ -22,10 +22,8 @@ def hello():
 def upload_file():
     if 'file' not in request.files:
         make_response(jsonify({'result':'uploadFile is required.'}))
-    #message = request.json
     f = request.files["file"]
     id= request.form['fileId']
-    #print("file={}".format(f))
     os.makedirs(f'./upload/{id}', exist_ok=True)
     f.save(f'./upload/{id}/{f.filename}')
     response = {
@@ -34,17 +32,12 @@ def upload_file():
         "filename": f.filename,      
         "mimetype": f.mimetype,      
     }
-    #return  jsonify(response)
-    json = request.get_json()
     return  jsonify(response)
-
-    # return  jsonify(response)
 
 @app.route("/file_list/<fid>",methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_file_list(fid):
     file_list = glob.glob(f'upload/{fid}/*')
-    app.logger.debug(file_list)
     file_list = ["../"+f.replace('\\','/') for f in file_list ]
     app.logger.debug(file_list)
     j_flist = { "list": file_list}
