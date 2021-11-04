@@ -76,9 +76,25 @@
         </form>    
     </b-card>
     <script>
+        dSelf = this;
         Dropzone.options.myAwesomeDropzone = { // camelized version of the `id`
-            dictDefaultMessage: 'ここにファイルをドロップしてね', 
+            dictDefaultMessage: 'ここにファイルをドロップしてね',
+            init: function(){
+                this.on("addedfile", file => {
+                    console.log("A file has been added");
+                    app.getFileList('001');
+                });
+
+            }
+
         };
+//        let myDropzone = Dropzone("#my-awesome-dropzone",{});
+//        , {
+//            addedfile: file => {
+//                console.log("A file has been added");
+//        // ONLY DO THIS IF YOU KNOW WHAT YOU'RE DOING!
+//            }
+ //       });
     </script>
 
 <!--
