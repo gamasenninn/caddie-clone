@@ -83,18 +83,6 @@
     </div>
   </template>
 
-  <!-- TODO:画面サイズを小さくするとボタンの配置が崩れるので、後でレスポンシブ対応する -->
-  <b-row class="mt-3">
-    <b-col cols=9></b-col>
-    <b-col cols=2>
-      <div class="float-right">
-        <b-button variant="info" @click="alert('更新しました')">更新</b-button>
-        <b-button class="ml-3" variant="info" @click="isPrint=true">印刷</b-button>
-      </div>
-    </b-col>
-    <b-col cols=1></b-col>
-  </b-row>
-
   <b-row class="mt-3">
     <b-col></b-col> <!-- dummy -->
     <!--- 本体　-->
@@ -152,6 +140,19 @@
     </b-col>
 
   </b-row>
+
+  <b-row class="mb-5"></b-row>
+  <b-row class="mb-5"></b-row>
+  <b-row class="mb-5"></b-row>
+
+  <!-- 更新・取消ボタンのフッター -->
+  <b-card bg-variant="dark" text-variant="white" class="fixed-bottom">
+    <div class="d-flex justify-content-end">
+      <b-button variant="info" class="mr-3" @click="alert('更新しました')">更新</b-button>
+      <b-button variant="danger" @click="window.confirm('変更は反映されません。このページから離れますか？')">取消</b-button>
+    </div>
+  </b-card>
+
 </div>
 
 <script>

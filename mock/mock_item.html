@@ -117,12 +117,8 @@
                         <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="原価" label-for="cost">
                             <b-form-input v-model="header.cost" id="cost" size="sm"></b-form-input>
                         </b-form-group>
-
-                        <div class="float-right">
-                            <b-button variant="info" @click="alert('更新しました')">更新</b-button>
-                            <b-button class="ml-3" variant="info" @click="isPrint=true">印刷</b-button>
-                        </div>
                     </b-col>
+                    
                 </b-row> <!-- end header -->
             </b-card>
 
@@ -137,6 +133,14 @@
         </b-col>
 
     </b-row>
+
+    <!-- 更新・取消ボタンのフッター -->
+    <b-card bg-variant="dark" text-variant="white" class="fixed-bottom">
+        <div class="d-flex justify-content-end">
+            <b-button variant="info" class="mr-3" @click="alert('更新しました')">更新</b-button>
+            <b-button variant="danger" @click="window.confirm('変更は反映されません。このページから離れますか？')">取消</b-button>
+        </div>
+    </b-card>
 </div>
 
 <script>

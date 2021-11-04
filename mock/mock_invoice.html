@@ -120,17 +120,6 @@
     </div>
   </template>
 
-  <!-- 更新・印刷ボタン -->
-  <b-row class="mt-3">
-    <b-col></b-col>
-    <b-col cols=10>
-      <div class="d-flex justify-content-end">
-        <b-button variant="info" @click="alert('更新しました')">更新</b-button>
-        <b-button class="ml-3" variant="info" @click="isPrint=true">印刷</b-button>
-      </div>
-    </b-col>
-    <b-col></b-col>
-  </b-row>
 
   <b-row class="mt-3">
     <b-col></b-col> <!-- dummy -->
@@ -266,17 +255,17 @@
 
   </b-row>
 
-  <!-- 更新・印刷ボタン -->
-  <b-row class="mb-5">
-    <b-col></b-col>
-    <b-col cols=10>
-      <div class="d-flex justify-content-end">
-        <b-button variant="info" @click="alert('更新しました')">更新</b-button>
-        <b-button class="ml-3" variant="info" @click="isPrint=true">印刷</b-button>
-      </div>
-    </b-col>
-    <b-col></b-col>
-  </b-row>
+  <b-row class="mb-5"></b-row>
+  <b-row class="mb-5"></b-row>
+  <b-row class="mb-5"></b-row>
+
+  <!-- 更新・取消ボタンのフッター -->
+  <b-card bg-variant="dark" text-variant="white" class="fixed-bottom">
+    <div class="d-flex justify-content-end">
+      <b-button variant="info" class="mr-3" @click="alert('更新しました')">更新</b-button>
+      <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
+    </div>
+  </b-card>
 
 </div>
 
