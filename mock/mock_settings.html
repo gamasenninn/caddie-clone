@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="images/favicon.ico" rel="shortcut icon">
 
-<title>invoice mock</title>
+<title>setting mock</title>
 <!-- Load required Bootstrap and BootstrapVue CSS -->
 
 <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
@@ -59,6 +59,15 @@
     [v-cloak] {
         display: none;
     }
+
+    .isPrintDisplay {
+        display: flex;
+        justify-content: center;
+    }
+
+    .isPrintDisplay>div {
+        margin-right: 10px;
+    }
 </style>
 
 <div id="app" v-cloak>
@@ -95,7 +104,7 @@
         </div>
     </template>
 
-    <!-- 更新・印刷ボタン -->
+    <!-- 更新・取消ボタン -->
     <b-row class="mt-3">
         <b-col></b-col>
         <b-col cols=10>
@@ -153,19 +162,93 @@
                 会社ロゴをアップロードできます。ロゴはトップページ、サイドバー、見積書・請求書に使用されます。<br>
                 印鑑をアップロードできます。印鑑は見積書・請求書に使用されます。<br>
                 画像サイズは○○×○○以内のものを使用し、PNGまたはJPEG形式のみとなります。
-                <b-row>
-                    <b-col>
-                        会社ロゴスペース
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <b-col cols="4">
+                        <p>会社ロゴ</p>
+                        <img src="images/mn_customer.png" width="100%">
                     </b-col>
-                    <b-col>
-                        印鑑スペース
+                    <b-col></b-col>
+                    <b-col cols="4">
+                        <p>印鑑</p>
+                        <img src="images/mn_product.png" width="100%">
                     </b-col>
-                    <b-col>
-                        アップロードボタン
+                    <b-col></b-col>
+                </b-row>
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <b-col cols="4">
+                        <p>会社ロゴの印刷時の表示</p>
+                        <div class="isPrintDisplay">
+                            <b-form-checkbox v-model="uploads.logo.isChecked_quotaion">見積書</b-form-checkbox>
+                            <b-form-checkbox v-model="uploads.logo.isChecked_invoice">請求書</b-form-checkbox>
+                            <b-form-checkbox v-model="uploads.logo.isChecked_delivery">納品書</b-form-checkbox>
+                        </div>
+                    </b-col>
+                    <b-col></b-col>
+                    <b-col cols="4">
+                        <p>印鑑の印刷時の表示</p>
+                        <div class="isPrintDisplay">
+                            <b-form-checkbox v-model="uploads.stamp.isChecked_quotaion">見積書</b-form-checkbox>
+                            <b-form-checkbox v-model="uploads.stamp.isChecked_invoice">請求書</b-form-checkbox>
+                            <b-form-checkbox v-model="uploads.stamp.isChecked_delivery">納品書</b-form-checkbox>
+                        </div>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <b-col cols="4">
+                        <p>会社ロゴアップロード</p>
+                        <form action="/file-upload" class="dropzone" id="my-awesome-dropzone">
+                        </form>
+                    </b-col>
+                    <b-col></b-col>
+                    <b-col cols="4">
+                        <p>印鑑アップロード</p>
+                        <form action="/file-upload" class="dropzone" id="my-awesome-dropzone">
+                        </form>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+            </b-card>
+
+            <b-card border-variant="white" class="text-center" header="商品単位設定" header-border-variant="light">
+                <b-table hover caption-top small id="htable" sort-by="ID" small striped label="Table Options"
+                    :items=items :fields="[
+                  {  key: 'id', label: 'No.',  class:'text-center' },
+                  {  key: 'unit', label: '単位' },
+                  {  key: 'delete', label: '' },
+                ]">
+                    <template v-slot:cell(unit)="data">
+                        <b-form-input v-model="data.item.unit" type="text" size="sm"></b-form-input>
+                    </template>
+                    <template v-slot:cell(delete)="data">
+                        <b-button>削除</b-button>
+                    </template>
+                </b-table>
+
+                <!-- 商品項目を追加するプラスボタン -->
+                <b-row class="d-flex justify-content-end" id="item_add">
+                    <b-col cols="16" md="auto">
+                        <b-button pill variant="primary">✙</b-button>
                     </b-col>
                 </b-row>
             </b-card>
 
+        </b-col>
+        <b-col></b-col>
+    </b-row>
+
+    <!-- 更新・取消ボタン -->
+    <b-row class="mt-3">
+        <b-col></b-col>
+        <b-col cols=10>
+            <div class="d-flex justify-content-end">
+                <b-button variant="info" @click="alert('更新しました')">更新</b-button>
+                <b-button class="ml-3" variant="danger" @click="window.confirm('変更は反映されません。このページから離れますか？')">取消
+                </b-button>
+            </div>
         </b-col>
         <b-col></b-col>
     </b-row>
@@ -197,24 +280,41 @@
                     { name: 'invoice', path: 'images/mn_invoice.png' }
                 ]
             },
+            uploads: {
+                stamp: {
+                    isChecked_quotaion: true,
+                    isChecked_invoice: true,
+                    isChecked_delivery: true,
+                },
+                logo: {
+                    isChecked_quotaion: true,
+                    isChecked_invoice: true,
+                    isChecked_delivery: true,
+                }
+            },
+            items: [
+                { id: 1, unit: '個' },
+                { id: 2, unit: '本' },
+                { id: 3, unit: '式' },
+                { id: 4, unit: 'ヶ' },
+                { id: 5, unit: '部' },
+            ],
         },
-        // methods: {
-        //     checkHinmei: function (val) {
-        //         //if ( typeof(this.items) == 'undefined' ){ return 0 }　//初期立ち上がりでのエラー抑制
-        //         if ((val.match(new RegExp("\n", "g")) || []).length < 2) {
-        //             return true;
-        //         } else {
-        //             alert("品名の入力は2行までです！");
-        //             return false;
-        //         }
-        //     },
-        // },
-        // computed: {
-        //     // 逐次、数量＊単価の合計をする
-        //     sum: function () {
-        //         if (typeof (this.items) == 'undefined') { return 0 }　//初期立ち上がりでのエラー抑制
-        //         return this.items.map(item => parseInt(item.suryo * item.tanka)).reduce(function (a, b) { return a + b }, 0);
-        //     },
-        // },
     })
+
+    // 項目の追加ボタン
+    $(function () {
+        $("#item_add").click(function () {
+            var lastId = app.items[app.items.length - 1].id;
+            app.items.push({ id: lastId + 1, unit: '' });
+        });
+    });
+
+    // ファイルアップロードメッセージ変更
+    $(function () {
+        var element = document.getElementsByClassName("dz-button");
+        for (var i = 0; i <= element.length - 1; i++) {
+            element[i].innerHTML = "ファイルをドロップする";
+        }
+    });
 </script>
