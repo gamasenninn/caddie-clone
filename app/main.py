@@ -34,6 +34,23 @@ def upload_file():
     }
     return  jsonify(response)
 
+@app.route("/delete_files/<fid>",methods=['DELETE'])
+@cross_origin(supports_credentials=True)
+
+def delete_files(fid):
+    #f = request.files["file"]
+    #id= request.form['fileId']
+    #os.makedirs(f'./upload/{id}', exist_ok=True)
+    #f.save(f'./upload/{id}/{f.filename}')
+    #response = {
+    #    "text":"OK",
+    #    "fileId": id,
+    #    "filename": f.filename,      
+    #    "mimetype": f.mimetype,      
+    #}
+    response={"result":"OK"}
+    return  jsonify(response)
+
 @app.route("/file_list/<fid>",methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_file_list(fid):

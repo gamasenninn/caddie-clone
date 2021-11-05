@@ -153,7 +153,7 @@
                         self.dicFiles=arry;
                     });
             },
-            deleteFiles: function(fid){
+            deleteFiles: async function(fid){
                 let flist=[];
                 for(const f of this.dicFiles){
                     if(f.isActive){
@@ -162,7 +162,15 @@
                     }
                 }
                 console.log(flist)
-
+                url= "http://localhost/delete_files/"+fid;
+                await axios.delete(url,
+                        {
+                            files: flist
+                        }
+                    )    
+                    .then(function (response) {
+                        console.log(response.data);
+                    });                
             }
 
         },
@@ -172,9 +180,5 @@
         }
     });
 </script>
-
-
-
-
 
 </html >
