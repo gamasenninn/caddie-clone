@@ -50,6 +50,10 @@
     [v-cloak] {
         display: none;
     }
+
+    .footer {
+        opacity: 0.8;
+    }
 </style>
 
 <div id="app" v-cloak>
@@ -118,7 +122,7 @@
                             <b-form-input v-model="header.cost" id="cost" size="sm"></b-form-input>
                         </b-form-group>
                     </b-col>
-                    
+
                 </b-row> <!-- end header -->
             </b-card>
 
@@ -135,7 +139,7 @@
     </b-row>
 
     <!-- 更新・取消ボタンのフッター -->
-    <b-card bg-variant="dark" text-variant="white" class="fixed-bottom">
+    <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
         <div class="d-flex justify-content-end">
             <b-button variant="info" class="mr-3" @click="alert('更新しました')">更新</b-button>
             <b-button variant="danger" @click="window.confirm('変更は反映されません。このページから離れますか？')">取消</b-button>
