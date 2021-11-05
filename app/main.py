@@ -63,12 +63,12 @@ def upload_file():
 
 def delete_files():
     dict_data = json.loads(request.data.decode())
-    #app.logger.debug(dict_data['files'])
 
     for f in dict_data['files']:
-        app.logger.debug(f)
         os.remove("./upload/"+f)
-        #os.remove("./upload/thumbs/"+f)
+
+    for f in dict_data['thumbs']:
+        os.remove("./upload/"+f)
 
     response={"result":"OK"}
     return  jsonify(response)
@@ -79,7 +79,7 @@ def get_file_list(fid):
     file_path_list = glob.glob(f'upload/{fid}/*')
     file_path_list = ["../"+f.replace('\\','/') for f in file_path_list ]
     file_names = [f.split('/')[-1] for f in file_path_list ]
-    app.logger.debug(file_path_list)
+    #app.logger.debug(file_path_list)
     j_flist = { 
         "list": file_path_list,
         "file_names" : file_names 
@@ -104,7 +104,7 @@ def get_file_list2(fid):
             "isdir": os.path.isdir(f),
             "status": os.stat(f),
         }
-        app.logger.debug(dict_flist)
+        #app.logger.debug(dict_flist)
         arry.append(dict_flist)
     #file_path_list = ["../"+f.replace('\\','/') for f in file_path_list ]
     #file_names = [os.path.split(f)[1] for f in file_path_list ]

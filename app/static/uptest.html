@@ -160,10 +160,12 @@
             deleteFiles: async function(fid){
                 self = this;
                 let flist=[];
+                let thumbs=[];
                 for(const f of this.dicFiles){
                     if(f.isActive){
                         console.log(f.path,f.isActive)
                         flist.push(f.path.replace("upload/",''))
+                        thumbs.push(f.thumb_path.replace("upload/",''))
                     }
                 }
                 console.log(flist)
@@ -175,7 +177,8 @@
                                 'Content-Type': 'application/json'
                             },
                             data:{
-                                files: flist
+                                files: flist,
+                                thumbs: thumbs
                             }
                         }
                     )    
