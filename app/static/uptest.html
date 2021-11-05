@@ -80,7 +80,7 @@
 
 <div id="app">
 
-    <h3>ファイルIDを指定してください。</h3><br/>
+    <h3>フォルダーIDを指定してください。</h3><br/>
     <b-form-input type="text" v-model="fileId" ></b-form-input>
     <b-button @click="getFileList(fileId)" >読込</b-button>
 
@@ -88,9 +88,10 @@
     <p><b-button @click="deleteFiles(fileId)" >削除</b-button></p>
     <template v-for="f in dicFiles">
         <span class="image-box">
-            <img :src="f.file" width="90" height=90 class="trim-img ml-2 mt-2">
+            <img :src="'../'+f.thumb_path" width="90" height=90 class="trim-img ml-2 mt-2">
             <input type="checkbox" v-model="f.isActive" class="image-in-check">
         </span>
+
     </template>
 
     <h3 class="mt-5">アップロードパターン①:　ディフォルト機能の画面</h3><br/>
@@ -128,7 +129,7 @@
         el: '#app',
         data: {
             isList: true,
-            files: [],
+//            files: [],
             dicFiles:[],
             fileId: '001',
         },
@@ -136,46 +137,58 @@
             getFileList: async function (fid) {
                 self = this;
                 //url = "http://localhost/file_list";
-                url = "http://localhost/file_list/"+fid;
+                url = "http://localhost/file_list2/"+fid;
                 await axios.get(url)
                     .then(function (response) {
                         console.log(response.data);
-                        self.files = response.data.list;
+                        //self.files = response.data.list;
+                        //self.files = response.data;
                         let arry =[];
-                        for(const f of self.files){
-                            let d_dict = {
-                                file: f,
-                                isActive: null
+                        for(const f of response.data){
+                            if (f.isfile){
+                                f.isActive = null
+                                arry.push(f)
                             }
-                            //console.log(d_dict);
-                            arry.push(d_dict)
                         }
                         self.dicFiles=arry;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        alert("ネットワークエラーです。ローカルサーバーは立ち上がっていますか？")
                     });
             },
             deleteFiles: async function(fid){
+                self = this;
                 let flist=[];
                 for(const f of this.dicFiles){
                     if(f.isActive){
-                        console.log(f.file,f.isActive)
-                        flist.push(f.file.replace("../",''))
+                        console.log(f.path,f.isActive)
+                        flist.push(f.path.replace("upload/",''))
                     }
                 }
                 console.log(flist)
-                url= "http://localhost/delete_files/"+fid;
+                url= "http://localhost/delete_files";
+                
                 await axios.delete(url,
                         {
-                            files: flist
+                            headers:{
+                                'Content-Type': 'application/json'
+                            },
+                            data:{
+                                files: flist
+                            }
                         }
                     )    
                     .then(function (response) {
                         console.log(response.data);
+                        self.getFileList(fid);
                     });                
             }
 
         },
         mounted: function () {
-           this.getFileList('001');
+            this.getFileList('001');
+ 
 
         }
     });
