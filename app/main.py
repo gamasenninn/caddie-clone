@@ -33,15 +33,6 @@ def upload_file():
     
     make_thumb(file_path,f"./upload/{id}/thumbs")
 
-    '''
-    im = Image.open(file_path)
-    thumb_width = 150
-
-    im_crop_maxsq = crop_max_square(im)  
-    im_thumb  = im_crop_maxsq.resize((thumb_width,thumb_width))
-    im_thumb.save(thumb_path, quality=95)
-    '''
-
     response = {
         "text":"OK",
         "fileId": id,
