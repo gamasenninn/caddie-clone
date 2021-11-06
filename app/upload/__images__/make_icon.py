@@ -60,7 +60,7 @@ def crop_center(pil_img, crop_width, crop_height):
 def crop_max_square(pil_img):
     return crop_center(pil_img, min(pil_img.size), min(pil_img.size))
 
-def make_thumb(filename,save_dir):
+def make_thumb(filename,save_dir="./thumbs"):
     if os.path.isfile(filename) == False: return
     basename = os.path.basename(filename)
     dirname =  os.path.dirname(filename)
@@ -98,4 +98,5 @@ def make_thumb(filename,save_dir):
 if __name__ == "__main__":
     files = ["./test1.Doc","./test2.Zip","./test3.pdf","./test4.xyz","./test5.jpg"]
     for f in files:
-        make_thumb(f,'./thumbs')
+        #make_thumb(f,'./thumbs')
+        make_thumb(f)
