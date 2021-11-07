@@ -53,80 +53,73 @@
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
+<style>
+.image-box {
+    position: relative;
+}
+
+.image-in-check {
+    width: 15px;
+    height: 15px;
+    color: #ffffff;
+    background-color: #2779bd;
+    display: flex;
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    font-size: 1.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    
+    position: absolute;
+    top: -20;
+    left: 10;
+}
+
+</style>
+
 
 <div id="app">
 
-    <h3>ファイルIDを指定してください。</h3><br/>
+    <h3>フォルダーIDを指定してください。</h3><br/>
     <b-form-input type="text" v-model="fileId" ></b-form-input>
     <b-button @click="getFileList(fileId)" >読込</b-button>
 
     <h2 class="mt-5">現在登録されているファイルは次のとおりです。</h2><br/>
-    <template v-for="f in files">
-        <img :src="f" width="140" height=90 class="trim-img ml-2 mt-2">
+    <p><b-button @click="deleteFiles(fileId)" >削除</b-button></p>
+    <template v-for="f in dicFiles">
+        <span class="image-box">
+            <img :src="'../'+f.thumb_path" width="90" height=90 class="trim-img ml-2 mt-2">
+            <input type="checkbox" v-model="f.isActive" class="image-in-check">
+        </span>
 
     </template>
 
     <h3 class="mt-5">アップロードパターン①:　ディフォルト機能の画面</h3><br/>
 
     <b-card style="max-width: 20rem">
-        <form action="http://localhost/upload" class="dropzone" id="my-awesome-dropzone">
+        <form action="http://localhost/upload" class="dropzone" id="my-dropzone">
             <input hidden type="text" name="fileId" v-model="fileId" >
 
-            <input hidden type="file" name="file" id="my-awesome-dropzone" multiple>
+            <input hidden type="file" name="file" id="my-dropzone" multiple>
         </form>    
     </b-card>
     <script>
-        dSelf = this;
-        Dropzone.options.myAwesomeDropzone = { // camelized version of the `id`
+        Dropzone.options.myDropzone = { // camelized version of the `id`
             dictDefaultMessage: 'ここにファイルをドロップしてね',
             init: function(){
-                this.on("addedfile", file => {
-                    console.log("A file has been added");
-                    app.getFileList('001');
+                this.on("complete", file => {
+                    console.log("complete A file has been added");
+                    this.removeFile(file);
+                    app.getFileList(app.fileId);
                 });
-
             }
-
         };
-//        let myDropzone = Dropzone("#my-awesome-dropzone",{});
-//        , {
-//            addedfile: file => {
-//                console.log("A file has been added");
-//        // ONLY DO THIS IF YOU KNOW WHAT YOU'RE DOING!
-//            }
- //       });
     </script>
-
-<!--
-    <h3 class="mt-5">アップロードパターン②:　動的に生成</h3><br/>
-
-    <div class="dropzone" id="DropZone2">
-        <input type="text" name="fileId" v-model="fileId" >
-        <input type="file" name="file" id="DropZone2" multiple>
-    </div>
-    <script>
-        const Dropzone2 = new Dropzone('#DropZone2', {
-            url: 'http://localhost/upload',
-            paramName: 'upload',
-            dictDefaultMessage: 'ここにファイルをドロップしてね',
-        });
-        Dropzone2.on("addedfile", file => {
-            console.log("A file has been added");
-        });
-    </script>
--->
-
 <br/><br/>
-      -----------------------<br/><br/>
-
-    
+   
 </div>
 
 <script>
-
-
-
-
 
     Vue.filter('nf', function (val) {
         return val.toLocaleString();
@@ -136,31 +129,72 @@
         el: '#app',
         data: {
             isList: true,
-            files: [],
-            fileId: '001'
+//            files: [],
+            dicFiles:[],
+            fileId: '001',
         },
         methods: {
             getFileList: async function (fid) {
                 self = this;
                 //url = "http://localhost/file_list";
-                url = "http://localhost/file_list/"+fid;
+                url = "http://localhost/file_list2/"+fid;
                 await axios.get(url)
                     .then(function (response) {
                         console.log(response.data);
-                        self.files = response.data.list;
+                        //self.files = response.data.list;
+                        //self.files = response.data;
+                        let arry =[];
+                        for(const f of response.data){
+                            if (f.isfile){
+                                f.isActive = null
+                                arry.push(f)
+                            }
+                        }
+                        self.dicFiles=arry;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        alert("ネットワークエラーです。ローカルサーバーは立ち上がっていますか？")
                     });
             },
+            deleteFiles: async function(fid){
+                self = this;
+                let flist=[];
+                let thumbs=[];
+                for(const f of this.dicFiles){
+                    if(f.isActive){
+                        console.log(f.path,f.isActive)
+                        flist.push(f.path.replace("upload/",''))
+                        thumbs.push(f.thumb_path.replace("upload/",''))
+                    }
+                }
+                console.log(flist)
+                url= "http://localhost/delete_files";
+                
+                await axios.delete(url,
+                        {
+                            headers:{
+                                'Content-Type': 'application/json'
+                            },
+                            data:{
+                                files: flist,
+                                thumbs: thumbs
+                            }
+                        }
+                    )    
+                    .then(function (response) {
+                        console.log(response.data);
+                        self.getFileList(fid);
+                    });                
+            }
 
         },
         mounted: function () {
-           this.getFileList('001');
+            this.getFileList('001');
+ 
 
         }
     });
 </script>
-
-
-
-
 
 </html >
