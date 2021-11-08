@@ -62,14 +62,18 @@
     background-color: rgb(51, 103, 214);
   }
 
-  .table-striped>tbody>tr:nth-child(even)>td,
-  .table-striped>tbody>tr:nth-child(even)>th {
+  #htable>tbody>tr:nth-child(even)>td,
+  #htable>tbody>tr:nth-child(even)>th {
     background-color: #dde9fc;
-    /* Choose your own color here */
   }
 
-  .table-striped>tbody>tr:nth-child(odd) {
+  #htable>tbody>tr:nth-child(odd) {
     background-color: white;
+  }
+
+  .table-hover tbody tr:hover td,
+  .table-hover tbody tr:hover th {
+    background-color: #dde9fc;
   }
 
   .table thead th {
@@ -143,8 +147,23 @@
               <b-form-input v-model="header.applyNumber" id="applyNumber" size="sm"></b-form-input>
             </b-form-group>
 
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名" label-for="kokyaku">
-              <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm"></b-form-input>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名" label-for="kokyaku"
+              class="kokyaku">
+              <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm" v-b-modal.customer-modal></b-form-input>
+              <!-- 得意先一覧モーダル -->
+              <b-modal size="xl" id="customer-modal">
+                <p>顧客を選択してください</p>
+                <b-table hover striped small sort-by="ID" id="customer-table" :items="customers" @row-clicked="row"
+                  label="Table Options" :items=items :fields="[
+                        {  key: 'id', label: 'No.' },
+                        {  key: 'kokyaku', label: '顧客名' },
+                        {  key: 'postNum',   label: '郵便番号' },
+                        {  key: 'address',  label: '住所' },
+                        {  key: 'telno',  label: '電話番号' },
+                        {  key: 'daihyou', label: '代表者名' },
+                        {  key: 'memo', label: 'メモ' },
+                      ]"></b-table>
+              </b-modal>
             </b-form-group>
             <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所" label-for="jyusho">
               <b-form-input v-model="header.jyusho" id="jyusho" size="sm">
@@ -192,7 +211,7 @@
 
 
       <!--  table list & edit -->
-      <b-table hover caption-top small id="htable" sort-by="ID" small striped label="Table Options" :items=items
+      <b-table hover caption-top small id="htable" sort-by="ID" small label="Table Options" :items=items
         :fields="[
                   {  key: 'id', label: 'ID',  class:'text-center' },
                   {  key: 'hinmei', label: '商品名' },
@@ -310,6 +329,12 @@
         { id: 9, hinmei: '', suryo: null, tanka: null },
         { id: 10, hinmei: '', suryo: null, tanka: null },
       ],
+      customers: [
+        { id: 1, kokyaku: '○○株式会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはテストのための備考です' },
+        { id: 2, kokyaku: '○○有限会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはテストのための備考です' },
+        { id: 3, kokyaku: '○○商事', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはテストのための備考です' },
+        { id: 4, kokyaku: '○○鉄工所', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはテストのための備考です' },
+      ],
       isPrint: false,
     },
     methods: {
@@ -331,6 +356,13 @@
         return this.items.map(item => parseInt(item.suryo * item.tanka)).reduce(function (a, b) { return a + b }, 0);
       },
     },
+    methods: {
+      // 顧客モーダル内、顧客を選択した時
+      row(record) {
+        app.header.kokyaku = record.kokyaku;
+        this.$bvModal.hide("customer-modal")
+      },
+    }
   })
 
   $(function () {
@@ -338,7 +370,13 @@
       var lastId = app.items[app.items.length - 1].id;
       app.items.push({ id: lastId + 1, hinmei: '', suryo: null, tanka: null });
     });
-  });
+  },
+    $("#htable>tbody>tr").hover(function () {
+      $(this).children().css('background', '#dee2e6');
+    }, function () {
+      $(this).children().css('background', '');
+    })
+  );
 
 </script>
 
