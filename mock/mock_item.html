@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="images/favicon.ico" rel="shortcut icon">
 
-<title>customer mock</title>
+<title>item mock</title>
 
 <!-- Load required Bootstrap and BootstrapVue CSS -->
 <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
@@ -138,6 +138,46 @@
 
     </b-row>
 
+    <b-row class="mb-5"></b-row>
+    <b-row class="mb-5"></b-row>
+    <b-row class="mb-5"></b-row>
+
+    <!-- 一覧表示 -->
+    <b-row class="mt-3">
+        <b-col></b-col>
+        <b-col cols="10">
+            <!-- このボタンで新規ページに切り替える？ -->
+            <b-button variant="success">＋新規</b-button>
+            <b-card border-variant="white" class="mb-3 text-center" header="商品一覧" header-border-variant="light">
+                <b-table responsive="sm" hover small id="itemtable" sort-by="ID" small label="Table Options" :items=items
+                    :fields="[
+                {  key: 'update', label: ''},
+                {  key: 'id', label: 'No.'},
+                {  key: 'itemName', label: '商品名' },
+                {  key: 'unit',   label: '単位' },
+                {  key: 'price',  label: '値段' },
+                {  key: 'cost',  label: '原価' },
+                {  key: 'costRate', label: '原価率' },
+                {  key: 'delete', label: '' },
+              ]">
+                    <template v-slot:cell(update)="data">
+                        <b-button variant="info"><i class="fas fa-edit"></i></b-button>
+                    </template>
+                    <template v-slot:cell(delete)="data">
+                        <b-button variant="danger" @click="window.confirm('データを削除します。よろしいですか？')"><i
+                                class="fas fa-trash-alt"></i>
+                        </b-button>
+                    </template>
+                </b-table>
+            </b-card>
+        </b-col>
+        <b-col></b-col>
+    </b-row>
+
+    <b-row class="mb-5"></b-row>
+    <b-row class="mb-5"></b-row>
+    <b-row class="mb-5"></b-row>
+
     <!-- 更新・取消ボタンのフッター -->
     <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
         <div class="d-flex justify-content-end">
@@ -167,6 +207,12 @@
                     { value: 'キロ', text: 'キロ' },
                 ],
             },
+            items: [
+                { id: 1, itemName: 'ラジオ', unit: '台', price: 1000, cost: 700, costRate: 0.7 },
+                { id: 2, itemName: '電池', unit: '個', price: 100, cost: 50, costRate: 0.5 },
+                { id: 3, itemName: 'イヤホン', unit: '本', price: 200, cost: 50, costRate: 0.25 },
+                { id: 4, itemName: '鉛筆', unit: '本', price: 20, cost: 5, costRate: 0.25 },
+            ],
             isPrint: false,
         },
     })
