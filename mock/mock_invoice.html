@@ -140,13 +140,20 @@
           <b-col>
 
             <!-- header -->
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付" label-for="applyDate">
-              <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
-            </b-form-group>
             <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求番号" label-for="applyNumber">
               <b-form-input v-model="header.applyNumber" id="applyNumber" size="sm"></b-form-input>
             </b-form-group>
-
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付" label-for="applyDate">
+              <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
+            </b-form-group>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求有効期限" label-for="expiry">
+              <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
+            </b-form-group>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名" label-for="title">
+              <b-form-input v-model="header.title" id="title" size="sm"></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col>
             <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名" label-for="kokyaku"
               class="kokyaku">
               <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm" v-b-modal.customer-modal></b-form-input>
@@ -165,24 +172,8 @@
                       ]"></b-table>
               </b-modal>
             </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所" label-for="jyusho">
-              <b-form-input v-model="header.jyusho" id="jyusho" size="sm">
-              </b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="電話番号" label-for="telno">
-              <b-form-input v-model="header.telno" id="telno" size="sm">
-              </b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email" label-for="email">
-              <b-form-input v-model="header.email" id="email" size="sm"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求有効期限" label-for="expiry">
-              <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名" label-for="title">
-              <b-form-input v-model="header.title" id="title" size="sm"></b-form-input>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ" label-for="メモ">
+              <b-form-textarea v-model="header.memo" size="sm" rows="4"></b-form-textarea>
             </b-form-group>
           </b-col>
         </b-row> <!-- end header -->
@@ -211,8 +202,7 @@
 
 
       <!--  table list & edit -->
-      <b-table hover caption-top small id="htable" sort-by="ID" small label="Table Options" :items=items
-        :fields="[
+      <b-table hover caption-top small id="htable" sort-by="ID" small label="Table Options" :items=items :fields="[
                   {  key: 'id', label: 'ID',  class:'text-center' },
                   {  key: 'hinmei', label: '商品名' },
                   {  key: 'suryo',   label: '数量' },
@@ -307,7 +297,7 @@
         jyusho: '栃木県鹿沼市板荷0000-00',
         telno: '090-000-0000',
         email: 'abc@qwertyu.zz',
-        memo: 'これはテストのための備考です',
+        memo: 'これは請求書のメモです',
         expiry: '2021-01-01',
         title: '請求書の件名がここに入る',
         isTaxExp: true,
