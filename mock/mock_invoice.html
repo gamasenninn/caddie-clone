@@ -137,22 +137,7 @@
       <b-card border-variant="white" class="mb-3 text-center" header="請求書入力" header-border-variant="light">
         <b-row>
           <b-col>
-
             <!-- header -->
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求番号" label-for="applyNumber">
-              <b-form-input v-model="header.applyNumber" id="applyNumber" size="sm"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付" label-for="applyDate">
-              <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求有効期限" label-for="expiry">
-              <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名" label-for="title">
-              <b-form-input v-model="header.title" id="title" size="sm"></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col>
             <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名" label-for="kokyaku"
               class="kokyaku">
               <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm" v-b-modal.customer-modal></b-form-input>
@@ -170,6 +155,20 @@
                         {  key: 'memo', label: 'メモ' },
                       ]"></b-table>
               </b-modal>
+            </b-form-group>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付" label-for="applyDate">
+              <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
+            </b-form-group>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求有効期限" label-for="expiry">
+              <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
+            </b-form-group>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名" label-for="title">
+              <b-form-input v-model="header.title" id="title" size="sm"></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求番号" label-for="applyNumber">
+              <b-form-input v-model="header.applyNumber" id="applyNumber" size="sm"></b-form-input>
             </b-form-group>
             <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ" label-for="メモ">
               <b-form-textarea v-model="header.memo" size="sm" rows="4"></b-form-textarea>

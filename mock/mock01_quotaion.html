@@ -106,23 +106,7 @@
       <b-card border-variant="white" class="mb-3 text-center" header="見積書入力" header-border-variant="light">
         <b-row>
           <b-col>
-
             <!-- header -->
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号" label-for="applyNumber">
-              <p class="text-left pl-2" id="applyNumber">{{header.applyNumber}}</p>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付" label-for="applyDate">
-              <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限" label-for="expiry">
-              <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名" label-for="title">
-              <b-form-input v-model="header.title" id="title" size="sm"></b-form-input>
-            </b-form-group>
-
-          </b-col>
-          <b-col>
             <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名" label-for="kokyaku"
               class="kokyaku">
               <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm" v-b-modal.customer-modal></b-form-input>
@@ -140,6 +124,20 @@
                         {  key: 'memo', label: 'メモ' },
                       ]"></b-table>
               </b-modal>
+            </b-form-group>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付" label-for="applyDate">
+              <b-form-input v-model="header.applyDate" id="applyDate" size="sm" type="date"></b-form-input>
+            </b-form-group>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限" label-for="expiry">
+              <b-form-input v-model="header.expiry" id="expiry" size="sm" type="date"></b-form-input>
+            </b-form-group>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名" label-for="title">
+              <b-form-input v-model="header.title" id="title" size="sm"></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号" label-for="applyNumber">
+              <p class="text-left pl-2" id="applyNumber">{{header.applyNumber}}</p>
             </b-form-group>
             <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ" label-for="メモ">
               <b-form-textarea v-model="header.memo" size="sm" rows="4"></b-form-textarea>
@@ -269,13 +267,13 @@
                 {  key: 'memo', label: 'メモ' },
                 {  key: 'delete', label: '' },
               ]">
-        <template v-slot:cell(update)="data">
-          <b-button variant="info"><i class="fas fa-edit"></i></b-button>
-        </template>
-        <template v-slot:cell(delete)="data">
-          <b-button variant="danger" @click="window.confirm('データを削除します。よろしいですか？')"><i class="fas fa-trash-alt"></i>
-          </b-button>
-        </template>
+          <template v-slot:cell(update)="data">
+            <b-button variant="info"><i class="fas fa-edit"></i></b-button>
+          </template>
+          <template v-slot:cell(delete)="data">
+            <b-button variant="danger" @click="window.confirm('データを削除します。よろしいですか？')"><i class="fas fa-trash-alt"></i>
+            </b-button>
+          </template>
         </b-table>
       </b-card>
     </b-col>
