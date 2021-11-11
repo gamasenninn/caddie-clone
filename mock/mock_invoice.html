@@ -62,18 +62,13 @@
     background-color: rgb(51, 103, 214);
   }
 
-  #htable>tbody>tr:nth-child(even)>td,
-  #htable>tbody>tr:nth-child(even)>th {
+  .table>tbody>tr:nth-child(even) {
     background-color: #dde9fc;
   }
 
-  #htable>tbody>tr:nth-child(odd) {
-    background-color: white;
-  }
-
-  .table-hover tbody tr:hover td,
-  .table-hover tbody tr:hover th {
-    background-color: #dde9fc;
+  .table tbody tr:hover td,
+  .table tbody tr:hover th {
+    background-color: #dee2e6;
   }
 
   .table thead th {
@@ -141,7 +136,7 @@
               <!-- 得意先一覧モーダル -->
               <b-modal size="xl" id="customer-modal">
                 <p>顧客を選択してください</p>
-                <b-table hover striped small sort-by="ID" id="customer-table" :items="customers" @row-clicked="row"
+                <b-table hover small sort-by="ID" id="customer-table" :items="customers" @row-clicked="row"
                   label="Table Options" :items=items :fields="[
                         {  key: 'id', label: 'No.' },
                         {  key: 'kokyaku', label: '顧客名' },
@@ -402,13 +397,7 @@
       var lastId = app.items[app.items.length - 1].id;
       app.items.push({ id: lastId + 1, hinmei: '', suryo: null, tanka: null });
     });
-  },
-    $("#htable>tbody>tr").hover(function () {
-      $(this).children().css('background', '#dee2e6');
-    }, function () {
-      $(this).children().css('background', '');
-    })
-  );
+  });
 
 </script>
 

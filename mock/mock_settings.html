@@ -60,6 +60,31 @@
         display: none;
     }
 
+    thead {
+        background-color: rgb(51, 103, 214)
+    }
+
+    .table>tbody>tr:nth-child(even) {
+        background-color: #dde9fc;
+    }
+
+    .table tbody tr:hover td,
+    .table tbody tr:hover th {
+        background-color: #dee2e6;
+    }
+
+    .table thead th {
+        border: none;
+    }
+
+    .table thead tr {
+        color: white;
+    }
+
+    .table thead {
+        font-family: sans-serif;
+    }
+
     .isPrintDisplay {
         display: flex;
         justify-content: center;
@@ -206,8 +231,8 @@
             </b-card>
 
             <b-card border-variant="white" class="text-center" header="商品単位設定" header-border-variant="light">
-                <b-table hover caption-top small id="htable" sort-by="ID" small striped label="Table Options"
-                    :items=items :fields="[
+                <b-table hover caption-top small id="unittable" sort-by="ID" small label="Table Options" :items=items
+                    :fields="[
                   {  key: 'id', label: 'No.',  class:'text-center' },
                   {  key: 'unit', label: '単位' },
                   {  key: 'delete', label: '' },
@@ -216,7 +241,8 @@
                         <b-form-input v-model="data.item.unit" type="text" size="sm"></b-form-input>
                     </template>
                     <template v-slot:cell(delete)="data">
-                        <b-button>削除</b-button>
+                        <b-button variant="danger" @click="window.confirm('データを削除します。よろしいですか？')"><i
+                                class="fas fa-trash-alt"></i>
                     </template>
                 </b-table>
 
