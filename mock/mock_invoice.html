@@ -62,18 +62,13 @@
     background-color: rgb(51, 103, 214);
   }
 
-  #htable>tbody>tr:nth-child(even)>td,
-  #htable>tbody>tr:nth-child(even)>th {
+  .table>tbody>tr:nth-child(even) {
     background-color: #dde9fc;
   }
 
-  #htable>tbody>tr:nth-child(odd) {
-    background-color: white;
-  }
-
-  .table-hover tbody tr:hover td,
-  .table-hover tbody tr:hover th {
-    background-color: #dde9fc;
+  .table tbody tr:hover td,
+  .table tbody tr:hover th {
+    background-color: #dee2e6;
   }
 
   .table thead th {
@@ -144,7 +139,7 @@
               <!-- 得意先一覧モーダル -->
               <b-modal size="xl" id="customer-modal">
                 <p>顧客を選択してください</p>
-                <b-table hover striped small sort-by="ID" id="customer-table" :items="customers" @row-clicked="row"
+                <b-table hover small sort-by="ID" id="customer-table" :items="customers" @row-clicked="row"
                   label="Table Options" :items=items :fields="[
                         {  key: 'id', label: 'No.' },
                         {  key: 'kokyaku', label: '顧客名' },
@@ -256,7 +251,7 @@
 
       <!-- 備考欄 -->
       <b-card border-variant="white" class="mb-3 text-center" header="備考欄" header-border-variant="light">
-        <b-form-textarea v-model="header.memo" id="memo" size="sm" type="text" rows="3"></b-form-textarea>
+        <b-form-textarea v-model="header.remarks" id="remarks" size="sm" type="text" rows="3"></b-form-textarea>
       </b-card>
 
     </b-col> <!-- 本体 -->
@@ -337,6 +332,7 @@
         memo: 'これは請求書のメモです',
         expiry: '2021-01-01',
         title: '請求書の件名がここに入る',
+        remarks: 'これは請求書の備考です',
         isTaxExp: true,
         files: [
           { name: 'customer', path: 'images/mn_customer.png' },
@@ -357,17 +353,17 @@
         { id: 10, hinmei: '', suryo: null, tanka: null },
       ],
       customers: [
-        { id: 1, kokyaku: '○○株式会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはテストのための備考です' },
-        { id: 2, kokyaku: '○○有限会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはテストのための備考です' },
-        { id: 3, kokyaku: '○○商事', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはテストのための備考です' },
-        { id: 4, kokyaku: '○○鉄工所', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはテストのための備考です' },
+        { id: 2, kokyaku: '○○有限会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはお客さんのメモです' },
+        { id: 1, kokyaku: '○○株式会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはお客さんのメモです' },
+        { id: 3, kokyaku: '○○商事', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはお客さんのメモです' },
+        { id: 4, kokyaku: '○○鉄工所', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはお客さんのメモです' },
       ],
       invoices: [
         // 見積一覧
-        { id: 1, applyDate: '2021-10-21', applyNumber: '211021001', kokyaku: '○○株式会社', jyusho: '栃木県鹿沼市板荷0000-00', telno: '090-0000-0000', email: 'abc@qwertyu.zz', expiry: '2022-01-01', title: '見積書の件名', memo: 'これはテストのための備考です' },
-        { id: 2, applyDate: '2021-10-22', applyNumber: '211021002', kokyaku: '○○有限会社', jyusho: '栃木県鹿沼市板荷0000-01', telno: '090-0000-0001', email: 'abc1@qwertyu.zz', expiry: '2022-01-02', title: '見積書の件名1', memo: 'これはテストのための備考です1' },
-        { id: 3, applyDate: '2021-10-23', applyNumber: '211021003', kokyaku: '○○商事', jyusho: '栃木県鹿沼市板荷0000-02', telno: '090-0000-0002', email: 'abc2@qwertyu.zz', expiry: '2022-01-02', title: '見積書の件名2', memo: 'これはテストのための備考です2' },
-        { id: 4, applyDate: '2021-10-24', applyNumber: '211021004', kokyaku: '○○鉄工所', jyusho: '栃木県鹿沼市板荷0000-03', telno: '090-0000-0003', email: 'abc3@qwertyu.zz', expiry: '2022-01-03', title: '見積書の件名3', memo: 'これはテストのための備考です3' },
+        { id: 1, applyDate: '2021-10-21', applyNumber: '211021001', kokyaku: '○○株式会社', jyusho: '栃木県鹿沼市板荷0000-00', telno: '090-0000-0000', email: 'abc@qwertyu.zz', expiry: '2022-01-01', title: '見積書の件名', memo: 'これは請求書のメモです' },
+        { id: 2, applyDate: '2021-10-22', applyNumber: '211021002', kokyaku: '○○有限会社', jyusho: '栃木県鹿沼市板荷0000-01', telno: '090-0000-0001', email: 'abc1@qwertyu.zz', expiry: '2022-01-02', title: '見積書の件名1', memo: 'これは請求書のメモです1' },
+        { id: 3, applyDate: '2021-10-23', applyNumber: '211021003', kokyaku: '○○商事', jyusho: '栃木県鹿沼市板荷0000-02', telno: '090-0000-0002', email: 'abc2@qwertyu.zz', expiry: '2022-01-02', title: '見積書の件名2', memo: 'これは請求書のメモです2' },
+        { id: 4, applyDate: '2021-10-24', applyNumber: '211021004', kokyaku: '○○鉄工所', jyusho: '栃木県鹿沼市板荷0000-03', telno: '090-0000-0003', email: 'abc3@qwertyu.zz', expiry: '2022-01-03', title: '見積書の件名3', memo: 'これは請求書のメモです3' },
       ],
       isPrint: false,
     },
@@ -404,13 +400,7 @@
       var lastId = app.items[app.items.length - 1].id;
       app.items.push({ id: lastId + 1, hinmei: '', suryo: null, tanka: null });
     });
-  },
-    $("#htable>tbody>tr").hover(function () {
-      $(this).children().css('background', '#dee2e6');
-    }, function () {
-      $(this).children().css('background', '');
-    })
-  );
+  });
 
 </script>
 

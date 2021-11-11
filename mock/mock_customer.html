@@ -51,6 +51,31 @@
     display: none;
   }
 
+  thead {
+    background-color: rgb(51, 103, 214)
+  }
+
+  .table>tbody>tr:nth-child(even) {
+    background-color: #dde9fc;
+  }
+
+  .table tbody tr:hover td,
+  .table tbody tr:hover th {
+    background-color: #dee2e6;
+  }
+
+  .table thead th {
+    border: none;
+  }
+
+  .table thead tr {
+    color: white;
+  }
+
+  .table thead {
+    font-family: sans-serif;
+  }
+
   .footer {
     opacity: 0.8;
   }
@@ -134,7 +159,7 @@
       </b-card>
 
       <!-- 備考欄 -->
-      <b-card border-variant="white" class="mb-3 text-center" header="備考欄" header-border-variant="light">
+      <b-card border-variant="white" class="mb-3 text-center" header="メモ" header-border-variant="light">
         <b-form-textarea v-model="header.memo" id="memo" size="sm" type="text" rows="3"></b-form-textarea>
       </b-card>
 
@@ -210,13 +235,13 @@
         url: 'example.com',
         email: 'abc@qwertyu.zz',
         daihyou: '代表者名',
-        memo: 'これはテストのための備考です',
+        memo: 'これはテストのためのメモです',
       },
       customers: [
-        { id: 1, kokyaku: '○○株式会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', faxNum: '000-0000-0000', email: 'example.com', daihyou: '代表者名', memo: 'これはテストのための備考です' },
-        { id: 2, kokyaku: '○○有限会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', faxNum: '000-0000-0000', email: 'example.com', daihyou: '代表者名', memo: 'これはテストのための備考です' },
-        { id: 3, kokyaku: '○○商事', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', faxNum: '000-0000-0000', email: 'example.com', daihyou: '代表者名', memo: 'これはテストのための備考です' },
-        { id: 4, kokyaku: '○○鉄工所', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', faxNum: '000-0000-0000', email: 'example.com', daihyou: '代表者名', memo: 'これはテストのための備考です' },
+        { id: 1, kokyaku: '○○株式会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', faxNum: '000-0000-0000', email: 'example.com', daihyou: '代表者名', memo: 'これはテストのためのメモです' },
+        { id: 2, kokyaku: '○○有限会社', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', faxNum: '000-0000-0000', email: 'example.com', daihyou: '代表者名', memo: 'これはテストのためのメモです' },
+        { id: 3, kokyaku: '○○商事', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', faxNum: '000-0000-0000', email: 'example.com', daihyou: '代表者名', memo: 'これはテストのためのメモです' },
+        { id: 4, kokyaku: '○○鉄工所', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', faxNum: '000-0000-0000', email: 'example.com', daihyou: '代表者名', memo: 'これはテストのためのメモです' },
       ],
       isPrint: false,
     },

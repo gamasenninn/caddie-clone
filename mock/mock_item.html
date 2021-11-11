@@ -51,6 +51,31 @@
         display: none;
     }
 
+    thead {
+    background-color: rgb(51, 103, 214)
+  }
+
+  .table>tbody>tr:nth-child(even) {
+    background-color: #dde9fc;
+  }
+
+  .table tbody tr:hover td,
+  .table tbody tr:hover th {
+    background-color: #dee2e6;
+  }
+
+  .table thead th {
+    border: none;
+  }
+
+  .table thead tr {
+    color: white;
+  }
+
+  .table thead {
+    font-family: sans-serif;
+  }
+
     .footer {
         opacity: 0.8;
     }
@@ -127,7 +152,7 @@
             </b-card>
 
             <!-- 備考欄 -->
-            <b-card border-variant="white" class="mb-3 text-center" header="備考欄" header-border-variant="light">
+            <b-card border-variant="white" class="mb-3 text-center" header="メモ欄" header-border-variant="light">
                 <b-form-textarea v-model="header.memo" id="memo" size="sm" type="text" rows="3"></b-form-textarea>
             </b-card>
 
@@ -149,8 +174,8 @@
             <!-- このボタンで新規ページに切り替える？ -->
             <b-button variant="success">＋新規</b-button>
             <b-card border-variant="white" class="mb-3 text-center" header="商品一覧" header-border-variant="light">
-                <b-table responsive="sm" hover small id="itemtable" sort-by="ID" small label="Table Options" :items=items
-                    :fields="[
+                <b-table responsive="sm" hover small id="itemtable" sort-by="ID" small label="Table Options"
+                    :items=items :fields="[
                 {  key: 'update', label: ''},
                 {  key: 'id', label: 'No.'},
                 {  key: 'itemName', label: '商品名' },
@@ -158,6 +183,7 @@
                 {  key: 'price',  label: '値段' },
                 {  key: 'cost',  label: '原価' },
                 {  key: 'costRate', label: '原価率' },
+                {  key: 'memo', label: 'メモ' },
                 {  key: 'delete', label: '' },
               ]">
                     <template v-slot:cell(update)="data">
@@ -197,6 +223,7 @@
                 price: 100,
                 cost: 70,
                 costRate: 0.7,
+                memo: 'これはテストのためのメモです',
             },
             options: {
                 unit: [
@@ -208,10 +235,10 @@
                 ],
             },
             items: [
-                { id: 1, itemName: 'ラジオ', unit: '台', price: 1000, cost: 700, costRate: 0.7 },
-                { id: 2, itemName: '電池', unit: '個', price: 100, cost: 50, costRate: 0.5 },
-                { id: 3, itemName: 'イヤホン', unit: '本', price: 200, cost: 50, costRate: 0.25 },
-                { id: 4, itemName: '鉛筆', unit: '本', price: 20, cost: 5, costRate: 0.25 },
+                { id: 1, itemName: 'ラジオ', unit: '台', price: 1000, cost: 700, costRate: 0.7, memo: 'これはテストのためのメモです' },
+                { id: 2, itemName: '電池', unit: '個', price: 100, cost: 50, costRate: 0.5, memo: 'これはテストのためのメモです' },
+                { id: 3, itemName: 'イヤホン', unit: '本', price: 200, cost: 50, costRate: 0.25, memo: 'これはテストのためのメモです' },
+                { id: 4, itemName: '鉛筆', unit: '本', price: 20, cost: 5, costRate: 0.25, memo: 'これはテストのためのメモです' },
             ],
             isPrint: false,
         },
