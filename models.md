@@ -1,6 +1,6 @@
 ## Customer
 
-| 和名            | 項目名          | タイプ  | 長さ       | 備考                             | 
+| 項目名           | 和名           | タイプ  | 長さ       | 備考                             | 
 | --------------- | --------------- | ------- | ---------- | -------------------------------- | 
 | id              | id              | integer | INTEGER    |                                  | 
 | customer_name   | 顧客名          | text    | TEXT       |                                  | 
@@ -13,5 +13,5 @@
 | email           | メールアドレス  | text    | TEXT       |                                  | 
 | representative  | 代表者名        | text    | TEXT       |                                  | 
 | memo            | メモ            | text    | TEXT       |                                  |
-| create          | 作成日時        | date    | DATE       | 作成日時                          |
-| update          | 更新日時        | date    | DATE       | 更新日時                          | 
+| create_at       | 作成日時        | datetime| DATETIME   | 作成日時                          |
+| update_at       | 更新日時        | datetime| DATETIME   | 更新日時                          | 
