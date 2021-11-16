@@ -3,7 +3,7 @@
 | 項目名           | 和名           | タイプ      |  備考                             | 
 | --------------- | --------------- | -------    |  -------------------------------- | 
 | id              | id              | integer    |                                   | 
-| customerName    | 顧客名          | text       |                                   | 
+| customerName    | 得意先名         | text       |                                   | 
 | honorificTitle  | 敬称            | text       |                                   | 
 | postNumber      | 郵便番号        | string(20) |  ハイフンが入ると思ったのでstring | 
 | address         | 住所            | text       |                                   | 
@@ -94,6 +94,18 @@
 | count       | 個数     | integer  |                         | 
 | createdAt   | 作成日時 | datetime |                         | 
 | updatedAt   | 更新日時 | datetime |                         | 
+
+<br>
+
+## Memos
+
+| 項目名    | 和名     | タイプ   | 備考 | 
+| --------- | -------- | -------- | ---- | 
+| id        | id       | integer  |      | 
+| title     | 件名     | text     |      | 
+| content   | 内容     | text     |      | 
+| createdAt | 作成日時 | datetime |      | 
+| updatedAt | 更新日時 | datetime |      | 
 
 <br>
 
