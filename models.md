@@ -97,6 +97,18 @@
 
 <br>
 
+## Memos
+
+| 項目名    | 和名     | タイプ   | 備考 | 
+| --------- | -------- | -------- | ---- | 
+| id        | id       | integer  |      | 
+| title     | 件名     | text     |      | 
+| content   | 内容     | text     |      | 
+| createdAt | 作成日時 | datetime |      | 
+| updatedAt | 更新日時 | datetime |      | 
+
+<br>
+
 ## Units
 
 | 項目名    | 和名     | タイプ    |  備考 | 
