@@ -62,7 +62,7 @@ class Item(db.Model):
     price = db.Column(db.Integer)
     cost = db.Column(db.Integer)
     costRate = db.Column(db.Float)
-    memo = memo = db.Column(db.String)
+    memo = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
