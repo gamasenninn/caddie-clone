@@ -1,6 +1,5 @@
 from app import db, app
 from datetime import datetime
-from flask_migrate import Migrate
 
 
 class User(db.Model):
@@ -180,42 +179,4 @@ class Setting(db.Model):
         db.Boolean, nullable=False, default=True)
     updatedAt = updatedAt = db.Column(
         db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
-
-
-if __name__ == '__main__':
-
-    newCustomer = Customer(
-        customerName="田中",
-        honorificTitle='様',
-        postNumber='000-0000',
-        address='aaaa',
-        telNumber='000-0000-0000',
-        faxNumber='000-0000-0000',
-        url='aaaa.com',
-        email='aaaa@gmail.com',
-        manager='管理者',
-        representative='代表者',
-        memo='メモ',
-    )
-    db.session.add(newCustomer)
-
-    customers = Customer.query.all()
-    print("\n----新規のデータ---\n")
-    for customer in customers:
-        print(
-            customer, id,
-            customer.customerName,
-            customer.honorificTitle,
-            customer.postNumber,
-            customer.address,
-            customer.telNumber,
-            customer.faxNumber,
-            customer.url,
-            customer.email,
-            customer.manager,
-            customer.representative,
-            customer.memo,
-            customer.createdAt,
-            customer.updatedAt
-        )
 
