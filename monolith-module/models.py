@@ -1,8 +1,5 @@
-import app
+from import db,app
 from datetime import datetime
-from flask_migrate import Migrate
-
-db = app.db
 
 class User(db.Model):
     __tablename__ = 'users'
