@@ -3,7 +3,7 @@ from app import db, app
 from models import *
 
 models = [User, Customer, Item, Invoice,
-          Invoice_Item, Quotaion, Quotaion_Item, Memo]
+          Invoice_Item, Quotaion, Quotaion_Item, Memo, Unit, Setting]
 
 for model in models:
     db.session.query(model).delete()
@@ -122,3 +122,29 @@ db.session.commit()
 memos = Memo.query.all()
 for memo in memos:
     print(memo.title)
+
+# -----Units-----
+print('----Units----')
+units = [
+    Unit(id=1, unitName='個'),
+    Unit(id=2, unitName='本'),
+    Unit(id=3, unitName='台'),
+]
+db.session.add_all(units)
+db.session.commit()
+
+units = Unit.query.all()
+for unit in units:
+    print(unit.unitName)
+
+# -----Setting-----
+print('----Setting----')
+setting = [
+    Setting(companyName='自社株式会社', representative='自社代表者', postNumber='000-0000', address='宇都宮市北若松原', telNumber='000-0000-0000', faxNumber='000-0000-0000', url='mypage.com', email='mymail@co.jp', logoFilePath='sohoweb/images/logo.png',
+            stampFilePath='sohoweb/images/stamp.png', isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True, isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True)
+]
+db.session.add_all(setting)
+db.session.commit()
+
+setting = Setting.query.all()
+print(setting[0].companyName)
