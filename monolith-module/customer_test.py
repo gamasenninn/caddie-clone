@@ -29,6 +29,9 @@ class BasicTest(unittest.TestCase):
         customer = Customer.query.filter(Customer.id == 1).first()
         self.assertTrue(customer)
         self.assertEqual(customer.customerName, '○○株式会社')
+        print(customer.quotaions[0].applyNumber)
+        # テスト的に出力
+        print(customer.invoices[0].invoice_items[0].items[0].itemName)
 
         print('---Customer一件読み込み失敗---')
         customers = Customer.query.filter(Customer.id == 9999).all()
