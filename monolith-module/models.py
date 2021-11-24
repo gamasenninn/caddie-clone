@@ -68,8 +68,8 @@ class Item(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoice_items=db.relationship('Invoice_Item',backref='items')
-    quotaion_items=db.relationship('Quotaion_Item',backref='items')
+    # invoice_items=db.relationship('Invoice_Item',backref='items')
+    # quotaion_items=db.relationship('Quotaion_Item',backref='items')
 
 
 class Invoice(db.Model):
