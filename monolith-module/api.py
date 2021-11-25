@@ -1,7 +1,3 @@
-from os import name
-from werkzeug import datastructures
-
-from werkzeug.datastructures import RequestCacheControl
 from app import app
 from models import *
 from flask import jsonify, request
