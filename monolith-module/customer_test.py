@@ -24,6 +24,7 @@ class BasicTest(unittest.TestCase):
         c_count = len(customers)
         self.assertTrue(c_count)
         # Invoice_Itemまで全件取得
+        print('Customer→Invoice_Item全件取得')
         invoiceItemCount = 0
         quotaionItemCount = 0
         for customer in customers:
@@ -31,6 +32,7 @@ class BasicTest(unittest.TestCase):
                 for invoiceItem in invoice.invoice_items:
                     invoiceItemCount += 1
         self.assertGreaterEqual(invoiceItemCount, 1)
+        print('Customer→Quotaion_Item全件取得')
         for customer in customers:
             for quotaion in customer.quotaions:
                 for quotaionItem in quotaion.quotaion_items:
