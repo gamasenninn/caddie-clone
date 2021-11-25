@@ -32,7 +32,7 @@ class Customer(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoices=db.relationship('Invoice',backref='customers')
+    invoices=db.relationship('Invoice',backref='customer')
     quotaions=db.relationship('Quotaion',backref='customer')
 
     def to_dict(self):
@@ -88,7 +88,7 @@ class Invoice(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoice_items=db.relationship('Invoice_Item',backref='invoices')
+    invoice_items=db.relationship('Invoice_Item',backref='invoice')
 
 
 class Invoice_Item(db.Model):
@@ -120,7 +120,7 @@ class Quotaion(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    quotaion_items=db.relationship('Quotaion_Item',backref='quotaions')
+    quotaion_items=db.relationship('Quotaion_Item',backref='quotaion')
 
 
 class Quotaion_Item(db.Model):

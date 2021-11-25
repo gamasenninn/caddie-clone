@@ -23,15 +23,25 @@ class BasicTest(unittest.TestCase):
         customers = Customer.query.all()
         c_count = len(customers)
         self.assertTrue(c_count)
+        # Invoice_Itemまで全件取得
+        invoiceItemCount = 0
+        quotaionItemCount = 0
+        for customer in customers:
+            for invoice in customer.invoices:
+                for invoiceItem in invoice.invoice_items:
+                    invoiceItemCount += 1
+        self.assertGreaterEqual(invoiceItemCount, 1)
+        for customer in customers:
+            for quotaion in customer.quotaions:
+                for quotaionItem in quotaion.quotaion_items:
+                    quotaionItemCount += 1
+        self.assertGreaterEqual(quotaionItemCount,1)
 
     def test_get_coustomer_byId(self):
         print('---Customer一件読み込み---')
         customer = Customer.query.filter(Customer.id == 1).first()
         self.assertTrue(customer)
         self.assertEqual(customer.customerName, '○○株式会社')
-        print(customer.quotaions[0].applyNumber)
-        # テスト的に出力
-        print(customer.invoices[0].invoice_items[0].count)
 
         print('---Customer一件読み込み失敗---')
         customers = Customer.query.filter(Customer.id == 9999).all()
