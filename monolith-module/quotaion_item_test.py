@@ -22,6 +22,12 @@ class BasicTest(unittest.TestCase):
         quotaionItems = Quotaion_Item.query.all()
         quotaionItemCount = len(quotaionItems)
         self.assertTrue(quotaionItemCount)
+        print('---Quotaion_Item→Customer全件取得---')
+        customerCount = 0
+        for quotaionItem in quotaionItems:
+            if quotaionItem.quotaion.customer is not None:
+                customerCount += 1
+        self.assertGreaterEqual(customerCount, 1)
 
     def test_get_quotaion_item_byId(self):
         print('---Quotaion_Item一件読み込み---')

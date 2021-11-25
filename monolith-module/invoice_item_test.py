@@ -22,6 +22,12 @@ class BasicTest(unittest.TestCase):
         invoiceItems = Invoice_Item.query.all()
         invoiceItemCount = len(invoiceItems)
         self.assertTrue(invoiceItemCount)
+        print('---Invoice_Item→Customer全件取得---')
+        customerCount = 0
+        for invoiceItem in invoiceItems:
+            if invoiceItem.invoice.customer is not None:
+                customerCount += 1
+        self.assertGreaterEqual(customerCount, 1)
 
     def test_get_invoice_item_byId(self):
         print('---Invoice_Item一件読み込み---')
