@@ -1,0 +1,46 @@
+{
+    "data": {
+        "hdata": [
+            {
+                "h_id": 691,
+                "sheet_name": "",
+                "client_name": "テスト商店",
+                "client_class": "法人",
+                "category": "請求書",
+                "apply_date": "2021-08-22",
+                "person": "小野",
+                "doc_descript": "値引きテスト",
+                "memo": null,
+                "file_name": "",
+                "mail": "xxx@yyy.zz",
+                "fax": "000-0000-0000",
+                "discount": "",
+                "tax": "税込",
+                "create_user_id": null,
+                "create_at": null,
+                "update_user_id": "naka",
+                "update_at": "2021-09-28 15:06:24",
+                "commit_user_id": null,
+                "commit_at": null
+            }
+        ],
+        "bdata": [
+            {
+                "h_id": 691,
+                "b_id": 1937,
+                "item_num": 1,
+                "p_name": "草刈機",
+                "p_qty": 1,
+                "p_price": 50000
+            },
+            {
+                "h_id": 691,
+                "b_id": 1938,
+                "item_num": 2,
+                "p_name": "管理機",
+                "p_qty": 1,
+                "p_price": 3000
+            }
+        ]
+    }
+}
