@@ -68,6 +68,19 @@ class Item(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'itemName': self.itemName,
+            'unit': self.unit,
+            'price': self.price,
+            'cost': self.cost,
+            'costRate': self.costRate,
+            'memo': self.memo,
+            'createdAt': self.createdAt,
+            'updatedAt': self.updatedAt,
+        }
     # invoice_items=db.relationship('Invoice_Item',backref='items')
     # quotaion_items=db.relationship('Quotaion_Item',backref='items')
 

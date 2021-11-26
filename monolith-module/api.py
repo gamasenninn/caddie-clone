@@ -9,7 +9,8 @@ def index():
     return 'HelloWorld!'
 
 
-@app.route('/customers', methods=['GET'])
+# -----得意先(Customer)-----
+@app.route('/customer', methods=['GET'])
 def customer_index():
     return jsonify(
         [customer.to_dict() for customer in Customer.query.all()]
@@ -25,7 +26,7 @@ def customer_show(id):
         return jsonify([])
 
 
-@app.route('/customers', methods=['POST'])
+@app.route('/customer', methods=['POST'])
 def customer_create():
     data = request.json
     newCustomer = Customer(
@@ -74,6 +75,62 @@ def customer_destroy(id):
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
+
+# -----商品(item)-----
+@app.route('/item', methods=['GET'])
+def item_index():
+    return jsonify(
+        [item.to_dict() for item in Item.query.all()]
+    )
+
+
+@app.route('/item/<id>', methods=['GET'])
+def item_show(id):
+    itemCount = Item.query.filter(Item.id == id).count()
+    if itemCount:
+        return jsonify(Item.query.filter(Item.id == id).first().to_dict())
+    else:
+        return jsonify([])
+
+
+@app.route('/item', methods=['POST'])
+def item_create():
+    data = request.json
+    newItem = Customer(
+        itemName=data['itemName'],
+        unit=data['unit'],
+        price=data['price'],
+        cost=data['cost'],
+        costRate=data['costRate'],
+        memo=data['memo'],
+    )
+    db.session.add(newItem)
+    db.session.commit()
+    id = newItem.id
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/item/<id>', methods=['PUT'])
+def item_update(id):
+    data = request.json
+    item = Item.query.filter(Item.id == id).one()
+
+    item.itemName = data['itemName']
+    item.unit = data['unit']
+    item.price = data['price']
+    item.cost = data['cost']
+    item.costRate = data['costRate']
+    item.memo = data['memo']
+
+    db.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/item/<id>', methods=['DELETE'])
+def item_destroy(id):
+    item = Item.query.filter(Item.id == id).delete()
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ''})
 
 if __name__ == '__main__':
 
