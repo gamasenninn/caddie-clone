@@ -1,4 +1,4 @@
-from app import db, app
+from app import db, app, ma
 from datetime import datetime
 
 
@@ -32,8 +32,8 @@ class Customer(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoices=db.relationship('Invoice',backref='customer')
-    quotaions=db.relationship('Quotaion',backref='customer')
+    invoices = db.relationship('Invoice', backref='customer')
+    quotaions = db.relationship('Quotaion', backref='customer')
 
     def to_dict(self):
         return {
@@ -68,7 +68,7 @@ class Item(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -90,7 +90,7 @@ class Invoice(db.Model):
     __tablename__ = 'invoices'
 
     id = db.Column(db.Integer, primary_key=True)
-    customerId = db.Column(db.Integer,db.ForeignKey('customers.id'))
+    customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     applyNumber = db.Column(db.Integer)
     applyDate = db.Column(db.DateTime)
     expiry = db.Column(db.DateTime)
@@ -101,7 +101,7 @@ class Invoice(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoice_items=db.relationship('Invoice_Item',backref='invoice')
+    invoice_items = db.relationship('Invoice_Item', backref='invoice')
 
 
 class Invoice_Item(db.Model):
@@ -109,8 +109,8 @@ class Invoice_Item(db.Model):
     __tablename__ = 'invoice_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    invoiceId = db.Column(db.Integer,db.ForeignKey('invoices.id'))
-    itemId = db.Column(db.Integer,db.ForeignKey('items.id'))
+    invoiceId = db.Column(db.Integer, db.ForeignKey('invoices.id'))
+    itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
     count = db.Column(db.Integer)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
@@ -122,7 +122,7 @@ class Quotaion(db.Model):
     __tablename__ = 'quotaions'
 
     id = db.Column(db.Integer, primary_key=True)
-    customerId = db.Column(db.Integer,db.ForeignKey('customers.id'))
+    customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     applyNumber = db.Column(db.Integer)
     applyDate = db.Column(db.DateTime)
     expiry = db.Column(db.DateTime)
@@ -133,7 +133,7 @@ class Quotaion(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    quotaion_items=db.relationship('Quotaion_Item',backref='quotaion')
+    quotaion_items = db.relationship('Quotaion_Item', backref='quotaion')
 
 
 class Quotaion_Item(db.Model):
@@ -141,8 +141,8 @@ class Quotaion_Item(db.Model):
     __tablename__ = 'quotaion_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    quotaionId = db.Column(db.Integer,db.ForeignKey('quotaions.id'))
-    itemId = db.Column(db.Integer,db.ForeignKey('items.id'))
+    quotaionId = db.Column(db.Integer, db.ForeignKey('quotaions.id'))
+    itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
     count = db.Column(db.Integer)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
@@ -199,3 +199,9 @@ class Setting(db.Model):
     updatedAt = updatedAt = db.Column(
         db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
+
+# -----Json変換-----
+
+class CustomerSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Customer
