@@ -37,7 +37,13 @@ class BasicTest(unittest.TestCase):
             for quotaion in customer.quotaions:
                 for quotaionItem in quotaion.quotaion_items:
                     quotaionItemCount += 1
-        self.assertGreaterEqual(quotaionItemCount,1)
+        self.assertGreaterEqual(quotaionItemCount, 1)
+
+    def test_get_customers_dict(self):
+        print('---Customer全件読み込み→Dict---')
+        customers = Customer.query.all()
+        sch = CustomerSchema(many=True).dump(customers)
+        self.assertEqual(sch[0]['customerName'], '○○株式会社')
 
     def test_get_coustomer_byId(self):
         print('---Customer一件読み込み---')

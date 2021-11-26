@@ -12,16 +12,16 @@ def index():
 # -----得意先(Customer)-----
 @app.route('/customer', methods=['GET'])
 def customer_index():
-    return jsonify(
-        [customer.to_dict() for customer in Customer.query.all()]
-    )
+    customer = Customer.query.all()
+    return jsonify(CustomerSchema(many=True).dump(customer))
 
 
 @app.route('/customer/<id>', methods=['GET'])
 def customer_show(id):
     customerCount = Customer.query.filter(Customer.id == id).count()
     if customerCount:
-        return jsonify(Customer.query.filter(Customer.id == id).first().to_dict())
+        customer = Customer.query.filter(Customer.id == id).first()
+        return jsonify(CustomerSchema().dump(customer))
     else:
         return jsonify([])
 
@@ -131,6 +131,7 @@ def item_destroy(id):
     item = Item.query.filter(Item.id == id).delete()
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
+
 
 if __name__ == '__main__':
 
