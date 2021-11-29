@@ -1,7 +1,7 @@
 from app import db, app
 from models import Memo
 import unittest
-import subprocess
+from seeder import seeder
 
 
 class BasicTest(unittest.TestCase):
@@ -15,7 +15,7 @@ class BasicTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("---tearDown---")
-        subprocess.call('python seeder.py', shell=True)
+        seeder()
 
     def test_get_memos(self):
         print('---Memo全件読み込み---')
@@ -54,11 +54,15 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_memo(self):
         print('---Memo一件削除---')
-        memo = Memo.query.filter(Memo.id == 3).delete()
+        memo = Memo(title='メモのタイトル６', content='メモの内容６')
+        db.session.add(memo)
+        db.session.commit()
+        newId = memo.id
+        memo = Memo.query.filter(Memo.id == newId).delete()
         db.session.commit()
 
-        memo = Memo.query.filter(Memo.id == 3).all()
-        self.assertGreaterEqual(len(memo), 0)
+        memo = Memo.query.filter(Memo.id == newId).all()
+        self.assertEqual(len(memo), 0)
 
 
 if __name__ == '__main__':

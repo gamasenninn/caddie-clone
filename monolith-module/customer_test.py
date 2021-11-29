@@ -2,7 +2,7 @@ from logging import captureWarnings
 from app import db, app
 from models import *
 import unittest
-import subprocess
+from seeder import seeder
 
 
 class BasicTest(unittest.TestCase):
@@ -16,7 +16,7 @@ class BasicTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("---tearDown---")
-        subprocess.call('python seeder.py', shell=True)
+        seeder()
 
     def test_get_costomers(self):
         print('---Customer全件読み込み---')
@@ -78,11 +78,16 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_customer(self):
         print('---Customer一件削除---')
-        customer = Customer.query.filter(Customer.id == 3).delete()
+        customer = Customer(customerName='デリートテスト会社', honorificTitle='御中', postNumber='000-0000', address='鹿沼市板荷000', telNumber='000-0000-0000',
+                            faxNumber='000-0000-0000', url='example.com', email='example@co.jp', manager='田中太郎', representative='田中代表', memo='これは○○株式会社のメモです')
+        db.session.add(customer)    
+        db.session.commit()
+        newId = customer.id
+        customer = Customer.query.filter(Customer.id == newId).delete()
         db.session.commit()
 
-        customer = Customer.query.filter(Customer.id == 3).all()
-        self.assertGreaterEqual(len(customer), 0)
+        customer = Customer.query.filter(Customer.id == newId).all()
+        self.assertEqual(len(customer), 0)
 
 
 if __name__ == '__main__':

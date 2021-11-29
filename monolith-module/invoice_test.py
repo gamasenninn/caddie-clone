@@ -1,8 +1,8 @@
 from app import db, app
 from models import Invoice
 import unittest
-import subprocess
 from datetime import datetime
+from seeder import seeder
 
 
 class BasicTest(unittest.TestCase):
@@ -16,7 +16,7 @@ class BasicTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("---tearDown---")
-        subprocess.call('python seeder.py', shell=True)
+        seeder()
 
     def test_get_invoices(self):
         print('---Invoice全件読み込み---')
@@ -57,11 +57,16 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_invoice(self):
         print('---Invoice一件削除---')
-        invoice = Invoice.query.filter(Invoice.id == 3).delete()
+        invoice = Invoice(customerId=1, applyNumber=1000006, applyDate=datetime.now(), expiry=datetime.now(),
+                          title='デリートテスト会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
+        db.session.add(invoice)
+        db.session.commit()
+        newId = invoice.id
+        invoice = Invoice.query.filter(Invoice.id == newId).delete()
         db.session.commit()
 
-        invoice = Invoice.query.filter(Invoice.id == 3).all()
-        self.assertGreaterEqual(len(invoice), 0)
+        invoice = Invoice.query.filter(Invoice.id == newId).all()
+        self.assertEqual(len(invoice), 0)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 from app import db, app
 from models import Quotaion_Item
 import unittest
-import subprocess
+from seeder import seeder
 
 
 class BasicTest(unittest.TestCase):
@@ -15,7 +15,7 @@ class BasicTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("---tearDown---")
-        subprocess.call('python seeder.py', shell=True)
+        seeder()
 
     def test_get_quotaion_items(self):
         print('---Quotaion_Item全件読み込み---')
@@ -64,12 +64,17 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_quotaion_item(self):
         print('---Quotaion_Item一件削除---')
+        quotaionItem = Quotaion_Item(quotaionId=1, itemId=1, count=10)
+        db.session.add(quotaionItem)
+        db.session.commit()
+        newId = quotaionItem.id
         quotaionItem = Quotaion_Item.query.filter(
-            Quotaion_Item.id == 3).delete()
+            Quotaion_Item.id == newId).delete()
         db.session.commit()
 
-        quotaionItem = Quotaion_Item.query.filter(Quotaion_Item.id == 3).all()
-        self.assertGreaterEqual(len(quotaionItem), 0)
+        quotaionItem = Quotaion_Item.query.filter(
+            Quotaion_Item.id == newId).all()
+        self.assertEqual(len(quotaionItem), 0)
 
 
 if __name__ == '__main__':
