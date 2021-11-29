@@ -1,8 +1,9 @@
 from app import db, app
 from models import Quotaion
 import unittest
-import subprocess
 from datetime import datetime
+from seeder import seeder
+
 
 class BasicTest(unittest.TestCase):
 
@@ -15,7 +16,7 @@ class BasicTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("---tearDown---")
-        subprocess.call('python seeder.py', shell=True)
+        seeder()
 
     def test_get_quotaions(self):
         print('---Quotaion全件読み込み---')
@@ -46,9 +47,9 @@ class BasicTest(unittest.TestCase):
         print('---Quotaion新規作成---')
         quotaions = [
             Quotaion(customerId=1, applyNumber=1000004, applyDate=datetime.now(), expiry=datetime.now(),
-                    title='○○建設への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
+                     title='○○建設への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
             Quotaion(customerId=1, applyNumber=1000005, applyDate=datetime.now(), expiry=datetime.now(),
-                    title='○○商店への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
+                     title='○○商店への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
         ]
         db.session.add_all(quotaions)
         db.session.commit()
@@ -56,11 +57,16 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_quotaion(self):
         print('---Quotaion一件削除---')
-        quotaion = Quotaion.query.filter(Quotaion.id == 3).delete()
+        quotaion = Quotaion(customerId=1, applyNumber=1000006, applyDate=datetime.now(), expiry=datetime.now(),
+                            title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True)
+        db.session.add(quotaion)
+        db.session.commit()
+        newId = quotaion.id
+        quotaion = Quotaion.query.filter(Quotaion.id == newId).delete()
         db.session.commit()
 
-        quotaion = Quotaion.query.filter(Quotaion.id == 3).all()
-        self.assertGreaterEqual(len(quotaion), 0)
+        quotaion = Quotaion.query.filter(Quotaion.id == newId).all()
+        self.assertEqual(len(quotaion), 0)
 
 
 if __name__ == '__main__':

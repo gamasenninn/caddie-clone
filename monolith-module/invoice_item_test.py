@@ -1,7 +1,7 @@
 from app import db, app
 from models import Invoice_Item
 import unittest
-import subprocess
+from seeder import seeder
 
 
 class BasicTest(unittest.TestCase):
@@ -15,7 +15,7 @@ class BasicTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("---tearDown---")
-        subprocess.call('python seeder.py', shell=True)
+        seeder()
 
     def test_get_invoice_items(self):
         print('---Invoice_Item全件読み込み---')
@@ -60,11 +60,16 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_invoice_item(self):
         print('---Invoice_Item一件削除---')
-        invoiceItem = Invoice_Item.query.filter(Invoice_Item.id == 3).delete()
+        invoiceItem = Invoice_Item(invoiceId=1, itemId=1, count=10)
+        db.session.add(invoiceItem)
+        db.session.commit()
+        newId = invoiceItem.id
+        invoiceItem = Invoice_Item.query.filter(
+            Invoice_Item.id == newId).delete()
         db.session.commit()
 
-        invoiceItem = Invoice_Item.query.filter(Invoice_Item.id == 3).all()
-        self.assertGreaterEqual(len(invoiceItem), 0)
+        invoiceItem = Invoice_Item.query.filter(Invoice_Item.id == newId).all()
+        self.assertEqual(len(invoiceItem), 0)
 
 
 if __name__ == '__main__':

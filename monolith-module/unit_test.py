@@ -1,7 +1,7 @@
 from app import db, app
 from models import Unit
 import unittest
-import subprocess
+from seeder import seeder
 
 
 class BasicTest(unittest.TestCase):
@@ -15,7 +15,7 @@ class BasicTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("---tearDown---")
-        subprocess.call('python seeder.py', shell=True)
+        seeder()
 
     def test_get_units(self):
         print('---Unit全件読み込み---')
@@ -54,11 +54,15 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_unit(self):
         print('---Unit一件削除---')
-        unit = Unit.query.filter(Unit.id == 3).delete()
+        unit = Unit(unitName='点')
+        db.session.add(unit)
+        db.session.commit()
+        newId = unit.id
+        unit = Unit.query.filter(Unit.id == newId).delete()
         db.session.commit()
 
-        unit = Unit.query.filter(Unit.id == 3).all()
-        self.assertGreaterEqual(len(unit), 0)
+        unit = Unit.query.filter(Unit.id == newId).all()
+        self.assertEqual(len(unit), 0)
 
 
 if __name__ == '__main__':

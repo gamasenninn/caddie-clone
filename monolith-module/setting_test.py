@@ -1,7 +1,7 @@
 from app import db, app
 from models import Setting
 import unittest
-import subprocess
+from seeder import seeder
 
 
 class BasicTest(unittest.TestCase):
@@ -15,7 +15,7 @@ class BasicTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("---tearDown---")
-        subprocess.call('python seeder.py', shell=True)
+        seeder()
 
     # Settingは一件だけかと思うので一応コメントアウト
     # def test_get_settings(self):
