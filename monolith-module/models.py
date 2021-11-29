@@ -205,3 +205,35 @@ class Setting(db.Model):
 class CustomerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Customer
+
+class ItemSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Item
+
+class InvoiceSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Invoice
+
+class Invoice_ItemSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Invoice_Item
+
+class QuotaionSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Quotaion
+
+class Quotaion_ItemSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Quotaion_Item
+
+class MemoSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Memo
+
+class UnitSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Unit
+
+class SettingSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Setting
