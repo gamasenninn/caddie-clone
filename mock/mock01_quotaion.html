@@ -170,9 +170,9 @@
 
 
         <!--  table list & edit -->
-        <b-table hover caption-top small id="htable" sort-by="ID" small label="Table Options" :items=items :fields="[
+        <b-table hover caption-top small id="htable" primary-key="id"  small label="Table Options" :items=items :fields="[
                   {  key: 'id', label: 'ID', class:'text-center' },
-                  {  key: 'hinmei', label: '商品名' },
+                  {  key: 'hinmei', label: '商品名' ,sortable: true},
                   {  key: 'suryo',   label: '数量' },
                   {  key: 'unit',  label: '単位' },
                   {  key: 'tanka',  label: '単価' },
