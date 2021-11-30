@@ -45,10 +45,10 @@ class BasicTest(unittest.TestCase):
     def test_create_item(self):
         print('---Item新規作成---')
         items = [
-            Item(itemName='みかん', unit='個', price=50,
-                 cost=20, costRate=0.4, memo='これはみかんのメモです'),
-            Item(itemName='ボールペン', unit='本', price=100,
-                 cost=10, costRate=0.1, memo='これはボールペンのメモです'),
+            Item(itemName='みかん', unit='個', basePrice=50,
+                 cost=20, memo='これはみかんのメモです'),
+            Item(itemName='ボールペン', unit='本', basePrice=100,
+                 cost=10, memo='これはボールペンのメモです'),
         ]
         db.session.add_all(items)
         db.session.commit()
@@ -56,8 +56,8 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_item(self):
         print('---Item一件削除---')
-        item = Item(itemName='ボール', unit='個', price=50,
-                    cost=20, costRate=0.4, memo='これはボールのメモです')
+        item = Item(itemName='ボール', unit='個', basePrice=50,
+                    cost=20, memo='これはボールのメモです')
         db.session.add(item)
         db.session.commit()
         newId = item.id
