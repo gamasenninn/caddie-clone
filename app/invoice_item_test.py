@@ -51,8 +51,8 @@ class BasicTest(unittest.TestCase):
     def test_create_invoice_item(self):
         print('---Invoice_Item新規作成---')
         invoiceItems = [
-            Invoice_Item(invoiceId=3, itemId=2, count=20),
-            Invoice_Item(invoiceId=3, itemId=3, count=10),
+            Invoice_Item(invoiceId=3, itemId=2, price=100, count=20),
+            Invoice_Item(invoiceId=3, itemId=3, price=200, count=10),
         ]
         db.session.add_all(invoiceItems)
         db.session.commit()
@@ -60,7 +60,7 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_invoice_item(self):
         print('---Invoice_Item一件削除---')
-        invoiceItem = Invoice_Item(invoiceId=1, itemId=1, count=10)
+        invoiceItem = Invoice_Item(invoiceId=1, itemId=1, price=999, count=10)
         db.session.add(invoiceItem)
         db.session.commit()
         newId = invoiceItem.id

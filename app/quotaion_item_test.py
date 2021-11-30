@@ -55,8 +55,8 @@ class BasicTest(unittest.TestCase):
     def test_create_quotaion_item(self):
         print('---Quotaion_Item新規作成---')
         quotaionItems = [
-            Quotaion_Item(quotaionId=3, itemId=2, count=20),
-            Quotaion_Item(quotaionId=3, itemId=3, count=10),
+            Quotaion_Item(quotaionId=3, itemId=2, price=100, count=20),
+            Quotaion_Item(quotaionId=3, itemId=3, price=200, count=10),
         ]
         db.session.add_all(quotaionItems)
         db.session.commit()
@@ -64,7 +64,8 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_quotaion_item(self):
         print('---Quotaion_Item一件削除---')
-        quotaionItem = Quotaion_Item(quotaionId=1, itemId=1, count=10)
+        quotaionItem = Quotaion_Item(
+            quotaionId=1, itemId=1, price=999, count=10)
         db.session.add(quotaionItem)
         db.session.commit()
         newId = quotaionItem.id

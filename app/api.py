@@ -97,12 +97,11 @@ def item_show(id):
 @app.route('/item', methods=['POST'])
 def item_create():
     data = request.json
-    newItem = Customer(
+    newItem = Item(
         itemName=data['itemName'],
         unit=data['unit'],
-        price=data['price'],
+        basePrice=data['basePrice'],
         cost=data['cost'],
-        costRate=data['costRate'],
         memo=data['memo'],
     )
     db.session.add(newItem)
@@ -118,9 +117,8 @@ def item_update(id):
 
     item.itemName = data['itemName']
     item.unit = data['unit']
-    item.price = data['price']
+    item.basePrice = data['basePrice']
     item.cost = data['cost']
-    item.costRate = data['costRate']
     item.memo = data['memo']
 
     db.commit()
@@ -216,6 +214,7 @@ def invoice_item_create():
     newInvoiceItem = Invoice_Item(
         invoiceId=data['invoiceId'],
         itemId=data['itemId'],
+        price=data['price'],
         count=data['count'],
     )
     db.session.add(newInvoiceItem)
@@ -230,6 +229,7 @@ def invoice_item_update(id):
     invoiceItem = Invoice_Item.query.filter(Invoice_Item.id == id).one()
     invoiceItem.invoiceId = data['invoiceId']
     invoiceItem.itemId = data['itemId']
+    invoiceItem.price = data['price']
     invoiceItem.count = data['count']
     db.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
@@ -326,6 +326,7 @@ def quotaion_item_create():
     newQuotaionItem = Quotaion_Item(
         quotaionId=data['quotaionId'],
         itemId=data['itemId'],
+        price=data['price'],
         count=data['count'],
     )
     db.session.add(newQuotaionItem)
@@ -340,6 +341,7 @@ def quotaion_item_update(id):
     quotaionItem = Quotaion_Item.query.filter(Quotaion_Item.id == id).one()
     quotaionItem.quotaionId = data['quotaionId']
     quotaionItem.itemId = data['itemId']
+    quotaionItem.price = data['price']
     quotaionItem.count = data['count']
     db.commit()
     return jsonify({"result": "OK", "id": id, "data": data})

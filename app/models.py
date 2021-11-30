@@ -61,9 +61,8 @@ class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     itemName = db.Column(db.String)
     unit = db.Column(db.String)
-    price = db.Column(db.Integer)
+    basePrice = db.Column(db.Integer)
     cost = db.Column(db.Integer)
-    costRate = db.Column(db.Float)
     memo = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
@@ -111,6 +110,7 @@ class Invoice_Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     invoiceId = db.Column(db.Integer, db.ForeignKey('invoices.id'))
     itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
+    price = db.Column(db.Integer)
     count = db.Column(db.Integer)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
@@ -143,6 +143,7 @@ class Quotaion_Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quotaionId = db.Column(db.Integer, db.ForeignKey('quotaions.id'))
     itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
+    price = db.Column(db.Integer)
     count = db.Column(db.Integer)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
@@ -206,33 +207,41 @@ class CustomerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Customer
 
+
 class ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Item
+
 
 class InvoiceSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Invoice
 
+
 class Invoice_ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Invoice_Item
+
 
 class QuotaionSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Quotaion
 
+
 class Quotaion_ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Quotaion_Item
+
 
 class MemoSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Memo
 
+
 class UnitSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Unit
+
 
 class SettingSchema(ma.SQLAlchemyAutoSchema):
     class Meta:

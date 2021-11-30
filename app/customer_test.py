@@ -45,7 +45,7 @@ class BasicTest(unittest.TestCase):
         sch = CustomerSchema(many=True).dump(customers)
         self.assertEqual(sch[0]['customerName'], '○○株式会社')
 
-    def test_get_coustomer_byId(self):
+    def test_get_customer_byId(self):
         print('---Customer一件読み込み---')
         customer = Customer.query.filter(Customer.id == 1).first()
         self.assertTrue(customer)
@@ -66,13 +66,13 @@ class BasicTest(unittest.TestCase):
 
     def test_create_customer(self):
         print('---Customer新規作成---')
-        custoemrs = [
+        customers = [
             Customer(customerName='テストクリエイト株式会社', honorificTitle='御中', postNumber='000-0000', address='鹿沼市板荷000', telNumber='000-0000-0000',
                      faxNumber='000-0000-0000', url='example.com', email='example@co.jp', manager='田中太郎', representative='田中代表', memo='これは○○株式会社のメモです'),
             Customer(customerName='テストクリエイト株式会社2', honorificTitle='御中', postNumber='000-0000', address='鹿沼市板荷000', telNumber='000-0000-0000',
                      faxNumber='000-0000-0000', url='example.com', email='example@co.jp', manager='田中太郎', representative='田中代表', memo='これは○○株式会社のメモです'),
         ]
-        db.session.add_all(custoemrs)
+        db.session.add_all(customers)
         db.session.commit()
         self.assertGreaterEqual(len(Customer.query.all()), 2)
 
