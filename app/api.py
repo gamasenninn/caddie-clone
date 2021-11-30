@@ -10,6 +10,59 @@ def index():
     return 'HelloWorld!'
 
 
+# -----ユーザー(Users)-----
+@app.route('/users', methods=['GET'])
+def user_index():
+    users = User.query.all()
+    return jsonify(UserSchema(many=True).dump(users))
+
+
+@app.route('/user/<id>', methods=['GET'])
+def user_show(id):
+    userCount = User.query.filter(User.id == id).count()
+    if userCount:
+        user = User.query.filter(User.id == id).first()
+        return jsonify(UserSchema().dump(user))
+    else:
+        return jsonify([])
+
+
+@app.route('/user', methods=['POST'])
+def user_create():
+    data = request.json
+    newUser = User(
+        name=data['name'],
+        password=data['password'],
+        group=data['group'],
+        role=data['role'],
+    )
+    db.session.add(newUser)
+    db.session.commit()
+    id = newUser.id
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/user/<id>', methods=['PUT'])
+def user_update(id):
+    data = request.json
+    user = User.query.filter(User.id == id).one()
+
+    user.name = data['name']
+    user.password = data['password']
+    user.group = data['group']
+    user.role = data['role']
+
+    db.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/user/<id>', methods=['DELETE'])
+def user_destroy(id):
+    user = User.query.filter(User.id == id).delete()
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ''})
+
+
 # -----得意先(Customers)-----
 @app.route('/customers', methods=['GET'])
 def customer_index():

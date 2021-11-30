@@ -12,6 +12,23 @@ def seeder():
         db.session.query(model).delete()
         db.session.commit()
 
+    # -----Users-----
+    print('----Users----')
+    users = [
+        User(id=1, name='tanaka_taro', password='password',
+             group='operator', role='admin'),
+        User(id=2, name='suzuki_jiro', password='password',
+             group='guest', role='admin'),
+        User(id=3, name='satou_saburo', password='password',
+             group='guest', role='admin'),
+    ]
+    db.session.add_all(users)
+    db.session.commit()
+
+    users = User.query.all()
+    for user in users:
+        print(user.name)
+
     # -------------Customers---------------
     print('----Customers----')
     customers = [
@@ -66,11 +83,11 @@ def seeder():
     # -----Invoice_Items-----
     print('----Invoice_Items----')
     invoice_items = [
-        Invoice_Item(id=1, invoiceId=1, itemId=1, price=100,count=5),
-        Invoice_Item(id=2, invoiceId=1, itemId=2, price=20,count=10),
-        Invoice_Item(id=3, invoiceId=2, itemId=2, price=30,count=15),
-        Invoice_Item(id=4, invoiceId=2, itemId=3, price=1100,count=2),
-        Invoice_Item(id=5, invoiceId=3, itemId=1, price=120,count=30),
+        Invoice_Item(id=1, invoiceId=1, itemId=1, price=100, count=5),
+        Invoice_Item(id=2, invoiceId=1, itemId=2, price=20, count=10),
+        Invoice_Item(id=3, invoiceId=2, itemId=2, price=30, count=15),
+        Invoice_Item(id=4, invoiceId=2, itemId=3, price=1100, count=2),
+        Invoice_Item(id=5, invoiceId=3, itemId=1, price=120, count=30),
     ]
     db.session.add_all(invoice_items)
     db.session.commit()
@@ -99,11 +116,11 @@ def seeder():
     # -----Quotaion_Items-----
     print('----Quotaion_Items----')
     quotaion_items = [
-        Quotaion_Item(id=1, quotaionId=1, itemId=1, price=100,count=5),
-        Quotaion_Item(id=2, quotaionId=1, itemId=2, price=20,count=10),
-        Quotaion_Item(id=3, quotaionId=2, itemId=2, price=30,count=15),
-        Quotaion_Item(id=4, quotaionId=2, itemId=3, price=1100,count=2),
-        Quotaion_Item(id=5, quotaionId=3, itemId=1, price=120,count=30),
+        Quotaion_Item(id=1, quotaionId=1, itemId=1, price=100, count=5),
+        Quotaion_Item(id=2, quotaionId=1, itemId=2, price=20, count=10),
+        Quotaion_Item(id=3, quotaionId=2, itemId=2, price=30, count=15),
+        Quotaion_Item(id=4, quotaionId=2, itemId=3, price=1100, count=2),
+        Quotaion_Item(id=5, quotaionId=3, itemId=1, price=120, count=30),
     ]
     db.session.add_all(quotaion_items)
     db.session.commit()

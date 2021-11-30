@@ -1,3 +1,17 @@
+## Users
+
+| 項目      | 和名       | タイプ   | 備考                             | 
+| --------- | ---------- | -------- | -------------------------------- | 
+| id        | id         | integer  |                                  | 
+| name      | 名前       | string   | ログイン時のID                   | 
+| password  | パスワード | string   | ログイン時のパスワード           | 
+| group     | グループ   | string   | とりあえず入れておく             | 
+| role      | 権限       | string   | 権限によって編集できる範囲を設定 | 
+| createdAt | 作成日時   | datetime |                                  | 
+| updatedAt | 更新日時   | datetime |                                  | 
+
+<br>
+
 ## Customers
 
 | 項目名           | 和名           | タイプ      |  備考                             | 
