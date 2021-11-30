@@ -11,10 +11,10 @@ def index():
 
 
 # -----得意先(Customers)-----
-@app.route('/customer', methods=['GET'])
+@app.route('/customers', methods=['GET'])
 def customer_index():
-    customer = Customer.query.all()
-    return jsonify(CustomerSchema(many=True).dump(customer))
+    customers = Customer.query.all()
+    return jsonify(CustomerSchema(many=True).dump(customers))
 
 
 @app.route('/customer/<id>', methods=['GET'])
@@ -78,7 +78,7 @@ def customer_destroy(id):
 
 
 # -----商品(Items)-----
-@app.route('/item', methods=['GET'])
+@app.route('/items', methods=['GET'])
 def item_index():
     items = Item.query.all()
     return jsonify(ItemSchema(many=True).dump(items))
@@ -135,7 +135,7 @@ def item_destroy(id):
 
 
 # -----請求書(Invoices)-----
-@app.route('/invoice', methods=['GET'])
+@app.route('/invoices', methods=['GET'])
 def invoice_index():
     invoices = Invoice.query.all()
     return jsonify(InvoiceSchema(many=True).dump(invoices))
@@ -194,7 +194,7 @@ def invoice_destroy(id):
 
 
 # 請求書＿商品(Invoice_Items)
-@app.route('/invoice_item', methods=['GET'])
+@app.route('/invoice_items', methods=['GET'])
 def invoice_item_index():
     invoiceItems = Invoice_Item.query.all()
     return jsonify(Invoice_ItemSchema(many=True).dump(invoiceItems))
@@ -243,7 +243,7 @@ def invoice_item_destroy(id):
 
 
 # 見積書(Quotaions)
-@app.route('/quotaion', methods=['GET'])
+@app.route('/quotaions', methods=['GET'])
 def quotaion_index():
     quotaions = Quotaion.query.all()
     return jsonify(QuotaionSchema(many=True).dump(quotaions))
@@ -302,7 +302,7 @@ def quotaion_destroy(id):
 
 
 # 見積書＿商品(Quotaion_Items)
-@app.route('/quotaion_item', methods=['GET'])
+@app.route('/quotaion_items', methods=['GET'])
 def quotaion_item_index():
     quotaionItems = Quotaion_Item.query.all()
     return jsonify(Quotaion_ItemSchema(many=True).dump(quotaionItems))
@@ -353,7 +353,7 @@ def quotaion_item_destroy(id):
 
 
 # メモ(Memos)
-@app.route('/memo', methods=['GET'])
+@app.route('/memos', methods=['GET'])
 def memo_index():
     memos = Memo.query.all()
     return jsonify(MemoSchema(many=True).dump(memos))
@@ -402,7 +402,7 @@ def memo_destroy(id):
 
 
 # 単位(Units)
-@app.route('/unit', methods=['GET'])
+@app.route('/units', methods=['GET'])
 def unit_index():
     units = Unit.query.all()
     return jsonify(UnitSchema(many=True).dump(units))
