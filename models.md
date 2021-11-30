@@ -26,9 +26,8 @@
 | id       | id       | integer   |                                                                                             | 
 | itemName | 商品名   | text      |                                                                                             | 
 | unit     | 単位     | text      |  単位はユーザーが追加できるように単位テーブルを作成し、単位追加ページを作成した方が良いかも         | 
-| price    | 単価     | integer   |                                                                                             | 
+| basePrice| 単価     | integer   |                                                                                             | 
 | cost     | 原価     | integer   |                                                                                             | 
-| costRate | 原価率   | float     |                                                                                             | 
 | memo     | メモ     | text      |                                                                                             | 
 | createdAt| 作成日時 | datetime  |                                                                                             | 
 | updatedAt| 更新日時 | datetime  |                                                                                             |
@@ -60,13 +59,14 @@
 | id         | id       | integer  |                         | 
 | invoiceId  | 請求書ID | integer  |  請求書テーブルと紐づく | 
 | itemId     | 商品ID   | integer  |  商品テーブルと紐づく   | 
+| price      | 値段     | integer  |                       |
 | count      | 個数     | integer  |                         | 
 | createdAt  | 作成日時 | datetime |                         | 
 | updatedAt  | 更新日時 | datetime |                         | 
 
 <br>
 
-## Quotaions
+## Quotations
 
 | 項目名       | 和名           | タイプ    |  備考                                                     | 
 | ----------- | -------------- | -------- | -------------------------------------------------------- | 
@@ -84,13 +84,14 @@
 
 <br>
 
-## Quotaion_Items
+## Quotation_Items
 
 | 項目名       | 和名     | タイプ    |  備考                   | 
 | ----------  | -------- | -------- |  ---------------------- | 
 | id          | id       | integer  |                         | 
-| quotaionId  | 見積書ID | integer  |  見積書テーブルと紐づく | 
-| itemId      | 商品ID   | integer  |  商品テーブルと紐づく   | 
+| quotationId | 見積書ID | integer  |  見積書テーブルと紐づく   | 
+| itemId      | 商品ID   | integer  |  商品テーブルと紐づく     | 
+| price       | 値段     | integer  |                         |
 | count       | 個数     | integer  |                         | 
 | createdAt   | 作成日時 | datetime |                         | 
 | updatedAt   | 更新日時 | datetime |                         | 
