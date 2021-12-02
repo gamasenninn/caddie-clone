@@ -1,5 +1,5 @@
 from app import db, app
-from models import Quotaion_Item
+from models import *
 import unittest
 from seeder import seeder
 
@@ -28,6 +28,12 @@ class BasicTest(unittest.TestCase):
             if quotaionItem.quotaion.customer is not None:
                 customerCount += 1
         self.assertGreaterEqual(customerCount, 1)
+
+    def test_get_quotation_item_byId(self):
+        print('---Quotation_Item全件取得→Dict---')
+        quotationItems = Quotaion_Item.query.all()
+        sch = Quotaion_ItemSchema(many=True).dump(quotationItems)
+        self.assertEqual(sch[0]['price'], 100)
 
     def test_get_quotaion_item_byId(self):
         print('---Quotaion_Item一件読み込み---')

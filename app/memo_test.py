@@ -1,5 +1,5 @@
 from app import db, app
-from models import Memo
+from models import *
 import unittest
 from seeder import seeder
 
@@ -22,6 +22,12 @@ class BasicTest(unittest.TestCase):
         memos = Memo.query.all()
         memoCount = len(memos)
         self.assertTrue(memoCount)
+
+    def test_get_memos_dict(self):
+        print('---Memo全件読込→Dict---')
+        memos = Memo.query.all()
+        sch = MemoSchema(many=True).dump(memos)
+        self.assertEqual(sch[0]['title'], 'メモのタイトル１')
 
     def test_get_memo_byId(self):
         print('---Memo一件読み込み---')

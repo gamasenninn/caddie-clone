@@ -1,5 +1,5 @@
 from app import db, app
-from models import Item
+from models import *
 import unittest
 from seeder import seeder
 
@@ -22,6 +22,12 @@ class BasicTest(unittest.TestCase):
         items = Item.query.all()
         itemCount = len(items)
         self.assertTrue(itemCount)
+
+    def test_get_items_dict(self):
+        print('---Item全件読込→Dict---')
+        items = Item.query.all()
+        sch = ItemSchema(many=True).dump(items)
+        self.assertEqual(sch[0]['itemName'], 'りんご')
 
     def test_get_item_byId(self):
         print('---Item一件読み込み---')

@@ -1,5 +1,5 @@
 from app import db, app
-from models import Invoice_Item
+from models import *
 import unittest
 from seeder import seeder
 
@@ -28,6 +28,12 @@ class BasicTest(unittest.TestCase):
             if invoiceItem.invoice.customer is not None:
                 customerCount += 1
         self.assertGreaterEqual(customerCount, 1)
+
+    def test_get_invoice_items_dict(self):
+        print('---InvoiceItem全件取得→Dict---')
+        invoiceItems = Invoice_Item.query.all()
+        sch = Invoice_ItemSchema(many=True).dump(invoiceItems)
+        self.assertEqual(sch[0]['price'], 100)
 
     def test_get_invoice_item_byId(self):
         print('---Invoice_Item一件読み込み---')
