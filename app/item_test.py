@@ -1,5 +1,5 @@
 from app import db, app
-from models import Item,ItemSchema
+from models import *
 import unittest
 from seeder import seeder
 
