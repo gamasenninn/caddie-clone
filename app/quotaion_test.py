@@ -1,5 +1,5 @@
 from app import db, app
-from models import Quotaion
+from models import *
 import unittest
 from datetime import datetime
 from seeder import seeder
@@ -20,9 +20,31 @@ class BasicTest(unittest.TestCase):
 
     def test_get_quotaions(self):
         print('---Quotaion全件読み込み---')
-        quotaions = Quotaion.query.all()
-        quotaionCount = len(quotaions)
-        self.assertTrue(quotaionCount)
+        quotations = Quotaion.query.all()
+        quotationCount = len(quotations)
+        self.assertTrue(quotationCount)
+
+        # Customerまで全件取得
+        print('Quotation→Customer全件取得')
+        customerCount = 0
+        for quotation in quotations:
+            if(quotation.customer is not None):
+                customerCount += 1
+        self.assertGreaterEqual(customerCount, 1)
+
+        # Quotation_Itemまで取得
+        print('Quotation→Quotation_Item全件取得')
+        quotationItemCount = 0
+        for quotation in quotations:
+            for quotationItem in quotation.quotaion_items:
+                quotationItemCount += 1
+        self.assertGreaterEqual(quotationItemCount, 1)
+
+    def test_get_quotations_dict(self):
+        print('---Quotation全件読込→Dict---')
+        quotations = Quotaion.query.all()
+        sch = QuotaionSchema(many=True).dump(quotations)
+        self.assertEqual(sch[0]['title'], '○○株式会社への見積書')
 
     def test_get_quotaion_byId(self):
         print('---Quotaion一件読み込み---')

@@ -1,5 +1,5 @@
 from app import db, app
-from models import Setting
+from models import *
 import unittest
 from seeder import seeder
 
@@ -23,6 +23,12 @@ class BasicTest(unittest.TestCase):
     #     settings = Setting.query.all()
     #     settingCount = len(settings)
     #     self.assertTrue(settingCount)
+
+    def test_get_setting_dict(self):
+        print('---Setting一件読込→Dict---')
+        setting = Setting.query.filter(Setting.id == 1).first()
+        sch = SettingSchema().dump(setting)
+        self.assertEqual(sch['companyName'], '自社株式会社')
 
     def test_get_setting_byId(self):
         print('---Setting一件読み込み---')
