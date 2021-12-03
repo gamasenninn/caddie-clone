@@ -142,6 +142,21 @@
             head-variant="light" label="Table Options" :items="setting" :fields="[
                     {  key: 'id', label: 'ID',  sortable: true },
                     {  key: 'companyName', label: '会社名' },
+                    {  key: 'representative', label: '代表者名' },
+                    {  key: 'postNumber', label: '郵便番号' },
+                    {  key: 'address', label: '住所' },
+                    {  key: 'telNumber', label: '電話番号' },
+                    {  key: 'faxNumber', label: 'FAX番号' },
+                    {  key: 'url', label: 'ホームページURL' },
+                    {  key: 'email', label: 'メールアドレス' },
+                    {  key: 'logoFilePath', label: 'ロゴファイルパス' },
+                    {  key: 'stampFilePath', label: '印鑑ファイルパス' },
+                    {  key: 'isDisplayQuotationLogo', label: 'ロゴ見積書表示' },
+                    {  key: 'isDisplayInvoiceLogo', label: 'ロゴ請求書表示' },
+                    {  key: 'isDisplayDeliveryLogo', label: 'ロゴ納品書表示' },
+                    {  key: 'isDisplayQuotationStamp', label: '印鑑見積書表示' },
+                    {  key: 'isDisplayInvoiceStamp', label: '印鑑請求書表示' },
+                    {  key: 'isDisplayDeliveryStamp', label: '印鑑納品書表示' },
                   ]">
         </b-table>
 
