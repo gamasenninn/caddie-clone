@@ -6,7 +6,7 @@ from models import *
 def seeder():
 
     models = [User, Customer, Item, Invoice,
-              Invoice_Item, Quotaion, Quotaion_Item, Memo, Unit, Setting]
+              Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Setting]
 
     for model in models:
         db.session.query(model).delete()
@@ -96,38 +96,38 @@ def seeder():
     for invoice_item in invoice_items:
         print(invoice_item.count)
 
-    # -----Quotaions-----
-    print('----Quotaions----')
-    quotaions = [
-        Quotaion(id=1, customerId=1, applyNumber=1000001, applyDate=datetime.now(), expiry=datetime.now(),
-                 title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
-        Quotaion(id=2, customerId=2, applyNumber=1000002, applyDate=datetime.now(), expiry=datetime.now(),
-                 title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
-        Quotaion(id=3, customerId=3, applyNumber=1000003, applyDate=datetime.now(), expiry=datetime.now(),
-                 title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
+    # -----Quotations-----
+    print('----Quotations----')
+    quotations = [
+        Quotation(id=1, customerId=1, applyNumber=1000001, applyDate=datetime.now(), expiry=datetime.now(),
+                  title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
+        Quotation(id=2, customerId=2, applyNumber=1000002, applyDate=datetime.now(), expiry=datetime.now(),
+                  title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
+        Quotation(id=3, customerId=3, applyNumber=1000003, applyDate=datetime.now(), expiry=datetime.now(),
+                  title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
     ]
-    db.session.add_all(quotaions)
+    db.session.add_all(quotations)
     db.session.commit()
 
-    quotaions = Quotaion.query.all()
-    for quotaion in quotaions:
-        print(quotaion.title)
+    quotations = Quotation.query.all()
+    for quotation in quotations:
+        print(quotation.title)
 
-    # -----Quotaion_Items-----
-    print('----Quotaion_Items----')
-    quotaion_items = [
-        Quotaion_Item(id=1, quotaionId=1, itemId=1, price=100, count=5),
-        Quotaion_Item(id=2, quotaionId=1, itemId=2, price=20, count=10),
-        Quotaion_Item(id=3, quotaionId=2, itemId=2, price=30, count=15),
-        Quotaion_Item(id=4, quotaionId=2, itemId=3, price=1100, count=2),
-        Quotaion_Item(id=5, quotaionId=3, itemId=1, price=120, count=30),
+    # -----Quotation_Items-----
+    print('----Quotation_Items----')
+    quotation_items = [
+        Quotation_Item(id=1, quotationId=1, itemId=1, price=100, count=5),
+        Quotation_Item(id=2, quotationId=1, itemId=2, price=20, count=10),
+        Quotation_Item(id=3, quotationId=2, itemId=2, price=30, count=15),
+        Quotation_Item(id=4, quotationId=2, itemId=3, price=1100, count=2),
+        Quotation_Item(id=5, quotationId=3, itemId=1, price=120, count=30),
     ]
-    db.session.add_all(quotaion_items)
+    db.session.add_all(quotation_items)
     db.session.commit()
 
-    quotaion_items = Quotaion_Item.query.all()
-    for quotaion_item in quotaion_items:
-        print(quotaion_item.count)
+    quotation_items = Quotation_Item.query.all()
+    for quotation_item in quotation_items:
+        print(quotation_item.count)
 
     # -----Memos-----
     print('----Memos----')
