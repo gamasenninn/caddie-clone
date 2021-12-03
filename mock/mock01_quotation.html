@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="images/favicon.ico" rel="shortcut icon">
 
-<title>quotaion mock</title>
+<title>quotation mock</title>
 <!-- Load required Bootstrap and BootstrapVue CSS -->
 
 <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
@@ -109,7 +109,7 @@
                 </b-button>
                 <b-button variant="primary" block href="mock_item.html"><i class="fas fa-box"></i>　商　品</b-button>
                 <b-button variant="primary" block href="mock_invoice.html"><i class="fas fa-copy"></i>　請求書</b-button>
-                <b-button variant="primary" block href="mock01_quotaion.html"><i class="far fa-copy"></i>　見積書</b-button>
+                <b-button variant="primary" block href="mock01_quotation.html"><i class="far fa-copy"></i>　見積書</b-button>
               </b-nav>
             </nav>
           </div>
@@ -279,7 +279,7 @@
       <b-col cols="10">
         <b-button variant="success" @click="changeMode('detail')">＋新規</b-button>
         <b-card border-variant="white" class="mb-3 text-center" header="見積書一覧" header-border-variant="light">
-          <b-table responsive hover small id="quotaiontable" sort-by="ID" small label="Table Options" :items=quotaions
+          <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options" :items=quotations
             :fields="[
                   {  key: 'update', label: '' },
                   {  key: 'id', label: 'No.' },
@@ -379,7 +379,7 @@
         { id: 3, kokyaku: '○○商事', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはお客さんのメモです' },
         { id: 4, kokyaku: '○○鉄工所', postNum: '000-0000', address: '栃木県鹿沼市板荷0000-00', telno: '000-0000-0000', daihyou: '代表者名', memo: 'これはお客さんのメモです' },
       ],
-      quotaions: [
+      quotations: [
         // 見積一覧
         { id: 1, applyDate: '2021-10-21', applyNumber: '211021001', kokyaku: '○○株式会社', jyusho: '栃木県鹿沼市板荷0000-00', telno: '090-0000-0000', email: 'abc@qwertyu.zz', expiry: '2022-01-01', title: '見積書の件名', memo: 'これは見積書のメモです' },
         { id: 2, applyDate: '2021-10-22', applyNumber: '211021002', kokyaku: '○○有限会社', jyusho: '栃木県鹿沼市板荷0000-01', telno: '090-0000-0001', email: 'abc1@qwertyu.zz', expiry: '2022-01-02', title: '見積書の件名1', memo: 'これは見積書のメモです1' },
