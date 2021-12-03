@@ -1,0 +1,147 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="images/favicon.ico" rel="shortcut icon">
+
+    <title>quotaion mock</title>
+    <!-- Load required Bootstrap and BootstrapVue CSS -->
+
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+    <!-- Load fontawesome -->
+    <!-- link href="./css/all.css" rel="stylesheet" -->
+    <!--load all styles -->
+    <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+        crossorigin="anonymous"></script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+    <!-- 各種便利なツール塁です必要なときに随時使用のこと
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.js"></script>
+<script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
+<script src="./jsQR.js"></script>
+<script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
+-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    Viewレイヤのテスト
+    <div id="app">
+        <b-table responsive hover caption-top striped small id="clist" sort-by="id" sort-desc=true small
+            head-variant="light" label="Table Options" :items="customers" :fields="[
+                    {  key: 'id', label: 'ID',  sortable: true },
+                    {  key: 'customerName', label: '得意先名' },
+                    {  key: 'honorificTitle', label: '敬称'},
+                    {  key: 'postNumber', label: '郵便番号'},
+                    {  key: 'address', label: '住所'},
+                    {  key: 'telNumber', label: '電話番号'},
+                    {  key: 'faxNumber', label: 'FAX番号'},
+                    {  key: 'url', label: 'ホームページURL'},
+                    {  key: 'email', label: 'メールアドレス'},
+                    {  key: 'manager', label: '担当者'},
+                    {  key: 'representative', label: '代表者'},
+                    {  key: 'memo', label: 'メモ'},
+                  ]">
+        </b-table>
+
+        <b-table responsive hover caption-top striped small id="clist" sort-by="id" sort-desc=true small
+            head-variant="light" label="Table Options" :items="items" :fields="[
+                    {  key: 'id', label: 'ID',  sortable: true },
+                    {  key: 'itemName', label: '商品名' },
+                    {  key: 'unit', label: '単位' },
+                    {  key: 'price', label: '値段' },
+                    {  key: 'cost', label: '原価' },
+                    {  key: 'costRate', label: '原価率' },
+                    {  key: 'memo', label: 'メモ' },
+                  ]">
+        </b-table>
+
+        <!-- <b-table responsive hover caption-top striped small id="clist" sort-by="id" sort-desc=true small
+            head-variant="light" label="Table Options" :items="invoices" :fields="[
+                    {  key: 'id', label: 'ID',  sortable: true },
+                    {  key: 'applyNumber', label: '' },
+                    {  key: 'applyDate', label: '' },
+                    {  key: 'expiry', label: '' },
+                    {  key: 'title', label: '' },
+                    {  key: '', label: '' },
+                    {  key: '', label: '' },
+                    {  key: '', label: '' },
+                    {  key: '', label: '' },
+                    {  key: '', label: '' },
+                    {  key: '', label: '' },
+                  ]">
+        </b-table> -->
+
+        <b-button @click='getCustomers'>得意先読み込み</b-button>
+        <b-button @click='getItems'>商品読み込み</b-button>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                customers: [],
+                items: [],
+                invoices: [],
+            },
+            methods: {
+                getCustomers: async function () {
+                    self = this;
+                    url = "/customers";
+                    await axios.get(url)
+                        .then(function (response) {
+                            console.log(response);
+                            self.customers = response.data;
+                        });
+                },
+                getItems: async function () {
+                    self = this;
+                    url = "/items";
+                    await axios.get(url)
+                        .then(function (response) {
+                            console.log(response);
+                            self.items = response.data
+                        });
+                },
+                getInvoices: async function () {
+                    self = this;
+                    url = "invoices";
+                    await axios.get(url)
+                        .then(function (response) {
+                            console.log(response);
+                            self.invoices = response.data;
+                        });
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
