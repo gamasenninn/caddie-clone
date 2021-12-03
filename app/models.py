@@ -36,7 +36,7 @@ class Customer(db.Model):
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
     invoices = db.relationship('Invoice', backref='customer')
-    quotaions = db.relationship('Quotaion', backref='customer')
+    quotations = db.relationship('Quotation', backref='customer')
 
     def to_dict(self):
         return {
@@ -84,7 +84,7 @@ class Item(db.Model):
             'updatedAt': self.updatedAt,
         }
     # invoice_items=db.relationship('Invoice_Item',backref='items')
-    # quotaion_items=db.relationship('Quotaion_Item',backref='items')
+    # quotation_items=db.relationship('Quotation_Item',backref='items')
 
 
 class Invoice(db.Model):
@@ -120,9 +120,9 @@ class Invoice_Item(db.Model):
                           default=datetime.now, onupdate=datetime.now)
 
 
-class Quotaion(db.Model):
+class Quotation(db.Model):
 
-    __tablename__ = 'quotaions'
+    __tablename__ = 'quotations'
 
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
@@ -136,15 +136,15 @@ class Quotaion(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    quotaion_items = db.relationship('Quotaion_Item', backref='quotaion')
+    quotation_items = db.relationship('Quotation_Item', backref='quotation')
 
 
-class Quotaion_Item(db.Model):
+class Quotation_Item(db.Model):
 
-    __tablename__ = 'quotaion_items'
+    __tablename__ = 'quotation_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    quotaionId = db.Column(db.Integer, db.ForeignKey('quotaions.id'))
+    quotationId = db.Column(db.Integer, db.ForeignKey('quotations.id'))
     itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
     price = db.Column(db.Integer)
     count = db.Column(db.Integer)
@@ -231,14 +231,14 @@ class Invoice_ItemSchema(ma.SQLAlchemyAutoSchema):
         model = Invoice_Item
 
 
-class QuotaionSchema(ma.SQLAlchemyAutoSchema):
+class QuotationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Quotaion
+        model = Quotation
 
 
-class Quotaion_ItemSchema(ma.SQLAlchemyAutoSchema):
+class Quotation_ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Quotaion_Item
+        model = Quotation_Item
 
 
 class MemoSchema(ma.SQLAlchemyAutoSchema):

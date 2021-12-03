@@ -26,18 +26,18 @@ class BasicTest(unittest.TestCase):
         # Invoice_Itemまで全件取得
         print('Customer→Invoice_Item全件取得')
         invoiceItemCount = 0
-        quotaionItemCount = 0
+        quotationItemCount = 0
         for customer in customers:
             for invoice in customer.invoices:
                 for invoiceItem in invoice.invoice_items:
                     invoiceItemCount += 1
         self.assertGreaterEqual(invoiceItemCount, 1)
-        print('Customer→Quotaion_Item全件取得')
+        print('Customer→Quotation_Item全件取得')
         for customer in customers:
-            for quotaion in customer.quotaions:
-                for quotaionItem in quotaion.quotaion_items:
-                    quotaionItemCount += 1
-        self.assertGreaterEqual(quotaionItemCount, 1)
+            for quotation in customer.quotations:
+                for quotationItem in quotation.quotation_items:
+                    quotationItemCount += 1
+        self.assertGreaterEqual(quotationItemCount, 1)
 
     def test_get_customers_dict(self):
         print('---Customer全件読み込み→Dict---')
@@ -80,7 +80,7 @@ class BasicTest(unittest.TestCase):
         print('---Customer一件削除---')
         customer = Customer(customerName='デリートテスト会社', honorificTitle='御中', postNumber='000-0000', address='鹿沼市板荷000', telNumber='000-0000-0000',
                             faxNumber='000-0000-0000', url='example.com', email='example@co.jp', manager='田中太郎', representative='田中代表', memo='これは○○株式会社のメモです')
-        db.session.add(customer)    
+        db.session.add(customer)
         db.session.commit()
         newId = customer.id
         customer = Customer.query.filter(Customer.id == newId).delete()
