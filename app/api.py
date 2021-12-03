@@ -295,27 +295,27 @@ def invoice_item_destroy(id):
     return jsonify({"result": "OK", "id": id, "data": ''})
 
 
-# 見積書(Quotaions)
-@app.route('/quotaions', methods=['GET'])
-def quotaion_index():
-    quotaions = Quotaion.query.all()
-    return jsonify(QuotaionSchema(many=True).dump(quotaions))
+# 見積書(Quotations)
+@app.route('/quotations', methods=['GET'])
+def quotation_index():
+    quotations = Quotation.query.all()
+    return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
-@app.route('/quotaion/<id>', methods=['GET'])
-def quotaion_show(id):
-    quotaionCount = Quotaion.query.filter(Quotaion.id == id).count()
-    if quotaionCount:
-        quotaion = Quotaion.query.filter(Quotaion.id == id).first()
-        return jsonify(QuotaionSchema().dump(quotaion))
+@app.route('/quotation/<id>', methods=['GET'])
+def quotation_show(id):
+    quotationCount = Quotation.query.filter(Quotation.id == id).count()
+    if quotationCount:
+        quotation = Quotation.query.filter(Quotation.id == id).first()
+        return jsonify(QuotationSchema().dump(quotation))
     else:
         return jsonify([])
 
 
-@app.route('/quotaion', methods=['POST'])
-def quotaion_create():
+@app.route('/quotation', methods=['POST'])
+def quotation_create():
     data = request.json
-    newQuotaion = Quotaion(
+    newQuotation = Quotation(
         customerId=data['customerId'],
         applyNumber=data['applyNumber'],
         applyDate=data['applyDate'],
@@ -325,84 +325,85 @@ def quotaion_create():
         remarks=data['remarks'],
         isTaxExp=data['isTaxExp'],
     )
-    db.session.add(newQuotaion)
+    db.session.add(newQuotation)
     db.session.commit()
-    id = newQuotaion.id
+    id = newQuotation.id
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
-@app.route('/quotaion/<id>', methods=['PUT'])
-def quotaion_update(id):
+@app.route('/quotation/<id>', methods=['PUT'])
+def quotation_update(id):
     data = request.json
-    quotaion = Quotaion.query.filter(Quotaion.id == id).one()
-    quotaion.customerId = data['customerId']
-    quotaion.applyNumber = data['applyNumber']
-    quotaion.applyDate = data['applyDate']
-    quotaion.expiry = data['expiry']
-    quotaion.title = data['title']
-    quotaion.memo = data['memo']
-    quotaion.remarks = data['remarks']
-    quotaion.isTaxExp = data['isTaxExp']
+    quotation = Quotation.query.filter(Quotation.id == id).one()
+    quotation.customerId = data['customerId']
+    quotation.applyNumber = data['applyNumber']
+    quotation.applyDate = data['applyDate']
+    quotation.expiry = data['expiry']
+    quotation.title = data['title']
+    quotation.memo = data['memo']
+    quotation.remarks = data['remarks']
+    quotation.isTaxExp = data['isTaxExp']
     db.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
-@app.route('/quotaion/<id>', methods=['DELETE'])
-def quotaion_destroy(id):
-    quotaion = Quotaion.query.filter(Quotaion.id == id).delete()
+@app.route('/quotation/<id>', methods=['DELETE'])
+def quotation_destroy(id):
+    quotation = Quotation.query.filter(Quotation.id == id).delete()
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
 
-# 見積書＿商品(Quotaion_Items)
-@app.route('/quotaion_items', methods=['GET'])
-def quotaion_item_index():
-    quotaionItems = Quotaion_Item.query.all()
-    return jsonify(Quotaion_ItemSchema(many=True).dump(quotaionItems))
+# 見積書＿商品(Quotation_Items)
+@app.route('/quotation_items', methods=['GET'])
+def quotation_item_index():
+    quotationItems = Quotation_Item.query.all()
+    return jsonify(Quotation_ItemSchema(many=True).dump(quotationItems))
 
 
-@app.route('/quotaion_item/<id>', methods=['GET'])
-def quotaion_item_show(id):
-    quotaionItemCount = Quotaion_Item.query.filter(
-        Quotaion_Item.id == id).count()
-    if quotaionItemCount:
-        quotaionItem = Quotaion_Item.query.filter(
-            Quotaion_Item.id == id).first()
-        return jsonify(Quotaion_ItemSchema().dump(quotaionItem))
+@app.route('/quotation_item/<id>', methods=['GET'])
+def quotation_item_show(id):
+    quotationItemCount = Quotation_Item.query.filter(
+        Quotation_Item.id == id).count()
+    if quotationItemCount:
+        quotationItem = Quotation_Item.query.filter(
+            Quotation_Item.id == id).first()
+        return jsonify(Quotation_ItemSchema().dump(quotationItem))
     else:
         return jsonify([])
 
 
-@app.route('/quotaion_item', methods=['POST'])
-def quotaion_item_create():
+@app.route('/quotation_item', methods=['POST'])
+def quotation_item_create():
     data = request.json
-    newQuotaionItem = Quotaion_Item(
-        quotaionId=data['quotaionId'],
+    newQuotationItem = Quotation_Item(
+        quotationId=data['quotationId'],
         itemId=data['itemId'],
         price=data['price'],
         count=data['count'],
     )
-    db.session.add(newQuotaionItem)
+    db.session.add(newQuotationItem)
     db.session.commit()
-    id = newQuotaionItem.id
+    id = newQuotationItem.id
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
-@app.route('/quotaion_item/<id>', methods=['PUT'])
-def quotaion_item_update(id):
+@app.route('/quotation_item/<id>', methods=['PUT'])
+def quotation_item_update(id):
     data = request.json
-    quotaionItem = Quotaion_Item.query.filter(Quotaion_Item.id == id).one()
-    quotaionItem.quotaionId = data['quotaionId']
-    quotaionItem.itemId = data['itemId']
-    quotaionItem.price = data['price']
-    quotaionItem.count = data['count']
+    quotationItem = Quotation_Item.query.filter(Quotation_Item.id == id).one()
+    quotationItem.quotationId = data['quotationId']
+    quotationItem.itemId = data['itemId']
+    quotationItem.price = data['price']
+    quotationItem.count = data['count']
     db.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
-@app.route('/quotaion_item/<id>', methods=['DELETE'])
-def quotaion_item_destroy(id):
-    quotaionItem = Quotaion_Item.query.filter(Quotaion_Item.id == id).delete()
+@app.route('/quotation_item/<id>', methods=['DELETE'])
+def quotation_item_destroy(id):
+    quotationItem = Quotation_Item.query.filter(
+        Quotation_Item.id == id).delete()
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
