@@ -84,17 +84,17 @@ def customer_show(id):
 def customer_create():
     data = request.json
     newCustomer = Customer(
-        customerName=data['customerName'],
-        honorificTitle=data['honorificTitle'],
-        postNumber=data['postNumber'],
-        address=data['address'],
-        telNumber=data['telNumber'],
-        faxNumber=data['faxNumber'],
-        url=data['url'],
-        email=data['email'],
-        manager=data['manager'],
-        representative=data['representative'],
-        memo=data['memo'],
+        customerName=data.get('customerName'),
+        honorificTitle=data.get('honorificTitle'),
+        postNumber=data.get('postNumber'),
+        address=data.get('address'),
+        telNumber=data.get('telNumber'),
+        faxNumber=data.get('faxNumber'),
+        url=data.get('url'),
+        email=data.get('email'),
+        manager=data.get('manager'),
+        representative=data.get('representative'),
+        memo=data.get('memo'),
     )
     db.session.add(newCustomer)
     db.session.commit()
@@ -107,17 +107,17 @@ def customer_update(id):
     data = request.json
     customer = Customer.query.filter(Customer.id == id).one()
 
-    customer.customerName = data['customerName']
-    customer.honorificTitle = data['honorificTitle']
-    customer.postNumber = data['postNumber']
-    customer.address = data['address']
-    customer.telNumber = data['telNumber']
-    customer.faxNumber = data['faxNumber']
-    customer.url = data['url']
-    customer.email = data['email']
-    customer.manager = data['manager']
-    customer.representative = data['representative']
-    customer.memo = data['memo']
+    customer.customerName = data.get('customerName')
+    customer.honorificTitle = data.get('honorificTitle')
+    customer.postNumber = data.get('postNumber')
+    customer.address = data.get('address')
+    customer.telNumber = data.get('telNumber')
+    customer.faxNumber = data.get('faxNumber')
+    customer.url = data.get('url')
+    customer.email = data.get('email')
+    customer.manager = data.get('manager')
+    customer.representative = data.get('representative')
+    customer.memo = data.get('memo')
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})

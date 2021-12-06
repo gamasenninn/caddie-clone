@@ -66,43 +66,71 @@
 
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>敬称:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.honorificTitle" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.honorificTitle" size="sm" rows="3" max-rows="8">
+                            </b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>郵便番号:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.postNumber" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.postNumber" size="sm" rows="3" max-rows="8">
+                            </b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>住所:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.address" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.address" size="sm" rows="3" max-rows="8">
+                            </b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>電話番号:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.telNumber" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.telNumber" size="sm" rows="3" max-rows="8">
+                            </b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>FAX番号:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.faxNumber" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.faxNumber" size="sm" rows="3" max-rows="8">
+                            </b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>ホームページURL:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.url" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.url" size="sm" rows="3" max-rows="8"></b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>メールアドレス:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.email" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.email" size="sm" rows="3" max-rows="8">
+                            </b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>担当者:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.manager" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.manager" size="sm" rows="3" max-rows="8">
+                            </b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>代表者名:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.representative" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.representative" size="sm" rows="3" max-rows="8">
+                            </b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>メモ:</b></b-col>
-                        <b-col><b-form-textarea v-model="data.item.memo" size="sm" rows="3" max-rows="8"></b-form-textarea></b-col>
+                        <b-col>
+                            <b-form-textarea v-model="data.item.memo" size="sm" rows="3" max-rows="8"></b-form-textarea>
+                        </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>作成日:</b></b-col>
@@ -163,17 +191,6 @@
                 },
                 addRow: function () {
                     this.customers.push({
-                        customerName:'',
-                        honorificTitle:'',
-                        postNumber:'',
-                        address:'',
-                        telNumber:'',
-                        faxNumber:'',
-                        url:'',
-                        email:'',
-                        manager:'',
-                        representative:'',
-                        memo:'',
                         isInsert: true
                     })
                 },
