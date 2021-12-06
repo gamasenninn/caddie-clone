@@ -123,7 +123,7 @@
                                 </b-button>
                                 <b-button variant="primary" block href="mock_invoice.html"><i
                                         class="fas fa-copy"></i>　請求書</b-button>
-                                <b-button variant="primary" block href="mock01_quotaion.html"><i
+                                <b-button variant="primary" block href="mock01_quotation.html"><i
                                         class="far fa-copy"></i>　見積書
                                 </b-button>
                             </b-nav>
@@ -197,7 +197,7 @@
                     <b-col cols="4">
                         <p>会社ロゴの印刷時の表示</p>
                         <div class="isPrintDisplay">
-                            <b-form-checkbox v-model="uploads.logo.isChecked_quotaion">見積書</b-form-checkbox>
+                            <b-form-checkbox v-model="uploads.logo.isChecked_quotation">見積書</b-form-checkbox>
                             <b-form-checkbox v-model="uploads.logo.isChecked_invoice">請求書</b-form-checkbox>
                             <b-form-checkbox v-model="uploads.logo.isChecked_delivery">納品書</b-form-checkbox>
                         </div>
@@ -206,7 +206,7 @@
                     <b-col cols="4">
                         <p>印鑑の印刷時の表示</p>
                         <div class="isPrintDisplay">
-                            <b-form-checkbox v-model="uploads.stamp.isChecked_quotaion">見積書</b-form-checkbox>
+                            <b-form-checkbox v-model="uploads.stamp.isChecked_quotation">見積書</b-form-checkbox>
                             <b-form-checkbox v-model="uploads.stamp.isChecked_invoice">請求書</b-form-checkbox>
                             <b-form-checkbox v-model="uploads.stamp.isChecked_delivery">納品書</b-form-checkbox>
                         </div>
@@ -299,12 +299,12 @@
             },
             uploads: {
                 stamp: {
-                    isChecked_quotaion: true,
+                    isChecked_quotation: true,
                     isChecked_invoice: true,
                     isChecked_delivery: true,
                 },
                 logo: {
-                    isChecked_quotaion: true,
+                    isChecked_quotation: true,
                     isChecked_invoice: true,
                     isChecked_delivery: true,
                 }
