@@ -52,7 +52,7 @@ def user_update(id):
     user.group = data['group']
     user.role = data['role']
 
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -119,7 +119,7 @@ def customer_update(id):
     customer.representative = data['representative']
     customer.memo = data['memo']
 
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -174,7 +174,7 @@ def item_update(id):
     item.cost = data['cost']
     item.memo = data['memo']
 
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -233,7 +233,7 @@ def invoice_update(id):
     invoice.memo = data['memo']
     invoice.remarks = data['remarks']
     invoice.isTaxExp = data['isTaxExp']
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -284,7 +284,7 @@ def invoice_item_update(id):
     invoiceItem.itemId = data['itemId']
     invoiceItem.price = data['price']
     invoiceItem.count = data['count']
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -343,7 +343,7 @@ def quotation_update(id):
     quotation.memo = data['memo']
     quotation.remarks = data['remarks']
     quotation.isTaxExp = data['isTaxExp']
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -396,7 +396,7 @@ def quotation_item_update(id):
     quotationItem.itemId = data['itemId']
     quotationItem.price = data['price']
     quotationItem.count = data['count']
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -446,7 +446,7 @@ def memo_update(id):
     memo.title = data['title']
     memo.content = data['content']
 
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -493,7 +493,7 @@ def unit_update(id):
 
     unit.unitName = data['unitName']
 
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -533,7 +533,7 @@ def setting_update():
     setting.isDisplayInvoiceStamp = data['isDisplayInvoiceStamp']
     setting.isDisplayDeliveryStamp = data['isDisplayDeliveryStamp']
 
-    db.commit()
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
