@@ -63,11 +63,11 @@
             "footter_size": 40    
         },
         "file":{
-            "outDir": "f'./pdf'", 
+            "outDir": "./pdf", 
             "file_name": "test.pdf"
         },
         "header":{
-            "title": ["EP","請求書","sm_r"],
+            "title": ["P","請求書","sm_r"],
             "title_after": ["E","Spacer(0,15*mm)"],
             "table_info":{
                 "table":[

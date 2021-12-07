@@ -99,6 +99,20 @@ def page_break(pageno):
     print(f"-----------Page Break {pageno}------------------------")
 
 
+def cv(src_l):
+    print("srcl:",src_l)
+    #return Paragraph(src_l[1],PS(**styles[src_l[2]]))
+    if src_l[0] == "P": 
+        return Paragraph(src_l[1],PS(**styles[src_l[2]]))
+    elif  src_l[0] == "E":
+        return eval(src_l[1])
+
+
+    #if src_l[0] == "P": return Paragraph(src_l[1],PS(**styles[src_l[2]]))
+
+    return Paragraph("error",PS(**styles['sm_l']))
+
+
 #------- initial ---------
 
 
@@ -121,6 +135,7 @@ with open( "./data.json", mode='r', encoding='utf-8') as f:
     d = json.load(f)
     d_data = d.get('data')
     defPdf = d.get('defPdf')
+    styles = d.get('style')
 
 
 nouHs = d_data['hdata']
@@ -181,8 +196,15 @@ doc.addPageTemplates(page_template)
 
 #-----タイトル表示 ------
 elements = []
-elements.append(Paragraph(defPdf['header']['title'][1]),PS(**style))
 
+#elements.append(Paragraph(defPdf['header']['title'][1],PS(**styles['big_center'])))
+#elements.append(Paragraph("テスト",PS(**styles['sm_r'])))
+
+elements.append(cv(defPdf['header']['title']))
+
+elements.append(cv(defPdf['header']['title_after']))
+
+elements.append(cv(defPdf['header']['title']))
 
 
 doc.build(elements)
