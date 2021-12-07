@@ -100,12 +100,16 @@ def page_break(pageno):
 
 
 def cv(src_l):
-    print("srcl:",src_l)
+    #print("srcl:",src_l)
     #return Paragraph(src_l[1],PS(**styles[src_l[2]]))
     if src_l[0] == "P": 
         return Paragraph(src_l[1],PS(**styles[src_l[2]]))
     elif  src_l[0] == "E":
         return eval(src_l[1])
+    elif  src_l[0] == "EP":
+        return Paragraph(eval(src_l[1]),PS(**styles[src_l[2]]))
+    elif  src_l[0] == "NOP":
+        return 
 
 
     #if src_l[0] == "P": return Paragraph(src_l[1],PS(**styles[src_l[2]]))
@@ -138,11 +142,11 @@ with open( "./data.json", mode='r', encoding='utf-8') as f:
     styles = d.get('style')
 
 
-nouHs = d_data['hdata']
-nouBs = d_data['bdata']
+_HEAD = d_data['hdata'][0]
+_ROWS = d_data['bdata']
 
-_HEAD = nouHs[0]
-_ROWS = nouBs
+#_HEAD = nouHs[0]
+#_ROWS = nouBs
 
 
 
@@ -204,57 +208,42 @@ elements.append(cv(defPdf['header']['title']))
 
 elements.append(cv(defPdf['header']['title_after']))
 
-elements.append(cv(defPdf['header']['title']))
-
-
-doc.build(elements)
-sys.exit()
-
-
-elements.append(defPdf['header']['title_after'])
 
 def make_table(table_info):
 #    h_data = defPdf['header']['table']
 
-    h_data = table_info['table']
+    t_data = table_info['table']
 
-
-    for i,row in enumerate( h_data):
-        key = ''
-        attr = ''
+    for i,row in enumerate(t_data):
         for j,col in enumerate( row ):
-            if type(col) is list:          
-                if col[0] == 'bindParagraph':
-                    key1= re.search('%%.*%%',str(col[1])).group()
-                    key2 = key1.replace('%%','')
-                    attr=col[2]
-                    db_val = nouHs[0][key2]
-                    bind_val = col[1].replace(key1,db_val)
-                    h_data[i][j] = Paragraph(bind_val,PS(**attr))
-                elif col[0] == 'evalParagraph' or col[0] == 'EP' or col[0]=='EP2':
-                    eval_val = eval(col[1])
-                    print("eval_val:",eval_val)
-                    
-                    attr=col[2]
-                    if col[0] =='EP2':
-                        attr = defPdf["style"][col[2]]
-
-                    if len(col) > 3 :
-                        print("@@@@@@@@@@@@@",col[3],eval_val)
-                        try:
-                            eval_val = col[3].format(eval_val)
-                        except:
-                            eval_val = ''
-                    h_data[i][j] = Paragraph(eval_val,PS(**attr))
+            if type(col) is list:
+                col_val = cv(col)          
+            else:
+                col_val  = col
+            #print("col:",col_val)
+            t_data[i][j] = col_val
+ 
         
+    #print("t_data:",t_data)    
+    #ht=Table(t_data)
 
     if 'row_Heights' in table_info:
-        ht=Table(h_data,colWidths=table_info['col_widths'],rowHeights=table_info['row_Heights'])
+        ht=Table(t_data,colWidths=table_info['col_widths'],rowHeights=table_info['row_Heights'])
     else:    
-        ht=Table(h_data,colWidths=table_info['col_widths'])
+        ht=Table(t_data,colWidths=cv(table_info['col_widths']))
 
+    #t_styles = []
+    #for t_style in table_info['table_style']:
+    #    cv_style = cv(t_style)
+    #    if cv_style : t_styles.append(cv_style)
 
-    ht.setStyle(TableStyle(table_info['table_style']))
+    #ht.setStyle(TableStyle(table_info['table_style']))
+    #t_styles = [
+    #    ('SPAN',(0,0),(0,8))
+    #]
+#    ht.setStyle(TableStyle(t_styles))
+
+#    print("t_styles:",t_styles)
 
     return ht
 
@@ -263,9 +252,16 @@ ht = make_table(defPdf['header']['table_info'])
 
 elements.append(ht)
 
+elements.append(cv(defPdf['header']['table_after']))
 
 
-elements.append(defPdf['header']['table_after'])
+doc.build(elements)
+sys.exit()
+
+
+
+
+
 
 
 #------明細表示 ------
