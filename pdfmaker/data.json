@@ -1,4 +1,96 @@
 {
+
+    "style":{
+        "sm_r":{
+            "name":         "Normal",
+            "alignment":    2,
+            "fontName":     "IPAexGothic",
+            "fontSize":     11
+        },
+
+        "sm_l":{
+            "name":         "Normal",
+            "alignment":    0,
+            "fontName":     "IPAexGothic",
+            "fontSize":     11
+        },
+
+        "sm_l_b":{
+            "name":         "Normal",
+            "alignment":    0,
+            "fontName":     "IPAexGothic",
+            "fontSize":     12
+        },
+
+        "md_l_b":{
+            "name":         "Normal",
+            "alignment":    0,
+            "fontName":     "IPAexGothic",
+            "fontSize":     15
+        },
+
+        "big_center":{
+            "name":         "Normal",
+            "alignment":    1,
+            "fontName":     "IPAexGothic",
+            "fontSize":     20,
+            "underlineWidth":   0.5,
+            "underlineGap":     0,
+            "underlineOffset": -5.0,
+            "strikeWidth":   0.5,
+            "strikeGap" : 0,
+            "strikeOffset" : -3.0,
+            "leading":2
+        },
+        "client":{
+            "name":         "Normal",
+            "alignment":    0,
+            "fontName":     "IPAexGothic",
+            "fontSize":     18,
+            "underlineWidth":   1,
+            "underlineGap":     1,
+            "underlineOffset": -3.0,
+            "textColor": "#000000"
+        }  
+    },
+    "defPdf":{
+        "attr":{
+            "name": "def_invoice",
+            "name_jp":"請求書",
+            "page_size": "A4",
+            "page_type": "portrait",
+            "top_mergin": 15,
+            "footter_size": 40    
+        },
+        "file":{
+            "outDir": "f'./pdf'", 
+            "file_name": "test.pdf"
+        },
+        "header":{
+            "title": ["EP","請求書","sm_r"],
+            "title_after": ["E","Spacer(0,15*mm)"],
+            "table_info":{
+                "table":[
+                    [ ["EP" ,"h_client","client"],["EP" ,"h_date","sm_r"]],
+                    ["",""],
+                    ["",["EP2","'株式会社　テストコム'","md_l_b"] ],
+                    ["",""],
+                    ["", ["EP2","'鹿沼店:栃木県鹿沼市板荷0000－99'","sm_r"]],
+                    ["", ["EP2","'TEL: 0289-000-0000'","sm_r"]],
+                    ["", ["EP2","'FAX: 0289-000-0001'","sm_r"]],
+                    ["", ["EP2","'宇都宮店:栃木県宇都宮市鶴田0-00-0'","sm_r"]],
+                    ["", ["EP2","'TEL: 028-000-0000'","sm_r"]],
+                    ["", ["EP2" ,"小野","sm_l"]]
+                ],
+                "col_widths": [110, 70],
+                "table_style":[
+                    ["NOP","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                    ["E","('SPAN',(0,7),(0,8))",""]
+                ]
+            },
+            "table_after": ["E","Spacer(10*mm,5*mm)"]
+        }  
+    },
     "data": {
         "hdata": [
             {
