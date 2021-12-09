@@ -14,6 +14,12 @@
             "fontName":     "IPAexGothic",
             "fontSize":     11
         },
+        "sm_c":{
+            "name":         "Normal",
+            "alignment":    1,
+            "fontName":     "IPAexGothic",
+            "fontSize":     11
+        },
 
         "sm_l_b":{
             "name":         "Normal",
@@ -84,12 +90,51 @@
                 ],
                 "col_widths": ["E","[110*mm, 70*mm]"],
                 "table_style":[
-                    ["NOP","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                    ["E","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
                     ["E","('SPAN',(0,7),(0,8))"]
                 ]
             },
             "table_after": ["E","Spacer(10*mm,5*mm)"]
-        }  
+        },
+        "body":{
+            "detail":{
+                "num_key": "item_num",
+                "num_field": "num",
+                "row_max": 12,
+                "label_style" : "sm_c",
+                "fields":[
+                    {  "key": "num"        ,"label": "No." ,  "width": 20 , "p_style":"sm_r","eval":"_ROWNUM+1" },
+                    {  "key": "p_name"      ,"label": "商品名", "width": 90, "p_style":"sm_l" },
+                    {  "key": "p_qty"       ,"label": "数量",   "width": 15 , "p_style":"sm_r", "format": "{:,}" },
+                    {  "key": "p_price"     ,"label": "単価",   "width": 25 , "p_style":"sm_r", "format": "{:,}" },
+                    {  "key": "p_calc_price","label": "金額",   "width": 25 , "p_style":"sm_r", "format": "{:,}" }
+                ],
+                "styles":[
+                    ["E","('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                    ["E","('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
+                    ["E","('ALIGN', (0, 0), (-1, 0), 'CENTER')"],
+                    ["E","('BACKGROUND', (0, 0), (6, 0), colors.lightgrey)"]
+                ]
+            },
+            "detail_after":{
+                "table_info":{
+                    "table":[
+                        ["",["EPF","'小計(税込)' if _HEAD['tax'] == '税込' else '小計'","sma_l","{:}"], ["EPF","compute_sum", "sm_r","{:,}"]],
+                        ["",["EPF","'うち消費税分' if _HEAD['tax'] == '税込' else '消費税分'","sm_l","{:}"], ["EPF","compute_tax","sm_r","{:,}" ]],
+                        ["",["P","合計金額","sm_left"] ,["EPF","compute_total,style_small_right","{:,}" ]]
+                    ],
+                    "col_widths":["E","(55*mm, 75*mm, 40*mm)"],
+                    "table_style":[
+                        ["E","('LINEBEFORE', (0, 0), (0, -1), 0.15, colors.black)"],
+                        ["E","('LINEABOVE', (0, 0), (-1, -1), 0.15, colors.black)"],
+                        ["E","('LINEBELOW', (0, 0), (-1, -1), 0.15, colors.black)"],
+                        ["E","('GRID',(2,0),(-1,-1),0.15,colors.black)"]
+                    ]    
+                }
+            }    
+
+        }
+
     },
     "data": {
         "hdata": [
@@ -123,7 +168,8 @@
                 "item_num": 1,
                 "p_name": "草刈機",
                 "p_qty": 1,
-                "p_price": 50000
+                "p_price": 50000,
+                "p_calc_price": 50000
             },
             {
                 "h_id": 691,
@@ -131,7 +177,8 @@
                 "item_num": 2,
                 "p_name": "管理機",
                 "p_qty": 1,
-                "p_price": 3000
+                "p_price": 3000,
+                "p_calc_price": 3000
             }
         ]
     }
