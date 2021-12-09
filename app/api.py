@@ -151,11 +151,11 @@ def item_show(id):
 def item_create():
     data = request.json
     newItem = Item(
-        itemName=data['itemName'],
-        unit=data['unit'],
-        basePrice=data['basePrice'],
-        cost=data['cost'],
-        memo=data['memo'],
+        itemName=data.get('itemName'),
+        unit=data.get('unit'),
+        basePrice=data.get('basePrice'),
+        cost=data.get('cost'),
+        memo=data.get('memo'),
     )
     db.session.add(newItem)
     db.session.commit()
@@ -168,11 +168,11 @@ def item_update(id):
     data = request.json
     item = Item.query.filter(Item.id == id).one()
 
-    item.itemName = data['itemName']
-    item.unit = data['unit']
-    item.basePrice = data['basePrice']
-    item.cost = data['cost']
-    item.memo = data['memo']
+    item.itemName = data.get('itemName')
+    item.unit = data.get('unit')
+    item.basePrice = data.get('basePrice')
+    item.cost = data.get('cost')
+    item.memo = data.get('memo')
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
@@ -206,14 +206,14 @@ def invoice_show(id):
 def invoice_create():
     data = request.json
     newInvoice = Invoice(
-        customerId=data['customerId'],
-        applyNumber=data['applyNumber'],
-        applyDate=data['applyDate'],
-        expiry=data['expiry'],
-        title=data['title'],
-        memo=data['memo'],
-        remarks=data['remarks'],
-        isTaxExp=data['isTaxExp'],
+        customerId=data.get('customerId'),
+        applyNumber=data.get('applyNumber'),
+        applyDate=data.get('applyDate'),
+        expiry=data.get('expiry'),
+        title=data.get('title'),
+        memo=data.get('memo'),
+        remarks=data.get('remarks'),
+        isTaxExp=data.get('isTaxExp'),
     )
     db.session.add(newInvoice)
     db.session.commit()
@@ -225,14 +225,14 @@ def invoice_create():
 def invoice_update(id):
     data = request.json
     invoice = Invoice.query.filter(Invoice.id == id).one()
-    invoice.customerId = data['customerId']
-    invoice.applyNumber = data['applyNumber']
-    invoice.applyDate = data['applyDate']
-    invoice.expiry = data['expiry']
-    invoice.title = data['title']
-    invoice.memo = data['memo']
-    invoice.remarks = data['remarks']
-    invoice.isTaxExp = data['isTaxExp']
+    invoice.customerId = data.get('customerId')
+    invoice.applyNumber = data.get('applyNumber')
+    invoice.applyDate = data.get('applyDate')
+    invoice.expiry = data.get('expiry')
+    invoice.title = data.get('title')
+    invoice.memo = data.get('memo')
+    invoice.remarks = data.get('remarks')
+    invoice.isTaxExp = data.get('isTaxExp')
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -265,10 +265,10 @@ def invoice_item_show(id):
 def invoice_item_create():
     data = request.json
     newInvoiceItem = Invoice_Item(
-        invoiceId=data['invoiceId'],
-        itemId=data['itemId'],
-        price=data['price'],
-        count=data['count'],
+        invoiceId=data.get('invoiceId'),
+        itemId=data.get('itemId'),
+        price=data.get('price'),
+        count=data.get('count'),
     )
     db.session.add(newInvoiceItem)
     db.session.commit()
@@ -280,10 +280,10 @@ def invoice_item_create():
 def invoice_item_update(id):
     data = request.json
     invoiceItem = Invoice_Item.query.filter(Invoice_Item.id == id).one()
-    invoiceItem.invoiceId = data['invoiceId']
-    invoiceItem.itemId = data['itemId']
-    invoiceItem.price = data['price']
-    invoiceItem.count = data['count']
+    invoiceItem.invoiceId = data.get('invoiceId')
+    invoiceItem.itemId = data.get('itemId')
+    invoiceItem.price = data.get('price')
+    invoiceItem.count = data.get('count')
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -316,14 +316,14 @@ def quotation_show(id):
 def quotation_create():
     data = request.json
     newQuotation = Quotation(
-        customerId=data['customerId'],
-        applyNumber=data['applyNumber'],
-        applyDate=data['applyDate'],
-        expiry=data['expiry'],
-        title=data['title'],
-        memo=data['memo'],
-        remarks=data['remarks'],
-        isTaxExp=data['isTaxExp'],
+        customerId=data.get('customerId'),
+        applyNumber=data.get('applyNumber'),
+        applyDate=data.get('applyDate'),
+        expiry=data.get('expiry'),
+        title=data.get('title'),
+        memo=data.get('memo'),
+        remarks=data.get('remarks'),
+        isTaxExp=data.get('isTaxExp'),
     )
     db.session.add(newQuotation)
     db.session.commit()
@@ -335,14 +335,14 @@ def quotation_create():
 def quotation_update(id):
     data = request.json
     quotation = Quotation.query.filter(Quotation.id == id).one()
-    quotation.customerId = data['customerId']
-    quotation.applyNumber = data['applyNumber']
-    quotation.applyDate = data['applyDate']
-    quotation.expiry = data['expiry']
-    quotation.title = data['title']
-    quotation.memo = data['memo']
-    quotation.remarks = data['remarks']
-    quotation.isTaxExp = data['isTaxExp']
+    quotation.customerId = data.get('customerId')
+    quotation.applyNumber = data.get('applyNumber')
+    quotation.applyDate = data.get('applyDate')
+    quotation.expiry = data.get('expiry')
+    quotation.title = data.get('title')
+    quotation.memo = data.get('memo')
+    quotation.remarks = data.get('remarks')
+    quotation.isTaxExp = data.get('isTaxExp')
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -377,10 +377,10 @@ def quotation_item_show(id):
 def quotation_item_create():
     data = request.json
     newQuotationItem = Quotation_Item(
-        quotationId=data['quotationId'],
-        itemId=data['itemId'],
-        price=data['price'],
-        count=data['count'],
+        quotationId=data.get('quotationId'),
+        itemId=data.get('itemId'),
+        price=data.get('price'),
+        count=data.get('count'),
     )
     db.session.add(newQuotationItem)
     db.session.commit()
@@ -392,10 +392,10 @@ def quotation_item_create():
 def quotation_item_update(id):
     data = request.json
     quotationItem = Quotation_Item.query.filter(Quotation_Item.id == id).one()
-    quotationItem.quotationId = data['quotationId']
-    quotationItem.itemId = data['itemId']
-    quotationItem.price = data['price']
-    quotationItem.count = data['count']
+    quotationItem.quotationId = data.get('quotationId')
+    quotationItem.itemId = data.get('itemId')
+    quotationItem.price = data.get('price')
+    quotationItem.count = data.get('count')
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -429,8 +429,8 @@ def memo_show(id):
 def memo_create():
     data = request.json
     newMemo = Memo(
-        title=data['title'],
-        content=data['content'],
+        title=data.get('title'),
+        content=data.get('content'),
     )
     db.session.add(newMemo)
     db.session.commit()
@@ -443,8 +443,8 @@ def memo_update(id):
     data = request.json
     memo = Memo.query.filter(Memo.id == id).one()
 
-    memo.title = data['title']
-    memo.content = data['content']
+    memo.title = data.get('title')
+    memo.content = data.get('content')
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
@@ -478,7 +478,7 @@ def unit_show(id):
 def unit_create():
     data = request.json
     newUnit = Unit(
-        unitName=data['unitName'],
+        unitName=data.get('unitName'),
     )
     db.session.add(newUnit)
     db.session.commit()
@@ -491,7 +491,7 @@ def unit_update(id):
     data = request.json
     unit = Unit.query.filter(Unit.id == id).one()
 
-    unit.unitName = data['unitName']
+    unit.unitName = data.get('unitName')
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
@@ -516,22 +516,22 @@ def setting_update():
     data = request.json
     setting = Setting.query.filter(Setting.id == 1).one()
 
-    setting.companyName = data['companyName']
-    setting.representative = data['representative']
-    setting.postNumber = data['postNumber']
-    setting.address = data['address']
-    setting.telNumber = data['telNumber']
-    setting.faxNumber = data['faxNumber']
-    setting.url = data['url']
-    setting.email = data['email']
-    setting.logoFilePath = data['logoFilePath']
-    setting.stampFilePath = data['stampFilePath']
-    setting.isDisplayQuotationLogo = data['isDisplayQuotationLogo']
-    setting.isDisplayInvoiceLogo = data['isDisplayInvoiceLogo']
-    setting.isDisplayDeliveryLogo = data['isDisplayDeliveryLogo']
-    setting.isDisplayQuotationStamp = data['isDisplayQuotationStamp']
-    setting.isDisplayInvoiceStamp = data['isDisplayInvoiceStamp']
-    setting.isDisplayDeliveryStamp = data['isDisplayDeliveryStamp']
+    setting.companyName = data.get('companyName')
+    setting.representative = data.get('representative')
+    setting.postNumber = data.get('postNumber')
+    setting.address = data.get('address')
+    setting.telNumber = data.get('telNumber')
+    setting.faxNumber = data.get('faxNumber')
+    setting.url = data.get('url')
+    setting.email = data.get('email')
+    setting.logoFilePath = data.get('logoFilePath')
+    setting.stampFilePath = data.get('stampFilePath')
+    setting.isDisplayQuotationLogo = data.get('isDisplayQuotationLogo')
+    setting.isDisplayInvoiceLogo = data.get('isDisplayInvoiceLogo')
+    setting.isDisplayDeliveryLogo = data.get('isDisplayDeliveryLogo')
+    setting.isDisplayQuotationStamp = data.get('isDisplayQuotationStamp')
+    setting.isDisplayInvoiceStamp = data.get('isDisplayInvoiceStamp')
+    setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
