@@ -31,10 +31,10 @@ def user_show(id):
 def user_create():
     data = request.json
     newUser = User(
-        name=data['name'],
-        password=data['password'],
-        group=data['group'],
-        role=data['role'],
+        name=data.get('name'),
+        password=data.get('password'),
+        group=data.get('group'),
+        role=data.get('role'),
     )
     db.session.add(newUser)
     db.session.commit()
@@ -47,10 +47,10 @@ def user_update(id):
     data = request.json
     user = User.query.filter(User.id == id).one()
 
-    user.name = data['name']
-    user.password = data['password']
-    user.group = data['group']
-    user.role = data['role']
+    user.name = data.get('name')
+    user.password = data.get('password')
+    user.group = data.get('group')
+    user.role = data.get('role')
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
