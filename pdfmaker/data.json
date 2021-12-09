@@ -151,8 +151,10 @@
                     ["E","('ALIGN',(0,0),(0,-1),'CENTER')"]
                 ]
             },
-            "hanko": ["E","canvas.drawImage('./inkan.png', 490,525,50,50,mask='auto')"],
-            "logo": ["E","canvas.drawImage('./logo2.jpg', 490,675,50,50,mask='auto')"]    
+            "DrawImage":[
+                ["E","('./inkan.png', 490,525,50,50,mask='auto')"],
+                ["E","('./logo2.jpg', 490,675,50,50,mask='auto')"]        
+            ]
         }    
     },
     "data": {
