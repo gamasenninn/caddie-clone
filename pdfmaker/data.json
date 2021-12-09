@@ -90,7 +90,7 @@
                 ],
                 "col_widths": ["E","[110*mm, 70*mm]"],
                 "table_style":[
-                    ["E","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                    ["NOP","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
                     ["E","('SPAN',(0,7),(0,8))"]
                 ]
             },
@@ -119,11 +119,11 @@
             "detail_after":{
                 "table_info":{
                     "table":[
-                        ["",["EPF","'小計(税込)' if _HEAD['tax'] == '税込' else '小計'","sma_l","{:}"], ["EPF","compute_sum", "sm_r","{:,}"]],
-                        ["",["EPF","'うち消費税分' if _HEAD['tax'] == '税込' else '消費税分'","sm_l","{:}"], ["EPF","compute_tax","sm_r","{:,}" ]],
-                        ["",["P","合計金額","sm_left"] ,["EPF","compute_total,style_small_right","{:,}" ]]
+                        ["",["EPF","'小計(税込)' if _HEAD['tax'] == '税込' else '小計'","sm_l","{:}"], ["EPF","999999", "sm_r","{:,}"]],
+                        ["",["EPF","'うち消費税分' if _HEAD['tax'] == '税込' else '消費税分'","sm_l","{:}"], ["EPF","999998","sm_r","{:,}" ]],
+                        ["",["P","合計金額","sm_l"] ,["EPF","99997","sm_r","{:,}" ]]
                     ],
-                    "col_widths":["E","(55*mm, 75*mm, 40*mm)"],
+                    "col_widths":["E","(60*mm, 75*mm, 40*mm)"],
                     "table_style":[
                         ["E","('LINEBEFORE', (0, 0), (0, -1), 0.15, colors.black)"],
                         ["E","('LINEABOVE', (0, 0), (-1, -1), 0.15, colors.black)"],
@@ -133,8 +133,27 @@
                 }
             }    
 
-        }
-
+        },
+        "footer":{
+            "pos_xy": ["E","(15*mm,10*mm)"],
+            "table_info":{
+                "table":[
+                    ["摘要", "", "", ""],
+                    ["","", "", ""]
+                ],
+                "col_widths": ["E","(110*mm,10*mm,30*mm,30*mm)"],
+                "row_Heights": ["E","(8*mm,30*mm)"],
+                "table_style":[
+                    ["E","('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                    ["E","('GRID', (0, 0), (0,1), 0.25, colors.black)"],
+                    ["E","('GRID', (2, 0), (3,2), 0.25, colors.black)"],
+                    ["E","('VALIGN',(0,1),(0,-1),'TOP')"],
+                    ["E","('ALIGN',(0,0),(0,-1),'CENTER')"]
+                ]
+            },
+            "hanko": ["E","canvas.drawImage('./inkan.png', 490,525,50,50,mask='auto')"],
+            "logo": ["E","canvas.drawImage('./logo2.jpg', 490,675,50,50,mask='auto')"]    
+        }    
     },
     "data": {
         "hdata": [

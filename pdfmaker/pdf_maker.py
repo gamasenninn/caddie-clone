@@ -83,7 +83,7 @@ def make_table(table_info):
             t_data[i][j] = col_val
 
     if 'row_Heights' in table_info:
-        ht=Table(t_data,colWidths=table_info['col_widths'],rowHeights=table_info['row_Heights'])
+        ht=Table(t_data,colWidths=cv(table_info['col_widths']),rowHeights=cv(table_info['row_Heights']))
     else:    
         ht=Table(t_data,colWidths=cv(table_info['col_widths']))
 
@@ -150,7 +150,9 @@ def footer(canvas, doc):
 
     ft = make_table(defPdf['footer']['table_info'])
 
-    x,y =defPdf['footer']['pos_xy']
+    x,y =cv(defPdf['footer']['pos_xy'])
+    #print("xy:",type(x),x)
+    #print("xy:",type(y),y)
 
     ft.wrapOn(canvas, x, y)
     ft.drawOn(canvas, x, y)
@@ -158,11 +160,10 @@ def footer(canvas, doc):
 
     #canvas.drawImage('./inkan.png', 300,300,50,50,mask='auto')
 
-    if "hanko" in  defPdf['footer']:
-        eval(defPdf['footer']['hanko'])
+#    for di in defPdf['footer']['DrawImage']:
+#        print(di[1])
+        #canvas.drawImage(di[1])
 
-    if "logo" in  defPdf['footer']:
-        eval(defPdf['footer']['logo'])
 
     canvas.restoreState()
 
@@ -184,6 +185,10 @@ def cv(src_l):
         return eval(src_l[1])
     elif  src_l[0] == "EP":
         return Paragraph(eval(src_l[1]),PS(**styles[src_l[2]]))
+    elif  src_l[0] == "EPF":
+        print("EPF:",src_l[1])
+        val = src_l[3].format(eval(src_l[1]))
+        return Paragraph(val,PS(**styles[src_l[2]]))
     elif  src_l[0] == "NOP":
         return 
 
@@ -248,8 +253,8 @@ frames = [
     Frame(0 * mm, ft_size, w, h-ft_size-top_mergin, showBoundary=0)
 ]
 
-#page_template = PageTemplate("frames", frames=frames,onPage=footer)
-page_template = PageTemplate("frames", frames=frames)
+page_template = PageTemplate("frames", frames=frames,onPage=footer)
+#page_template = PageTemplate("frames", frames=frames)
 doc.addPageTemplates(page_template)
 
 #-----タイトル表示 ------
@@ -265,6 +270,13 @@ elements.append(cv(defPdf['header']['table_after']))
 
 bt = make_detail(defPdf['body']['detail'],d_data.get('bdata'))
 elements.append(bt)
+
+bt = make_table(defPdf['body']['detail_after']['table_info'])
+elements.append(bt)
+
+#ft = make_table(defPdf['footer']['table_info'])
+#elements.append(ft)
+
 
 doc.build(elements)
 sys.exit()
