@@ -208,8 +208,10 @@ def invoice_create():
     newInvoice = Invoice(
         customerId=data.get('customerId'),
         applyNumber=data.get('applyNumber'),
-        applyDate=data.get('applyDate'),
-        expiry=data.get('expiry'),
+        applyDate=datetime.strptime(
+            data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
+        expiry=datetime.strptime(
+            data.get('expiry'), "%Y-%m-%d") if data.get('expiry') else None,
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
@@ -227,8 +229,10 @@ def invoice_update(id):
     invoice = Invoice.query.filter(Invoice.id == id).one()
     invoice.customerId = data.get('customerId')
     invoice.applyNumber = data.get('applyNumber')
-    invoice.applyDate = data.get('applyDate')
-    invoice.expiry = data.get('expiry')
+    invoice.applyDate = datetime.strptime(
+        data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
+    invoice.expiry = datetime.strptime(
+        data.get('expiry'), "%Y-%m-%d") if data.get('expiry') else None
     invoice.title = data.get('title')
     invoice.memo = data.get('memo')
     invoice.remarks = data.get('remarks')
@@ -318,8 +322,10 @@ def quotation_create():
     newQuotation = Quotation(
         customerId=data.get('customerId'),
         applyNumber=data.get('applyNumber'),
-        applyDate=data.get('applyDate'),
-        expiry=data.get('expiry'),
+        applyDate=datetime.strptime(
+            data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
+        expiry=datetime.strptime(
+            data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
@@ -337,8 +343,10 @@ def quotation_update(id):
     quotation = Quotation.query.filter(Quotation.id == id).one()
     quotation.customerId = data.get('customerId')
     quotation.applyNumber = data.get('applyNumber')
-    quotation.applyDate = data.get('applyDate')
-    quotation.expiry = data.get('expiry')
+    quotation.applyDate = datetime.strptime(
+        data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
+    quotation.expiry = datetime.strptime(
+        data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
     quotation.title = data.get('title')
     quotation.memo = data.get('memo')
     quotation.remarks = data.get('remarks')
