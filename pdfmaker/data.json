@@ -152,8 +152,8 @@
                 ]
             },
             "DrawImage":[
-                ["E","('./inkan.png', 490,525,50,50,mask='auto')"],
-                ["E","('./logo2.jpg', 490,675,50,50,mask='auto')"]        
+                ["('./inkan.png', 490,560,50,50,mask='auto')"],
+                ["('./logo2.jpg', 495,675,50,50,mask='auto')"]        
             ]
         }    
     },

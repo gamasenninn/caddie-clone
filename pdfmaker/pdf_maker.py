@@ -160,9 +160,12 @@ def footer(canvas, doc):
 
     #canvas.drawImage('./inkan.png', 300,300,50,50,mask='auto')
 
-#    for di in defPdf['footer']['DrawImage']:
-#        print(di[1])
+    for di in defPdf['footer']['DrawImage']:
+        cmd = f'canvas.drawImage{di[0]}'
+        print(cmd)
+        eval(cmd)
         #canvas.drawImage(di[1])
+        #eval('canvas.drawImage'+di(1))
 
 
     canvas.restoreState()
