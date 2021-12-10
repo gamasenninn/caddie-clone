@@ -513,16 +513,16 @@ def unit_destroy(id):
 
 
 # 設定(Setting)
-@app.route('/setting', methods=['GET'])
+@app.route('/settings', methods=['GET'])
 def setting_index():
     setting = Setting.query.all()
     return jsonify(SettingSchema(many=True).dump(setting))
 
 
-@app.route('/setting', methods=['PUT'])
-def setting_update():
+@app.route('/setting/<id>', methods=['PUT'])
+def setting_update(id):
     data = request.json
-    setting = Setting.query.filter(Setting.id == 1).one()
+    setting = Setting.query.filter(Setting.id == id).one()
 
     setting.companyName = data.get('companyName')
     setting.representative = data.get('representative')
