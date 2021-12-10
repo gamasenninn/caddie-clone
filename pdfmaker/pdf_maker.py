@@ -26,6 +26,8 @@ import re
 from importlib import import_module
 import json
 
+import pprint
+
 
 #----------　フォント定義------------
 pdfmetrics.registerFont(TTFont('IPAexGothic','./ipaexg.ttf'))
@@ -68,13 +70,89 @@ class NumberedCanvas(canvas.Canvas):
             self.drawRightString(200*mm, 5*mm,
                 "Page %d of %d" % (self._pageNumber, page_count))
 
+def make_table(table_info):
+
+    t_data = table_info['table']
+
+    for i,row in enumerate(t_data):
+        for j,col in enumerate( row ):
+            if type(col) is list:
+                col_val = cv(col)          
+            else:
+                col_val  = col
+            t_data[i][j] = col_val
+
+    if 'row_Heights' in table_info:
+        ht=Table(t_data,colWidths=cv(table_info['col_widths']),rowHeights=cv(table_info['row_Heights']))
+    else:    
+        ht=Table(t_data,colWidths=cv(table_info['col_widths']))
+
+    t_styles = []
+    for t_style in table_info['table_style']:
+        cv_style = cv(t_style)
+        if cv_style : t_styles.append(cv_style)
+
+    ht.setStyle(TableStyle(t_styles))
+    print(t_styles)
+
+    return ht
+
+
+def make_row(fields,bdata):
+    _ROWNUM = 0
+
+    vals_l =[]
+
+    for b_row in bdata:
+        vals = []
+        col_width = 0
+        for f in fields:
+            k = f['key']
+            val = b_row.get(k) #値の取得
+
+            if 'eval' in f:
+                val = eval(str(f.get('eval')))
+            if 'format' in f:
+                if val:
+                    fmt = f.get('format')
+                    if fmt: val = fmt.format(val)
+            val = Paragraph(str(val),PS(**styles[f.get('p_style')]))
+            vals.append(val)
+        #print(vals)
+        _ROWNUM += 1
+        vals_l.append(vals)
+
+    return vals_l
+
+def make_detail(detail,bdata):
+
+    th_style = detail.get('label_style')
+    labels = [Paragraph(f.get('label'),PS(**styles[th_style])) for f in detail['fields']]
+    vals_l = make_row(detail['fields'],bdata)
+    vals_l.insert(0,labels)
+    col_width_l = [int(f.get('width'))*mm for f in detail['fields']]
+    bt=Table(vals_l,colWidths=col_width_l)
+
+    t_styles = []
+    for t_style in detail['styles']:
+        cv_style = cv(t_style)
+        if cv_style : t_styles.append(cv_style)
+
+    bt.setStyle(TableStyle(t_styles))
+
+
+
+    return bt
+
 
 def footer(canvas, doc):
     canvas.saveState()
 
     ft = make_table(defPdf['footer']['table_info'])
 
-    x,y =defPdf['footer']['pos_xy']
+    x,y =cv(defPdf['footer']['pos_xy'])
+    #print("xy:",type(x),x)
+    #print("xy:",type(y),y)
 
     ft.wrapOn(canvas, x, y)
     ft.drawOn(canvas, x, y)
@@ -82,11 +160,13 @@ def footer(canvas, doc):
 
     #canvas.drawImage('./inkan.png', 300,300,50,50,mask='auto')
 
-    if "hanko" in  defPdf['footer']:
-        eval(defPdf['footer']['hanko'])
+    for di in defPdf['footer']['DrawImage']:
+        cmd = f'canvas.drawImage{di[0]}'
+        print(cmd)
+        eval(cmd)
+        #canvas.drawImage(di[1])
+        #eval('canvas.drawImage'+di(1))
 
-    if "logo" in  defPdf['footer']:
-        eval(defPdf['footer']['logo'])
 
     canvas.restoreState()
 
@@ -108,6 +188,10 @@ def cv(src_l):
         return eval(src_l[1])
     elif  src_l[0] == "EP":
         return Paragraph(eval(src_l[1]),PS(**styles[src_l[2]]))
+    elif  src_l[0] == "EPF":
+        print("EPF:",src_l[1])
+        val = src_l[3].format(eval(src_l[1]))
+        return Paragraph(val,PS(**styles[src_l[2]]))
     elif  src_l[0] == "NOP":
         return 
 
@@ -145,27 +229,11 @@ with open( "./data.json", mode='r', encoding='utf-8') as f:
 _HEAD = d_data['hdata'][0]
 _ROWS = d_data['bdata']
 
-#_HEAD = nouHs[0]
-#_ROWS = nouBs
-
-
-
-
-#----　Styleパラメータのリスト　--  いらない-
-#styles = getSampleStyleSheet()
 
 #----ドキュメント本体-----
 
 attr_name = defPdf['attr']['name']
-#_ATTR_NAME = attr_name
-#_KEY = hkey
-#pfile = eval(defPdf['file']['outDir'])+"/"+eval(defPdf['file']['file_name'])
 pfile = defPdf['file']['outDir']+"/"+ defPdf['file']['file_name']
-#---------ここまで
-#サイズテーブル
-
-
-
 size = defPdf['attr']['page_size']
 if defPdf['attr']['page_type']=="landscape":
     w = psize[size]['long']*mm
@@ -173,11 +241,7 @@ if defPdf['attr']['page_type']=="landscape":
 else:
     w = psize[size]['short']*mm
     h = psize[size]['long']*mm
-    
-
-
 #w,h = A4
-
 doc = BaseDocTemplate(pfile, pagesize=[w,h])
 #doc = BaseDocTemplate(sys.stdout, pagesize=A4)
 
@@ -188,84 +252,41 @@ top_mergin = defPdf['attr']['top_mergin']*mm
 ft_size = defPdf['attr']['footter_size']*mm
 
 
-
-
 frames = [
-            Frame(0 * mm, ft_size, w, h-ft_size-top_mergin, showBoundary=0)
-    ]
+    Frame(0 * mm, ft_size, w, h-ft_size-top_mergin, showBoundary=0)
+]
 
-#page_template = PageTemplate("frames", frames=frames,onPage=footer)
-page_template = PageTemplate("frames", frames=frames)
+page_template = PageTemplate("frames", frames=frames,onPage=footer)
+#page_template = PageTemplate("frames", frames=frames)
 doc.addPageTemplates(page_template)
 
 #-----タイトル表示 ------
 elements = []
 
-#elements.append(Paragraph(defPdf['header']['title'][1],PS(**styles['big_center'])))
-#elements.append(Paragraph("テスト",PS(**styles['sm_r'])))
-
 elements.append(cv(defPdf['header']['title']))
-
 elements.append(cv(defPdf['header']['title_after']))
 
-
-def make_table(table_info):
-#    h_data = defPdf['header']['table']
-
-    t_data = table_info['table']
-
-    for i,row in enumerate(t_data):
-        for j,col in enumerate( row ):
-            if type(col) is list:
-                col_val = cv(col)          
-            else:
-                col_val  = col
-            #print("col:",col_val)
-            t_data[i][j] = col_val
- 
-        
-    #print("t_data:",t_data)    
-    #ht=Table(t_data)
-
-    if 'row_Heights' in table_info:
-        ht=Table(t_data,colWidths=table_info['col_widths'],rowHeights=table_info['row_Heights'])
-    else:    
-        ht=Table(t_data,colWidths=cv(table_info['col_widths']))
-
-    #t_styles = []
-    #for t_style in table_info['table_style']:
-    #    cv_style = cv(t_style)
-    #    if cv_style : t_styles.append(cv_style)
-
-    #ht.setStyle(TableStyle(table_info['table_style']))
-    #t_styles = [
-    #    ('SPAN',(0,0),(0,8))
-    #]
-#    ht.setStyle(TableStyle(t_styles))
-
-#    print("t_styles:",t_styles)
-
-    return ht
-
-#ht = make_table('header')
 ht = make_table(defPdf['header']['table_info'])
-
 elements.append(ht)
-
 elements.append(cv(defPdf['header']['table_after']))
+
+
+bt = make_detail(defPdf['body']['detail'],d_data.get('bdata'))
+elements.append(bt)
+
+bt = make_table(defPdf['body']['detail_after']['table_info'])
+elements.append(bt)
+
+#ft = make_table(defPdf['footer']['table_info'])
+#elements.append(ft)
 
 
 doc.build(elements)
 sys.exit()
 
 
-
-
-
-
-
-#------明細表示 ------
-
+#--- BODY 明細部　作cls
+# 成----
 def make_row(row_data):
     d=[]
     _ROW = row_data
@@ -295,6 +316,22 @@ def make_row(row_data):
             row_data[key] = val
 
     return d 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#------明細表示 ------
 
 
 b_data = []
