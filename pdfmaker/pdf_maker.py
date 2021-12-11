@@ -93,16 +93,16 @@ def make_table(table_info):
         if cv_style : t_styles.append(cv_style)
 
     ht.setStyle(TableStyle(t_styles))
-    print(t_styles)
+    #print(t_styles)
 
     return ht
 
 
-def make_row(fields,bdata):
+def make_row(detail,bdata):
     _ROWNUM = 0
 
     vals_l =[]
-
+    fields = detail['fields']
     for b_row in bdata:
         vals = []
         col_width = 0
@@ -121,6 +121,12 @@ def make_row(fields,bdata):
         #print(vals)
         _ROWNUM += 1
         vals_l.append(vals)
+    #空白行の作成
+    row_max = detail.get('row_max')
+    fld_len = len(fields)
+    sp_row_len = row_max - len(bdata)
+    sp_row = [['']*fld_len]*sp_row_len
+    vals_l = vals_l + sp_row
 
     return vals_l
 
@@ -128,15 +134,26 @@ def make_detail(detail,bdata):
 
     th_style = detail.get('label_style')
     labels = [Paragraph(f.get('label'),PS(**styles[th_style])) for f in detail['fields']]
-    vals_l = make_row(detail['fields'],bdata)
+    vals_l = make_row(detail,bdata)
     vals_l.insert(0,labels)
     col_width_l = [int(f.get('width'))*mm for f in detail['fields']]
-    bt=Table(vals_l,colWidths=col_width_l)
+
+    bt=Table(vals_l,repeatRows=1,colWidths=col_width_l)
 
     t_styles = []
     for t_style in detail['styles']:
         cv_style = cv(t_style)
         if cv_style : t_styles.append(cv_style)
+    #stripe設定
+    if detail.get('stripe_backcrounds'):
+        clr = detail['stripe_backcrounds']
+        stripes = [
+            ('BACKGROUND',(0,i),(-1,i),eval(clr[i%2]))
+            for i in range(1,len(vals_l))
+        ]
+        #print("stripes:", stripes)
+        t_styles = t_styles + stripes
+        #print(t_styles)
 
     bt.setStyle(TableStyle(t_styles))
 
@@ -164,12 +181,23 @@ def footer(canvas, doc):
         cmd = f'canvas.drawImage{di[0]}'
         print(cmd)
         eval(cmd)
-        #canvas.drawImage(di[1])
-        #eval('canvas.drawImage'+di(1))
 
 
     canvas.restoreState()
 
+
+def firstPage(canvas):
+    print("------- first page-------------")
+
+def drawImages(draw_images):
+    pass
+    #for di in draw_images:
+    #    cmd = f'canvas.drawImage{di[0]}'
+    #    print(cmd)
+    #    eval(cmd)
+
+def coords(canvas):
+    print("-----COORDS-------")
 
 def monitor(type,val):
     print(type,val)
@@ -180,8 +208,6 @@ def page_break(pageno):
 
 
 def cv(src_l):
-    #print("srcl:",src_l)
-    #return Paragraph(src_l[1],PS(**styles[src_l[2]]))
     if src_l[0] == "P": 
         return Paragraph(src_l[1],PS(**styles[src_l[2]]))
     elif  src_l[0] == "E":
@@ -189,230 +215,105 @@ def cv(src_l):
     elif  src_l[0] == "EP":
         return Paragraph(eval(src_l[1]),PS(**styles[src_l[2]]))
     elif  src_l[0] == "EPF":
-        print("EPF:",src_l[1])
         val = src_l[3].format(eval(src_l[1]))
         return Paragraph(val,PS(**styles[src_l[2]]))
     elif  src_l[0] == "NOP":
         return 
 
-
-    #if src_l[0] == "P": return Paragraph(src_l[1],PS(**styles[src_l[2]]))
-
     return Paragraph("error",PS(**styles['sm_l']))
+
+data={}
+defPdf ={}
+styles ={}
+def pdf_maker(d):
+    global data
+    data = d.get('data')
+
+    global defPdf
+    defPdf = d.get('defPdf')
+
+    global styles
+    styles = d.get('style')
+
+    _HEAD = data['hdata']
+    _ROWS = data['bdata']
+    _SUM = data['sum']
+
+    #----ドキュメント本体-----
+
+    attr_name = defPdf['attr']['name']
+    pfile = defPdf['file']['outDir']+"/"+ defPdf['file']['file_name']
+    size = defPdf['attr']['page_size']
+    if defPdf['attr']['page_type']=="landscape":
+        w = psize[size]['long']*mm
+        h = psize[size]['short']*mm
+    else:
+        w = psize[size]['short']*mm
+        h = psize[size]['long']*mm
+    #w,h = A4
+    doc = BaseDocTemplate(pfile, pagesize=[w,h])
+    #doc = BaseDocTemplate(sys.stdout, pagesize=A4)
+
+    #top_mergin = 20*mm
+    top_mergin = defPdf['attr']['top_mergin']*mm
+    ft_size = defPdf['attr']['footter_size']*mm
+
+    frames = [
+        Frame(0 * mm, ft_size, w, h-ft_size-top_mergin, showBoundary=0)
+    ]
+
+    page_template = PageTemplate("frames", frames=frames,onPage=footer)
+    #page_template = PageTemplate("frames", frames=frames)
+    #beforeDrawPage(canv,doc):
+    #    print ("----brfore draw pae------"
+    doc.addPageTemplates(page_template)
+
+    #-----タイトル表示 ------
+    elements = []
+
+    elements.append(cv(defPdf['header']['title']))
+    elements.append(cv(defPdf['header']['title_after']))
+    drawImages(defPdf['header']['drawImages'])
+
+    ht = make_table(defPdf['header']['table_info'])
+    elements.append(ht)
+    elements.append(cv(defPdf['header']['table_after']))
+
+
+    bt = make_detail(defPdf['body']['detail'],data.get('bdata'))
+    elements.append(bt)
+
+    bt = make_table(defPdf['body']['detail_after']['table_info'])
+    elements.append(bt)
+
+    #ft = make_table(defPdf['footer']['table_info'])
+    #elements.append(ft)
+
+    doc.setProgressCallBack(monitor)
+    doc.setPageCallBack(page_break)
+        
+
+    doc.build(elements,canvasmaker=NumberedCanvas)
+    #doc.build(elements)
+
 
 
 #------- initial ---------
+if __name__ == '__main__':
+
+    args = sys.argv
+    if len(args) == 1 :
+        json_file_name = './data.json'
+    elif len(args) ==2:
+        json_file_name = args[1]
+    else:
+        print("パラメータエラー\n")
+        sys.exit()
+        
+
+    with open( json_file_name, mode='r', encoding='utf-8') as f:
+        d = json.load(f)
+
+    pdf_maker(d)
 
-
-args = sys.argv
-if len(args) == 1 :
-    hkey = ''
-    mod_name = 'def_base'
-elif len(args) ==2:
-    hkey = int(args[1])
-    mod_name = 'def_base'
-elif len(args) == 3:
-    mod_name = args[1]
-    hkey = int(args[2])
-else:
-    print("パラメータエラー\n")
-    sys.exit()
-    
-
-with open( "./data.json", mode='r', encoding='utf-8') as f:
-    d = json.load(f)
-    d_data = d.get('data')
-    defPdf = d.get('defPdf')
-    styles = d.get('style')
-
-
-_HEAD = d_data['hdata'][0]
-_ROWS = d_data['bdata']
-
-
-#----ドキュメント本体-----
-
-attr_name = defPdf['attr']['name']
-pfile = defPdf['file']['outDir']+"/"+ defPdf['file']['file_name']
-size = defPdf['attr']['page_size']
-if defPdf['attr']['page_type']=="landscape":
-    w = psize[size]['long']*mm
-    h = psize[size]['short']*mm
-else:
-    w = psize[size]['short']*mm
-    h = psize[size]['long']*mm
-#w,h = A4
-doc = BaseDocTemplate(pfile, pagesize=[w,h])
-#doc = BaseDocTemplate(sys.stdout, pagesize=A4)
-
-
-
-#top_mergin = 20*mm
-top_mergin = defPdf['attr']['top_mergin']*mm
-ft_size = defPdf['attr']['footter_size']*mm
-
-
-frames = [
-    Frame(0 * mm, ft_size, w, h-ft_size-top_mergin, showBoundary=0)
-]
-
-page_template = PageTemplate("frames", frames=frames,onPage=footer)
-#page_template = PageTemplate("frames", frames=frames)
-doc.addPageTemplates(page_template)
-
-#-----タイトル表示 ------
-elements = []
-
-elements.append(cv(defPdf['header']['title']))
-elements.append(cv(defPdf['header']['title_after']))
-
-ht = make_table(defPdf['header']['table_info'])
-elements.append(ht)
-elements.append(cv(defPdf['header']['table_after']))
-
-
-bt = make_detail(defPdf['body']['detail'],d_data.get('bdata'))
-elements.append(bt)
-
-bt = make_table(defPdf['body']['detail_after']['table_info'])
-elements.append(bt)
-
-#ft = make_table(defPdf['footer']['table_info'])
-#elements.append(ft)
-
-
-doc.build(elements)
-sys.exit()
-
-
-#--- BODY 明細部　作cls
-# 成----
-def make_row(row_data):
-    d=[]
-    _ROW = row_data
-    for b_row in defPdf['body']['fields']:
-        add_sw = False
-        key = b_row['key']
-        if key in row_data:
-            val = str(row_data[key])
-#            print("++++",key,val)
-        else:
-            val = ''
-            add_sw =True
-#            print("+--+",key,val)
-
-        if 'eval' in b_row.keys() :
-#            print("-eval---",val)
-            if b_row['eval'] :
-                val = eval(str(b_row['eval']))
-                print("//////",val,type(val))
-                if 'format' in b_row:
-                    if val != '':
-                        val = b_row['format'].format(val)
-                        print("%%%%%%%",val)
-        p = Paragraph(str(val),PS(**b_row['p_style']))
-        d.append(p)
-        if add_sw == True:
-            row_data[key] = val
-
-    return d 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#------明細表示 ------
-
-
-b_data = []
-b_data.append([row['label'] for row in defPdf['body']['fields']])
-
-#---- test
-_ROWNUM = 0
-_STR_ROWNUM = ''
-row_max = defPdf['body']['row_max']
-if row_max - len(nouBs) < 0 : row_max = len(nouBs)
-
-if 'num_key' in defPdf['body']:
-    target_key = defPdf['body']['num_key']
-    target_field = defPdf['body']['num_field']
-    nums = [ nouB[target_key] for nouB in nouBs]
-    field_count = len(defPdf['body']['fields'])
-    field_list =[fld['key'] for fld in defPdf['body']['fields']]
-    field_pos =  field_list.index(target_field)
-    nop_field_l = ['' for i in range(field_count)]
-    num_mode = True
-else:
-    nums = []
-    key_count =0
-    num_mode = False
-
-if num_mode:
-    for i in range(1,row_max+1):
-        if not(i in nums):
-            print(i,"...............None")
-            nfl = nop_field_l.copy()
-            p_style = defPdf['body']['fields'][field_pos]['p_style']
-            nfl[field_pos] = Paragraph(str(i),PS(**p_style))    
-            b_data.append(nfl)
-
-        else:
-            idx = nums.index(i)
-            print(i,nouBs[idx])
-            d = make_row(nouBs[idx])
-            b_data.append(d)
-
-        _ROWNUM += 1
-        _STR_ROWNUM = str(_ROWNUM)
-
-else:
-    record_max = len(nouBs)
-    for i in range(row_max):
-        if i < record_max:
-            print(i,nouBs[i])
-            d = make_row(nouBs[i])
-            b_data.append(d)
-        else:
-            print(i,"...............None")
-            b_data.append(['','','','',''])
-
-        _ROWNUM += 1
-        _STR_ROWNUM = str(_ROWNUM)
-
-
-#----        
-	
-
-widths = [row['width'] for row in defPdf['body']['fields'] ]
-
-bt=Table(b_data,repeatRows=1,colWidths=widths)
-
-
-tstyle_param = defPdf['body']['title_style']
-
-bt.setStyle(TableStyle(tstyle_param))
-
-elements.append(Spacer(2*mm, 2*mm))
-elements.append(bt)
-
-
-after_table = make_table(defPdf['body']['after_table'])
-elements.append(after_table)
-
-
-doc.setProgressCallBack(monitor)
-doc.setPageCallBack(page_break)
-    
-
-doc.build(elements,canvasmaker=NumberedCanvas)
 
