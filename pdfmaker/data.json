@@ -73,11 +73,11 @@
             "file_name": "test.pdf"
         },
         "header":{
-            "title": ["P","請求書","big_center"],
+            "title": ["EP","_HEAD['category']","big_center"],
             "title_after": ["E","Spacer(0,15*mm)"],
             "table_info":{
                 "table":[
-                    [ ["EP" ,"_HEAD['client_name']","client"],["EP" ,"_HEAD['apply_date']","sm_r"]],
+                    [ ["EP" ,"_HEAD['clientName']","client"],["EP" ,"_HEAD['dueDate']","sm_r"]],
                     ["",""],
                     ["",["P","株式会社　テストコム","md_l_b"] ],
                     ["",""],
@@ -86,7 +86,7 @@
                     ["", ["P","FAX: 0289-000-0001","sm_r"]],
                     ["", ["P","宇都宮店:栃木県宇都宮市鶴田0-00-0","sm_r"]],
                     ["", ["P","TEL: 028-000-0000","sm_r"]],
-                    ["", ["P" ,"小野","sm_l"]]
+                    ["", ["EP" ,"_HEAD['person']","sm_l"]]
                 ],
                 "col_widths": ["E","[110*mm, 70*mm]"],
                 "table_style":[
@@ -98,16 +98,16 @@
         },
         "body":{
             "detail":{
-                "num_key": "item_num",
+                "num_key": "itemNum",
                 "num_field": "num",
                 "row_max": 12,
                 "label_style" : "sm_c",
                 "fields":[
-                    {  "key": "num"        ,"label": "No." ,  "width": 20 , "p_style":"sm_r","eval":"_ROWNUM+1" },
-                    {  "key": "p_name"      ,"label": "商品名", "width": 90, "p_style":"sm_l" },
-                    {  "key": "p_qty"       ,"label": "数量",   "width": 15 , "p_style":"sm_r", "format": "{:,}" },
-                    {  "key": "p_price"     ,"label": "単価",   "width": 25 , "p_style":"sm_r", "format": "{:,}" },
-                    {  "key": "p_calc_price","label": "金額",   "width": 25 , "p_style":"sm_r", "format": "{:,}" }
+                    {  "key": "num"         ,"label": "No." ,  "width": 20 , "p_style":"sm_r","eval":"_ROWNUM+1" },
+                    {  "key": "productName" ,"label": "商品名", "width": 90, "p_style":"sm_l" },
+                    {  "key": "quantity"    ,"label": "数量",   "width": 15 , "p_style":"sm_r", "format": "{:,}" },
+                    {  "key": "unitPrice"   ,"label": "単価",   "width": 25 , "p_style":"sm_r", "format": "{:,}" },
+                    {  "key": "price"       ,"label": "金額",   "width": 25 , "p_style":"sm_r", "format": "{:,}" }
                 ],
                 "styles":[
                     ["E","('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
@@ -119,8 +119,8 @@
             "detail_after":{
                 "table_info":{
                     "table":[
-                        ["",["EPF","'小計(税込)' if _HEAD['tax'] == '税込' else '小計'","sm_l","{:}"], ["EPF","999999", "sm_r","{:,}"]],
-                        ["",["EPF","'うち消費税分' if _HEAD['tax'] == '税込' else '消費税分'","sm_l","{:}"], ["EPF","999998","sm_r","{:,}" ]],
+                        ["",["EPF","'小計(税込)' if _HEAD['tax'] == '税込' else '小計'","sm_l","{:}"], ["EPF","9991", "sm_r","{:,}"]],
+                        ["",["EPF","'うち消費税分' if _HEAD['tax'] == '税込' else '消費税分'","sm_l","{:}"], ["EPF","9992","sm_r","{:,}" ]],
                         ["",["P","合計金額","sm_l"] ,["EPF","99997","sm_r","{:,}" ]]
                     ],
                     "col_widths":["E","(60*mm, 75*mm, 40*mm)"],
@@ -160,47 +160,41 @@
     "data": {
         "hdata": [
             {
-                "h_id": 691,
-                "sheet_name": "",
-                "client_name": "テスト商店",
-                "client_class": "法人",
+                "hid": 691,
+                "invoiceNo": "20210822001",
+                "clientName": "テスト商店",
+                "clientClass": "法人",
                 "category": "請求書",
-                "apply_date": "2021-08-22",
+                "dueDate": "2021-08-22",
                 "person": "小野",
-                "doc_descript": "値引きテスト",
-                "memo": null,
-                "file_name": "",
-                "mail": "xxx@yyy.zz",
-                "fax": "000-0000-0000",
-                "discount": "",
-                "tax": "税込",
-                "create_user_id": null,
-                "create_at": null,
-                "update_user_id": "naka",
-                "update_at": "2021-09-28 15:06:24",
-                "commit_user_id": null,
-                "commit_at": null
+                "memo": "とりあえずメモ",
+                "tax": "税込"
             }
         ],
         "bdata": [
             {
-                "h_id": 691,
-                "b_id": 1937,
-                "item_num": 1,
-                "p_name": "草刈機",
-                "p_qty": 1,
-                "p_price": 50000,
-                "p_calc_price": 50000
+                "hid": 691,
+                "bid": 1937,
+                "itemNum": 1,
+                "productName": "草刈機",
+                "quantity": 1,
+                "unitPrice": 50000,
+                "price": 50000
             },
             {
-                "h_id": 691,
-                "b_id": 1938,
-                "item_num": 2,
-                "p_name": "管理機",
-                "p_qty": 1,
-                "p_price": 3000,
-                "p_calc_price": 3000
+                "hid": 691,
+                "bid": 1938,
+                "itemNum": 2,
+                "productName": "管理機",
+                "quantity": 1,
+                "unitPrice": 3000,
+                "price": 3000
             }
-        ]
+        ],
+        "sumdata": {
+            "amount": 53000,
+            "tax": 5300,
+            "total": 58300
+        }
     }
 }
