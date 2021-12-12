@@ -98,8 +98,8 @@ def make_table(table_info):
                 col_val  = col
             t_data[i][j] = col_val
 
-    if 'row_Heights' in table_info:
-        ht=Table(t_data,colWidths=cv(table_info['col_widths']),rowHeights=cv(table_info['row_Heights']))
+    if 'row_heights' in table_info:
+        ht=Table(t_data,colWidths=cv(table_info['col_widths']),rowHeights=cv(table_info['row_heights']))
     else:    
         ht=Table(t_data,colWidths=cv(table_info['col_widths']))
 
