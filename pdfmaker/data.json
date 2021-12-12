@@ -72,26 +72,28 @@
         "header":{
             "title": ["EP","data['hdata']['category']","big_center"],
             "title_after": ["E","Spacer(0,15*mm)"],
-            "table_info":{
-                "table":[
-                    [ ["EP" ,"data['hdata']['clientName']","client"],["EP" ,"'請求番号:'+data['hdata']['invoiceNo']","sm_r"]],
-                    ["",""],
-                    ["",["EP","data['hdata']['myCompanyName']","md_l_b"] ],
-                    ["",""],
-                    ["", ["EP","'鹿沼店:'+data['hdata']['myAddress1']","sm_r"]],
-                    ["", ["EP","'TEL: '+ data['hdata']['myTel1']","sm_r"]],
-                    ["", ["EP","'FAX: ' + data['hdata']['myFax1']","sm_r"]],
-                    ["", ["EP","'千渡店:'+ data['hdata']['myAddress2']","sm_r"]],
-                    ["", ["EP","'TEL: '+ data['hdata']['myTel2']","sm_r"]],
-                    ["", ["EP" ,"'担当者: '+ data['hdata']['person']","sm_l"]]
-                ],
-                "col_widths": ["E","[110*mm, 70*mm]"],
-                "table_style":[
-                    ["NOP","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
-                    ["E","('SPAN',(0,7),(0,8))"]
-                ]
-            },
-            "table_after": ["E","Spacer(10*mm,5*mm)"],
+            "table_infos":[
+                {
+                    "table":[
+                        [ ["EP" ,"data['hdata']['clientName']","client"],["EP" ,"'請求番号:'+data['hdata']['invoiceNo']","sm_r"]],
+                        ["",""],
+                        ["",["EP","data['hdata']['myCompanyName']","md_l_b"] ],
+                        ["",""],
+                        ["", ["EP","'鹿沼店:'+data['hdata']['myAddress1']","sm_r"]],
+                        ["", ["EP","'TEL: '+ data['hdata']['myTel1']","sm_r"]],
+                        ["", ["EP","'FAX: ' + data['hdata']['myFax1']","sm_r"]],
+                        ["", ["EP","'千渡店:'+ data['hdata']['myAddress2']","sm_r"]],
+                        ["", ["EP","'TEL: '+ data['hdata']['myTel2']","sm_r"]],
+                        ["", ["EP" ,"'担当者: '+ data['hdata']['person']","sm_l"]]
+                    ],
+                    "col_widths": ["E","[110*mm, 70*mm]"],
+                    "table_style":[
+                        ["NOP","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                        ["E","('SPAN',(0,7),(0,8))"]
+                    ],
+                    "after": ["E","Spacer(10*mm,5*mm)"]
+                }
+            ],
             "drawImages":[
                 ["('./logo2.jpg', 495,675,50,50,mask='auto')"]
             ]
@@ -150,7 +152,7 @@
                     ["E","('ALIGN',(0,0),(0,-1),'CENTER')"]
                 ]
             },
-            "DrawImage":[
+            "drawImages":[
                 ["('./inkan.png', 400,50,50,50,mask='auto')"],
                 ["('./inkan.png', 490,50,50,50,mask='auto')"]
             ]

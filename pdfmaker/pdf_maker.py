@@ -61,6 +61,7 @@ class NumberedCanvas(canvas.Canvas):
         for state in self._saved_page_states:
             self.__dict__.update(state)
             self.draw_page_number(num_pages)
+            self.draw_images()
             canvas.Canvas.showPage(self)
         canvas.Canvas.save(self)
 
@@ -69,6 +70,21 @@ class NumberedCanvas(canvas.Canvas):
         if page_count > 1 :
             self.drawRightString(200*mm, 5*mm,
                 "Page %d of %d" % (self._pageNumber, page_count))
+
+    def draw_images(self):
+        if self._pageNumber == 1:
+            print(f"------- draw Images ( {self._pageNumber} ) -------")
+            print(f"     {defPdf['header']['drawImages']} ") 
+            dimgs = defPdf['header']['drawImages']
+            for dimg in dimgs:
+                pass
+                #cmd = f'canvas.drawImage{dimg[0]}'
+                #print(cmd)
+                #eval(cmd)
+                #canvas.Canvas.drawImage('./logo2.jpg', 495,675,50,50,mask='auto')
+
+
+
 
 def make_table(table_info):
 
@@ -93,7 +109,12 @@ def make_table(table_info):
         if cv_style : t_styles.append(cv_style)
 
     ht.setStyle(TableStyle(t_styles))
-    #print(t_styles)
+    #print(t_styles)    
+    #----　after -----
+    #cv(table_info['after'])
+
+    if table_info.get('hAlign'):
+        ht.hAlign = table_info.get('hAlign')
 
     return ht
 
@@ -165,6 +186,10 @@ def make_detail(detail,bdata):
 def footer(canvas, doc):
     canvas.saveState()
 
+    print(f"----- page number at footer ----- { canvas._pageNumber } ")
+
+    if not defPdf.get('footer'): return
+
     ft = make_table(defPdf['footer']['table_info'])
 
     x,y =cv(defPdf['footer']['pos_xy'])
@@ -176,8 +201,14 @@ def footer(canvas, doc):
 
 
     #canvas.drawImage('./inkan.png', 300,300,50,50,mask='auto')
+    if canvas._pageNumber == 1:
+        for di in defPdf['header']['drawImages']:
+            cmd = f'canvas.drawImage{di[0]}'
+            print(cmd)
+            eval(cmd)
 
-    for di in defPdf['footer']['DrawImage']:
+
+    for di in defPdf['footer']['drawImages']:
         cmd = f'canvas.drawImage{di[0]}'
         print(cmd)
         eval(cmd)
@@ -188,13 +219,6 @@ def footer(canvas, doc):
 
 def firstPage(canvas):
     print("------- first page-------------")
-
-def drawImages(draw_images):
-    pass
-    #for di in draw_images:
-    #    cmd = f'canvas.drawImage{di[0]}'
-    #    print(cmd)
-    #    eval(cmd)
 
 def coords(canvas):
     print("-----COORDS-------")
@@ -235,9 +259,9 @@ def pdf_maker(d):
     global styles
     styles = d.get('style')
 
-    _HEAD = data['hdata']
-    _ROWS = data['bdata']
-    _SUM = data['sum']
+    #_HEAD = data['hdata']
+    #_ROWS = data['bdata']
+    #_SUM = data['sum']
 
     #----ドキュメント本体-----
 
@@ -273,18 +297,20 @@ def pdf_maker(d):
 
     elements.append(cv(defPdf['header']['title']))
     elements.append(cv(defPdf['header']['title_after']))
-    drawImages(defPdf['header']['drawImages'])
+    #drawImages(defPdf['header']['drawImages'])
 
-    ht = make_table(defPdf['header']['table_info'])
-    elements.append(ht)
-    elements.append(cv(defPdf['header']['table_after']))
+    for table_info in defPdf['header']['table_infos']:
+        if table_info.get('before') : elements.append(cv(table_info.get('after')))
+        ht = make_table(table_info)
+        elements.append(ht)
+        if table_info.get('after') : elements.append(cv(table_info.get('after')))
 
+    if data.get('bdata'):
+        bt = make_detail(defPdf['body']['detail'],data.get('bdata'))
+        elements.append(bt)
 
-    bt = make_detail(defPdf['body']['detail'],data.get('bdata'))
-    elements.append(bt)
-
-    bt = make_table(defPdf['body']['detail_after']['table_info'])
-    elements.append(bt)
+        bt = make_table(defPdf['body']['detail_after']['table_info'])
+        elements.append(bt)
 
     #ft = make_table(defPdf['footer']['table_info'])
     #elements.append(ft)
