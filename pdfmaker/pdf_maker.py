@@ -61,7 +61,6 @@ class NumberedCanvas(canvas.Canvas):
         for state in self._saved_page_states:
             self.__dict__.update(state)
             self.draw_page_number(num_pages)
-            self.draw_images()
             canvas.Canvas.showPage(self)
         canvas.Canvas.save(self)
 
@@ -71,20 +70,6 @@ class NumberedCanvas(canvas.Canvas):
             self.drawRightString(200*mm, 5*mm,
                 "Page %d of %d" % (self._pageNumber, page_count))
 
-    def draw_images(self):
-        if self._pageNumber == 1:
-            print(f"------- draw Images ( {self._pageNumber} ) -------")
-            print(f"     {defPdf['header']['drawImages']} ") 
-            dimgs = defPdf['header']['drawImages']
-            for dimg in dimgs:
-                pass
-                #cmd = f'canvas.drawImage{dimg[0]}'
-                #print(cmd)
-                #eval(cmd)
-                #canvas.Canvas.drawImage('./logo2.jpg', 495,675,50,50,mask='auto')
-
-
-
 
 def make_table(table_info):
 
@@ -93,6 +78,7 @@ def make_table(table_info):
     for i,row in enumerate(t_data):
         for j,col in enumerate( row ):
             if type(col) is list:
+
                 col_val = cv(col)          
             else:
                 col_val  = col
