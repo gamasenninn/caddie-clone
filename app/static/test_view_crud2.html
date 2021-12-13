@@ -332,6 +332,12 @@
                                 </b-form-input>
                         </b-col>
                     </b-row>
+                    <b-row class="mb-2">
+                        <b-col sm="3" class="text-sm-right"><b>請求書_商品一覧</b></b-col>
+                        <b-col>
+                            {{ data.item.invoice_items }}
+                        </b-col>
+                    </b-row>
 
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>作成日:</b></b-col>
@@ -455,6 +461,12 @@
                         <b-col>
                             <b-form-checkbox v-model="data.item.isTaxExp" @change="data.item.isTaxExp">
                                 </b-form-input>
+                        </b-col>
+                    </b-row>
+                    <b-row class="mb-2">
+                        <b-col sm="3" class="text-sm-right"><b>見積書_商品一覧:</b></b-col>
+                        <b-col>
+                            {{ data.item.quotation_items }}
                         </b-col>
                     </b-row>
 

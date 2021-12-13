@@ -221,24 +221,26 @@ class ItemSchema(ma.SQLAlchemyAutoSchema):
         model = Item
 
 
-class InvoiceSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Invoice
-
-
 class Invoice_ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Invoice_Item
 
 
-class QuotationSchema(ma.SQLAlchemyAutoSchema):
+class InvoiceSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Quotation
+        model = Invoice
+    invoice_items = ma.Nested(Invoice_ItemSchema, many=True)
 
 
 class Quotation_ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Quotation_Item
+
+
+class QuotationSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Quotation
+    quotation_items = ma.Nested(Quotation_ItemSchema, many=True)
 
 
 class MemoSchema(ma.SQLAlchemyAutoSchema):
