@@ -190,7 +190,8 @@ def footer(canvas, doc):
 
     if not defPdf.get('footer'): return
 
-    ft = make_table(defPdf['footer']['table_info'])
+    for table_info in defPdf['footer']['table_infos']:
+        ft = make_table(table_info)
 
     x,y =cv(defPdf['footer']['pos_xy'])
     #print("xy:",type(x),x)

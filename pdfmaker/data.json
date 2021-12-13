@@ -137,21 +137,23 @@
         },
         "footer":{
             "pos_xy": ["E","(15*mm,10*mm)"],
-            "table_info":{
-                "table":[
-                    ["摘要", "", "", ""],
-                    [["EP","data['hdata']['memo']","sm_l"],"", "", ""]
-                ],
-                "col_widths": ["E","(110*mm,10*mm,30*mm,30*mm)"],
-                "row_Heights": ["E","(8*mm,30*mm)"],
-                "table_style":[
-                    ["E","('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
-                    ["E","('GRID', (0, 0), (0,1), 0.25, colors.black)"],
-                    ["E","('GRID', (2, 0), (3,2), 0.25, colors.black)"],
-                    ["E","('VALIGN',(0,1),(0,-1),'TOP')"],
-                    ["E","('ALIGN',(0,0),(0,-1),'CENTER')"]
-                ]
-            },
+            "table_infos":[
+                {
+                    "table":[
+                        ["摘要", "", "", ""],
+                        [["EP","data['hdata']['memo']","sm_l"],"", "", ""]
+                    ],
+                    "col_widths": ["E","(110*mm,10*mm,30*mm,30*mm)"],
+                    "row_heights": ["E","(8*mm,30*mm)"],
+                    "table_style":[
+                        ["E","('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                        ["E","('GRID', (0, 0), (0,1), 0.25, colors.black)"],
+                        ["E","('GRID', (2, 0), (3,2), 0.25, colors.black)"],
+                        ["E","('VALIGN',(0,1),(0,-1),'TOP')"],
+                        ["E","('ALIGN',(0,0),(0,-1),'CENTER')"]
+                    ]
+                }
+            ],
             "drawImages":[
                 ["('./inkan.png', 400,50,50,50,mask='auto')"],
                 ["('./inkan.png', 490,50,50,50,mask='auto')"]
