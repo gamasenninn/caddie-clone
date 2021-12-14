@@ -166,15 +166,6 @@
                         isInsert: true
                     });
                 },
-                getInvoiceItem: async function (item) {
-                    self = this;
-                    url = self.baseUrlItem + "/" + item.id;
-                    await axios.get(url)
-                        .then(function (response) {
-                            console.log(response);
-                            self.invoice_items = response.data.invoice_items;
-                        })
-                }
             }
         }
 
@@ -187,6 +178,17 @@
                 invoice_items: [],
                 baseUrlItems: "/invoices",
                 baseUrlItem: "/invoice"
+            },
+            methods:{
+                getInvoiceItem: async function (item) {
+                    self = this;
+                    url = self.baseUrlItem + "/" + item.id;
+                    await axios.get(url)
+                        .then(function (response) {
+                            console.log(response);
+                            self.invoice_items = response.data.invoice_items;
+                        })
+                },
             }
         })
 
