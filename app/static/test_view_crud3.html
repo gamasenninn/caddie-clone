@@ -60,7 +60,6 @@
                 <b-button v-else @click="updateItem(data.item)">更新</b-button>
                 <b-button v-if="data.item.isInsert" @click="getItems">キャンセル</b-button>
                 <b-button v-else @click="deleteItem(data.item)">削除</b-button>
-                <b-button @click="getInvoiceItem(data.item)"> 商品一覧取得</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
             <template #row-details="data">
@@ -102,6 +101,12 @@
                                 </b-form-input>
                         </b-col>
                     </b-row>
+                    <b-row class="mb-2">
+                        <b-col sm="3" class="text-sm-right"><b>請求書_商品一覧</b></b-col>
+                        <b-col>
+                            {{ data.item.invoice_items }}
+                        </b-col>
+                    </b-row>
 
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>作成日:</b></b-col>
@@ -117,11 +122,53 @@
                 </b-card>
             </template>
         </b-table>
+    </div>
 
+    <!-- 請求書＿商品（Invoice_Items）View -->
+    <div id="appInvoice_Items" class="mt-2">
         <span class="mr-5 h2">Invoice_Items</span>
+        <b-button @click='getItems'>読み込み</b-button>
+        <b-button class="ml-2" @click='addRow'>+</b-button>
         <div class="mt-2"></div>
-        <b-table hover :items="invoice_items" :fields="['id','count','price']"></b-table>
+        <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
+            :items="items" :fields="[
+                        {  key: 'id', label: 'ID',  sortable: true },
+                        {  key: 'price', label: '値段' },
+                        {  key: 'control', label: '操作'},
+                      ]">
+            <template v-slot:cell(price)="data">
+                <b-form-input v-model="data.item.price" type="text" size="sm"></b-form-input>
+            </template>
+            <template v-slot:cell(control)="data">
+                <b-button v-if="data.item.isInsert" @click="insertItem(data.item)">保存</b-button>
+                <b-button v-else @click="updateItem(data.item)">更新</b-button>
+                <b-button v-if="data.item.isInsert" @click="getItems">キャンセル</b-button>
+                <b-button v-else @click="deleteItem(data.item)">削除</b-button>
+                <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
+            </template>
+            <template #row-details="data">
+                <b-card>
+                    <b-row class="mb-2">
+                        <b-col sm="3" class="text-sm-right"><b>個数:</b></b-col>
+                        <b-col>
+                            <b-form-input v-model="data.item.count" type="text" size="sm"></b-form-input>
+                        </b-col>
+                    </b-row>
 
+                    <b-row class="mb-2">
+                        <b-col sm="3" class="text-sm-right"><b>作成日:</b></b-col>
+                        <b-col>{{ data.item.createdAt }}</b-col>
+                    </b-row>
+
+                    <b-row class="mb-2">
+                        <b-col sm="3" class="text-sm-right"><b>更新日:</b></b-col>
+                        <b-col>{{ data.item.updatedAt }}</b-col>
+                    </b-row>
+
+                    <b-button size="sm" @click="data.toggleDetails">詳細を隠す</b-button>
+                </b-card>
+            </template>
+        </b-table>
     </div>
 
 
@@ -165,7 +212,7 @@
                     this.items.push({
                         isInsert: true
                     });
-                },
+                }
             }
         }
 
@@ -175,20 +222,8 @@
             mixins: [mixin],
             data: {
                 items: [],
-                invoice_items: [],
                 baseUrlItems: "/invoices",
                 baseUrlItem: "/invoice"
-            },
-            methods:{
-                getInvoiceItem: async function (item) {
-                    self = this;
-                    url = self.baseUrlItem + "/" + item.id;
-                    await axios.get(url)
-                        .then(function (response) {
-                            console.log(response);
-                            self.invoice_items = response.data.invoice_items;
-                        })
-                },
             }
         })
 
