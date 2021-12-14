@@ -60,6 +60,7 @@
                 <b-button v-else @click="updateItem(data.item)">更新</b-button>
                 <b-button v-if="data.item.isInsert" @click="getItems">キャンセル</b-button>
                 <b-button v-else @click="deleteItem(data.item)">削除</b-button>
+                <b-button @click="getInvoiceItems(data.item)">登録商品取得</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
             <template #row-details="data">
@@ -125,13 +126,13 @@
     </div>
 
     <!-- 請求書＿商品（Invoice_Items）View -->
-    <div id="appInvoice_Items" class="mt-2">
+    <div id="appInvoiceItems" class="mt-2">
         <span class="mr-5 h2">Invoice_Items</span>
-        <b-button @click='getItems'>読み込み</b-button>
+        <!-- <b-button @click='getItems'>読み込み</b-button> -->
         <b-button class="ml-2" @click='addRow'>+</b-button>
         <div class="mt-2"></div>
         <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
-            :items="items" :fields="[
+            :items="invoiceItems" :fields="[
                         {  key: 'id', label: 'ID',  sortable: true },
                         {  key: 'price', label: '値段' },
                         {  key: 'control', label: '操作'},
@@ -141,7 +142,7 @@
             </template>
             <template v-slot:cell(control)="data">
                 <b-button v-if="data.item.isInsert" @click="insertItem(data.item)">保存</b-button>
-                <b-button v-else @click="updateItem(data.item)">更新</b-button>
+                <b-button v-else @click="updateItem(data.item);">更新</b-button>
                 <b-button v-if="data.item.isInsert" @click="getItems">キャンセル</b-button>
                 <b-button v-else @click="deleteItem(data.item)">削除</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
@@ -185,6 +186,7 @@
                         });
                 },
                 insertItem: async function (item) {
+                    self = this;
                     url = self.baseUrlItem;
                     await axios.post(url, item)
                         .then(function (response) {
@@ -193,6 +195,7 @@
                         });
                 },
                 updateItem: async function (item) {
+                    self = this;
                     url = self.baseUrlItem + "/" + item.id;
                     await axios.put(url, item)
                         .then(function (response) {
@@ -201,6 +204,7 @@
                         });
                 },
                 deleteItem: async function (item) {
+                    self = this;
                     url = self.baseUrlItem + "/" + item.id;
                     await axios.delete(url)
                         .then(function (response) {
@@ -222,18 +226,47 @@
             mixins: [mixin],
             data: {
                 items: [],
+                // invoiceItems: [],
                 baseUrlItems: "/invoices",
                 baseUrlItem: "/invoice"
+            },
+            methods: {
+                getInvoiceItems: async function (item) {
+                    self = this;
+                    url = self.baseUrlItem + "/" + item.id;
+                    await axios.get(url)
+                        .then(function (response) {
+                            console.log(response);
+                            appInvoiceItems.invoiceItems = response.data.invoice_items;
+                            appInvoiceItems.invoiceItemId = response.data.invoiceItemId;
+                            console.log("商品ID：" + response.data.itemId);
+                            // console.log(response.data.invoice_items);
+                        });
+                }
             }
         })
 
-        var appInvoice_Items = new Vue({
-            el: '#appInvoice_Items',
+        var appInvoiceItems = new Vue({
+            el: '#appInvoiceItems',
             mixins: [mixin],
             data: {
                 items: [],
+                invoiceItems: [],
+                selectInvoiceId: '',            //更新時、InvoiceItemテーブルのinvoiceIdがnullになるため
+                selectInvoiceItemId: '',        //更新時、InvoiceItemテーブルのitemIdがnullになるため
                 baseUrlItems: "/invoice_items",
                 baseUrlItem: "/invoice_item"
+            },
+            methods: {
+                updateInvoiceItem: async function (item) {
+                    self = this;
+                    url = self.baseUrlItem + "/" + item.id;
+                    await axios.put(url, item)
+                        .then(function (response) {
+                            console.log(response);
+                            // self.selectInvoiceId=response.data.
+                        });
+                }
             }
         })
 
