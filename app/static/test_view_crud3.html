@@ -238,9 +238,6 @@
                         .then(function (response) {
                             console.log(response);
                             appInvoiceItems.invoiceItems = response.data.invoice_items;
-                            appInvoiceItems.invoiceItemId = response.data.invoiceItemId;
-                            console.log("商品ID：" + response.data.itemId);
-                            // console.log(response.data.invoice_items);
                         });
                 }
             }
@@ -251,9 +248,7 @@
             mixins: [mixin],
             data: {
                 items: [],
-                invoiceItems: [],
-                selectInvoiceId: '',            //更新時、InvoiceItemテーブルのinvoiceIdがnullになるため
-                selectInvoiceItemId: '',        //更新時、InvoiceItemテーブルのitemIdがnullになるため
+                invoiceItems: [],               //ここに値が入ると自動的にテーブルに出力される
                 baseUrlItems: "/invoice_items",
                 baseUrlItem: "/invoice_item"
             },
@@ -264,8 +259,12 @@
                     await axios.put(url, item)
                         .then(function (response) {
                             console.log(response);
-                            // self.selectInvoiceId=response.data.
                         });
+                },
+                addRow: function () {
+                    this.invoiceItems.push({
+                        isInsert: true
+                    });
                 }
             }
         })

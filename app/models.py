@@ -224,11 +224,13 @@ class ItemSchema(ma.SQLAlchemyAutoSchema):
 class Invoice_ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Invoice_Item
+        include_fk = True
 
 
 class InvoiceSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Invoice
+        include_fk = True
     invoice_items = ma.Nested(Invoice_ItemSchema, many=True)
 
 
