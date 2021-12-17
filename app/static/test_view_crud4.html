@@ -44,7 +44,7 @@
     <div id="app" class="mt-2">
         <span class="mr-5 h2">Invoices</span>
         <b-button @click='getInvoices'>読み込み</b-button>
-        <b-button class="ml-2" @click='addRow'>+</b-button>
+        <b-button class="ml-2" @click='InvoiceAddRow'>+</b-button>
         <div class="mt-2"></div>
         <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
             :items="invoices" :fields="[
@@ -60,6 +60,7 @@
                 <b-button v-else @click="updateInvoice(data.item)">更新</b-button>
                 <b-button v-if="data.item.isInsert" @click="getInvoices">キャンセル</b-button>
                 <b-button v-else @click="deleteInvoice(data.item)">削除</b-button>
+                <b-button @click="getInvoice_InvoiceItems(data.item)">商品読み込み</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
             <template #row-details="data">
@@ -122,28 +123,28 @@
                 </b-card>
             </template>
         </b-table>
-    </div>
+        <!-- </div> -->
 
-    <!-- 請求書＿商品（Invoice_Items）View -->
-    <!-- <div id="appInvoice_Items" class="mt-2">
+        <!-- 請求書＿商品（Invoice_Items）View -->
+        <!-- <div id="app" class="mt-2"> -->
         <span class="mr-5 h2">Invoice_Items</span>
-        <b-button @click='getItems'>読み込み</b-button>
-        <b-button class="ml-2" @click='addRow'>+</b-button>
+        <!-- <b-button @click='getItems'>読み込み</b-button> -->
+        <b-button class="ml-2" @click='invoiceItemAddRow();'>+</b-button>
         <div class="mt-2"></div>
         <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
-            :items="items" :fields="[
+            :items="invoice_invoiceItems" :fields="[
                         {  key: 'id', label: 'ID',  sortable: true },
                         {  key: 'price', label: '値段' },
                         {  key: 'control', label: '操作'},
                       ]">
             <template v-slot:cell(price)="data">
-                <b-form-input v-model="data.invoices.price" type="text" size="sm"></b-form-input>
+                <b-form-input v-model="data.item.price" type="text" size="sm"></b-form-input>
             </template>
             <template v-slot:cell(control)="data">
-                <b-button v-if="data.item.isInsert" @click="insertItem(data.item)">保存</b-button>
-                <b-button v-else @click="updateItem(data.item)">更新</b-button>
-                <b-button v-if="data.item.isInsert" @click="getItems">キャンセル</b-button>
-                <b-button v-else @click="deleteItem(data.item)">削除</b-button>
+                <b-button v-if="data.item.isInsert" @click="insertInvoiceItem(data.item)">保存</b-button>
+                <b-button v-else @click="updateInvoiceItem(data.item)">更新</b-button>
+                <b-button v-if="data.item.isInsert" @click="getInvoice_InvoiceItems">キャンセル</b-button>
+                <b-button v-else @click="deleteInvoiceItem(data.item)">削除</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
             <template #row-details="data">
@@ -155,6 +156,10 @@
                         </b-col>
                     </b-row>
 
+                    <b-row class="mb-2">
+                        <b-col sm="3" class="text-sm-right"><b>請求書ID:</b></b-col>
+                        <b-col>{{ data.item.invoiceId }}</b-col>
+                    </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>作成日:</b></b-col>
                         <b-col>{{ data.item.createdAt }}</b-col>
@@ -169,7 +174,7 @@
                 </b-card>
             </template>
         </b-table>
-    </div> -->
+    </div>
 
 
 
@@ -177,18 +182,19 @@
         var app = new Vue({
             el: '#app',
             data: {
-                invoices: [],
-
+                invoices: [],               //全件invoice
+                invoice: [],                //選択中のinvoice
+                invoice_invoiceItems: [],   //選択中のinvoiceに紐づくinvoiceItems
+                invoiceItem: [],             //選択中？のinvoiceItem
             },
             methods: {
+                // ---Invoices---
                 getInvoices: async function () {
                     self = this;
                     await axios.get("/invoices")
                         .then(function (response) {
                             console.log(response);
                             self.invoices = response.data;
-                            console.log("invoices:");
-                            console.log(this.invoices);
                         });
                 },
                 insertInvoice: async function (item) {
@@ -200,6 +206,7 @@
                         });
                 },
                 updateInvoice: async function (item) {
+                    self = this;
                     await axios.put("/invoice/" + item.id, item)
                         .then(function (response) {
                             console.log(response);
@@ -207,162 +214,78 @@
                         });
                 },
                 deleteInvoice: async function (item) {
+                    self = this;
                     await axios.delete("/invoice/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             self.getInvoices();
                         });
                 },
-                addRow: function () {
-                    invoices.push({
+                InvoiceAddRow: function () {
+                    self = this;
+                    self.invoices.push({
                         isInsert: true
                     });
-                }
+                },
+                // ---InvoiceからInvoice_Items---
+                getInvoice_InvoiceItems: async function (item) {
+                    self = this;
+                    await axios.get("/invoice/" + item.id)
+                        .then(function (response) {
+                            console.log(response);
+                            self.invoice = response.data;
+                            self.invoice_invoiceItems = response.data.invoice_items;
+                        });
+                },
+                getInvoiceId_InvoiceItems: async function (id) {
+                    await axios.get("/invoice/" + id)
+                        .then(function (response) {
+                            console.log(response);
+                            self.invoice_invoiceItems = response.data.invoice_items;
+                        });
+                },
+                // ---Invoice_Item---
+                insertInvoiceItem: async function (item) {
+                    self = this;
+                    item.invoiceId = self.invoice.id;
+                    await axios.post("/invoice_item", item)
+                        .then(function (response) {
+                            console.log(response);
+                            self.getInvoice_InvoiceItems(item);
+                        });
+                },
+                updateInvoiceItem: async function (item) {
+                    self = this;
+                    await axios.put("/invoice_item/" + item.id, item)
+                        .then(function (response) {
+                            console.log(response);
+                            invoiceId = response.data.data.invoiceId;
+                            self.getInvoiceId_InvoiceItems(invoiceId);
+                        });
+                },
+                deleteInvoiceItem: async function (item) {
+                    self = this;
+                    // deleteするとresponse内のdataが消えるのでGET->DELETE
+                    await axios.get("/invoice_item/" + item.id)
+                        .then(function (response) {
+                            console.log(response);
+                            invoiceId = response.data.invoiceId;
+                        });
+                    await axios.delete("/invoice_item/" + item.id)
+                        .then(function (response) {
+                            console.log(response);
+                            self.getInvoiceId_InvoiceItems(invoiceId);
+                        });
+                },
+                invoiceItemAddRow: function () {
+                    self = this;
+                    self.invoice_invoiceItems.push({
+                        isInsert: true,
+                    });
+                },
             }
         })
 
-        // var mixin = {
-        //     methods: {
-        //         getItems: async function () {
-        //             self = this;
-        //             url = self.baseUrlItems;
-        //             await axios.get(url)
-        //                 .then(function (response) {
-        //                     console.log(response);
-        //                     self.items = response.data;
-        //                 });
-        //         },
-        //         insertItem: async function (item) {
-        //             url = self.baseUrlItem;
-        //             await axios.post(url, item)
-        //                 .then(function (response) {
-        //                     console.log(response);
-        //                     self.getItems();
-        //                 });
-        //         },
-        //         updateItem: async function (item) {
-        //             url = self.baseUrlItem + "/" + item.id;
-        //             await axios.put(url, item)
-        //                 .then(function (response) {
-        //                     console.log(response);
-        //                     self.getItems();
-        //                 });
-        //         },
-        //         deleteItem: async function (item) {
-        //             url = self.baseUrlItem + "/" + item.id;
-        //             await axios.delete(url)
-        //                 .then(function (response) {
-        //                     console.log(response);
-        //                     self.getItems();
-        //                 });
-        //         },
-        //         addRow: function () {
-        //             this.items.push({
-        //                 isInsert: true
-        //             });
-        //         }
-        //     }
-        // }
-
-        // var appUsers = new Vue({
-        //     el: '#appUsers',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/users",
-        //         baseUrlItem: "/user",
-        //     }
-        // })
-
-        // var appCustomers = new Vue({
-        //     el: '#appCustomers',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/customers",
-        //         baseUrlItem: "/customer",
-        //     }
-        // })
-
-        // var appItems = new Vue({
-        //     el: '#appItems',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/items",
-        //         baseUrlItem: "/item"
-        //     }
-        // })
-
-        // var appInvoices = new Vue({
-        //     el: '#appInvoices',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/invoices",
-        //         baseUrlItem: "/invoice"
-        //     }
-        // })
-
-        // var appInvoice_Items = new Vue({
-        //     el: '#appInvoice_Items',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/invoice_items",
-        //         baseUrlItem: "/invoice_item"
-        //     }
-        // })
-
-        // var appQuotations = new Vue({
-        //     el: '#appQuotations',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/quotations",
-        //         baseUrlItem: "/quotation"
-        //     }
-        // })
-
-        // var appQuotation_Items = new Vue({
-        //     el: '#appQuotation_Items',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/quotation_items",
-        //         baseUrlItem: "/quotation_item"
-        //     }
-        // })
-
-        // var appMemos = new Vue({
-        //     el: '#appMemos',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/memos",
-        //         baseUrlItem: "/memo"
-        //     }
-        // })
-
-        // var appUnits = new Vue({
-        //     el: '#appUnits',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/units",
-        //         baseUrlItem: "/unit"
-        //     }
-        // })
-
-        // var appSetting = new Vue({
-        //     el: '#appSetting',
-        //     mixins: [mixin],
-        //     data: {
-        //         items: [],
-        //         baseUrlItems: "/settings",
-        //         baseUrlItem: "/setting"
-        //     }
-        // })
 
     </script>
 
