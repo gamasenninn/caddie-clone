@@ -29,6 +29,9 @@ def crud_test2():
 def crud_test3():
     return app.send_static_file('test_view_crud3.html')
 
+@app.route('/test-view-crud4')
+def crud_test4():
+    return app.send_static_file('test_view_crud4.html')
 
 if __name__ == '__main__':
 
