@@ -2,3 +2,4 @@
 /migrations
 *.db
 *.db-journal
+pdfmaker/pdf/

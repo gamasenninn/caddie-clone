@@ -237,7 +237,7 @@ def cv(src_l):
 data={}
 defPdf ={}
 styles ={}
-def pdf_maker(d,is_BytesIO=False):
+def pdf_maker(d,is_BytesIO=False,file_name=''):
     global data
     data = d.get('data')
 
@@ -254,10 +254,15 @@ def pdf_maker(d,is_BytesIO=False):
     #----ドキュメント本体-----
 
     attr_name = defPdf['attr']['name']
+    alter_file_name = ''
     if is_BytesIO:
         pfile = BytesIO()
     else:
-        pfile = defPdf['file']['outDir']+"/"+ defPdf['file']['file_name']
+        if file_name:
+            alter_file_name = file_name
+        else:
+            alter_file_name = defPdf['file']['file_name']
+        pfile = defPdf['file']['outDir']+"/"+ alter_file_name
 
     size = defPdf['attr']['page_size']
     if defPdf['attr']['page_type']=="landscape":
@@ -318,7 +323,7 @@ def pdf_maker(d,is_BytesIO=False):
         pfile.seek(0)
         return pfile.read()
     else:
-        return ''
+        return alter_file_name
 
 
 #------- initial ---------

@@ -1,9 +1,10 @@
 # Server sample for Pdf Maker 
 # 
 #
-from flask import Flask,Response,make_response,redirect
+from flask import Flask,make_response,redirect
 from pdf_maker import pdf_maker
 import json
+import uuid
 
 app = Flask(__name__)
 
@@ -11,8 +12,15 @@ app = Flask(__name__)
 def hello():
     return "Hello Pdf serve"
 
+@app.route('/test')
+def test():
+    return app.send_static_file('test-pdf.html')
+
+@app.route('/pdf/<file>',methods=["GET"])
+def open_pdf(file):
+    return app.send_static_file("pdf/"+file)
     
-@app.route('/pdfmaker')
+@app.route('/pdfmaker',methods=["GET","POST"])
 def makepdf():
     return redirect('/pdfmaker/data')
 
@@ -21,11 +29,15 @@ def makepdf_file(json_file):
     with open( f'./{json_file}.json', mode='r', encoding='utf-8') as f:
         d = json.load(f)
 
-    pdfdata = pdf_maker(d,is_BytesIO=True)
-    response = make_response(pdfdata)
-    response.mimetype = "application/pdf"
-    return response
+    uuid_file_name = str(uuid.uuid1())+".pdf"
+    alter_file_name = pdf_maker(d,file_name=uuid_file_name)
 
+
+    #pdfdata = pdf_maker(d,is_BytesIO=True)
+    #response = make_response(pdfdata)
+    #response.mimetype = "application/pdf"
+    #return response
+    return alter_file_name
 
 @app.route('/file/<file_name>')
 def file(file_name):
