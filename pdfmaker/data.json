@@ -73,8 +73,7 @@
             "title": ["EP","data['hdata']['category']","big_center"],
             "title_after": ["E","Spacer(0,15*mm)"],
             "table_infos":[
-                [{"aaa" :{ "aaaa": 1234}}],
-                [ {
+                {
                     "table":[
                         [ ["EP" ,"data['hdata']['clientName']","client"],["EP" ,"'請求番号:'+data['hdata']['invoiceNo']","sm_r"]],
                         ["",""],
@@ -93,7 +92,7 @@
                         ["E","('SPAN',(0,7),(0,8))"]
                     ],
                     "after": ["E","Spacer(10*mm,5*mm)"]
-                }]
+                }
             ],
             "drawImages":[
                 ["('./logo2.jpg', 495,675,50,50,mask='auto')"]
