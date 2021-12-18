@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3.8
 
 
+from io import BytesIO
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
@@ -236,7 +237,7 @@ def cv(src_l):
 data={}
 defPdf ={}
 styles ={}
-def pdf_maker(d):
+def pdf_maker(d,is_BytesIO=False):
     global data
     data = d.get('data')
 
@@ -253,7 +254,11 @@ def pdf_maker(d):
     #----ドキュメント本体-----
 
     attr_name = defPdf['attr']['name']
-    pfile = defPdf['file']['outDir']+"/"+ defPdf['file']['file_name']
+    if is_BytesIO:
+        pfile = BytesIO()
+    else:
+        pfile = defPdf['file']['outDir']+"/"+ defPdf['file']['file_name']
+
     size = defPdf['attr']['page_size']
     if defPdf['attr']['page_type']=="landscape":
         w = psize[size]['long']*mm
@@ -309,6 +314,11 @@ def pdf_maker(d):
     doc.build(elements,canvasmaker=NumberedCanvas)
     #doc.build(elements)
 
+    if is_BytesIO:
+        pfile.seek(0)
+        return pfile.read()
+    else:
+        return ''
 
 
 #------- initial ---------
