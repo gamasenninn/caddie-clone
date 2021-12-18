@@ -1,0 +1,294 @@
+{
+    "style":{
+        "sm_r":{
+            "name": "Normal",
+            "alignment":    2,
+            "fontName":     "IPAexGothic",
+            "fontSize":     9
+        },
+
+        "sm_l":{
+            "name": "Normal",
+            "alignment":    0,
+            "fontName":     "IPAexGothic",
+            "fontSize":     9
+        },
+        "sm_c":{
+            "name": "Normal",
+            "alignment":    1,
+            "fontName":     "IPAexGothic",
+            "fontSize":     9
+        },
+
+        "sm_l_b":{
+            "name": "Normal",
+            "alignment":    0,
+            "fontName":     "IPAexGothic",
+            "fontSize":     9
+        },
+        "md_l_b":{
+            "name": "Normal",
+            "alignment":    0,
+            "fontName":     "IPAexGothic",
+            "fontSize":     15
+        },
+        "big_center":{
+            "name": "Normal",
+            "alignment":    1,
+            "fontName":     "IPAexGothic",
+            "fontSize":     20,
+            "underlineWidth":   0.5,
+            "underlineGap":     0,
+            "underlineOffset": -5.0,
+            "strikeWidth":   0.5,
+            "strikeGap" : 0,
+            "strikeOffset" : -3.0,
+            "leading":2
+        },
+        "client":{
+            "name": "Normal",
+            "alignment":    0,
+            "fontName":     "IPAexGothic",
+            "fontSize":     18,
+            "underlineWidth":   1,
+            "underlineGap":     1,
+            "underlineOffset": -3.0,
+            "textColor": "#000000"
+        }  
+    },
+    "defPdf":{
+        "attr":{
+            "name": "def_invoice",
+            "name_jp":"複雑なテーブル",
+            "page_size": "A4",
+            "page_type": "portrait",
+            "top_mergin": 10,
+            "footter_size": 0
+        },
+        "file":{
+            "outDir": "./pdf", 
+            "file_name": "test_n_table.pdf"
+        },
+        "header":{
+            "title": ["EP","data['hdata']['title']","big_center"],
+            "title_after": ["E","Spacer(0,10*mm)"],
+            "table_infos":[              
+                {
+                    "table":[
+                        ["",["EP","data['hdata']['postNumber']","sm_l"],"",""],
+                        ["",["EP","data['hdata']['address01']","sm_l"],
+                            ["EP","'作成日: '+data['hdata']['dueDate']","sm_l"],
+                            ["P","時刻: 14:50 店舗ページ  0","sm_l"]],
+                        ["",["EP","data['hdata']['address02']","sm_l"],"",""],
+                        ["","","",""],
+                        ["",["EP","data['hdata']['makerName']+'様'","sm_l"],"",""]
+                    ],
+                    "col_widths": ["E","[10*mm, 80*mm, 55*mm,55*mm]"],
+                    "table_style":[
+                        ["NOP","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                        ["E","('SPAN',(0,7),(0,8))"]
+                    ],
+                    "after": ["E","Spacer(10*mm,5*mm)"]
+                },
+                {
+                    "hAlign": "LEFT",
+                    "table":[
+                        ["",["P","品名","sm_l"],["EP","data['hdata']['product']","sm_l"],"",""],
+                        ["",["P","作型","sm_l"],["P","荷姿","sm_l"],["P","量目(g)","sm_l"],["P","課税区分","sm_l"]],
+                        ["",["EP","data['hdata']['model']","sm_l"],["EP","data['hdata']['modelClass']","sm_l"],
+                            ["EPF","data['hdata']['weight']","sm_r","{:,}"],["EP","'課税: 軽減'+data['hdata']['taxClass']","sm_l"]]
+                    ],
+                    "col_widths": ["E","[10*mm,20*mm,30*mm,30*mm, 40*mm]"],
+                    "table_style":[
+                        ["E","('GRID',(1,0),(-1,-1),0.15,colors.black)"],
+                        ["E","('SPAN',(2,0),(4,0))"]
+                    ],
+                    "after": ["E","Spacer(10*mm,5*mm)"]
+                },
+                {
+                    "hAlign": "LEFT",
+                    "table":[
+                        ["",["P","等階級","sm_c"],["P","当年度実績","sm_c"],"","",["P","前年度実績","sm_c"],"","",""],
+                        ["","",["P","荷受数量","sm_c"],["P","平均","sm_c"],["P","金額","sm_c"],["P","荷受数量","sm_c"],["P","対比","sm_c"],["P","平均","sm_c"],["P","金額","sm_c"]],
+                        [
+                            "",
+                            ["EP","data['hdata']['itemLabelA']","sm_l"],
+                            ["EPF","data['hdata']['itemQtyA']","sm_r","{:,}"],
+                            ["EPF","data['hdata']['itemPriceA']/data['hdata']['itemQtyA']","sm_r","{:,.2f}"],
+                            ["EPF","data['hdata']['itemPriceA']","sm_r","{:,}"],
+                            "","","",""
+                        ],
+                        [
+                            "",
+                            ["EP","data['hdata']['itemLabelB']","sm_l"],
+                            ["EPF","data['hdata']['itemQtyB']","sm_r","{:,}"],
+                            ["EPF","data['hdata']['itemPriceB']/data['hdata']['itemQtyB']","sm_r","{:,.2f}"],
+                            ["EPF","data['hdata']['itemPriceB']","sm_r","{:,}"],
+                            "","","",""
+                        ],
+                        [
+                            "",
+                            ["EP","data['hdata']['itemLabelC']","sm_l"],
+                            ["EPF","data['hdata']['itemQtyC']","sm_r","{:,}"],
+                            ["EPF","data['hdata']['itemPriceC']/data['hdata']['itemQtyC']","sm_r","{:,.2f}"],
+                            ["EPF","data['hdata']['itemPriceC']","sm_r","{:,}"],
+                            "","","",""
+                        ],
+                        [
+                            "",
+                            ["EP","data['hdata']['itemLabelD']","sm_l"],
+                            ["EPF","data['hdata']['itemQtyD']","sm_r","{:,}"],
+                            ["EPF","data['hdata']['itemPriceD']/data['hdata']['itemQtyD']","sm_r","{:,.2f}"],
+                            ["EPF","data['hdata']['itemPriceD']","sm_r","{:,}"],
+                            "","","",""
+                        ],
+                        [
+                            "",
+                            ["EP","data['hdata']['itemLabelE']","sm_l"],
+                            ["EPF","data['hdata']['itemQtyE']","sm_r","{:,}"],
+                            ["EPF","data['hdata']['itemPriceE']/data['hdata']['itemQtyE']","sm_r","{:,.2f}"],
+                            ["EPF","data['hdata']['itemPriceE']","sm_r","{:,}"],
+                            "","","",""
+                        ],
+                        [
+                            "",
+                            ["EP","data['hdata']['itemLabelF']","sm_l"],
+                            ["EPF","data['hdata']['itemQtyF']","sm_r","{:,}"],
+                            ["EPF","data['hdata']['itemPriceF']/data['hdata']['itemQtyF']","sm_r","{:,.2f}"],
+                            ["EPF","data['hdata']['itemPriceF']","sm_r","{:,}"],
+                            "","","",""
+                        ],
+                        [
+                            "",
+                            ["EP","data['hdata']['itemLabelG']","sm_l"],
+                            ["EPF","data['hdata']['itemQtyG']","sm_r","{:,}"],
+                            ["EPF","data['hdata']['itemPriceG']/data['hdata']['itemQtyG']","sm_r","{:,.2f}"],
+                            ["EPF","data['hdata']['itemPriceG']","sm_r","{:,}"],
+                            "","","",""
+                        ],
+
+                        ["",["P","端数","sm_c"],"","","","","","",""],
+                        ["",["P","合計","sm_c"],"","",["EPF","data['sum']['amountItem']","sm_r","{:,}"],"","",""],
+                        ["","",["P","消費税","sm_c"],"",["EPF","data['sum']['taxItem']","sm_r","{:,}"],"",["P","消費税","sm_c"],"","333,333"],
+                        ["","",["P","税込合計","sm_c"],"",["EPF","data['sum']['totalItem']","sm_r","{:,}"],"",["P","税込合計","sm_c"],"","3,333,333"]
+                    ],
+                    "col_widths": ["E","(5*mm,20*mm,25*mm,25*mm,25*mm, 25*mm,25*mm,25*mm,25*mm)"],
+                    "row_heights": ["E","(5.5*mm)"],
+                    "table_style":[
+                        ["E","('GRID',(1,0),(-1,10),0.15,colors.black)"],
+                        ["E","('GRID',(2,11),(4,12),0.15,colors.black)"],
+                        ["E","('GRID',(6,11),(8,12),0.15,colors.black)"],
+                        ["E","('SPAN',(1,0),(1,1))"],
+                        ["E","('SPAN',(2,0),(4,0))"],
+                        ["E","('SPAN',(5,0),(8,0))"],
+                        ["E","('SPAN',(2,11),(3,11))"],
+                        ["E","('SPAN',(2,12),(3,12))"],
+                        ["E","('SPAN',(6,11),(7,11))"],
+                        ["E","('SPAN',(6,12),(7,12))"]
+                    ],
+                    "after": ["E","Spacer(10*mm,5*mm)"]
+                },
+                {
+                    "hAlign": "LEFT",
+                    "table":[
+                        ["",["P","控除名","sm_c"],["P","課税区分","sm_c"],["P","税込控除","sm_c"],["P","内税","sm_c"],["P","備考","sm_c"]],
+                        ["",["P","手数料A","sm_l"],"","","","","","",""],
+                        ["",["P","手数料B","sm_l"],"","","","","","",""],
+                        ["",["P","手数料C","sm_l"],"","","","","","",""],
+                        ["",["P","手数料D","sm_l"],"","","","","","",""],
+                        ["",["P","運賃","sm_l"],"","","","","","",""],
+                        ["",["P","経費A","sm_l"],"","","","","","",""],
+                        ["",["P","経費B","sm_l"],"","","","","","",""],
+                        ["","",["P","計","sm_l"],"","","","","",""],
+                        ["",["P","その他A","sm_l"],"","","","","","",""],
+                        ["",["P","保険料","sm_l"],"","","","","","",""],
+                        ["","",["P","計","sm_l"],"","","","","",""],
+                        ["",["P","控除A","sm_l"],"","","","","","",""],
+                        ["",["P","控除B","sm_l"],"","","","","","",""],
+                        ["",["P","控除C","sm_l"],"","","","","","",""],
+                        ["",["P","端数処理","sm_l"],"","","","","","",""],
+                        ["","",["P","計","sm_l"],"","","","","",""],
+                        ["","",["P","計","sm_l"],"","","","","",""],
+                        ["","",["P","控除合計","sm_l"],"","","","","",""],
+                        ["","",["P","全合計","sm_l"],"","","","","",""]
+
+
+                    ],
+                    "col_widths": ["E","[10*mm,35*mm,35*mm,35*mm,35*mm,40*mm]"],
+                    "row_heights": ["E","5.5*mm"],
+                    "table_style":[
+                        ["E","('GRID',(1,0),(5,0),0.15,colors.black)"],
+                        ["E","('BOX',(1,5),(5,16),0.15,colors.black)"],
+                        ["E","('BOX',(1,5),(5,16),0.15,colors.black)"],
+                        ["E","('BOX',(1,1),(5,16),0.15,colors.black)"],
+                        ["E","('BOX',(2,1),(2,16),0.15,colors.black)"],
+                        ["E","('BOX',(4,1),(4,16),0.15,colors.black)"],
+                        ["E","('GRID',(1,8),(5,8),0.15,colors.black)"],
+                        ["E","('BOX',(1,9),(5,10),0.15,colors.black)"],
+                        ["E","('GRID',(1,11),(5,11),0.15,colors.black)"],
+                        ["E","('BOX',(1,12),(5,16),0.15,colors.black)"],
+                        ["E","('GRID',(2,16),(5,16),0.15,colors.black)"],
+                        ["E","('GRID',(1,17),(5,17),0.15,colors.black)"],
+                        ["E","('GRID',(2,18),(3,18),0.15,colors.black)"],
+                        ["E","('GRID',(2,19),(3,19),0.15,colors.black)"]
+                    ],
+                    "after": ["E","Spacer(10*mm,5*mm)"]
+                }
+
+            ],
+            "drawImages":[
+            ]
+        }
+    },
+    "data": {
+        "hdata": {
+                "title": "販売実績表",
+                "dueDate": "2121/11/17",
+                "postNumber": "000-1111",
+                "address01": "栃木県鹿沼市板荷",
+                "address02": "111-111",
+                "makerName": "小野　哲",
+
+                "product": "草刈機",
+                "model": "ハウス",
+                "modelClass": "ダンボール",
+                "weight": 4000,
+                "taxClass": "8%",
+
+                "itemLabelA": "品名A",
+                "itemQtyA": 101,
+                "itemPriceA": 40000,
+                "itemLabelB": "品名B",
+                "itemQtyB": 100,
+                "itemPriceB": 50000,
+                "itemQtyC": 100,
+                "itemLabelC": "品名C",
+                "itemPriceC": 60000,
+                "itemLabelD": "品名D",
+                "itemQtyD": 100,
+                "itemPriceD": 70000,
+                "itemLabelE": "品名E",
+                "itemQtyE": 100,
+                "itemPriceE": 80000,
+                "itemLabelF": "品名F",
+                "itemQtyF": 100,
+                "itemPriceF": 90000,
+                "itemLabelG": "品名G",
+                "itemQtyG": 100,
+                "itemPriceG": 900000
+
+        },
+        "sum": {
+            "amountItem": 11111,
+            "taxItem": 111,
+            "totalItem": 111222,
+            "amountExpense": 9911111,
+            "amountEtc": 222222,
+            "amountDeduction": 33333,
+            "totalDeduction": 33333,
+            "subtotal": 99999991,
+            "total": 99999991
+        }
+
+    }
+}
