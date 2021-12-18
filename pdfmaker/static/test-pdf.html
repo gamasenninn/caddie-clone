@@ -1,0 +1,95 @@
+<html>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="images/favicon.ico" rel="shortcut icon">
+
+<title>creacom mock</title>
+<!-- Load required Bootstrap and BootstrapVue CSS -->
+
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+<!-- Load fontawesome -->
+<!-- link href="./css/all.css" rel="stylesheet" -->
+<!--load all styles -->
+<!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+<!-- Load polyfills to support older browsers -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+  crossorigin="anonymous"></script>
+
+<!-- Load Vue followed by BootstrapVue -->
+<script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+<!-- Load the following for BootstrapVueIcons support -->
+<script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+  integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+<!-- 各種便利なツール塁です必要なときに随時使用のこと
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.js"></script>
+<script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
+<script src="./jsQR.js"></script>
+<script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
+-->
+
+<style>
+  .bg {
+    background-color: #e9ecef;
+  }
+
+  [v-cloak] {
+    display: none;
+  }
+</style>
+
+<!--   mock up here -->
+<div id="app">
+  <b-container class="pt-5">
+    <!-- b-row class="justify-content-center" -->
+    <b-card nobody title="PDF表示テスト" style="max-width: 30rem;" class="bg-transparent border-0">
+      <!-- div class="h2 text-center">ログイン</div -->
+      <b-row>
+        <b-col>
+          <b-form-group label-cols-sm="4" label-cols-lg="2" label-size="sm" label="PDF Def" label-for="jsonPdf">
+            <b-form-textarea v-model="jsonPdf" id="jsonPdf" size="sm" rows="10"></b-form-textarea>
+          </b-form-group>
+          <b-button variant="primary" class="text-center" @click="goPdf">Go PDF</b-button>
+        </b-col>
+
+      </b-row>
+    </b-card>
+  </b-container>
+
+
+</div>
+
+
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      jsonPdf: "",
+    },
+    methods: {
+      goPdf: async function () {
+        url = "/pdfmaker";
+        await axios.post(url, this.jsonPdf)
+        .then(function (response) {
+            console.log(response);
+        });
+      }
+    }
+  })
+</script>
+
+</html>
