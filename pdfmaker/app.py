@@ -1,7 +1,7 @@
 # Server sample for Pdf Maker 
 # 
 #
-from flask import Flask,Response,make_response
+from flask import Flask,Response,make_response,redirect
 from pdf_maker import pdf_maker
 import json
 
@@ -14,13 +14,18 @@ def hello():
     
 @app.route('/pdfmaker')
 def makepdf():
-    with open( './data.json', mode='r', encoding='utf-8') as f:
+    return redirect('/pdfmaker/data')
+
+@app.route('/pdfmaker/<json_file>')
+def makepdf_file(json_file):
+    with open( f'./{json_file}.json', mode='r', encoding='utf-8') as f:
         d = json.load(f)
 
     pdfdata = pdf_maker(d,is_BytesIO=True)
     response = make_response(pdfdata)
     response.mimetype = "application/pdf"
     return response
+
 
 @app.route('/file/<file_name>')
 def file(file_name):
@@ -35,9 +40,6 @@ def file(file_name):
     except:
         pass
         return f"file error:{file_name}"
-
-    #return f"This response is PDF Stream {file_name}"
-
 
 
 if __name__ == '__main__':
