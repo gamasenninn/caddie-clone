@@ -1,5 +1,5 @@
-# Server sample for Pdf Maker 
-# 
+#
+# Server sample for Pdf Maker  
 #
 from flask import Flask,make_response,redirect,request
 from pdf_maker import pdf_maker
@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return "Hello Pdf serve"
+    return "Hello pdf server"
 
 @app.route('/test')
 def test():
@@ -39,6 +39,7 @@ def makepdf_file(json_file):
     uuid_file_name = str(uuid.uuid1())+".pdf"
     alter_file_name = pdf_maker(d,file_name=uuid_file_name)
 
+    #------BytesIOを使えば、ファイル作成は必要ない ----
     #pdfdata = pdf_maker(d,is_BytesIO=True)
     #response = make_response(pdfdata)
     #response.mimetype = "application/pdf"
@@ -52,8 +53,6 @@ def file(file_name):
             pdfdata = f.read()
             response = make_response(pdfdata)
             response.mimetype = "application/pdf"
-            #response.headers['Content-Type'] = 'application/pdf'
-            #response.headers['Content-Disposition'] = f'inline; filename={file_name}'
             return response
     except:
         pass
