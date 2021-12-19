@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="images/favicon.ico" rel="shortcut icon">
 
-<title>creacom mock</title>
+<title>PDF TEST</title>
 <!-- Load required Bootstrap and BootstrapVue CSS -->
 
 <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
@@ -86,7 +86,6 @@
         await axios.post(url, this.jsonPdf)
         .then(function (response) {
             console.log(response);
-
             window.open('/pdf/'+response.data,"_blank")
         });
       }
