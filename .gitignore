@@ -3,3 +3,4 @@
 *.db
 *.db-journal
 pdfmaker/pdf/
+pdfmaker/static/pdf/
