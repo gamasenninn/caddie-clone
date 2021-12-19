@@ -24,6 +24,12 @@ def open_pdf(file):
 def makepdf():
     return redirect('/pdfmaker/data')
 
+#@app.route('/pdfmaker',methods=["POST"])
+#def makepdfPost():
+#    return response.data
+
+
+
 @app.route('/pdfmaker/<json_file>')
 def makepdf_file(json_file):
     with open( f'./{json_file}.json', mode='r', encoding='utf-8') as f:

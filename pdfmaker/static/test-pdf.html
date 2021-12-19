@@ -44,7 +44,7 @@
 
 <style>
   .bg {
-    background-color: #e9ecef;
+    background-color:#e9ecef;
   }
 
   [v-cloak] {
@@ -86,6 +86,8 @@
         await axios.post(url, this.jsonPdf)
         .then(function (response) {
             console.log(response);
+
+            window.open('/pdf/'+response.data,"_blank")
         });
       }
     }
