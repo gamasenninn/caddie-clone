@@ -42,6 +42,10 @@ def makepdf_file(json_file):
     #return response
     return alter_file_name
 
+@app.route('/pdf/<file>',methods=["GET"])
+def open_pdf(file):
+    return app.send_static_file("pdf/"+file)
+    
 #----ファイルを指定してpdfのレスポンスを返す場合（今回は使わない）---
 @app.route('/file/<file_name>')
 def file(file_name):
