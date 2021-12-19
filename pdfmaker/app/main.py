@@ -16,10 +16,6 @@ def hello():
 def test():
     return app.send_static_file('test-pdf.html')
 
-@app.route('/pdf/<file>',methods=["GET"])
-def open_pdf(file):
-    return app.send_static_file("pdf/"+file)
-    
 @app.route('/pdfmaker',methods=["GET","POST"])
 def makepdf():
 
@@ -39,13 +35,14 @@ def makepdf_file(json_file):
     uuid_file_name = str(uuid.uuid1())+".pdf"
     alter_file_name = pdf_maker(d,file_name=uuid_file_name)
 
-    #------BytesIOを使えば、ファイル作成は必要ない ----
+    #------BytesIOを使えば、ファイル作成は必要ない(今回は使わない) ----
     #pdfdata = pdf_maker(d,is_BytesIO=True)
     #response = make_response(pdfdata)
     #response.mimetype = "application/pdf"
     #return response
     return alter_file_name
 
+#----ファイルを指定してpdfのレスポンスを返す場合（今回は使わない）---
 @app.route('/file/<file_name>')
 def file(file_name):
     try:
