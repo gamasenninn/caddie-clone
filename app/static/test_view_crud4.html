@@ -60,7 +60,7 @@
                 <b-button v-else @click="updateInvoice(data.item)">更新</b-button>
                 <b-button v-if="data.item.isInsert" @click="getInvoices">キャンセル</b-button>
                 <b-button v-else @click="deleteInvoice(data.item)">削除</b-button>
-                <b-button @click="getInvoice_InvoiceItems(data.item)">商品読み込み</b-button>
+                <b-button @click="getInvoiceItems(data.item)">商品読み込み</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
             <template #row-details="data">
@@ -131,8 +131,14 @@
         <!-- <b-button @click='getItems'>読み込み</b-button> -->
         <b-button class="ml-2" @click='invoiceItemAddRow();'>+</b-button>
         <div class="mt-2"></div>
-        <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
+        <!-- <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
             :items="invoice_invoiceItems" :fields="[
+                        {  key: 'id', label: 'ID',  sortable: true },
+                        {  key: 'price', label: '値段' },
+                        {  key: 'control', label: '操作'},
+                      ]"> -->
+        <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
+            :items="invoice.invoice_items" :fields="[
                         {  key: 'id', label: 'ID',  sortable: true },
                         {  key: 'price', label: '値段' },
                         {  key: 'control', label: '操作'},
@@ -143,7 +149,7 @@
             <template v-slot:cell(control)="data">
                 <b-button v-if="data.item.isInsert" @click="insertInvoiceItem(data.item)">保存</b-button>
                 <b-button v-else @click="updateInvoiceItem(data.item)">更新</b-button>
-                <b-button v-if="data.item.isInsert" @click="getInvoice_InvoiceItems">キャンセル</b-button>
+                <b-button v-if="data.item.isInsert" @click="getInvoiceItems">キャンセル</b-button>
                 <b-button v-else @click="deleteInvoiceItem(data.item)">削除</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
@@ -184,8 +190,8 @@
             data: {
                 invoices: [],               //全件invoice
                 invoice: [],                //選択中のinvoice
-                invoice_invoiceItems: [],   //選択中のinvoiceに紐づくinvoiceItems
-                invoiceItem: [],             //選択中？のinvoiceItem
+                // invoice_invoiceItems: [],   //選択中のinvoiceに紐づくinvoiceItems
+                // invoiceItem: [],             //選択中？のinvoiceItem
             },
             methods: {
                 // ---Invoices---
@@ -197,6 +203,11 @@
                             self.invoices = response.data;
                         });
                 },
+                // getInvoice: async function (item) {
+                //     console.log("getInvoiceテスト");
+                //     console.log(item);
+                //     this.invoice = item;
+                // },
                 insertInvoice: async function (item) {
                     self = this;
                     await axios.post("/invoice", item)
@@ -228,20 +239,22 @@
                     });
                 },
                 // ---InvoiceからInvoice_Items---
-                getInvoice_InvoiceItems: async function (item) {
+                // getInvoice_InvoiceItems: async function (item) {
+                getInvoiceItems: async function (item) {
                     self = this;
                     await axios.get("/invoice/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             self.invoice = response.data;
-                            self.invoice_invoiceItems = response.data.invoice_items;
+                            // self.invoice_invoiceItems = response.data.invoice_items;
                         });
                 },
-                getInvoiceId_InvoiceItems: async function (id) {
+                // getInvoiceId_InvoiceItems: async function (id) {
+                getInvoiceItem: async function (id) {
                     await axios.get("/invoice/" + id)
                         .then(function (response) {
                             console.log(response);
-                            self.invoice_invoiceItems = response.data.invoice_items;
+                            // self.invoice_invoiceItems = response.data.invoice_items;
                         });
                 },
                 // ---Invoice_Item---
@@ -251,7 +264,7 @@
                     await axios.post("/invoice_item", item)
                         .then(function (response) {
                             console.log(response);
-                            self.getInvoice_InvoiceItems(item);
+                            self.getInvoiceItems(item);
                         });
                 },
                 updateInvoiceItem: async function (item) {
@@ -259,29 +272,32 @@
                     await axios.put("/invoice_item/" + item.id, item)
                         .then(function (response) {
                             console.log(response);
-                            invoiceId = response.data.data.invoiceId;
-                            self.getInvoiceId_InvoiceItems(invoiceId);
+                            // invoiceId = response.data.data.invoiceId;
+                            self.getInvoiceItems(item);
+                            // self.getInvoiceItem(invoiceId);
                         });
                 },
                 deleteInvoiceItem: async function (item) {
                     self = this;
                     // deleteするとresponse内のdataが消えるのでGET->DELETE
-                    await axios.get("/invoice_item/" + item.id)
-                        .then(function (response) {
-                            console.log(response);
-                            invoiceId = response.data.invoiceId;
-                        });
+                    // await axios.get("/invoice_item/" + item.id)
+                    //     .then(function (response) {
+                    //         console.log(response);
+                    //         invoiceId = response.data.invoiceId;
+                    //     });
                     await axios.delete("/invoice_item/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.getInvoiceId_InvoiceItems(invoiceId);
+                            self.getInvoiceItems(item);
+                            // self.getInvoiceItem(invoiceId);
                         });
                 },
                 invoiceItemAddRow: function () {
                     self = this;
-                    self.invoice_invoiceItems.push({
+                    self.invoice.invoice_items.push({
                         isInsert: true,
                     });
+                    console.log(self.invoice);
                 },
             }
         })
