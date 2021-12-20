@@ -230,7 +230,6 @@
                 // ---Invoice_Item---
                 getInvoiceItems: async function () {
                     self = this;
-                    console.log(self.invoice.id);
                     await axios.get("/invoice_items/" + self.invoice.id)
                         .then(function (response) {
                             console.log(response);
