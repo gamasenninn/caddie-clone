@@ -67,8 +67,11 @@ def chext(filename):
     dirname =  os.path.dirname(filename)
     fname = basename.split('.')[0].lower()
     ext = basename.split('.')[1].lower()
-    if icon[ext]['isImage']:
-        return filename
+    if icon.get(ext):
+        if icon[ext]['isImage']:
+            return filename
+        else:
+            return f"{dirname}/{fname}.png"
     else:
         return f"{dirname}/{fname}.png"
 

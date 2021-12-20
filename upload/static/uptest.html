@@ -164,11 +164,14 @@
                 for(const f of this.dicFiles){
                     if(f.isActive){
                         console.log(f.path,f.isActive)
-                        flist.push(f.path.replace("upload/",''))
-                        thumbs.push(f.thumb_path.replace("upload/",''))
+                        console.log(f.thumb_path,f.isActive)
+                        flist.push(f.path)
+                        thumbs.push(f.thumb_path)
+                        //flist.push(f.path.replace("upload/",''))
+                        //thumbs.push(f.thumb_path.replace("upload/",''))
                     }
                 }
-                console.log(flist)
+                console.log(flist,thumbs)
                 url= "delete_files";
                 
                 await axios.delete(url,

@@ -1,7 +1,7 @@
 import sys
 
 from flask import Flask,request,json, jsonify,Response,make_response
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
 import json
 import os
 import glob
@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFilter
 from make_thumb import make_thumb,chext #サムネイル作成関数
 
 app = Flask(__name__)
-CORS(app, support_credentials=True)
+#CORS(app, support_credentials=True)
 
 @app.route("/")
 def hello():
@@ -20,7 +20,7 @@ def hello():
     return message
 
 @app.route("/upload",methods=['POST'])
-@cross_origin(supports_credentials=True)
+#@cross_origin(supports_credentials=True)
 def upload_file():
     if 'file' not in request.files:
         make_response(jsonify({'result':'uploadFile is required.'}))
@@ -42,22 +42,22 @@ def upload_file():
     return  jsonify(response)
 
 @app.route("/delete_files",methods=['DELETE'])
-@cross_origin(supports_credentials=True)
+#@cross_origin(supports_credentials=True)
 
 def delete_files():
     dict_data = json.loads(request.data.decode())
 
     for f in dict_data['files']:
-        os.remove("./static/upload/"+f)
+        os.remove(f)
 
     for f in dict_data['thumbs']:
-        os.remove("./static/upload/"+f)
+        os.remove(f)
 
     response={"result":"OK"}
     return  jsonify(response)
 
 @app.route("/file_list/<fid>",methods=['GET'])
-@cross_origin(supports_credentials=True)
+#@cross_origin(supports_credentials=True)
 def get_file_list(fid):
     file_path_list = glob.glob(f'upload/{fid}/*')
     file_path_list = [".static/"+f.replace('\\','/') for f in file_path_list ]
@@ -71,7 +71,7 @@ def get_file_list(fid):
     return message
 
 @app.route("/file_list2/<fid>",methods=['GET'])
-@cross_origin(supports_credentials=True)
+#@cross_origin(supports_credentials=True)
 def get_file_list2(fid):
 
     file_path_list = glob.glob(f'./static/upload/{fid}/*')
