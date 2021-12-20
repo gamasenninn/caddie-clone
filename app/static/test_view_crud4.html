@@ -228,12 +228,13 @@
                     console.log(this.invoice);
                 },
                 // ---Invoice_Item---
-                getInvoiceItems: async function (item) {
+                getInvoiceItems: async function () {
                     self = this;
-                    await axios.get("/invoice/" + item.id)
+                    console.log(self.invoice.id);
+                    await axios.get("/invoice_items/" + self.invoice.id)
                         .then(function (response) {
                             console.log(response);
-                            self.invoice = response.data;
+                            self.invoice.invoice_items = response.data;
                         });
                 },
                 insertInvoiceItem: async function (item) {

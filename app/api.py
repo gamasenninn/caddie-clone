@@ -265,6 +265,13 @@ def invoice_item_show(id):
         return jsonify([])
 
 
+@app.route('/invoice_items/<hid>', methods=['GET'])
+def invoice_item_show_by_invoiceId(hid):
+    invoiceItems = Invoice_Item.query.filter(
+        Invoice_Item.invoiceId == hid).all()
+    return jsonify(Invoice_ItemSchema(many=True).dump(invoiceItems))
+
+
 @app.route('/invoice_item', methods=['POST'])
 def invoice_item_create():
     data = request.json
