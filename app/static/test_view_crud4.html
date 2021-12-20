@@ -223,7 +223,7 @@
                         isInsert: true
                     });
                 },
-                // ---InvoiceからInvoice_Items---
+                // ---Invoice_Item---
                 getInvoiceItems: async function (item) {
                     self = this;
                     await axios.get("/invoice/" + item.id)
@@ -232,13 +232,6 @@
                             self.invoice = response.data;
                         });
                 },
-                getInvoiceItem: async function (id) {
-                    await axios.get("/invoice/" + id)
-                        .then(function (response) {
-                            console.log(response);
-                        });
-                },
-                // ---Invoice_Item---
                 insertInvoiceItem: async function (item) {
                     self = this;
                     item.invoiceId = self.invoice.id;
