@@ -27,11 +27,11 @@ def upload_file():
     f = request.files["file"]
     id= request.form['fileId'] 
 
-    os.makedirs(f'./upload/{id}', exist_ok=True)
-    file_path = f'./upload/{id}/{f.filename}'
+    os.makedirs(f'./static/upload/{id}', exist_ok=True)
+    file_path = f'./static/upload/{id}/{f.filename}'
     f.save(file_path)
     
-    make_thumb(file_path,f"./upload/{id}/thumbs")
+    make_thumb(file_path,f"./static/upload/{id}/thumbs")
 
     response = {
         "text":"OK",
@@ -48,10 +48,10 @@ def delete_files():
     dict_data = json.loads(request.data.decode())
 
     for f in dict_data['files']:
-        os.remove("./upload/"+f)
+        os.remove("./static/upload/"+f)
 
     for f in dict_data['thumbs']:
-        os.remove("./upload/"+f)
+        os.remove("./static/upload/"+f)
 
     response={"result":"OK"}
     return  jsonify(response)
@@ -60,7 +60,7 @@ def delete_files():
 @cross_origin(supports_credentials=True)
 def get_file_list(fid):
     file_path_list = glob.glob(f'upload/{fid}/*')
-    file_path_list = ["../"+f.replace('\\','/') for f in file_path_list ]
+    file_path_list = [".static/"+f.replace('\\','/') for f in file_path_list ]
     file_names = [f.split('/')[-1] for f in file_path_list ]
     #app.logger.debug(file_path_list)
     j_flist = { 
@@ -74,7 +74,7 @@ def get_file_list(fid):
 @cross_origin(supports_credentials=True)
 def get_file_list2(fid):
 
-    file_path_list = glob.glob(f'upload/{fid}/*')
+    file_path_list = glob.glob(f'./static/upload/{fid}/*')
     arry = []
     for f in file_path_list:
         if os.path.isfile(f):
@@ -94,10 +94,21 @@ def get_file_list2(fid):
     message = jsonify(arry)
     return message
 
+@app.route('/test')
+def uptest():
+    return app.send_static_file('./uptest.html')
+
+@app.route('/upload/<fid>/thumbs/<file>')
+def upimage(fid,file):
+    app.logger.debug(f"{fid}:{file}")
+    return app.send_static_file(f'./upload/{fid}/thumbs/{file}')
+    #return f'./upload/{fid}/thumbs/{file}'
+
+
 @app.route('/<f>')
 def proc(f):
     return app.send_static_file('./'+f)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=80)
+    app.run(host="0.0.0.0", debug=True, port=5031)
     

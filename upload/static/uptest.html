@@ -97,7 +97,7 @@
     <h3 class="mt-5">アップロードパターン①:　ディフォルト機能の画面</h3><br/>
 
     <b-card style="max-width: 20rem">
-        <form action="http://localhost/upload" class="dropzone" id="my-dropzone">
+        <form action="upload" class="dropzone" id="my-dropzone">
             <input hidden type="text" name="fileId" v-model="fileId" >
 
             <input hidden type="file" name="file" id="my-dropzone" multiple>
@@ -137,7 +137,7 @@
             getFileList: async function (fid) {
                 self = this;
                 //url = "http://localhost/file_list";
-                url = "http://localhost/file_list2/"+fid;
+                url = "file_list2/"+fid;
                 await axios.get(url)
                     .then(function (response) {
                         console.log(response.data);
@@ -169,7 +169,7 @@
                     }
                 }
                 console.log(flist)
-                url= "http://localhost/delete_files";
+                url= "delete_files";
                 
                 await axios.delete(url,
                         {
