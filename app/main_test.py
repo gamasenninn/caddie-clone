@@ -36,9 +36,9 @@ def crud_test4():
     return app.send_static_file('test_view_crud4.html')
 
 
-@app.route('/test-view-quotation-switchable')
-def crud_test_quotation_switchable():
-    return app.send_static_file('test_view_quotation_switchable.html')
+@app.route('/test-view-invoice-switchable')
+def crud_test_invoice_switchable():
+    return app.send_static_file('test_view_invoice_switchable.html')
 
 
 if __name__ == '__main__':
