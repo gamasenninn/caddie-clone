@@ -60,7 +60,7 @@
                                 <!-- ↓仮 -->
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先ID"
                                     label-for="customerId">
-                                    <p class="text-left pl-2" id="customerId">{{invoice.customerId}}</p>
+                                    <b-form-input v-model="invoice.customerId" type="number" size="sm"></b-form-input>
                                 </b-form-group>
                                 <!-- <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="kokyaku" class="kokyaku"> -->
@@ -197,6 +197,10 @@
                         </b-form-textarea>
                     </b-card>
 
+                    <b-button v-if="isNew" @click="insertInvoice(invoice)">新規作成</b-button>
+                    <b-button v-if="isUpdate">保存</b-button>
+                    <b-button @click="">キャンセル</b-button>
+
                 </b-col> <!-- 本体 -->
 
                 <b-col>
@@ -213,7 +217,7 @@
             <b-row class="mt-3">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('detail')">＋新規</b-button>
+                    <b-button variant="success" @click="changeMode('detail');changeCreateMode('new');">＋新規</b-button>
                     <b-card border-variant="white" class="mb-3 text-center" header="見積書一覧"
                         header-border-variant="light">
                         <b-table responsive hover small id="quotaiontable" sort-by="ID" small label="Table Options"
@@ -228,7 +232,8 @@
                             {  key: 'control', label: '' },
                             ]">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('detail');getInvoice(data.item);"><i
+                                <b-button variant="info"
+                                    @click="changeMode('detail'); changeCreateMode('update'); getInvoice(data.item);"><i
                                         class="fas fa-edit"></i>
                                 </b-button>
                             </template>
@@ -262,6 +267,8 @@
                 invoice: [],                //選択中のinvoice
                 isList: true,
                 isDetail: false,
+                isNew: true,
+                isUpdate: false,
             },
             methods: {
                 // ---Invoices---
@@ -275,6 +282,9 @@
                 },
                 insertInvoice: async function (item) {
                     self = this;
+                    // item.customerId = 1;    //NotNullだがcustomerテーブルとの連携がまだなので暫定的に入れておく
+                    console.log("新規作成時item内");
+                    console.log(item);
                     await axios.post("/invoice", item)
                         .then(function (response) {
                             console.log(response);
@@ -303,6 +313,10 @@
                         isInsert: true
                     });
                 },
+                // invoiceCreateNew:function(){
+                //     this.invoice=[];
+                //     console.log(this.invoices);
+                // },
                 getInvoice: function (item) {
                     this.invoice = item;
                     console.log(this.invoice);
@@ -351,16 +365,29 @@
                 },
                 changeMode: function (mode) {
                     if (mode == 'list') {
-                        console.log('changeボタン')
+                        console.log("this.invoice=");
+                        console.log(this.invoices);
                         this.isList = true;
                         this.isDetail = false;
                     }
                     else if (mode == 'detail') {
-                        console.log('changeボタン')
+                        console.log("this.invoice=");
+                        console.log(this.invoices)
                         this.isList = false;
                         this.isDetail = true;
                     }
                 },
+                changeCreateMode: function (mode) {
+                    if (mode == 'new') {
+                        this.isNew = true;
+                        this.isUpdate = false;
+                        // this.invoice = [];
+                    }
+                    else if (mode == 'update') {
+                        this.isNew = false;
+                        this.isUpdate = true;
+                    }
+                }
             },
         })
 
