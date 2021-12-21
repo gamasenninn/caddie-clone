@@ -42,10 +42,46 @@
 
     <!-- 請求書（Invoice）View -->
     <div id="app" class="mt-2">
-        <b-row>
-            <b-button variant="success">切り替え</b-button>
-        </b-row>
-        <span class="mr-5 h2">Invoices</span>
+        <!-- 詳細 -->
+        
+
+        <!-- 一覧表示 -->
+        <div v-if="isList">
+            <b-button @click='getInvoices'>読み込み</b-button>
+            <b-row class="mt-3">
+                <b-col></b-col>
+                <b-col cols="10">
+                    <b-button variant="success" @click="changeMode('detail')">＋新規</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="見積書一覧"
+                        header-border-variant="light">
+                        <b-table responsive hover small id="quotaiontable" sort-by="ID" small label="Table Options"
+                            :items=invoices :fields="[
+                            {  key: 'update', label: '' },
+                            {  key: 'id', label: 'No.' },
+                            {  key: 'applyDate', label: '日付' },
+                            {  key: 'applyNumber', label: '見積番号' },
+                            {  key: 'title', label: '件名' },
+                            {  key: 'expiry', label: '見積有効期限' },
+                            {  key: 'delete', label: '' },
+                            ]">
+                            <template v-slot:cell(update)="data">
+                                <b-button variant="info" @click="changeMode('detail')"><i class="fas fa-edit"></i>
+                                </b-button>
+                            </template>
+                            <template v-slot:cell(delete)="data">
+                                <b-button variant="danger" @click="window.confirm('データを削除します。よろしいですか？')"><i
+                                        class="fas fa-trash-alt"></i>
+                                </b-button>
+                            </template>
+                        </b-table>
+                    </b-card>
+                </b-col>
+                <b-col></b-col>
+            </b-row>
+        </div>
+
+
+        <!-- <span class="mr-5 h2">Invoices</span>
         <b-button @click='getInvoices'>読み込み</b-button>
         <b-button class="ml-2" @click='InvoiceAddRow'>+</b-button>
         <div class="mt-2"></div>
@@ -125,11 +161,10 @@
                     <b-button size="sm" @click="data.toggleDetails">詳細を隠す</b-button>
                 </b-card>
             </template>
-        </b-table>
-        <!-- </div> -->
+        </b-table> -->
 
         <!-- 請求書＿商品（Invoice_Items）View -->
-        <span class="mr-5 h2">Invoice_Items</span>
+        <!-- <span class="mr-5 h2">Invoice_Items</span>
         <b-button class="ml-2" @click='invoiceItemAddRow();'>+</b-button>
         <div class="mt-2"></div>
         <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
@@ -174,7 +209,7 @@
                     <b-button size="sm" @click="data.toggleDetails">詳細を隠す</b-button>
                 </b-card>
             </template>
-        </b-table>
+        </b-table> -->
     </div>
 
 
@@ -185,6 +220,8 @@
             data: {
                 invoices: [],               //全件invoice
                 invoice: [],                //選択中のinvoice
+                isList: true,
+                isDetail: false,
             },
             methods: {
                 // ---Invoices---
@@ -272,7 +309,26 @@
                     });
                     console.log(self.invoice);
                 },
-            }
+                changeMode: function (mode) {
+                    if (mode == 'list') {
+                        this.isList = true;
+                        this.isDetail = false;
+                    }
+                    else if (mode == 'detail') {
+                        this.isList = false;
+                        this.isDetail = true;
+                    }
+                },
+                // window: onload = async function () {
+                //     self = this;
+                //     await axios.get("/invoices")
+                //         .then(function (response) {
+                //             console.log(response);
+                //             self.invoices = response.data;
+                //             console.log(self.invoices)
+                //         });
+                // },
+            },
         })
 
 
