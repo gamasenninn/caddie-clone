@@ -82,13 +82,14 @@
     },
     methods: {
       goPdf: async function () {
-        let url = "http://pdfs.hksagri.diskstation.me";
+        //let url = "http://pdfs.hksagri.diskstation.me";
+        let url = "http://localhost:5020/pdfmaker";
         let jsonData = editor.getSession().getValue()
         jsonObj = JSON.parse(jsonData)
         await axios.post(url, jsonObj)
         .then(function (response) {
             console.log(response);
-            window.open('/pdf/'+response.data,"_blank")
+            window.open('http://localhost:5020/pdf/'+response.data,"_blank")
         });
       }
     },
