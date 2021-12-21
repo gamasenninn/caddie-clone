@@ -64,7 +64,7 @@
                                 </b-form-group>
                                 <!-- <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="kokyaku" class="kokyaku"> -->
-                                <!-- ここは後で紐づけ -->
+                                <!-- Customerと紐づける必要があるのでコメントアウト -->
                                 <!-- <b-form-input v-model="header.kokyaku" id="kokyaku" size="sm" v-b-modal.customer-modal></b-form-input> -->
                                 <!-- 得意先一覧モーダル -->
                                 <!-- <b-modal size="xl" id="customer-modal">
@@ -250,135 +250,6 @@
         </div>
 
 
-        <!-- <span class="mr-5 h2">Invoices</span>
-        <b-button @click='getInvoices'>読み込み</b-button>
-        <b-button class="ml-2" @click='InvoiceAddRow'>+</b-button>
-        <div class="mt-2"></div>
-        <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
-            :items="invoices" :fields="[
-                        {  key: 'id', label: 'ID',  sortable: true },
-                        {  key: 'title', label: '件名' },
-                        {  key: 'control', label: '操作'},
-                      ]">
-            <template v-slot:cell(title)="data">
-                <b-form-input v-model="data.item.title" type="text" size="sm"></b-form-input>
-            </template>
-            <template v-slot:cell(control)="data">
-                <b-button v-if="data.item.isInsert" @click="insertInvoice(data.item)">保存</b-button>
-                <b-button v-else @click="updateInvoice(data.item)">更新</b-button>
-                <b-button v-if="data.item.isInsert" @click="getInvoices">キャンセル</b-button>
-                <b-button v-else @click="deleteInvoice(data.item)">削除</b-button>
-                <b-button @click="getInvoice(data.item)">商品読み込み</b-button>
-                <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
-            </template>
-            <template #row-details="data">
-                <b-card>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>請求書番号:</b></b-col>
-                        <b-col>
-                            <b-form-input v-model="data.item.applyNumber" type="text" size="sm"></b-form-input>
-                        </b-col>
-                    </b-row>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>日付:</b></b-col>
-                        <b-col>
-                            <b-form-input v-model="data.item.applyDate" type="date" size="sm"></b-form-input>
-                        </b-col>
-                    </b-row>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>請求書有効期限:</b></b-col>
-                        <b-col>
-                            <b-form-input v-model="data.item.expiry" type="date" size="sm"></b-form-input>
-                        </b-col>
-                    </b-row>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>メモ:</b></b-col>
-                        <b-col>
-                            <b-form-input v-model="data.item.memo" type="text" size="sm"></b-form-input>
-                        </b-col>
-                    </b-row>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>備考:</b></b-col>
-                        <b-col>
-                            <b-form-input v-model="data.item.remarks" type="text" size="sm"></b-form-input>
-                        </b-col>
-                    </b-row>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>内税・外税:</b></b-col>
-                        <b-col>
-                            <b-form-checkbox v-model="data.item.isTaxExp" @change="data.item.isTaxExp">
-                                </b-form-input>
-                        </b-col>
-                    </b-row>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>請求書_商品一覧</b></b-col>
-                        <b-col>
-                            {{ data.item.invoice_items }}
-                        </b-col>
-                    </b-row>
-
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>作成日:</b></b-col>
-                        <b-col>{{ data.item.createdAt }}</b-col>
-                    </b-row>
-
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>更新日:</b></b-col>
-                        <b-col>{{ data.item.updatedAt }}</b-col>
-                    </b-row>
-
-                    <b-button size="sm" @click="data.toggleDetails">詳細を隠す</b-button>
-                </b-card>
-            </template>
-        </b-table> -->
-
-        <!-- 請求書＿商品（Invoice_Items）View -->
-        <!-- <span class="mr-5 h2">Invoice_Items</span>
-        <b-button class="ml-2" @click='invoiceItemAddRow();'>+</b-button>
-        <div class="mt-2"></div>
-        <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
-            :items="invoice.invoice_items" :fields="[
-                        {  key: 'id', label: 'ID',  sortable: true },
-                        {  key: 'price', label: '値段' },
-                        {  key: 'control', label: '操作'},
-                      ]">
-            <template v-slot:cell(price)="data">
-                <b-form-input v-model="data.item.price" type="text" size="sm"></b-form-input>
-            </template>
-            <template v-slot:cell(control)="data">
-                <b-button v-if="data.item.isInsert" @click="insertInvoiceItem(data.item)">保存</b-button>
-                <b-button v-else @click="updateInvoiceItem(data.item)" @change="data.toggleDetails">更新</b-button>
-                <b-button v-if="data.item.isInsert" @click="getInvoiceItems">キャンセル</b-button>
-                <b-button v-else @click="deleteInvoiceItem(data.item)">削除</b-button>
-                <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
-            </template>
-            <template #row-details="data">
-                <b-card>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>個数:</b></b-col>
-                        <b-col>
-                            <b-form-input v-model="data.item.count" type="text" size="sm"></b-form-input>
-                        </b-col>
-                    </b-row>
-
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>請求書ID:</b></b-col>
-                        <b-col>{{ data.item.invoiceId }}</b-col>
-                    </b-row>
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>作成日:</b></b-col>
-                        <b-col>{{ data.item.createdAt }}</b-col>
-                    </b-row>
-
-                    <b-row class="mb-2">
-                        <b-col sm="3" class="text-sm-right"><b>更新日:</b></b-col>
-                        <b-col>{{ data.item.updatedAt }}</b-col>
-                    </b-row>
-
-                    <b-button size="sm" @click="data.toggleDetails">詳細を隠す</b-button>
-                </b-card>
-            </template>
-        </b-table> -->
     </div>
 
 
