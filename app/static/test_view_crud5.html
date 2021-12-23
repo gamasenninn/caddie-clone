@@ -60,7 +60,7 @@
                 <b-button v-else @click="updateInvoice(data.item)">更新</b-button>
                 <b-button v-if="data.item.isInsert" @click="getInvoices">キャンセル</b-button>
                 <b-button v-else @click="deleteInvoice(data.item)">削除</b-button>
-                <b-button @click="getInvoice(data.item)">商品読み込み</b-button>
+                <b-button @click="getInvoice(data.item)">明細</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
             <template #row-details="data">
