@@ -60,7 +60,10 @@
                                 <!-- ↓仮 -->
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先ID"
                                     label-for="customerId">
-                                    <b-form-input v-model="invoice.customerId" type="number" size="sm"></b-form-input>
+                                    <b-form-input v-if="isUpdate" v-model="invoice.customerId" type="number" size="sm">
+                                    </b-form-input>
+                                    <b-form-input v-if="isNew" v-model="newInvoice.customerId" type="number" size="sm">
+                                    </b-form-input>
                                 </b-form-group>
                                 <!-- <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="kokyaku" class="kokyaku"> -->
@@ -83,27 +86,44 @@
                                 </b-form-group> -->
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
                                     label-for="applyDate">
-                                    <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm" type="date">
+                                    <b-form-input v-if="isUpdate" v-model="invoice.applyDate" id="applyDate" size="sm"
+                                        type="date">
+                                    </b-form-input>
+                                    <b-form-input v-if="isNew" v-model="newInvoice.applyDate" id="applyDate" size="sm"
+                                        type="date">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
                                     label-for="expiry">
-                                    <b-form-input v-model="invoice.expiry" id="expiry" size="sm" type="date">
+                                    <b-form-input v-if="isUpdate" v-model="invoice.expiry" id="expiry" size="sm"
+                                        type="date">
+                                    </b-form-input>
+                                    <b-form-input v-if="isNew" v-model="newInvoice.expiry" id="expiry" size="sm"
+                                        type="date">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                     label-for="title">
-                                    <b-form-input v-model="invoice.title" id="title" size="sm"></b-form-input>
+                                    <b-form-input v-if="isUpdate" v-model="invoice.title" id="title" size="sm">
+                                    </b-form-input>
+                                    <b-form-input v-if="isNew" v-model="newInvoice.title" id="title" size="sm">
+                                    </b-form-input>
                                 </b-form-group>
                             </b-col>
                             <b-col>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
                                     label-for="applyNumber">
-                                    <p class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}</p>
+                                    <p v-if="isUpdate" class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}
+                                    </p>
+                                    <b-form-input v-if="isNew" v-model="newInvoice.applyNumber" type="number" size="sm">
+                                    </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="メモ">
-                                    <b-form-textarea v-model="invoice.memo" size="sm" rows="4"></b-form-textarea>
+                                    <b-form-textarea v-if="isUpdate" v-model="invoice.memo" size="sm" rows="4">
+                                    </b-form-textarea>
+                                    <b-form-textarea v-if="isNew" v-model="newInvoice.memo" size="sm" rows="4">
+                                    </b-form-textarea>
                                 </b-form-group>
                             </b-col>
                         </b-row> <!-- end header -->
@@ -193,12 +213,13 @@
 
                     <!-- 備考欄 -->
                     <b-card border-variant="white" class="mb-3 text-center" header="備考欄" header-border-variant="light">
-                        <b-form-textarea v-model="invoice.memo" id="memo" size="sm" type="text" rows="3">
+                        <b-form-textarea v-model="invoice.remarks" id="remarks" size="sm" type="text" rows="3">
                         </b-form-textarea>
                     </b-card>
 
-                    <b-button v-if="isNew" @click="insertInvoice(invoice)">新規作成</b-button>
-                    <b-button v-if="isUpdate">保存</b-button>
+                    <b-button v-if="isNew" @click="insertInvoice(newInvoice)">新規作成</b-button>
+                    <b-button v-if="isUpdate" @click="updateInvoice(invoice);updateInvoiceItem(invoice.invoice_items);">
+                        保存</b-button>
                     <b-button @click="">キャンセル</b-button>
 
                 </b-col> <!-- 本体 -->
@@ -264,7 +285,8 @@
             el: '#app',
             data: {
                 invoices: [],               //全件invoice
-                invoice: [],                //選択中のinvoice
+                invoice: {},                //選択中のinvoice
+                newInvoice: {},             //新規作成時のinvoice
                 isList: true,
                 isDetail: false,
                 isNew: true,
@@ -282,9 +304,7 @@
                 },
                 insertInvoice: async function (item) {
                     self = this;
-                    // item.customerId = 1;    //NotNullだがcustomerテーブルとの連携がまだなので暫定的に入れておく
-                    console.log("新規作成時item内");
-                    console.log(item);
+                    item.customerId = parseInt(item.customerId);
                     await axios.post("/invoice", item)
                         .then(function (response) {
                             console.log(response);
@@ -365,23 +385,29 @@
                 },
                 changeMode: function (mode) {
                     if (mode == 'list') {
-                        console.log("this.invoice=");
-                        console.log(this.invoices);
                         this.isList = true;
                         this.isDetail = false;
                     }
                     else if (mode == 'detail') {
-                        console.log("this.invoice=");
-                        console.log(this.invoices)
                         this.isList = false;
                         this.isDetail = true;
                     }
                 },
                 changeCreateMode: function (mode) {
+                    self = this;
                     if (mode == 'new') {
-                        this.isNew = true;
-                        this.isUpdate = false;
-                        // this.invoice = [];
+                        self.isNew = true;
+                        self.isUpdate = false;
+                        self.newInvoice.customerId = '';
+                        self.newInvoice.applyNumber = '';
+                        self.newInvoice.applyDate = '';
+                        self.newInvoice.expiry = '';
+                        self.newInvoice.title = '';
+                        self.newInvoice.memo = '';
+                        self.newInvoice.remarks = '';
+                        self.newInvoice.isTaxExp = false;
+                        self.newInvoice.invoiceItems = {};
+                        console.log(self.newInvoice);
                     }
                     else if (mode == 'update') {
                         this.isNew = false;
