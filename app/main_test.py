@@ -36,6 +36,11 @@ def crud_test4():
     return app.send_static_file('test_view_crud4.html')
 
 
+@app.route('/test-view-crud5')
+def crud_test5():
+    return app.send_static_file('test_view_crud5.html')
+
+
 @app.route('/test-view-invoice-switchable')
 def crud_test_invoice_switchable():
     return app.send_static_file('test_view_invoice_switchable.html')
