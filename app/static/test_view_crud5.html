@@ -125,8 +125,67 @@
         </b-table>
         <!-- </div> -->
 
-        <!-- 請求書＿商品（Invoice_Items）View -->
         <span class="mr-5 h2">Invoice_Items</span>
+        <!-- 請求書＿詳細 -->
+        <b-card>
+            <b-row class="h3">選択中の請求書</b-row>
+            <b-row>
+                <b-col sm="2">ID:</b-col>
+                <b-col>{{invoice.id}}</b-col>
+            </b-row>
+            <b-row>
+                <b-col sm="2">customerId:</b-col>
+                <b-col>{{invoice.customerId}}</b-col>
+            </b-row>
+            <b-row>
+                <b-col sm="2">applyNumber:</b-col>
+                <b-col>
+                    <b-form-input v-model="invoice.applyNumber" type="number" size="sm"></b-form-input>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col sm="2">applyDate:</b-col>
+                <b-col>
+                    <b-form-input v-model="invoice.applyDate" type="date" size="sm"></b-form-input>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col sm="2">expiry:</b-col>
+                <b-col>
+                    <b-form-input v-model="invoice.expiry" type="date" size="sm"></b-form-input>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col sm="2">title:</b-col>
+                <b-col>
+                    <b-form-input v-model="invoice.title" type="text" size="sm"></b-form-input>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col sm="2">memo:</b-col>
+                <b-col>
+                    <b-form-input v-model="invoice.memo" type="text" size="sm"></b-form-input>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col sm="2">remarks:</b-col>
+                <b-col>
+                    <b-form-input v-model="invoice.remarks" type="text" size="sm"></b-form-input>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col sm="2">isTaxExp:</b-col>
+                <b-col>
+                    <b-form-checkbox v-model="invoice.isTaxExp" @change="invoice.isTaxExp"></b-form-checkbox>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-button @click="updateInvoice(invoice)">更新</b-button>
+                <b-button @click="deleteInvoice(invoice)">削除</b-button>
+            </b-row>
+        </b-card>
+
+        <!-- 請求書＿商品（Invoice_Items）View -->
         <b-button class="ml-2" @click='invoiceItemAddRow();'>+</b-button>
         <div class="mt-2"></div>
         <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
