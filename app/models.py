@@ -1,5 +1,6 @@
 from app import db, app, ma
 from datetime import datetime
+from datetime import date
 
 
 class User(db.Model):
@@ -94,8 +95,8 @@ class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     applyNumber = db.Column(db.Integer)
-    applyDate = db.Column(db.DateTime)
-    expiry = db.Column(db.DateTime)
+    applyDate = db.Column(db.Date)
+    expiry = db.Column(db.Date)
     title = db.Column(db.String)
     memo = db.Column(db.String)
     remarks = db.Column(db.String)
@@ -127,8 +128,8 @@ class Quotation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     applyNumber = db.Column(db.Integer)
-    applyDate = db.Column(db.DateTime)
-    expiry = db.Column(db.DateTime)
+    applyDate = db.Column(db.Date)
+    expiry = db.Column(db.Date)
     title = db.Column(db.String)
     memo = db.Column(db.String)
     remarks = db.Column(db.String)

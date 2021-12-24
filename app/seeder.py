@@ -66,11 +66,11 @@ def seeder():
     # -----Invoices-----
     print('----Invoices-----')
     invoices = [
-        Invoice(id=1, customerId=1, applyNumber=1000001, applyDate=datetime.now(), expiry=datetime.now(),
+        Invoice(id=1, customerId=1, applyNumber=1000001, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○株式会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
-        Invoice(id=2, customerId=2, applyNumber=1000002, applyDate=datetime.now(), expiry=datetime.now(),
+        Invoice(id=2, customerId=2, applyNumber=1000002, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○有限会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
-        Invoice(id=3, customerId=3, applyNumber=1000003, applyDate=datetime.now(), expiry=datetime.now(),
+        Invoice(id=3, customerId=3, applyNumber=1000003, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○商事への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
     ]
     db.session.add_all(invoices)
@@ -99,11 +99,11 @@ def seeder():
     # -----Quotations-----
     print('----Quotations----')
     quotations = [
-        Quotation(id=1, customerId=1, applyNumber=1000001, applyDate=datetime.now(), expiry=datetime.now(),
+        Quotation(id=1, customerId=1, applyNumber=1000001, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                   title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
-        Quotation(id=2, customerId=2, applyNumber=1000002, applyDate=datetime.now(), expiry=datetime.now(),
+        Quotation(id=2, customerId=2, applyNumber=1000002, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                   title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
-        Quotation(id=3, customerId=3, applyNumber=1000003, applyDate=datetime.now(), expiry=datetime.now(),
+        Quotation(id=3, customerId=3, applyNumber=1000003, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                   title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
     ]
     db.session.add_all(quotations)
