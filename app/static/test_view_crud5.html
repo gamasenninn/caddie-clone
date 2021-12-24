@@ -180,8 +180,10 @@
                 </b-col>
             </b-row>
             <b-row>
-                <b-button @click="updateInvoice(invoice)">更新</b-button>
-                <b-button @click="deleteInvoice(invoice)">削除</b-button>
+                <b-button v-if="invoice.isInsert" @click="insertInvoice(invoice)">保存</b-button>
+                <b-button v-else @click="updateInvoice(invoice)">更新</b-button>
+                <b-button v-if="invoice.isInsert" @click="getInvoices();">キャンセル</b-button>
+                <b-button v-else @click="deleteInvoice(invoice)">削除</b-button>
             </b-row>
         </b-card>
 
@@ -255,6 +257,8 @@
                         .then(function (response) {
                             console.log(response);
                             self.getInvoices();
+                            Vue.set(self.invoice, 'id', response.data.id)
+                            self.invoice.isInsert = false;
                         });
                 },
                 updateInvoice: async function (item) {
@@ -270,6 +274,7 @@
                     await axios.delete("/invoice/" + item.id)
                         .then(function (response) {
                             console.log(response);
+                            self.invoice = '';
                             self.getInvoices();
                         });
                 },
@@ -278,6 +283,8 @@
                     self.invoices.push({
                         isInsert: true
                     });
+                    self.invoice = self.invoices.slice(-1)[0];
+                    self.invoice.isTaxExp = true;               //NotNullなので暫定的に
                 },
                 getInvoice: function (item) {
                     this.invoice = item;
