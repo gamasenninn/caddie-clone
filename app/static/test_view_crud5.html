@@ -256,7 +256,6 @@
                     await axios.post("/invoice", item)
                         .then(function (response) {
                             console.log(response);
-                            self.getInvoices();
                             Vue.set(self.invoice, 'id', response.data.id)
                             self.invoice.isInsert = false;
                         });
@@ -266,7 +265,6 @@
                     await axios.put("/invoice/" + item.id, item)
                         .then(function (response) {
                             console.log(response);
-                            self.getInvoices();
                         });
                 },
                 deleteInvoice: async function (item) {
