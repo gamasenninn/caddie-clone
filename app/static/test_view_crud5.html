@@ -279,7 +279,8 @@
                 InvoiceAddRow: function () {
                     self = this;
                     self.invoices.push({
-                        isInsert: true
+                        isInsert: true,
+                        invoice_items: [],
                     });
                     self.invoice = self.invoices.slice(-1)[0];
                     self.invoice.isTaxExp = true;               //NotNullなので暫定的に
@@ -327,7 +328,6 @@
                     self = this;
                     self.invoice.invoice_items.push({
                         isInsert: true,
-                        items: [],
                     });
                     console.log(self.invoice);
                 },
