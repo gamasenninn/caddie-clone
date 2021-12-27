@@ -46,6 +46,11 @@ def crud_test_invoice_switchable():
     return app.send_static_file('test_view_invoice_switchable.html')
 
 
+@app.route('/test-view-crud6')
+def crud_test6():
+    return app.send_static_file('test_view_crud6.html')
+
+
 if __name__ == '__main__':
 
     app.run(host='0.0.0.0', port=5010)

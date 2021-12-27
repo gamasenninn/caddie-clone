@@ -51,16 +51,12 @@
                         {  key: 'id', label: 'ID',  sortable: true },
                         {  key: 'title', label: '件名' },
                         {  key: 'control', label: '操作'},
-                      ]">
+                      ]" :tbody-tr-class="rowClass">
             <template v-slot:cell(title)="data">
-                <b-form-input v-model="data.item.title" type="text" size="sm"></b-form-input>
+                {{ data.item.title }}
             </template>
             <template v-slot:cell(control)="data">
-                <b-button v-if="data.item.isInsert" @click="insertInvoice(data.item)">保存</b-button>
-                <b-button v-else @click="updateInvoice(data.item)">更新</b-button>
-                <b-button v-if="data.item.isInsert" @click="getInvoices">キャンセル</b-button>
-                <b-button v-else @click="deleteInvoice(data.item)">削除</b-button>
-                <b-button @click="getInvoice(data.item)">明細</b-button>
+                <b-button @click="selectInvoice(data.item)">明細</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
             <template #row-details="data">
@@ -68,38 +64,38 @@
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>請求書番号:</b></b-col>
                         <b-col>
-                            <b-form-input v-model="data.item.applyNumber" type="text" size="sm"></b-form-input>
+                            {{ data.item.applyNumber }}
                         </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>日付:</b></b-col>
                         <b-col>
-                            <b-form-input v-model="data.item.applyDate" type="date" size="sm"></b-form-input>
+                            {{ data.item.applyDate }}
                         </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>請求書有効期限:</b></b-col>
                         <b-col>
-                            <b-form-input v-model="data.item.expiry" type="date" size="sm"></b-form-input>
+                            {{ data.item.expiry }}
                         </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>メモ:</b></b-col>
                         <b-col>
-                            <b-form-input v-model="data.item.memo" type="text" size="sm"></b-form-input>
+                            {{ data.item.memo }}
                         </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>備考:</b></b-col>
                         <b-col>
-                            <b-form-input v-model="data.item.remarks" type="text" size="sm"></b-form-input>
+                            {{ data.item.remarks }}
                         </b-col>
                     </b-row>
                     <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>内税・外税:</b></b-col>
                         <b-col>
-                            <b-form-checkbox v-model="data.item.isTaxExp" @change="data.item.isTaxExp">
-                                </b-form-input>
+                            {{ data.item.isTaxExp }}
+                            </b-form-checkbox> -->
                         </b-col>
                     </b-row>
                     <b-row class="mb-2">
@@ -206,7 +202,7 @@
             <template v-slot:cell(control)="data">
                 <b-button v-if="data.item.isInsert" @click="insertInvoiceItem(data.item)">保存</b-button>
                 <b-button v-else @click="updateInvoiceItem(data.item)" @change="data.toggleDetails">更新</b-button>
-                <b-button v-if="data.item.isInsert" @click="getInvoiceItems">キャンセル</b-button>
+                <b-button v-if="data.item.isInsert" @click="getInvoice(data.item);">キャンセル</b-button>
                 <b-button v-else @click="deleteInvoiceItem(data.item)">削除</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
@@ -257,6 +253,7 @@
                         .then(function (response) {
                             console.log(response);
                             Vue.set(self.invoice, 'id', response.data.id)
+                            self.getInvoice(self.invoice);
                             self.invoice.isInsert = false;
                         });
                 },
@@ -285,17 +282,20 @@
                     self.invoice = self.invoices.slice(-1)[0];
                     self.invoice.isTaxExp = true;               //NotNullなので暫定的に
                 },
-                getInvoice: function (item) {
+                selectInvoice: function (item) {
                     this.invoice = item;
                     console.log(this.invoice);
                 },
-                // ---Invoice_Item---
-                getInvoiceItems: async function () {
+                getInvoice: async function (item) {
                     self = this;
-                    await axios.get("/invoice_items/" + self.invoice.id)
+                    await axios.get("/invoice/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.invoice.invoice_items = response.data;
+                            for (const [key, value] of Object.entries(response.data)) {
+                                console.log(key,value);
+                                self.$set(self.invoice, key, value);
+                                // self.$set(self.invoice, key, response.data[key]);
+                            }
                         });
                 },
                 insertInvoiceItem: async function (item) {
@@ -304,7 +304,7 @@
                     await axios.post("/invoice_item", item)
                         .then(function (response) {
                             console.log(response);
-                            self.getInvoiceItems(item);
+                            self.getInvoice(self.invoice);
                         });
                 },
                 updateInvoiceItem: async function (item) {
@@ -313,7 +313,7 @@
                         .then(function (response) {
                             item._showDetails = false;      //商品読み込みを再度したときの詳細開きっぱなし防止
                             console.log(response);
-                            self.getInvoiceItems(item);
+                            self.getInvoice(self.invoice);
                         });
                 },
                 deleteInvoiceItem: async function (item) {
@@ -321,15 +321,23 @@
                     await axios.delete("/invoice_item/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.getInvoiceItems(item);
+                            self.getInvoice(self.invoice);
                         });
                 },
                 invoiceItemAddRow: function () {
                     self = this;
+                    if (self.invoice.length === 0) {
+                        alert('請求書を選択してください');
+                        return;
+                    }
                     self.invoice.invoice_items.push({
                         isInsert: true,
                     });
                     console.log(self.invoice);
+                },
+                rowClass: function (item, type) {
+                    if (!item || type !== 'row') return
+                    if (!item.id) return "d-none";
                 },
             },
             mounted: function () {
