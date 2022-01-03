@@ -176,15 +176,13 @@
                 </b-col>
             </b-row>
             <b-row>
-                <b-button v-if="invoice.isInsert" @click="insertInvoice(invoice)">保存</b-button>
-                <b-button v-else @click="updateInvoice(invoice)">更新</b-button>
-                <b-button v-if="invoice.isInsert" @click="getInvoices();">キャンセル</b-button>
-                <b-button v-else @click="deleteInvoice(invoice)">削除</b-button>
+                <b-button @click="bulkUpsert(invoice)">適用</b-button>
+                <b-button @click="deleteInvoice(invoice)">削除</b-button>
             </b-row>
         </b-card>
 
         <!-- 請求書＿商品（Invoice_Items）View -->
-        <b-button class="ml-2" @click='invoiceItemAddRow();'>+</b-button>
+        <b-button class="ml-2" @click='addRowInvoiceItem();'>+</b-button>
         <div class="mt-2"></div>
         <b-table hover caption-top striped small primary-key="id" id="clist" sort-by="id" small head-variant="light"
             :items="invoice.invoice_items" :fields="[
@@ -200,10 +198,7 @@
                 <b-form-input v-model="data.item.count" type="text" size="sm"></b-form-input>
             </template>
             <template v-slot:cell(control)="data">
-                <b-button v-if="data.item.isInsert" @click="insertInvoiceItem(data.item)">保存</b-button>
-                <b-button v-else @click="updateInvoiceItem(data.item)" @change="data.toggleDetails">更新</b-button>
-                <b-button v-if="data.item.isInsert" @click="getInvoice(data.item);">キャンセル</b-button>
-                <b-button v-else @click="deleteInvoiceItem(data.item)">削除</b-button>
+                <b-button @click="deleteInvoiceItem(data.item)">削除</b-button>
                 <b-form-checkbox v-model="data.detailsShowing" @change="data.toggleDetails">詳細</b-form-checkbox>
             </template>
             <template #row-details="data">
@@ -247,11 +242,20 @@
                             self.invoices = response.data;
                         });
                 },
+                bulkUpsert(item) {
+                    if (!item.id) {
+                        this.insertInvoice(item);
+                        this.toast("新規作成しました");
+                    }
+                    else {
+                        this.updateInvoice(item);
+                        this.toast("更新しました");
+                    }
+                },
                 insertInvoice: async function (item) {
                     self = this;
                     await axios.post("/invoice", item)
                         .then(function (response) {
-                            console.log(response);
                             Vue.set(self.invoice, 'id', response.data.id)
                             self.getInvoice(self.invoice);
                             self.invoice.isInsert = false;
@@ -261,6 +265,7 @@
                     self = this;
                     await axios.put("/invoice/" + item.id, item)
                         .then(function (response) {
+                            self.getInvoice(self.invoice);
                             console.log(response);
                         });
                 },
@@ -292,28 +297,9 @@
                         .then(function (response) {
                             console.log(response);
                             for (const [key, value] of Object.entries(response.data)) {
-                                console.log(key,value);
+                                console.log(key, value);
                                 self.$set(self.invoice, key, value);
-                                // self.$set(self.invoice, key, response.data[key]);
                             }
-                        });
-                },
-                insertInvoiceItem: async function (item) {
-                    self = this;
-                    item.invoiceId = self.invoice.id;
-                    await axios.post("/invoice_item", item)
-                        .then(function (response) {
-                            console.log(response);
-                            self.getInvoice(self.invoice);
-                        });
-                },
-                updateInvoiceItem: async function (item) {
-                    self = this;
-                    await axios.put("/invoice_item/" + item.id, item)
-                        .then(function (response) {
-                            item._showDetails = false;      //商品読み込みを再度したときの詳細開きっぱなし防止
-                            console.log(response);
-                            self.getInvoice(self.invoice);
                         });
                 },
                 deleteInvoiceItem: async function (item) {
@@ -324,20 +310,26 @@
                             self.getInvoice(self.invoice);
                         });
                 },
-                invoiceItemAddRow: function () {
-                    self = this;
-                    if (self.invoice.length === 0) {
+                addRowInvoiceItem: function () {
+                    if (this.invoice.length === 0) {
                         alert('請求書を選択してください');
                         return;
                     }
-                    self.invoice.invoice_items.push({
-                        isInsert: true,
-                    });
-                    console.log(self.invoice);
+                    this.invoice.invoice_items.push({
+                        invoiceId: this.invoice.id
+                    })
                 },
                 rowClass: function (item, type) {
                     if (!item || type !== 'row') return
                     if (!item.id) return "d-none";
+                },
+                toast(toaster, append = false) {
+                    this.$bvToast.toast(`${toaster}`, {
+                        title: `確認`,
+                        toaster: 'b-toaster-top-right',
+                        solid: true,
+                        appendToast: append,
+                    })
                 },
             },
             mounted: function () {
