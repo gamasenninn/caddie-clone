@@ -51,6 +51,11 @@ def crud_test6():
     return app.send_static_file('test_view_crud6.html')
 
 
+@app.route('/invoice-page')
+def invoicePage():
+    return app.send_static_file('invoice.html')
+
+
 if __name__ == '__main__':
 
     app.run(host='0.0.0.0', port=5010)
