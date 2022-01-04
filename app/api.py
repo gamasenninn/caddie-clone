@@ -205,6 +205,20 @@ def invoice_show(id):
 @app.route('/invoice', methods=['POST'])
 def invoice_create():
     data = request.json
+
+    if data.get('invoice_items'):
+        newInvoiceItems = [
+            Invoice_Item(
+                invoiceId=item.get('invoiceId'),
+                itemId=1,  # 紐づけがまだなので、暫定的に
+                price=item.get('price'),
+                count=item.get('count'),
+            )
+            for item in data.get('invoice_items')
+        ]
+    else:
+        newInvoiceItems = []
+
     newInvoice = Invoice(
         customerId=data.get('customerId'),
         applyNumber=data.get('applyNumber'),
@@ -216,6 +230,7 @@ def invoice_create():
         memo=data.get('memo'),
         remarks=data.get('remarks'),
         isTaxExp=data.get('isTaxExp'),
+        invoice_items=newInvoiceItems,
     )
     db.session.add(newInvoice)
     db.session.commit()
@@ -226,7 +241,11 @@ def invoice_create():
 @app.route('/invoice/<id>', methods=['PUT'])
 def invoice_update(id):
     data = request.json
+
     invoice = Invoice.query.filter(Invoice.id == id).one()
+    if not invoice:
+        return jsonify({"result": "No Data", "id": id, "data": data})
+
     invoice.customerId = data.get('customerId')
     invoice.applyNumber = data.get('applyNumber')
     invoice.applyDate = datetime.strptime(
@@ -237,6 +256,27 @@ def invoice_update(id):
     invoice.memo = data.get('memo')
     invoice.remarks = data.get('remarks')
     invoice.isTaxExp = data.get('isTaxExp')
+
+    if data.get('invoice_items'):
+        update_list = []
+        insert_list = []
+        delete_in_list = []
+        for item in data['invoice_items']:
+            if 'createdAt' in item:
+                del(item['createdAt'])
+            if 'updatedAt' in item:
+                del(item['updatedAt'])
+
+            if item.get('id'):
+                update_list.append(item)
+            else:
+                insert_list.append(item)
+
+        db.session.bulk_update_mappings(Invoice_Item, update_list)
+        db.session.bulk_insert_mappings(Invoice_Item, insert_list)
+        db.session.query(Invoice_Item).filter(Invoice_Item.id.in_(
+            delete_in_list)).delete(synchronize_session='fetch')
+
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
