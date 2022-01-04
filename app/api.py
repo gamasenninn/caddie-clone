@@ -210,7 +210,7 @@ def invoice_create():
         newInvoiceItems = [
             Invoice_Item(
                 invoiceId=item.get('invoiceId'),
-                itemId=1,  # 紐づけがまだなので、暫定的に
+                itemId=item.get('itemId'),
                 price=item.get('price'),
                 count=item.get('count'),
             )
