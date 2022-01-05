@@ -77,10 +77,10 @@
 
         <!-- 一覧表示 -->
         <div v-if="pageName=='index'">
-            <b-row class="mt-3">
+            <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <!-- <b-button variant="success" @click="changeMode('detail')">＋新規</b-button> -->
+                    <b-button variant="success" @click="changeMode('store');InvoiceAddRow();">＋新規作成</b-button>
                     <b-card border-variant="white" class="mb-3 text-center" header="請求書一覧"
                         header-border-variant="light">
                         <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
@@ -93,7 +93,7 @@
                           {  key: 'title', label: '件名' },
                           {  key: 'memo', label: 'メモ' },
                           {  key: 'delete', label: '削除' },
-                        ]">
+                        ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
                                 <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);"><i
                                         class="fas fa-edit"></i>
@@ -111,19 +111,18 @@
             </b-row>
         </div>
 
-        <!-- 詳細ページ -->
-        <div v-if="pageName=='show'">
+        <!-- 新規作成・詳細(更新)ページ -->
+        <div v-if="pageName=='show' || pageName=='store'">
             <b-row class="mt-5">
-                <b-col>
-                    <b-button @click="changeMode('index')">＜</b-button>
-                </b-col> <!-- dummy -->
+                <b-col></b-col>
                 <!--- 本体　-->
                 <b-col cols=10>
+                    <b-button @click="changeMode('index')">＜</b-button>
                     <b-card border-variant="white" class="mb-3 text-center" header="請求書入力"
                         header-border-variant="light">
                         <b-row>
                             <b-col>
-                                <!-- Customerテーブルとの連携が完了してから実装 -->
+                                <!-- TODO:Customerテーブルとの連携が完了してから実装 -->
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="customer" class="customer">
                                     <b-form-input v-model="invoice.customerId" id="customers" size="sm"
@@ -133,8 +132,8 @@
                                     <b-modal size="xl" id="customer-modal">
                                         <p>顧客を選択してください</p>
                                         <b-table hover striped small sort-by="ID" id="customer-table" :items="customers"
-                                            @row-clicked="console.log('ここで得意先切り替え処理を入れる');" label="Table Options"
-                                            :items=customers :fields="[
+                                            @row-clicked="customerSelect" label="Table Options" :items=customers
+                                            :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'customerName', label: '顧客名' },
                                   {  key: 'postNum',   label: '郵便番号' },
@@ -266,13 +265,25 @@
                     </b-card>
 
                 </b-col> <!-- 本体 -->
-
-                <b-col>
-                </b-col>
+                <b-col></b-col>
 
             </b-row>
 
         </div>
+
+        <!-- 空行 -->
+        <b-row class="mb-5"></b-row>
+        <b-row class="mb-5"></b-row>
+        <b-row class="mb-5"></b-row>
+
+        <!-- 更新・取消ボタンのフッター -->
+        <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
+            class="fixed-bottom footer">
+            <div class="d-flex justify-content-end">
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(invoice)">適用</b-button>
+                <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
+            </div>
+        </b-card>
 
     </div>
 
@@ -397,6 +408,11 @@
                 changeMode(pageName) {
                     this.pageName = pageName;
                 },
+                // 顧客名モーダル選択時
+                customerSelect(record) {
+                    Vue.set(self.invoice, 'customerId', record.id)
+                    this.$bvModal.hide("customer-modal")
+                }
             },
             mounted: function () {
                 this.getInvoices();
