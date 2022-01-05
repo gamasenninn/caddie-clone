@@ -85,14 +85,14 @@
                         header-border-variant="light">
                         <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
                             :items=invoices :fields="[
-                          {  key: 'update', label: '詳細' },
+                          {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '見積番号' },
                           {  key: 'applyDate', label: '日付' },
                           {  key: 'expiry', label: '見積有効期限' },
                           {  key: 'title', label: '件名' },
                           {  key: 'memo', label: 'メモ' },
-                          {  key: 'delete', label: '削除' },
+                          {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
                                 <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);"><i
@@ -100,7 +100,7 @@
                                 </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="window.confirm('データを削除します。よろしいですか？')"><i
+                                <b-button variant="danger" @click="deleteInvoice(data.item)"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -200,24 +200,28 @@
                             <p class="text-right">{{data.item.count*data.item.price|nf}}</p>
                         </template>
 
-                        <!-- TODO:商品テーブルとの連携が完了したら実装する -->
+                        <template v-slot:cell(detail)="data">
+                            <b-button variant="danger" class="fas fa-trash-alt" @click="deleteInvoiceItem(data.item)">
+                            </b-button>
+                        </template>
 
+                        <!-- TODO:商品テーブルとの連携が完了したら実装する -->
                         <!-- <template v-slot:cell(detail)="data">
                             <b-form-checkbox @change="data.toggleDetails"></b-form-checkbox>
-                        </template> -->
+                        </template>
 
-                        <!-- <template #row-details="data">
+                        <template #row-details="data">
                             <b-row>
                                 <b-col cols=1></b-col>
                                 <b-col cols=4>
                                     <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="原価:"
                                         label-for="genka">
-                                        <b-form-input v-model="data.item.genka" id="genka" size="sm">
+                                        <b-form-input v-model="data.item.items.cost" id="cost" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col>
-                                    <p class="mt-1">原価率: {{data.item.genka/data.item.tanka}}</p>
+                                    <p class="mt-1">原価率: {{data.item.items.cost/data.item.items.basePrice}}</p>
                                 </b-col>
                             </b-row>
                         </template> -->
@@ -410,8 +414,8 @@
                 },
                 // 顧客名モーダル選択時
                 customerSelect(record) {
-                    Vue.set(self.invoice, 'customerId', record.id)
-                    this.$bvModal.hide("customer-modal")
+                    Vue.set(self.invoice, 'customerId', record.id);
+                    this.$bvModal.hide("customer-modal");
                 }
             },
             mounted: function () {
