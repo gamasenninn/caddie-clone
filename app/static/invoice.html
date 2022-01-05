@@ -190,7 +190,7 @@
                             <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
                                 label-for="itemName" class="itemName">
                                 <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
-                                    @dblclick="$bvModal.show('items-modal')">
+                                    @dblclick="showModalItems(); selectInvoiceItem(data.item);">
                                 </b-form-textarea>
 
                                 <b-modal size="xl" id="items-modal">
@@ -320,6 +320,7 @@
                 pageName: 'index',
                 invoices: [],               //全件invoice
                 invoice: [],                //選択中のinvoice
+                invoiceItem: [],            //選択中のinvoiceItem
                 // TODO:ダミーデータ Customerとの連携が完了したら処理を追加する。　
                 customers: [
                     { id: 1, customerName: 'テスト株式会社', postNumber: '000-0000', address: '鹿沼市板荷111', telNumber: '000-0000-0000', representative: '代表者名', memo: 'これはメモ' },
@@ -391,6 +392,10 @@
                     this.invoice = item;
                     console.log(this.invoice);
                 },
+                selectInvoiceItem: function (item) {
+                    this.invoiceItem = item;
+                    console.log(this.invoiceItem);
+                },
                 getInvoice: async function (item) {
                     self = this;
                     await axios.get("/invoice/" + item.id)
@@ -442,14 +447,13 @@
                 },
                 // 商品名モーダル選択時
                 itemSelect(record) {
-                    //オブジェクトの取得
-                    var selectInvoiceItem = self.invoice.invoice_items.find((v) => v.itemId == record.id);
-                    console.log('invoice_items itemId==record.id');
-                    console.log(selectInvoiceItem);
-                    Vue.set(selectInvoiceItem, 'itemName', record.itemName);
-                    // Vue.set(self.invoice.invoice_items, 'itemName', record.itemName);
+                    Vue.set(self.invoiceItem, 'itemName', record.itemName);
                     this.$bvModal.hide("items-modal");
-                }
+                },
+                // 商品名モーダル表示 モーダルのダブり表示防止
+                showModalItems() {
+                    this.$bvModal.show('items-modal');
+                },
             },
             mounted: function () {
                 this.getInvoices();
