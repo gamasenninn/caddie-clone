@@ -126,7 +126,7 @@
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="customer" class="customer">
                                     <b-form-input v-model="invoice.customerId" id="customers" size="sm"
-                                        v-b-modal.customer-modal>
+                                        @dblclick="$bvModal.show('customer-modal')">
                                     </b-form-input>
                                     <!-- 得意先一覧モーダル -->
                                     <b-modal size="xl" id="customer-modal">
@@ -180,15 +180,33 @@
                     <b-table hover caption-top small id="invoice_items_table" primary-key="id" small
                         label="Table Options" :items=invoice.invoice_items :fields="[
                           {  key: 'id', label: 'ID', class:'text-center' },
-                          {  key: 'itemId', label: '商品名' ,sortable: true},
+                          {  key: 'itemName', label: '商品名' ,sortable: true},
                           {  key: 'count',   label: '個数' },
                           {  key: 'price', label: '値段' },
                           {  key: 'amount', label: '金額' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
                         ]">
-                        <template v-slot:cell(itemId)="data">
-                            <b-form-textarea v-model="data.item.itemId" size="sm" rows="1">
-                                </b-form-input>
+                        <template v-slot:cell(itemName)="data">
+                            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
+                                label-for="itemName" class="itemName">
+                                <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
+                                    @dblclick="$bvModal.show('items-modal')">
+                                </b-form-textarea>
+
+                                <b-modal size="xl" id="items-modal">
+                                    <p>商品を選択してください</p>
+                                    <b-table hover striped small sort-by="ID" id="items-table" :items="items"
+                                        @row-clicked="itemSelect" label="Table Options" :items=items :fields="[
+                                  {  key: 'id', label: 'No.' },
+                                  {  key: 'itemName', label: '商品名' },
+                                  {  key: 'unit',   label: '単位' },
+                                  {  key: 'basePrice',  label: '単価' },
+                                  {  key: 'cost',  label: '原価' },
+                                  {  key: 'memo', label: 'メモ' },
+                                ]"></b-table>
+                                </b-modal>
+
+                            </b-form-group>
                         </template>
                         <template v-slot:cell(count)="data">
                             <b-form-input v-model="data.item.count" type="number" size="sm"></b-form-input>
@@ -307,6 +325,11 @@
                     { id: 1, customerName: 'テスト株式会社', postNumber: '000-0000', address: '鹿沼市板荷111', telNumber: '000-0000-0000', representative: '代表者名', memo: 'これはメモ' },
                     { id: 2, customerName: 'テスト有限会社', postNumber: '000-0000', address: '鹿沼市板荷111', telNumber: '000-0000-0000', representative: '代表者名', memo: 'これはメモ' },
                     { id: 3, customerName: 'テスト商事', postNumber: '000-0000', address: '鹿沼市板荷111', telNumber: '000-0000-0000', representative: '代表者名', memo: 'これはメモ' },
+                ],
+                items: [
+                    { id: 1, itemName: 'りんご', unit: '個', basePrice: 100, cost: 50, memo: 'これはりんごのメモです' },
+                    { id: 2, itemName: '鉛筆', unit: '本', basePrice: 20, cost: 5, memo: 'これは鉛筆のメモです' },
+                    { id: 3, itemName: 'ラジオ', unit: '台', basePrice: 1000, cost: 300, memo: 'これはラジオのメモです' },
                 ]
             },
             methods: {
@@ -416,6 +439,16 @@
                 customerSelect(record) {
                     Vue.set(self.invoice, 'customerId', record.id);
                     this.$bvModal.hide("customer-modal");
+                },
+                // 商品名モーダル選択時
+                itemSelect(record) {
+                    //オブジェクトの取得
+                    var selectInvoiceItem = self.invoice.invoice_items.find((v) => v.itemId == record.id);
+                    console.log('invoice_items itemId==record.id');
+                    console.log(selectInvoiceItem);
+                    Vue.set(selectInvoiceItem, 'itemName', record.itemName);
+                    // Vue.set(self.invoice.invoice_items, 'itemName', record.itemName);
+                    this.$bvModal.hide("items-modal");
                 }
             },
             mounted: function () {
