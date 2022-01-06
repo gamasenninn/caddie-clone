@@ -187,8 +187,6 @@
                           {  key: 'detail', label: '詳細',class:'text-center' },
                         ]">
                         <template v-slot:cell(itemName)="data">
-                            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
-                                label-for="itemName" class="itemName">
                                 <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
                                     @dblclick="showModalItems(); selectInvoiceItem(data.item);">
                                 </b-form-textarea>
@@ -206,7 +204,6 @@
                                 ]"></b-table>
                                 </b-modal>
 
-                            </b-form-group>
                         </template>
                         <template v-slot:cell(count)="data">
                             <b-form-input v-model="data.item.count" type="number" size="sm"></b-form-input>
