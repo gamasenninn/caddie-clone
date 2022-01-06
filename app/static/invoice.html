@@ -327,17 +327,8 @@
                 invoices: [],               //全件invoice
                 invoice: [],                //選択中のinvoice
                 invoiceItem: [],            //選択中のinvoiceItem
-                // TODO:ダミーデータ Customerとの連携が完了したら処理を追加する。　
-                customers: [
-                    { id: 1, customerName: 'テスト株式会社', postNumber: '000-0000', address: '鹿沼市板荷111', telNumber: '000-0000-0000', representative: '代表者名', memo: 'これはメモ' },
-                    { id: 2, customerName: 'テスト有限会社', postNumber: '000-0000', address: '鹿沼市板荷111', telNumber: '000-0000-0000', representative: '代表者名', memo: 'これはメモ' },
-                    { id: 3, customerName: 'テスト商事', postNumber: '000-0000', address: '鹿沼市板荷111', telNumber: '000-0000-0000', representative: '代表者名', memo: 'これはメモ' },
-                ],
-                items: [
-                    { id: 1, itemName: 'りんご', unit: '個', basePrice: 100, cost: 50, memo: 'これはりんごのメモです' },
-                    { id: 2, itemName: '鉛筆', unit: '本', basePrice: 20, cost: 5, memo: 'これは鉛筆のメモです' },
-                    { id: 3, itemName: 'ラジオ', unit: '台', basePrice: 1000, cost: 300, memo: 'これはラジオのメモです' },
-                ]
+                customers: [],
+                items: [],
             },
             methods: {
                 // ---Invoices---
@@ -430,6 +421,22 @@
                         invoiceId: this.invoice.id
                     })
                 },
+                getCustomers: async function () {
+                    self = this;
+                    await axios.get("/customers")
+                        .then(function (response) {
+                            console.log(response);
+                            self.customers = response.data;
+                        });
+                },
+                getItems: async function () {
+                    self = this;
+                    await axios.get("/items")
+                        .then(function (response) {
+                            console.log(response);
+                            self.items = response.data;
+                        });
+                },
                 rowClass: function (item, type) {
                     if (!item || type !== 'row') return
                     if (!item.id) return "d-none";
@@ -475,6 +482,8 @@
             },
             mounted: function () {
                 this.getInvoices();
+                this.getCustomers();
+                this.getItems();
             },
         })
 
