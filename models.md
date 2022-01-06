@@ -54,6 +54,7 @@
 | ----------- | -------------- | -------- |  -------------------------------------------------------- | 
 | id          | id             | integer  |                                                           | 
 | customerId  | 得意先ID       | integer  |  フォーリンキー。                                         | 
+| customerName| 得意先名       | string   |  紐づいたものor入力 両対応できるように                      | 
 | applyNumber | 請求番号       | integer  |  作成時にインクリメント。他の請求書と被らないようにする。 | 
 | applyDate   | 日付           | datetime |  請求書作成日                                             | 
 | expiry      | 請求書有効期限  | datetime |                                                           | 
@@ -87,6 +88,7 @@
 | ----------- | -------------- | -------- | -------------------------------------------------------- | 
 | id          | id             | integer  |                                                          | 
 | customerId  | 得意先ID       | integer  | フォーリンキー。                                         | 
+| customerName| 得意先名       | string   |  紐づいたものor入力 両対応できるように                     | 
 | applyNumber | 見積番号       | integer  | 作成時にインクリメント。他の見積書と被らないようにする。 | 
 | applyDate   | 日付           | datetime | 見積書作成日                                             | 
 | expiry      | 見積書有効期限  | datetime |                                                          | 

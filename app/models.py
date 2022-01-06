@@ -94,6 +94,7 @@ class Invoice(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
+    customerName = db.Column(db.String)
     applyNumber = db.Column(db.Integer)
     applyDate = db.Column(db.Date)
     expiry = db.Column(db.Date)
@@ -128,6 +129,7 @@ class Quotation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
+    customerName = db.Column(db.String)
     applyNumber = db.Column(db.Integer)
     applyDate = db.Column(db.Date)
     expiry = db.Column(db.Date)
