@@ -180,6 +180,7 @@
                     <b-table hover caption-top small id="invoice_items_table" primary-key="id" small
                         label="Table Options" :items=invoice.invoice_items :fields="[
                           {  key: 'id', label: 'ID', class:'text-center' },
+                          {  key: 'itemId', label: '商品ID' ,sortable: true},
                           {  key: 'itemName', label: '商品名' ,sortable: true},
                           {  key: 'count',   label: '個数' },
                           {  key: 'price', label: '値段' },
@@ -187,14 +188,14 @@
                           {  key: 'detail', label: '詳細',class:'text-center' },
                         ]">
                         <template v-slot:cell(itemName)="data">
-                                <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
-                                    @dblclick="showModalItems(); selectInvoiceItem(data.item);">
-                                </b-form-textarea>
+                            <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
+                                @dblclick="showModalItems(); selectInvoiceItem(data.item);">
+                            </b-form-textarea>
 
-                                <b-modal size="xl" id="items-modal">
-                                    <p>商品を選択してください</p>
-                                    <b-table hover striped small sort-by="ID" id="items-table" :items="items"
-                                        @row-clicked="itemSelect" label="Table Options" :items=items :fields="[
+                            <b-modal size="xl" id="items-modal">
+                                <p>商品を選択してください</p>
+                                <b-table hover striped small sort-by="ID" id="items-table" :items="items"
+                                    @row-clicked="itemSelect" label="Table Options" :items=items :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'itemName', label: '商品名' },
                                   {  key: 'unit',   label: '単位' },
@@ -202,7 +203,7 @@
                                   {  key: 'cost',  label: '原価' },
                                   {  key: 'memo', label: 'メモ' },
                                 ]"></b-table>
-                                </b-modal>
+                            </b-modal>
 
                         </template>
                         <template v-slot:cell(count)="data">
@@ -445,6 +446,7 @@
                 // 商品名モーダル選択時
                 itemSelect(record) {
                     Vue.set(self.invoiceItem, 'itemName', record.itemName);
+                    Vue.set(self.invoiceItem, 'itemId', record.id);
                     this.$bvModal.hide("items-modal");
                 },
                 // 商品名モーダル表示 モーダルのダブり表示防止
