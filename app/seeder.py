@@ -66,11 +66,11 @@ def seeder():
     # -----Invoices-----
     print('----Invoices-----')
     invoices = [
-        Invoice(id=1, customerId=1, applyNumber=1000001, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Invoice(id=1, customerId=1, customerName='○○株式会社', applyNumber=1000001, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○株式会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
-        Invoice(id=2, customerId=2, applyNumber=1000002, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Invoice(id=2, customerId=2, customerName="○○有限会社", applyNumber=1000002, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○有限会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
-        Invoice(id=3, customerId=3, applyNumber=1000003, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Invoice(id=3, customerId=3, customerName="○○商事", applyNumber=1000003, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○商事への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
     ]
     db.session.add_all(invoices)
@@ -84,15 +84,15 @@ def seeder():
     print('----Invoice_Items----')
     invoice_items = [
         Invoice_Item(id=1, invoiceId=1, itemId=1,
-                     itemName='', price=100, count=5),
+                     itemName='りんご', price=100, count=5),
         Invoice_Item(id=2, invoiceId=1, itemId=2,
-                     itemName='', price=20, count=10),
+                     itemName='鉛筆', price=20, count=10),
         Invoice_Item(id=3, invoiceId=2, itemId=2,
-                     itemName='', price=30, count=15),
+                     itemName='鉛筆', price=30, count=15),
         Invoice_Item(id=4, invoiceId=2, itemId=3,
-                     itemName='', price=1100, count=2),
+                     itemName='ラジオ', price=1100, count=2),
         Invoice_Item(id=5, invoiceId=3, itemId=1,
-                     itemName='', price=120, count=30),
+                     itemName='りんご', price=120, count=30),
     ]
     db.session.add_all(invoice_items)
     db.session.commit()
@@ -104,11 +104,11 @@ def seeder():
     # -----Quotations-----
     print('----Quotations----')
     quotations = [
-        Quotation(id=1, customerId=1, applyNumber=1000001, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Quotation(id=1, customerId=1, customerName='○○株式会社', applyNumber=1000001, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                   title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
-        Quotation(id=2, customerId=2, applyNumber=1000002, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Quotation(id=2, customerId=2, customerName="○○有限会社", applyNumber=1000002, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                   title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
-        Quotation(id=3, customerId=3, applyNumber=1000003, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Quotation(id=3, customerId=3, customerName="○○商事", applyNumber=1000003, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                   title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
     ]
     db.session.add_all(quotations)

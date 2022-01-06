@@ -213,6 +213,7 @@ def invoice_create():
                 itemId=item.get('itemId'),
                 price=item.get('price'),
                 count=item.get('count'),
+                itemName=item.get('itemName'),
             )
             for item in data.get('invoice_items')
         ]
@@ -221,6 +222,7 @@ def invoice_create():
 
     newInvoice = Invoice(
         customerId=data.get('customerId'),
+        customerName=data.get('customerName'),
         applyNumber=data.get('applyNumber'),
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
@@ -247,6 +249,7 @@ def invoice_update(id):
         return jsonify({"result": "No Data", "id": id, "data": data})
 
     invoice.customerId = data.get('customerId')
+    invoice.customerName = data.get('customerName')
     invoice.applyNumber = data.get('applyNumber')
     invoice.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
@@ -368,6 +371,7 @@ def quotation_create():
     data = request.json
     newQuotation = Quotation(
         customerId=data.get('customerId'),
+        customerName=data.get('customerName'),
         applyNumber=data.get('applyNumber'),
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
@@ -389,6 +393,7 @@ def quotation_update(id):
     data = request.json
     quotation = Quotation.query.filter(Quotation.id == id).one()
     quotation.customerId = data.get('customerId')
+    quotation.customerName = data.get('customerName')
     quotation.applyNumber = data.get('applyNumber')
     quotation.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None

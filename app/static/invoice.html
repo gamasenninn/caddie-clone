@@ -117,16 +117,23 @@
                 <b-col></b-col>
                 <!--- 本体　-->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index')">＜</b-button>
+                    <b-button @click="changeMode('index');getInvoices();">＜</b-button>
                     <b-card border-variant="white" class="mb-3 text-center" header="請求書入力"
                         header-border-variant="light">
                         <b-row>
                             <b-col>
+
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
+                                    label-for="customerId">
+                                    <p class="text-left pl-2" id="customerId">{{invoice.customerId}}</p>
+                                </b-form-group>
+
                                 <!-- TODO:Customerテーブルとの連携が完了してから実装 -->
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="customer" class="customer">
-                                    <b-form-input v-model="invoice.customerId" id="customers" size="sm"
-                                        @dblclick="$bvModal.show('customer-modal')">
+                                    <b-form-input v-model="invoice.customerName" id="customerName" size="sm"
+                                        @dblclick="$bvModal.show('customer-modal')"
+                                        v-on:keydown.enter="onKeyDownCustomer">
                                     </b-form-input>
                                     <!-- 得意先一覧モーダル -->
                                     <b-modal size="xl" id="customer-modal">
@@ -155,15 +162,15 @@
                                     <b-form-input v-model="invoice.expiry" id="expiry" size="sm" type="date">
                                     </b-form-input>
                                 </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
-                                    label-for="title">
-                                    <b-form-input v-model="invoice.title" id="title" size="sm"></b-form-input>
-                                </b-form-group>
                             </b-col>
                             <b-col>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
                                     label-for="applyNumber">
                                     <p class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}</p>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
+                                    label-for="title">
+                                    <b-form-input v-model="invoice.title" id="title" size="sm"></b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="メモ">
@@ -180,6 +187,7 @@
                     <b-table hover caption-top small id="invoice_items_table" primary-key="id" small
                         label="Table Options" :items=invoice.invoice_items :fields="[
                           {  key: 'id', label: 'ID', class:'text-center' },
+                          {  key: 'itemId', label: '商品ID' ,sortable: true},
                           {  key: 'itemName', label: '商品名' ,sortable: true},
                           {  key: 'count',   label: '個数' },
                           {  key: 'price', label: '値段' },
@@ -187,16 +195,15 @@
                           {  key: 'detail', label: '詳細',class:'text-center' },
                         ]">
                         <template v-slot:cell(itemName)="data">
-                            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
-                                label-for="itemName" class="itemName">
-                                <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
-                                    @dblclick="showModalItems(); selectInvoiceItem(data.item);">
-                                </b-form-textarea>
+                            <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
+                                @dblclick="showModalItems(); selectInvoiceItem(data.item);"
+                                v-on:keydown.enter="selectInvoiceItem(data.item);onKeyDownItem();">
+                            </b-form-textarea>
 
-                                <b-modal size="xl" id="items-modal">
-                                    <p>商品を選択してください</p>
-                                    <b-table hover striped small sort-by="ID" id="items-table" :items="items"
-                                        @row-clicked="itemSelect" label="Table Options" :items=items :fields="[
+                            <b-modal size="xl" ref="items-modal">
+                                <p>商品を選択してください</p>
+                                <b-table hover striped small sort-by="ID" id="items-table" :items="items"
+                                    @row-clicked="itemSelect" label="Table Options" :items=items :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'itemName', label: '商品名' },
                                   {  key: 'unit',   label: '単位' },
@@ -204,9 +211,8 @@
                                   {  key: 'cost',  label: '原価' },
                                   {  key: 'memo', label: 'メモ' },
                                 ]"></b-table>
-                                </b-modal>
+                            </b-modal>
 
-                            </b-form-group>
                         </template>
                         <template v-slot:cell(count)="data">
                             <b-form-input v-model="data.item.count" type="number" size="sm"></b-form-input>
@@ -443,16 +449,28 @@
                 // 顧客名モーダル選択時
                 customerSelect(record) {
                     Vue.set(self.invoice, 'customerId', record.id);
+                    Vue.set(self.invoice, 'customerName', record.customerName);
                     this.$bvModal.hide("customer-modal");
+                },
+                // 顧客名入力→Enter
+                onKeyDownCustomer(record) {
+                    console.log(record);
+                    Vue.set(self.invoice, 'customerId', null);
                 },
                 // 商品名モーダル選択時
                 itemSelect(record) {
                     Vue.set(self.invoiceItem, 'itemName', record.itemName);
-                    this.$bvModal.hide("items-modal");
+                    Vue.set(self.invoiceItem, 'itemId', record.id);
+                    this.$refs['items-modal'].hide()
+                },
+                // 商品名入力→Enter
+                onKeyDownItem(record) {
+                    console.log(record);
+                    Vue.set(self.invoiceItem, 'itemId', null);
                 },
                 // 商品名モーダル表示 モーダルのダブり表示防止
                 showModalItems() {
-                    this.$bvModal.show('items-modal');
+                    this.$refs['items-modal'].show()
                 },
             },
             mounted: function () {
