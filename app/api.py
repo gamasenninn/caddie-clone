@@ -213,6 +213,7 @@ def invoice_create():
                 itemId=item.get('itemId'),
                 price=item.get('price'),
                 count=item.get('count'),
+                itemName=item.get('itemName'),
             )
             for item in data.get('invoice_items')
         ]
