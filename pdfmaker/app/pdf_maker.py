@@ -174,6 +174,7 @@ def footer(canvas, doc):
     canvas.saveState()
 
     print(f"----- page number at footer ----- { canvas._pageNumber } ")
+    canvas.setTitle("pdf-title")
 
     if not defPdf.get('footer'): return
 
