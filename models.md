@@ -40,7 +40,8 @@
 | id       | id       | integer   |                                                                                             | 
 | itemName | 商品名   | text      |                                                                                             | 
 | unit     | 単位     | text      |  単位はユーザーが追加できるように単位テーブルを作成し、単位追加ページを作成した方が良いかも         | 
-| basePrice| 単価     | integer   |                                                                                             | 
+| basePrice| 単価     | integer   |  請求書にて商品選択時に参照のみ。                                                              | 
+| baseCost | 原価単価  | integer   |  請求書にて商品選択時に参照のみ。                                                             | 
 | cost     | 原価     | integer   |                                                                                             | 
 | memo     | メモ     | text      |                                                                                             | 
 | createdAt| 作成日時 | datetime  |                                                                                             | 
@@ -75,7 +76,8 @@
 | invoiceId  | 請求書ID | integer  |  請求書テーブルと紐づく | 
 | itemId     | 商品ID   | integer  |  商品テーブルと紐づく   | 
 | itemName   | 商品名   | string   |  紐づいたものor入力 両対応できるように | 
-| price      | 値段     | integer  |                       |
+| price      | 値段     | integer  |  Itemsテーブルを参照可能             |
+| cost       | 原価     | integer  |  Itemsテーブルを参照可能             |
 | count      | 個数     | integer  |                         | 
 | createdAt  | 作成日時 | datetime |                         | 
 | updatedAt  | 更新日時 | datetime |                         | 
@@ -109,7 +111,8 @@
 | quotationId | 見積書ID | integer  |  見積書テーブルと紐づく   | 
 | itemId      | 商品ID   | integer  |  商品テーブルと紐づく     | 
 | itemName    | 商品名   | string   |  紐づいたものor入力 両対応できるように |
-| price       | 値段     | integer  |                         |
+| price       | 値段     | integer  |  Itemsテーブルを参照可能             |
+| cost        | 原価     | integer  |  Itemsテーブルを参照可能             |
 | count       | 個数     | integer  |                         | 
 | createdAt   | 作成日時 | datetime |                         | 
 | updatedAt   | 更新日時 | datetime |                         | 

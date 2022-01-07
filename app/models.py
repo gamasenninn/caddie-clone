@@ -66,7 +66,7 @@ class Item(db.Model):
     itemName = db.Column(db.String)
     unit = db.Column(db.String)
     basePrice = db.Column(db.Integer)
-    cost = db.Column(db.Integer)
+    baseCost = db.Column(db.Integer)
     memo = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
@@ -117,6 +117,7 @@ class Invoice_Item(db.Model):
     itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
     itemName = db.Column(db.String)
     price = db.Column(db.Integer)
+    cost = db.Column(db.Integer)
     count = db.Column(db.Integer)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
@@ -152,6 +153,7 @@ class Quotation_Item(db.Model):
     itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
     itemName = db.Column(db.String)
     price = db.Column(db.Integer)
+    cost = db.Column(db.Integer)
     count = db.Column(db.Integer)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
