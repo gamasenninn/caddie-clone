@@ -154,6 +154,7 @@ def item_create():
         itemName=data.get('itemName'),
         unit=data.get('unit'),
         basePrice=data.get('basePrice'),
+        baseCost=data.get('baseCost'),
         cost=data.get('cost'),
         memo=data.get('memo'),
     )
@@ -171,6 +172,7 @@ def item_update(id):
     item.itemName = data.get('itemName')
     item.unit = data.get('unit')
     item.basePrice = data.get('basePrice')
+    item.baseCost = data.get('baseCost')
     item.cost = data.get('cost')
     item.memo = data.get('memo')
 
@@ -321,7 +323,9 @@ def invoice_item_create():
     newInvoiceItem = Invoice_Item(
         invoiceId=data.get('invoiceId'),
         itemId=data.get('itemId'),
+        itemName=data.get('itemName'),
         price=data.get('price'),
+        cost=data.get('cost'),
         count=data.get('count'),
     )
     db.session.add(newInvoiceItem)
@@ -336,7 +340,9 @@ def invoice_item_update(id):
     invoiceItem = Invoice_Item.query.filter(Invoice_Item.id == id).one()
     invoiceItem.invoiceId = data.get('invoiceId')
     invoiceItem.itemId = data.get('itemId')
+    invoiceItem.itemName = data.get('itemName')
     invoiceItem.price = data.get('price')
+    invoiceItem.cost = data.get('cost')
     invoiceItem.count = data.get('count')
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
@@ -439,7 +445,9 @@ def quotation_item_create():
     newQuotationItem = Quotation_Item(
         quotationId=data.get('quotationId'),
         itemId=data.get('itemId'),
+        itemName=data.get('itemName'),
         price=data.get('price'),
+        cost=data.get('cost'),
         count=data.get('count'),
     )
     db.session.add(newQuotationItem)
@@ -454,7 +462,9 @@ def quotation_item_update(id):
     quotationItem = Quotation_Item.query.filter(Quotation_Item.id == id).one()
     quotationItem.quotationId = data.get('quotationId')
     quotationItem.itemId = data.get('itemId')
+    quotationItem.itemName = data.get('itemName')
     quotationItem.price = data.get('price')
+    quotationItem.cost = data.get('cost')
     quotationItem.count = data.get('count')
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
