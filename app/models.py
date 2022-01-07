@@ -105,7 +105,8 @@ class Invoice(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoice_items = db.relationship('Invoice_Item', backref='invoice')
+    invoice_items = db.relationship(
+        'Invoice_Item', backref='invoice', uselist=True, cascade='all, delete',)
 
 
 class Invoice_Item(db.Model):
