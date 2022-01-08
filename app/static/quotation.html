@@ -7,7 +7,7 @@
     <!--
         <link href="images/favicon.ico" rel="shortcut icon">
         -->
-    <title>請求書管理</title>
+    <title>見積書管理</title>
     <!-- Load required Bootstrap and BootstrapVue CSS -->
 
     <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
@@ -63,7 +63,7 @@
                                     </b-button>
                                     <b-button variant="primary" block href="mock_item.html"><i
                                             class="fas fa-box"></i>　商　品</b-button>
-                                    <b-button variant="primary" block href="mock_invoice.html"><i
+                                    <b-button variant="primary" block href="mock_quotation.html"><i
                                             class="fas fa-copy"></i>　請求書</b-button>
                                     <b-button variant="primary" block href="mock01_quotaion.html"><i
                                             class="far fa-copy"></i>　見積書</b-button>
@@ -80,11 +80,11 @@
             <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('store');InvoiceAddRow();">＋新規作成</b-button>
-                    <b-card border-variant="white" class="mb-3 text-center" header="請求書一覧"
+                    <b-button variant="success" @click="changeMode('store');QuotationAddRow();">＋新規作成</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="見積書一覧"
                         header-border-variant="light">
-                        <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
-                            :items=invoices :fields="[
+                        <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
+                            :items=quotations :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '見積番号' },
@@ -95,12 +95,12 @@
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);"><i
+                                <b-button variant="info" @click="changeMode('show');selectQuotation(data.item);"><i
                                         class="fas fa-edit"></i>
                                 </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteInvoice(data.item)"><i
+                                <b-button variant="danger" @click="deleteQuotation(data.item)"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -117,21 +117,21 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getInvoices();">＜</b-button>
-                    <b-card border-variant="white" class="mb-3 text-center" header="請求書入力"
+                    <b-button @click="changeMode('index');getQuotations();">＜</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="見積書入力"
                         header-border-variant="light">
                         <b-row>
                             <b-col>
 
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
                                     label-for="customerId">
-                                    <p class="text-left pl-2" id="customerId">{{invoice.customerId}}</p>
+                                    <p class="text-left pl-2" id="customerId">{{quotation.customerId}}</p>
                                 </b-form-group>
 
                                 <!-- TODO:Customerテーブルとの連携が完了してから実装 -->
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="customer" class="customer">
-                                    <b-form-input v-model="invoice.customerName" id="customerName" size="sm"
+                                    <b-form-input v-model="quotation.customerName" id="customerName" size="sm"
                                         @dblclick="$bvModal.show('customer-modal')"
                                         v-on:keydown.enter="onKeyDownCustomer">
                                     </b-form-input>
@@ -154,27 +154,27 @@
 
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
                                     label-for="applyDate">
-                                    <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm" type="date">
+                                    <b-form-input v-model="quotation.applyDate" id="applyDate" size="sm" type="date">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
                                     label-for="expiry">
-                                    <b-form-input v-model="invoice.expiry" id="expiry" size="sm" type="date">
+                                    <b-form-input v-model="quotation.expiry" id="expiry" size="sm" type="date">
                                     </b-form-input>
                                 </b-form-group>
                             </b-col>
                             <b-col>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
                                     label-for="applyNumber">
-                                    <p class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}</p>
+                                    <p class="text-left pl-2" id="applyNumber">{{quotation.applyNumber}}</p>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                     label-for="title">
-                                    <b-form-input v-model="invoice.title" id="title" size="sm"></b-form-input>
+                                    <b-form-input v-model="quotation.title" id="title" size="sm"></b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="メモ">
-                                    <b-form-textarea v-model="invoice.memo" size="sm" rows="4"></b-form-textarea>
+                                    <b-form-textarea v-model="quotation.memo" size="sm" rows="4"></b-form-textarea>
                                 </b-form-group>
                             </b-col>
                         </b-row>
@@ -184,8 +184,8 @@
                     <!--  table list & edit -->
 
                     <!-- TODO:商品テーブルとの連携が出来次第、商品名項目をitemIdからitem.itemNameに変更する -->
-                    <b-table hover caption-top small id="invoice_items_table" primary-key="id" small
-                        label="Table Options" :items=invoice.invoice_items :fields="[
+                    <b-table hover caption-top small id="quotation_items_table" primary-key="id" small
+                        label="Table Options" :items=quotation.quotation_items :fields="[
                           {  key: 'id', label: 'ID', class:'text-center' },
                           {  key: 'itemId', label: '商品ID' ,sortable: true},
                           {  key: 'itemName', label: '商品名' ,sortable: true},
@@ -197,8 +197,8 @@
                         ]">
                         <template v-slot:cell(itemName)="data">
                             <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
-                                @dblclick="showModalItems(); selectInvoiceItem(data.item);"
-                                v-on:keydown.enter="selectInvoiceItem(data.item);onKeyDownItem();">
+                                @dblclick="showModalItems(); selectQuotationItem(data.item);"
+                                v-on:keydown.enter="selectQuotationItem(data.item);onKeyDownItem();">
                             </b-form-textarea>
 
                             <b-modal size="xl" ref="items-modal">
@@ -253,7 +253,7 @@
                         </template> -->
 
                         <template v-slot:cell(delete)="data">
-                            <b-button variant="danger" class="fas fa-trash-alt" @click="deleteInvoiceItem(data.item)">
+                            <b-button variant="danger" class="fas fa-trash-alt" @click="deleteQuotationItem(data.item)">
                             </b-button>
                         </template>
 
@@ -262,7 +262,7 @@
                     <!-- 商品項目を追加するプラスボタン -->
                     <b-row class="d-flex justify-content-end" id="item_add">
                         <b-col cols="16" md="auto">
-                            <b-button pill variant="primary" @click="addRowInvoiceItem();">✙</b-button>
+                            <b-button pill variant="primary" @click="addRowQuotationItem();">✙</b-button>
                         </b-col>
                     </b-row>
 
@@ -272,10 +272,10 @@
                         <b-col></b-col>
                         <b-col>
                             <b-table-simple bordered>
-                                <b-form-checkbox v-model="invoice.isTaxExp">外税</b-form-checkbox>
+                                <b-form-checkbox v-model="quotation.isTaxExp">外税</b-form-checkbox>
                                 <b-tr>
                                     <b-td variant="light" class="text-right">合計金額</b-td>
-                                    <b-td v-if="invoice.isTaxExp" class="text-right">{{sum*1.1|nf}}</b-td>
+                                    <b-td v-if="quotation.isTaxExp" class="text-right">{{sum*1.1|nf}}</b-td>
                                     <b-td v-else class="text-right">{{sum|nf}}</b-td>
                                 </b-tr>
                                 <b-tr>
@@ -288,7 +288,7 @@
 
                     <!-- 備考欄 -->
                     <b-card border-variant="white" class="mb-3 text-center" header="備考欄" header-border-variant="light">
-                        <b-form-textarea v-model="invoice.remarks" id="remarks" size="sm" type="text" rows="3">
+                        <b-form-textarea v-model="quotation.remarks" id="remarks" size="sm" type="text" rows="3">
                         </b-form-textarea>
                     </b-card>
 
@@ -308,7 +308,7 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(invoice)">適用</b-button>
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(quotation)">適用</b-button>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -324,101 +324,101 @@
             el: '#app',
             data: {
                 pageName: 'index',
-                invoices: [],               //全件invoice
-                invoice: [],                //選択中のinvoice
-                invoiceItem: [],            //選択中のinvoiceItem
+                quotations: [],               //全件quotation
+                quotation: [],                //選択中のquotation
+                quotationItem: [],            //選択中のquotationItem
                 customers: [],
                 items: [],
             },
             methods: {
-                // ---Invoices---
-                getInvoices: async function () {
+                // ---Quotations---
+                getQuotations: async function () {
                     self = this;
-                    await axios.get("/invoices")
+                    await axios.get("/quotations")
                         .then(function (response) {
                             console.log(response);
-                            self.invoices = response.data;
+                            self.quotations = response.data;
                         });
                 },
                 bulkUpsert(item) {
                     if (!item.id) {
-                        this.insertInvoice(item);
+                        this.insertQuotation(item);
                         this.toast("新規作成しました");
                     }
                     else {
-                        this.updateInvoice(item);
+                        this.updateQuotation(item);
                         this.toast("更新しました");
                     }
                 },
-                insertInvoice: async function (item) {
+                insertQuotation: async function (item) {
                     self = this;
-                    await axios.post("/invoice", item)
+                    await axios.post("/quotation", item)
                         .then(function (response) {
-                            Vue.set(self.invoice, 'id', response.data.id)
-                            self.getInvoice(self.invoice);
-                            self.invoice.isInsert = false;
+                            Vue.set(self.quotation, 'id', response.data.id)
+                            self.getQuotation(self.quotation);
+                            self.quotation.isInsert = false;
                         });
                 },
-                updateInvoice: async function (item) {
+                updateQuotation: async function (item) {
                     self = this;
-                    await axios.put("/invoice/" + item.id, item)
+                    await axios.put("/quotation/" + item.id, item)
                         .then(function (response) {
-                            self.getInvoice(self.invoice);
+                            self.getQuotation(self.quotation);
                             console.log(response);
                         });
                 },
-                deleteInvoice: async function (item) {
+                deleteQuotation: async function (item) {
                     self = this;
-                    await axios.delete("/invoice/" + item.id)
+                    await axios.delete("/quotation/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.invoice = '';
-                            self.getInvoices();
+                            self.quotation = '';
+                            self.getQuotations();
                         });
                 },
-                InvoiceAddRow: function () {
+                QuotationAddRow: function () {
                     self = this;
-                    self.invoices.push({
+                    self.quotations.push({
                         isInsert: true,
-                        invoice_items: [],
+                        quotation_items: [],
                     });
-                    self.invoice = self.invoices.slice(-1)[0];
-                    Vue.set(self.invoice, 'isTaxExp', true);
+                    self.quotation = self.quotations.slice(-1)[0];
+                    Vue.set(self.quotation, 'isTaxExp', true);
                 },
-                selectInvoice: function (item) {
-                    this.invoice = item;
-                    console.log(this.invoice);
+                selectQuotation: function (item) {
+                    this.quotation = item;
+                    console.log(this.quotation);
                 },
-                selectInvoiceItem: function (item) {
-                    this.invoiceItem = item;
-                    console.log(this.invoiceItem);
+                selectQuotationItem: function (item) {
+                    this.quotationItem = item;
+                    console.log(this.quotationItem);
                 },
-                getInvoice: async function (item) {
+                getQuotation: async function (item) {
                     self = this;
-                    await axios.get("/invoice/" + item.id)
+                    await axios.get("/quotation/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             for (const [key, value] of Object.entries(response.data)) {
                                 console.log(key, value);
-                                self.$set(self.invoice, key, value);
+                                self.$set(self.quotation, key, value);
                             }
                         });
                 },
-                deleteInvoiceItem: async function (item) {
+                deleteQuotationItem: async function (item) {
                     self = this;
-                    await axios.delete("/invoice_item/" + item.id)
+                    await axios.delete("/quotation_item/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.getInvoice(self.invoice);
+                            self.getQuotation(self.quotation);
                         });
                 },
-                addRowInvoiceItem: function () {
-                    if (this.invoice.length === 0) {
-                        alert('請求書を選択してください');
+                addRowQuotationItem: function () {
+                    if (this.quotation.length === 0) {
+                        alert('見積書を選択してください');
                         return;
                     }
-                    this.invoice.invoice_items.push({
-                        invoiceId: this.invoice.id
+                    this.quotation.quotation_items.push({
+                        quotationId: this.quotation.id
                     })
                 },
                 getCustomers: async function () {
@@ -455,27 +455,27 @@
                 },
                 // 顧客名モーダル選択時
                 customerSelect(record) {
-                    Vue.set(self.invoice, 'customerId', record.id);
-                    Vue.set(self.invoice, 'customerName', record.customerName);
+                    Vue.set(self.quotation, 'customerId', record.id);
+                    Vue.set(self.quotation, 'customerName', record.customerName);
                     this.$bvModal.hide("customer-modal");
                 },
                 // 顧客名入力→Enter
                 onKeyDownCustomer(record) {
                     console.log(record);
-                    Vue.set(self.invoice, 'customerId', null);
+                    Vue.set(self.quotation, 'customerId', null);
                 },
                 // 商品名モーダル選択時
                 itemSelect(record) {
-                    Vue.set(self.invoiceItem, 'itemId', record.id);
-                    Vue.set(self.invoiceItem, 'itemName', record.itemName);
-                    Vue.set(self.invoiceItem, 'price', record.basePrice);
-                    Vue.set(self.invoiceItem, 'cost', record.baseCost);
+                    Vue.set(self.quotationItem, 'itemId', record.id);
+                    Vue.set(self.quotationItem, 'itemName', record.itemName);
+                    Vue.set(self.quotationItem, 'price', record.basePrice);
+                    Vue.set(self.quotationItem, 'cost', record.baseCost);
                     this.$refs['items-modal'].hide()
                 },
                 // 商品名入力→Enter
                 onKeyDownItem(record) {
                     console.log(record);
-                    Vue.set(self.invoiceItem, 'itemId', null);
+                    Vue.set(self.quotationItem, 'itemId', null);
                 },
                 // 商品名モーダル表示 モーダルのダブり表示防止
                 showModalItems() {
@@ -483,15 +483,15 @@
                 },
             },
             mounted: function () {
-                this.getInvoices();
+                this.getQuotations();
                 this.getCustomers();
                 this.getItems();
             },
             computed: {
                 // 逐次、数量＊単価の合計をする
                 sum: function () {
-                    if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 }　//初期立ち上がりでのエラー抑制
-                    return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * invoice_item.price)).reduce(function (a, b) { return a + b }, 0);
+                    if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 }　//初期立ち上がりでのエラー抑制
+                    return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + b }, 0);
                 }
             },
         })

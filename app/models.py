@@ -246,11 +246,13 @@ class InvoiceSchema(ma.SQLAlchemyAutoSchema):
 class Quotation_ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Quotation_Item
+        include_fk = True
 
 
 class QuotationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Quotation
+        include_fk = True
     quotation_items = ma.Nested(Quotation_ItemSchema, many=True)
 
 
