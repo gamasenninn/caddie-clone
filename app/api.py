@@ -288,7 +288,8 @@ def invoice_update(id):
 
 @app.route('/invoice/<id>', methods=['DELETE'])
 def invoice_destroy(id):
-    invoice = Invoice.query.filter(Invoice.id == id).delete()
+    invoice = Invoice.query.filter(Invoice.id == id).first()
+    db.session.delete(invoice)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
@@ -415,7 +416,8 @@ def quotation_update(id):
 
 @app.route('/quotation/<id>', methods=['DELETE'])
 def quotation_destroy(id):
-    quotation = Quotation.query.filter(Quotation.id == id).delete()
+    quotation = Quotation.query.filter(Quotation.id == id).first()
+    db.session.delete(quotation)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
