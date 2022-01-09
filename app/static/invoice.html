@@ -41,7 +41,7 @@
     <div id="app" v-cloak>
         <b-row class="bg pt-2 pb-2">
             <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
-                        class='mr-2'></a>見積書入力</b-col>
+                        class='mr-2'></a>請求書入力</b-col>
         </b-row>
 
         <!-- サイドバー -->
@@ -87,9 +87,9 @@
                             :items=invoices :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
-                          {  key: 'applyNumber', label: '見積番号' },
+                          {  key: 'applyNumber', label: '請求番号' },
                           {  key: 'applyDate', label: '日付' },
-                          {  key: 'expiry', label: '見積有効期限' },
+                          {  key: 'expiry', label: '請求書有効期限' },
                           {  key: 'title', label: '件名' },
                           {  key: 'memo', label: 'メモ' },
                           {  key: 'delete', label: '' },
