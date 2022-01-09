@@ -26,6 +26,7 @@ import re
 #import cStringIO
 from importlib import import_module
 import json
+import os
 
 import pprint
 
@@ -273,6 +274,8 @@ def pdf_maker(d,is_BytesIO=False,file_name=''):
         w = psize[size]['short']*mm
         h = psize[size]['long']*mm
     #w,h = A4
+    os.makedirs(defPdf['file']['outDir'], exist_ok=True)
+
     doc = BaseDocTemplate(pfile, pagesize=[w,h])
     #doc = BaseDocTemplate(sys.stdout, pagesize=A4)
 
