@@ -1,0 +1,294 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+        <link href="images/favicon.ico" rel="shortcut icon">
+        -->
+    <title>請求書管理</title>
+    <!-- Load required Bootstrap and BootstrapVue CSS -->
+
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+    <!-- Load fontawesome -->
+    <!-- link href="./css/all.css" rel="stylesheet" -->
+    <!--load all styles -->
+    <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+        crossorigin="anonymous"></script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <b-row class="bg pt-2 pb-2">
+            <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+                        class='mr-2'></a>請求書入力</b-col>
+        </b-row>
+
+        <!-- サイドバー -->
+        <template>
+            <div>
+                <b-button v-b-toggle.sidebar-no-header>メニュー</b-button>
+                <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" no-header shadow>
+                    <template #default="{ hide }">
+                        <div class="p-3">
+                            <h4 id="sidebar-no-header-title" style="float: left; width: 75%;">遷移メニュー</h4>
+                            <b-button variant="danger" block @click="hide" style="float: right; width: 15%;">✖
+                            </b-button>
+                            <b-img src="https://free-materials.com/adm/wp-content/uploads/2020/10/logo_07-1024x1024.png"
+                                style="width: 100%; height: 50px; margin: 10px 0px;"></b-img>
+                            <nav class="mb-3">
+                                <b-nav vertical>
+                                    <b-button variant="primary" block href="mock_customer.html"><i
+                                            class="fas fa-building"></i>　得意先
+                                    </b-button>
+                                    <b-button variant="primary" block href="mock_item.html"><i
+                                            class="fas fa-box"></i>　商　品</b-button>
+                                    <b-button variant="primary" block href="mock_invoice.html"><i
+                                            class="fas fa-copy"></i>　請求書</b-button>
+                                    <b-button variant="primary" block href="mock01_quotaion.html"><i
+                                            class="far fa-copy"></i>　見積書</b-button>
+                                </b-nav>
+                            </nav>
+                        </div>
+                    </template>
+                </b-sidebar>
+            </div>
+        </template>
+
+        <!-- 一覧表示 -->
+        <div v-if="pageName=='index'">
+            <b-row class="mt-5">
+                <b-col></b-col>
+                <b-col cols="10">
+                    <b-button variant="success" @click="changeMode('store');InvoiceAddRow();">＋新規作成</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="請求書一覧"
+                        header-border-variant="light">
+                        <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
+                            :items=invoices :fields="[
+                          {  key: 'update', label: '' },
+                          {  key: 'id', label: 'No.' },
+                          {  key: 'applyNumber', label: '請求番号' },
+                          {  key: 'applyDate', label: '日付' },
+                          {  key: 'expiry', label: '請求書有効期限' },
+                          {  key: 'title', label: '件名' },
+                          {  key: 'memo', label: 'メモ' },
+                          {  key: 'delete', label: '' },
+                        ]" :tbody-tr-class="rowClass">
+                            <template v-slot:cell(update)="data">
+                                <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);"><i
+                                        class="fas fa-edit"></i>
+                                </b-button>
+                            </template>
+                            <template v-slot:cell(delete)="data">
+                                <b-button variant="danger" @click="deleteInvoice(data.item)"><i
+                                        class="fas fa-trash-alt"></i>
+                                </b-button>
+                            </template>
+                        </b-table>
+                    </b-card>
+                </b-col>
+                <b-col></b-col>
+            </b-row>
+        </div>
+
+        <!-- 新規作成・詳細(更新)ページ -->
+        <div v-if="pageName=='show' || pageName=='store'">
+            <b-row class="mt-5">
+                <b-col></b-col>
+                <!--- 本体 -->
+                <b-col cols=10>
+                    <b-button @click="changeMode('index');getInvoices();">＜</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="請求書入力"
+                        header-border-variant="light">
+                        <b-row>
+                            <b-col>
+
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
+                                    label-for="customerId">
+                                    <p class="text-left pl-2" id="customerId">{{invoice.customerId}}</p>
+                                </b-form-group>
+
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
+                                    label-for="applyDate">
+                                    <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm" type="date">
+                                    </b-form-input>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
+                                    label-for="expiry">
+                                    <b-form-input v-model="invoice.expiry" id="expiry" size="sm" type="date">
+                                    </b-form-input>
+                                </b-form-group>
+                            </b-col>
+                            <b-col>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
+                                    label-for="applyNumber">
+                                    <p class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}</p>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
+                                    label-for="title">
+                                    <b-form-input v-model="invoice.title" id="title" size="sm"></b-form-input>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
+                                    label-for="メモ">
+                                    <b-form-textarea v-model="invoice.memo" size="sm" rows="4"></b-form-textarea>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                    </b-card>
+
+                </b-col> <!-- 本体 -->
+                <b-col></b-col>
+
+            </b-row>
+
+        </div>
+
+        <!-- 空行 -->
+        <b-row class="mb-5"></b-row>
+        <b-row class="mb-5"></b-row>
+        <b-row class="mb-5"></b-row>
+
+        <!-- 更新・取消ボタンのフッター -->
+        <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
+            class="fixed-bottom footer">
+            <div class="d-flex justify-content-end">
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(invoice)">適用</b-button>
+                <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
+            </div>
+        </b-card>
+
+    </div>
+
+    <script>
+        Vue.filter('nf', function (val) {
+            return val.toLocaleString();
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                pageName: 'index',
+                invoices: [],               //全件invoice
+                invoice: [],                //選択中のinvoice
+                invoiceItem: [],            //選択中のinvoiceItem
+                customers: [],
+                items: [],
+            },
+            methods: {
+                // ---Invoices---
+                getInvoices: async function () {
+                    self = this;
+                    await axios.get("/invoices")
+                        .then(function (response) {
+                            console.log(response);
+                            self.invoices = response.data;
+                        });
+                },
+                bulkUpsert(item) {
+                    if (!item.id) {
+                        this.insertInvoice(item);
+                        this.toast("新規作成しました");
+                    }
+                    else {
+                        this.updateInvoice(item);
+                        this.toast("更新しました");
+                    }
+                },
+                insertInvoice: async function (item) {
+                    self = this;
+                    await axios.post("/invoice", item)
+                        .then(function (response) {
+                            Vue.set(self.invoice, 'id', response.data.id)
+                            self.getInvoice(self.invoice);
+                            self.invoice.isInsert = false;
+                        });
+                },
+                updateInvoice: async function (item) {
+                    self = this;
+                    await axios.put("/invoice/" + item.id, item)
+                        .then(function (response) {
+                            self.getInvoice(self.invoice);
+                            console.log(response);
+                        });
+                },
+                deleteInvoice: async function (item) {
+                    self = this;
+                    await axios.delete("/invoice/" + item.id)
+                        .then(function (response) {
+                            console.log(response);
+                            self.invoice = '';
+                            self.getInvoices();
+                        });
+                },
+                InvoiceAddRow: function () {
+                    self = this;
+                    self.invoices.push({
+                        isInsert: true,
+                        invoice_items: [],
+                    });
+                    self.invoice = self.invoices.slice(-1)[0];
+                    Vue.set(self.invoice, 'isTaxExp', true);
+                },
+                selectInvoice: function (item) {
+                    this.invoice = item;
+                    console.log(this.invoice);
+                },
+                getInvoice: async function (item) {
+                    self = this;
+                    await axios.get("/invoice/" + item.id)
+                        .then(function (response) {
+                            console.log(response);
+                            for (const [key, value] of Object.entries(response.data)) {
+                                console.log(key, value);
+                                self.$set(self.invoice, key, value);
+                            }
+                        });
+                },
+                rowClass: function (item, type) {
+                    if (!item || type !== 'row') return
+                    if (!item.id) return "d-none";
+                },
+                toast(toaster, append = false) {
+                    this.$bvToast.toast(`${toaster}`, {
+                        title: `確認`,
+                        toaster: 'b-toaster-top-right',
+                        solid: true,
+                        appendToast: append,
+                    })
+                },
+                // ページ変更
+                changeMode(pageName) {
+                    this.pageName = pageName;
+                },
+            },
+            mounted: function () {
+                this.getInvoices();
+            },
+        })
+
+
+    </script>
+
+</body>
+
+</html>
