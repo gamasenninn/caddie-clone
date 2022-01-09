@@ -124,7 +124,10 @@ def make_row(detail,bdata):
             if 'format' in f:
                 if val:
                     fmt = f.get('format')
-                    if fmt: val = fmt.format(val)
+                    try:
+                        if fmt: val = fmt.format(val)
+                    except:
+                        val="format error!"
             val = Paragraph(str(val),PS(**styles[f.get('p_style')]))
             vals.append(val)
         #print(vals)
@@ -222,19 +225,23 @@ def page_break(pageno):
 
 
 def cv(src_l):
-    if src_l[0] == "P": 
-        return Paragraph(src_l[1],PS(**styles[src_l[2]]))
-    elif  src_l[0] == "E":
-        return eval(src_l[1])
-    elif  src_l[0] == "EP":
-        return Paragraph(eval(src_l[1]),PS(**styles[src_l[2]]))
-    elif  src_l[0] == "EPF":
-        val = src_l[3].format(eval(src_l[1]))
-        return Paragraph(val,PS(**styles[src_l[2]]))
-    elif  src_l[0] == "NOP":
-        return 
+    if not src_l: return
+    try:
+        if src_l[0] == "P": 
+            return Paragraph(src_l[1],PS(**styles[src_l[2]]))
+        elif  src_l[0] == "E":
+            return eval(src_l[1])
+        elif  src_l[0] == "EP":
+            return Paragraph(eval(src_l[1]),PS(**styles[src_l[2]]))
+        elif  src_l[0] == "EPF":
+            val = src_l[3].format(eval(src_l[1]))
+            return Paragraph(val,PS(**styles[src_l[2]]))
+        elif  src_l[0] == "NOP":
+            return 
+    except :
+        return Paragraph("value or format error! ",PS(**styles['sm_l']))
 
-    return Paragraph("error",PS(**styles['sm_l']))
+    return Paragraph("No instraction ",PS(**styles['sm_l']))
 
 data={}
 defPdf ={}
