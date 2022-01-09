@@ -7,7 +7,7 @@
     <!--
         <link href="images/favicon.ico" rel="shortcut icon">
         -->
-    <title>請求書管理</title>
+    <title>商品管理</title>
     <!-- Load required Bootstrap and BootstrapVue CSS -->
 
     <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
@@ -41,7 +41,7 @@
     <div id="app" v-cloak>
         <b-row class="bg pt-2 pb-2">
             <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
-                        class='mr-2'></a>請求書入力</b-col>
+                        class='mr-2'></a>商品入力</b-col>
         </b-row>
 
         <!-- サイドバー -->
@@ -63,7 +63,7 @@
                                     </b-button>
                                     <b-button variant="primary" block href="mock_item.html"><i
                                             class="fas fa-box"></i>　商　品</b-button>
-                                    <b-button variant="primary" block href="mock_invoice.html"><i
+                                    <b-button variant="primary" block href="mock_item.html"><i
                                             class="fas fa-copy"></i>　請求書</b-button>
                                     <b-button variant="primary" block href="mock01_quotaion.html"><i
                                             class="far fa-copy"></i>　見積書</b-button>
@@ -80,27 +80,27 @@
             <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('store');InvoiceAddRow();">＋新規作成</b-button>
-                    <b-card border-variant="white" class="mb-3 text-center" header="請求書一覧"
+                    <b-button variant="success" @click="changeMode('store');ItemAddRow();">＋新規作成</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="商品一覧"
                         header-border-variant="light">
-                        <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
-                            :items=invoices :fields="[
+                        <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
+                            :items=items :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
-                          {  key: 'applyNumber', label: '請求番号' },
-                          {  key: 'applyDate', label: '日付' },
-                          {  key: 'expiry', label: '請求書有効期限' },
-                          {  key: 'title', label: '件名' },
+                          {  key: 'itemName', label: '商品名' },
+                          {  key: 'unit', label: '単位' },
+                          {  key: 'basePrice', label: '単価' },
+                          {  key: 'baseCost', label: '原価単価' },
                           {  key: 'memo', label: 'メモ' },
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);"><i
+                                <b-button variant="info" @click="changeMode('show');selectItem(data.item);"><i
                                         class="fas fa-edit"></i>
                                 </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteInvoice(data.item)"><i
+                                <b-button variant="danger" @click="deleteItem(data.item)"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -111,13 +111,14 @@
             </b-row>
         </div>
 
+        <style>/*
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
             <b-row class="mt-5">
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getInvoices();">＜</b-button>
+                    <b-button @click="changeMode('index');getItems();">＜</b-button>
                     <b-card border-variant="white" class="mb-3 text-center" header="請求書入力"
                         header-border-variant="light">
                         <b-row>
@@ -125,32 +126,32 @@
 
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
                                     label-for="customerId">
-                                    <p class="text-left pl-2" id="customerId">{{invoice.customerId}}</p>
+                                    <p class="text-left pl-2" id="customerId">{{item.customerId}}</p>
                                 </b-form-group>
 
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
                                     label-for="applyDate">
-                                    <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm" type="date">
+                                    <b-form-input v-model="item.applyDate" id="applyDate" size="sm" type="date">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
                                     label-for="expiry">
-                                    <b-form-input v-model="invoice.expiry" id="expiry" size="sm" type="date">
+                                    <b-form-input v-model="item.expiry" id="expiry" size="sm" type="date">
                                     </b-form-input>
                                 </b-form-group>
                             </b-col>
                             <b-col>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
                                     label-for="applyNumber">
-                                    <p class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}</p>
+                                    <p class="text-left pl-2" id="applyNumber">{{item.applyNumber}}</p>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                     label-for="title">
-                                    <b-form-input v-model="invoice.title" id="title" size="sm"></b-form-input>
+                                    <b-form-input v-model="item.title" id="title" size="sm"></b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="メモ">
-                                    <b-form-textarea v-model="invoice.memo" size="sm" rows="4"></b-form-textarea>
+                                    <b-form-textarea v-model="item.memo" size="sm" rows="4"></b-form-textarea>
                                 </b-form-group>
                             </b-col>
                         </b-row>
@@ -162,6 +163,7 @@
             </b-row>
 
         </div>
+        */</style>
 
         <!-- 空行 -->
         <b-row class="mb-5"></b-row>
@@ -172,7 +174,7 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(invoice)">適用</b-button>
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(item)">適用</b-button>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -180,87 +182,78 @@
     </div>
 
     <script>
-        Vue.filter('nf', function (val) {
-            return val.toLocaleString();
-        });
-
         var app = new Vue({
             el: '#app',
             data: {
                 pageName: 'index',
-                invoices: [],               //全件invoice
-                invoice: [],                //選択中のinvoice
-                invoiceItem: [],            //選択中のinvoiceItem
-                customers: [],
-                items: [],
+                items: [],               //全件item
+                item: [],                //選択中のitem
             },
             methods: {
-                // ---Invoices---
-                getInvoices: async function () {
+                // ---Items---
+                getItems: async function () {
                     self = this;
-                    await axios.get("/invoices")
+                    await axios.get("/items")
                         .then(function (response) {
                             console.log(response);
-                            self.invoices = response.data;
+                            self.items = response.data;
                         });
                 },
                 bulkUpsert(item) {
                     if (!item.id) {
-                        this.insertInvoice(item);
+                        this.insertItem(item);
                         this.toast("新規作成しました");
                     }
                     else {
-                        this.updateInvoice(item);
+                        this.updateItem(item);
                         this.toast("更新しました");
                     }
                 },
-                insertInvoice: async function (item) {
+                insertItem: async function (item) {
                     self = this;
-                    await axios.post("/invoice", item)
+                    await axios.post("/item", item)
                         .then(function (response) {
-                            Vue.set(self.invoice, 'id', response.data.id)
-                            self.getInvoice(self.invoice);
-                            self.invoice.isInsert = false;
+                            Vue.set(self.item, 'id', response.data.id)
+                            self.getItem(self.item);
+                            self.item.isInsert = false;
                         });
                 },
-                updateInvoice: async function (item) {
+                updateItem: async function (item) {
                     self = this;
-                    await axios.put("/invoice/" + item.id, item)
+                    await axios.put("/item/" + item.id, item)
                         .then(function (response) {
-                            self.getInvoice(self.invoice);
+                            self.getItem(self.item);
                             console.log(response);
                         });
                 },
-                deleteInvoice: async function (item) {
+                deleteItem: async function (item) {
                     self = this;
-                    await axios.delete("/invoice/" + item.id)
+                    await axios.delete("/item/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.invoice = '';
-                            self.getInvoices();
+                            self.item = '';
+                            self.getItems();
                         });
                 },
-                InvoiceAddRow: function () {
+                ItemAddRow: function () {
                     self = this;
-                    self.invoices.push({
+                    self.items.push({
                         isInsert: true,
-                        invoice_items: [],
                     });
-                    self.invoice = self.invoices.slice(-1)[0];
-                    Vue.set(self.invoice, 'isTaxExp', true);
+                    self.item = self.items.slice(-1)[0];
                 },
-                selectInvoice: function (item) {
-                    this.invoice = item;
-                    console.log(this.invoice);
+                selectItem: function (item) {
+                    this.item = item;
+                    console.log(this.item);
                 },
-                getInvoice: async function (item) {
+                getItem: async function (item) {
                     self = this;
-                    await axios.get("/invoice/" + item.id)
+                    await axios.get("/item/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             for (const [key, value] of Object.entries(response.data)) {
                                 console.log(key, value);
-                                self.$set(self.invoice, key, value);
+                                self.$set(self.item, key, value);
                             }
                         });
                 },
@@ -282,7 +275,7 @@
                 },
             },
             mounted: function () {
-                this.getInvoices();
+                this.getItems();
             },
         })
 

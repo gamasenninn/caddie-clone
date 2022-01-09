@@ -61,6 +61,11 @@ def quotationPage():
     return app.send_static_file('quotation.html')
 
 
+@app.route('/item-page')
+def itemPage():
+    return app.send_static_file('item.html')
+
+
 if __name__ == '__main__':
 
     app.run(host='0.0.0.0', port=5010)
