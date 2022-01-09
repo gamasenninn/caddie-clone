@@ -56,6 +56,11 @@ def invoicePage():
     return app.send_static_file('invoice.html')
 
 
+@app.route('/quotation-page')
+def quotationPage():
+    return app.send_static_file('quotation.html')
+
+
 if __name__ == '__main__':
 
     app.run(host='0.0.0.0', port=5010)

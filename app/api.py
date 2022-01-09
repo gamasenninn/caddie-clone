@@ -376,6 +376,21 @@ def quotation_show(id):
 @app.route('/quotation', methods=['POST'])
 def quotation_create():
     data = request.json
+
+    if data.get('quotation_items'):
+        newQuotationItems = [
+            Quotation_Item(
+                quotationId=item.get('quotationId'),
+                itemId=item.get('itemId'),
+                price=item.get('price'),
+                count=item.get('count'),
+                itemName=item.get('itemName'),
+            )
+            for item in data.get('quotation_items')
+        ]
+    else:
+        newInvoiceItems = []
+
     newQuotation = Quotation(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
@@ -388,6 +403,7 @@ def quotation_create():
         memo=data.get('memo'),
         remarks=data.get('remarks'),
         isTaxExp=data.get('isTaxExp'),
+        quotation_items=newQuotationItems,
     )
     db.session.add(newQuotation)
     db.session.commit()
@@ -398,7 +414,11 @@ def quotation_create():
 @app.route('/quotation/<id>', methods=['PUT'])
 def quotation_update(id):
     data = request.json
+
     quotation = Quotation.query.filter(Quotation.id == id).one()
+    if not quotation:
+        return jsonify({"result": "No Data", "id": id, "data": data})
+
     quotation.customerId = data.get('customerId')
     quotation.customerName = data.get('customerName')
     quotation.applyNumber = data.get('applyNumber')
@@ -410,6 +430,26 @@ def quotation_update(id):
     quotation.memo = data.get('memo')
     quotation.remarks = data.get('remarks')
     quotation.isTaxExp = data.get('isTaxExp')
+
+    if data.get('quotation_items'):
+        update_list = []
+        insert_list = []
+        delete_in_list = []
+        for item in data['quotation_items']:
+            if 'createdAt' in item:
+                del(item['createdAt'])
+            if 'updatedAt' in item:
+                del(item['updatedAt'])
+
+            if item.get('id'):
+                update_list.append(item)
+            else:
+                insert_list.append(item)
+        db.session.bulk_update_mappings(Quotation_Item, update_list)
+        db.session.bulk_insert_mappings(Quotation_Item, insert_list)
+        db.session.query(Quotation_Item).filter(Quotation_Item.id.in_(
+            delete_in_list)).delete(synchronize_session='fetch')
+
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -439,6 +479,13 @@ def quotation_item_show(id):
         return jsonify(Quotation_ItemSchema().dump(quotationItem))
     else:
         return jsonify([])
+
+
+@app.route('/quotation_items/<hid>', methods=['GET'])
+def quotation_item_show_by_quotationId(hid):
+    quotationItems = Quotation_Item.query.filter(
+        Quotation_Item.quotationId == hid).all()
+    return jsonify(Quotation_ItemSchema(many=True).dump(quotationItems))
 
 
 @app.route('/quotation_item', methods=['POST'])
