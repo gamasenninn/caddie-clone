@@ -155,7 +155,6 @@ def item_create():
         unit=data.get('unit'),
         basePrice=data.get('basePrice'),
         baseCost=data.get('baseCost'),
-        cost=data.get('cost'),
         memo=data.get('memo'),
     )
     db.session.add(newItem)
@@ -173,7 +172,6 @@ def item_update(id):
     item.unit = data.get('unit')
     item.basePrice = data.get('basePrice')
     item.baseCost = data.get('baseCost')
-    item.cost = data.get('cost')
     item.memo = data.get('memo')
 
     db.session.commit()
