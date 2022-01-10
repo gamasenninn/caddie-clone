@@ -128,7 +128,6 @@
                                     <p class="text-left pl-2" id="customerId">{{invoice.customerId}}</p>
                                 </b-form-group>
 
-                                <!-- TODO:Customerテーブルとの連携が完了してから実装 -->
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="customer" class="customer">
                                     <b-form-input v-model="invoice.customerName" id="customerName" size="sm"
@@ -138,8 +137,14 @@
                                     <!-- 得意先一覧モーダル -->
                                     <b-modal size="xl" id="customer-modal">
                                         <p>顧客を選択してください</p>
-                                        <b-table hover striped small sort-by="ID" id="customer-table" :items="customers"
-                                            @row-clicked="customerSelect" label="Table Options" :items=customers
+                                        <b-form-group label-cols="2" label-size="sm" label-align="center" label="検索"
+                                            label-for="searchCustomerWord">
+                                            <b-form-input v-model="searchCustomerWord" id="searchCustomerWord"
+                                                size="sm">
+                                            </b-form-input>
+                                        </b-form-group>
+                                        <b-table hover striped small sort-by="ID" id="customer-table"
+                                            :items="searchCustomers" @row-clicked="customerSelect" label="Table Options"
                                             :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'customerName', label: '顧客名' },
@@ -180,10 +185,7 @@
                         </b-row>
                     </b-card>
 
-
                     <!--  table list & edit -->
-
-                    <!-- TODO:商品テーブルとの連携が出来次第、商品名項目をitemIdからitem.itemNameに変更する -->
                     <b-table hover caption-top small id="invoice_items_table" primary-key="id" small
                         label="Table Options" :items=invoice.invoice_items :fields="[
                           {  key: 'id', label: 'ID', class:'text-center' },
@@ -203,8 +205,12 @@
 
                             <b-modal size="xl" ref="items-modal">
                                 <p>商品を選択してください</p>
-                                <b-table hover striped small sort-by="ID" id="items-table" :items="items"
-                                    @row-clicked="itemSelect" label="Table Options" :items=items :fields="[
+                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="検索"
+                                    label-for="searchItemWord">
+                                    <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"></b-form-input>
+                                </b-form-group>
+                                <b-table hover striped small sort-by="ID" id="items-table" :items="searchItems"
+                                    @row-clicked="itemSelect" label="Table Options" :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'itemName', label: '商品名' },
                                   {  key: 'unit',   label: '単位' },
@@ -324,6 +330,8 @@
             el: '#app',
             data: {
                 pageName: 'index',
+                searchItemWord: '',
+                searchCustomerWord: '',
                 invoices: [],               //全件invoice
                 invoice: [],                //選択中のinvoice
                 invoiceItem: [],            //選択中のinvoiceItem
@@ -492,7 +500,20 @@
                 sum: function () {
                     if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 }　//初期立ち上がりでのエラー抑制
                     return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * invoice_item.price)).reduce(function (a, b) { return a + b }, 0);
-                }
+                },
+                // 得意先選択モーダルの検索機能
+                searchCustomers: function () {
+                    return this.customers.filter(customer => {
+                        return customer.customerName.includes(this.searchCustomerWord) || String(customer.id).includes(this.searchCustomerWord);
+                    })
+                },
+                // 商品選択モーダルの検索機能
+                // TODO:商品コードを実装次第、商品コードでの検索もできるようにする
+                searchItems: function () {
+                    return this.items.filter(item => {
+                        return item.itemName.includes(this.searchItemWord);
+                    });
+                },
             },
         })
 
