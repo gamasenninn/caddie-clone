@@ -1,7 +1,9 @@
+from types import NoneType
 from typing import Sequence
 from app import db, app, ma
 from datetime import datetime
 from datetime import date
+from sqlalchemy.sql import func
 
 
 class User(db.Model):
@@ -88,20 +90,29 @@ class Item(db.Model):
     # invoice_items=db.relationship('Invoice_Item',backref='items')
     # quotation_items=db.relationship('Quotation_Item',backref='items')
 
-fmt_str_invoice = "{0:請%y%m%d}";   
-def edited_invoice_number(context):
-    str_id = str(context.get_current_parameters()['id'])
-    today = date.today() 
-    return fmt_str_invoice.format(today) + "_" + str_id
+
+fmt_str_invoice = "{0:請%y%m%d}"
+
+
+def edited_invoice_number():
+    maxId = db.session.query(
+        func.max(Invoice.id)).first()[0]
+    if maxId:
+        nextId = str(maxId+1)
+    else:
+        nextId = '1'
+    today = date.today()
+    return fmt_str_invoice.format(today) + "_" + nextId
+
 
 class Invoice(db.Model):
 
     __tablename__ = 'invoices'
 
-    id = db.Column(db.Integer,primary_key=True )
+    id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     customerName = db.Column(db.String)
-    applyNumber = db.Column(db.String,default=edited_invoice_number)
+    applyNumber = db.Column(db.String, default=edited_invoice_number)
     applyDate = db.Column(db.Date)
     expiry = db.Column(db.Date)
     title = db.Column(db.String)
@@ -113,7 +124,6 @@ class Invoice(db.Model):
                           default=datetime.now, onupdate=datetime.now)
     invoice_items = db.relationship(
         'Invoice_Item', backref='invoice', uselist=True, cascade='all, delete',)
-
 
 
 class Invoice_Item(db.Model):
