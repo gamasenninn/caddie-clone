@@ -1,5 +1,3 @@
-from types import NoneType
-from typing import Sequence
 from app import db, app, ma
 from datetime import datetime
 from datetime import date
