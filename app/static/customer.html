@@ -80,26 +80,27 @@
             <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('store');ItemAddRow();">＋新規作成</b-button>
+                    <b-button variant="success" @click="changeMode('store');CustomerAddRow();">＋新規作成</b-button>
                     <b-card border-variant="white" class="mb-3 text-center" header="商品一覧" header-border-variant="light">
-                        <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
-                            :items=items :fields="[
+                        <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
+                            :items=customers :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
-                          {  key: 'itemName', label: '商品名' },
-                          {  key: 'unit', label: '単位' },
-                          {  key: 'basePrice', label: '単価' },
-                          {  key: 'baseCost', label: '原価単価' },
+                          {  key: 'customerName', label: '得意先名' },
+                          {  key: 'postNumber', label: '郵便番号' },
+                          {  key: 'address', label: '住所' },
+                          {  key: 'telNumber', label: '電話番号' },
+                          {  key: 'manager', label: '担当者' },
                           {  key: 'memo', label: 'メモ' },
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectItem(data.item);"><i
+                                <b-button variant="info" @click="changeMode('show');selectCustomer(data.item);"><i
                                         class="fas fa-edit"></i>
                                 </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteItem(data.item)"><i
+                                <b-button variant="danger" @click="deleteCustomer(data.item)"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -110,13 +111,15 @@
             </b-row>
         </div>
 
+        <style>
+            /*
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
             <b-row class="mt-5">
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getItems();">＜</b-button>
+                    <b-button @click="changeMode('index');getCustomers();">＜</b-button>
                     <b-card border-variant="white" class="mb-3 text-center" header="商品入力" header-border-variant="light">
                         <b-row>
                             <b-col>
@@ -171,6 +174,8 @@
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
+        */
+        </style>
 
     </div>
 
@@ -179,74 +184,74 @@
             el: '#app',
             data: {
                 pageName: 'index',
-                items: [],               //全件item
-                item: [],                //選択中のitem
+                customers: [],               //全件customer
+                customer: [],                //選択中のcustomer
             },
             methods: {
-                // ---Items---
-                getItems: async function () {
+                // ---Customers---
+                getCustomers: async function () {
                     self = this;
-                    await axios.get("/items")
+                    await axios.get("/customers")
                         .then(function (response) {
                             console.log(response);
-                            self.items = response.data;
+                            self.customers = response.data;
                         });
                 },
                 bulkUpsert(item) {
                     if (!item.id) {
-                        this.insertItem(item);
+                        this.insertCustomer(item);
                         this.toast("新規作成しました");
                     }
                     else {
-                        this.updateItem(item);
+                        this.updateCustomer(item);
                         this.toast("更新しました");
                     }
                 },
-                insertItem: async function (item) {
+                insertCustomer: async function (item) {
                     self = this;
-                    await axios.post("/item", item)
+                    await axios.post("/customer", item)
                         .then(function (response) {
-                            Vue.set(self.item, 'id', response.data.id)
-                            self.getItem(self.item);
-                            self.item.isInsert = false;
+                            Vue.set(self.customer, 'id', response.data.id)
+                            self.getCustomer(self.customer);
+                            self.customer.isInsert = false;
                         });
                 },
-                updateItem: async function (item) {
+                updateCustomer: async function (item) {
                     self = this;
-                    await axios.put("/item/" + item.id, item)
+                    await axios.put("/customer/" + item.id, item)
                         .then(function (response) {
-                            self.getItem(self.item);
+                            self.getCustomer(self.customer);
                             console.log(response);
                         });
                 },
-                deleteItem: async function (item) {
+                deleteCustomer: async function (item) {
                     self = this;
-                    await axios.delete("/item/" + item.id)
+                    await axios.delete("/customer/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.item = '';
-                            self.getItems();
+                            self.customer = '';
+                            self.getCustomers();
                         });
                 },
-                ItemAddRow: function () {
+                CustomerAddRow: function () {
                     self = this;
-                    self.items.push({
+                    self.customers.push({
                         isInsert: true,
                     });
-                    self.item = self.items.slice(-1)[0];
+                    self.customer = self.customers.slice(-1)[0];
                 },
-                selectItem: function (item) {
-                    this.item = item;
-                    console.log(this.item);
+                selectCustomer: function (item) {
+                    this.customer = item;
+                    console.log(this.customer);
                 },
-                getItem: async function (item) {
+                getCustomer: async function (item) {
                     self = this;
-                    await axios.get("/item/" + item.id)
+                    await axios.get("/customer/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             for (const [key, value] of Object.entries(response.data)) {
                                 console.log(key, value);
-                                self.$set(self.item, key, value);
+                                self.$set(self.customer, key, value);
                             }
                         });
                 },
@@ -268,7 +273,7 @@
                 },
             },
             mounted: function () {
-                this.getItems();
+                this.getCustomers();
             },
         })
 

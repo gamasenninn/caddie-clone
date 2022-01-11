@@ -61,6 +61,11 @@ def quotationPage():
     return app.send_static_file('quotation.html')
 
 
+@app.route('/customer-page')
+def customerPage():
+    return app.send_static_file('customer.html')
+
+
 @app.route('/item-page')
 def itemPage():
     return app.send_static_file('item.html')
