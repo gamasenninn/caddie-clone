@@ -42,7 +42,6 @@
 | unit     | 単位     | text      |  単位はユーザーが追加できるように単位テーブルを作成し、単位追加ページを作成した方が良いかも         | 
 | basePrice| 単価     | integer   |  請求書にて商品選択時に参照のみ。                                                              | 
 | baseCost | 原価単価  | integer   |  請求書にて商品選択時に参照のみ。                                                             | 
-| cost     | 原価     | integer   |                                                                                             | 
 | memo     | メモ     | text      |                                                                                             | 
 | createdAt| 作成日時 | datetime  |                                                                                             | 
 | updatedAt| 更新日時 | datetime  |                                                                                             |
