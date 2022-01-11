@@ -1,6 +1,7 @@
 from app import db, app, ma
 from datetime import datetime
 from datetime import date
+from sqlalchemy.sql import func
 
 
 class User(db.Model):
@@ -88,6 +89,20 @@ class Item(db.Model):
     # quotation_items=db.relationship('Quotation_Item',backref='items')
 
 
+fmt_str_invoice = "{0:請%y%m%d}"
+
+
+def edited_invoice_number():
+    maxId = db.session.query(
+        func.max(Invoice.id)).first()[0]
+    if maxId:
+        nextId = str(maxId+1)
+    else:
+        nextId = '1'
+    today = date.today()
+    return fmt_str_invoice.format(today) + "_" + nextId
+
+
 class Invoice(db.Model):
 
     __tablename__ = 'invoices'
@@ -95,7 +110,7 @@ class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     customerName = db.Column(db.String)
-    applyNumber = db.Column(db.Integer)
+    applyNumber = db.Column(db.String, default=edited_invoice_number)
     applyDate = db.Column(db.Date)
     expiry = db.Column(db.Date)
     title = db.Column(db.String)

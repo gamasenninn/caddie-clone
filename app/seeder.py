@@ -66,11 +66,11 @@ def seeder():
     # -----Invoices-----
     print('----Invoices-----')
     invoices = [
-        Invoice(id=1, customerId=1, customerName='○○株式会社', applyNumber=1000001, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Invoice(customerId=1, customerName='○○株式会社',  applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○株式会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
-        Invoice(id=2, customerId=2, customerName="○○有限会社", applyNumber=1000002, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Invoice(customerId=2, customerName="○○有限会社",  applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○有限会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
-        Invoice(id=3, customerId=3, customerName="○○商事", applyNumber=1000003, applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
+        Invoice(customerId=3, customerName="○○商事",  applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
                 title='○○商事への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
     ]
     db.session.add_all(invoices)
