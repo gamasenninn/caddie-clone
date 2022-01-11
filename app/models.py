@@ -112,7 +112,7 @@ class Invoice(db.Model):
     customerName = db.Column(db.String)
     applyNumber = db.Column(db.String, default=edited_invoice_number)
     applyDate = db.Column(db.Date)
-    expiry = db.Column(db.Date)
+    deadLine = db.Column(db.Date)
     title = db.Column(db.String)
     memo = db.Column(db.String)
     remarks = db.Column(db.String)
