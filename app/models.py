@@ -1,10 +1,7 @@
-from sqlalchemy.sql.functions import now
 from app import db, app, ma
 from datetime import datetime
 from datetime import date
 from sqlalchemy.sql import func
-import sqlalchemy as sa
-import calendar
 
 
 class User(db.Model):
