@@ -1,7 +1,10 @@
+from sqlalchemy.sql.functions import now
 from app import db, app, ma
 from datetime import datetime
 from datetime import date
 from sqlalchemy.sql import func
+import sqlalchemy as sa
+import calendar
 
 
 class User(db.Model):
@@ -89,18 +92,16 @@ class Item(db.Model):
     # quotation_items=db.relationship('Quotation_Item',backref='items')
 
 
-fmt_str_invoice = "{0:請%y%m%d}"
-
-
+# 請求番号自動生成
 def edited_invoice_number():
-    maxId = db.session.query(
-        func.max(Invoice.id)).first()[0]
-    if maxId:
-        nextId = str(maxId+1)
-    else:
-        nextId = '1'
-    today = date.today()
-    return fmt_str_invoice.format(today) + "_" + nextId
+    nowYearFormat = datetime.now().strftime('%y')
+    nowYear = datetime.now().year
+    yearStart = date(nowYear, 1, 1)
+    yearEnd = date(nowYear, 12, calendar.monthrange(nowYear, 12)[1])
+    countForYear = Invoice.query.filter(
+        Invoice.createdAt >= yearStart, Invoice.createdAt <= yearEnd).count()
+    countFormat = format(countForYear+1, '0>5')
+    return str(nowYearFormat) + str(countFormat)
 
 
 class Invoice(db.Model):
