@@ -94,14 +94,22 @@ class Item(db.Model):
 
 # 請求番号自動生成
 def edited_invoice_number():
+
     nowYearFormat = datetime.now().strftime('%y')
     nowYear = datetime.now().year
     yearStart = date(nowYear, 1, 1)
-    yearEnd = date(nowYear, 12, calendar.monthrange(nowYear, 12)[1])
-    countForYear = Invoice.query.filter(
-        Invoice.createdAt >= yearStart, Invoice.createdAt <= yearEnd).count()
-    countFormat = format(countForYear+1, '0>5')
-    return str(nowYearFormat) + str(countFormat)
+    # 年末を含めてしまうのを防ぐ
+    yearEnd = date(nowYear+1, 1, 1)
+    maxNumberForYear = db.session.query(
+        func.max(Invoice.applyNumber)).filter(Invoice.createdAt >= yearStart, Invoice.createdAt < yearEnd).first()[0]
+    if maxNumberForYear:
+        maxNumberForYear_s = str(maxNumberForYear)
+        maxApplyNumber_s = maxNumberForYear_s[2:]
+        maxApplyNumber = int(maxApplyNumber_s)
+        nextNumber = format(maxApplyNumber+1, '0>5')
+    else:
+        nextNumber = '00001'
+    return str(nowYearFormat) + str(nextNumber)
 
 
 class Invoice(db.Model):
