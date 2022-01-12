@@ -223,7 +223,6 @@ def invoice_create():
     newInvoice = Invoice(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
-        applyNumber=data.get('applyNumber'),
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         deadLine=datetime.strptime(
@@ -387,12 +386,11 @@ def quotation_create():
             for item in data.get('quotation_items')
         ]
     else:
-        newInvoiceItems = []
+        newQuotationItems = []
 
     newQuotation = Quotation(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
-        applyNumber=data.get('applyNumber'),
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         expiry=datetime.strptime(
