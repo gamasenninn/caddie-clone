@@ -116,7 +116,7 @@ class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     customerName = db.Column(db.String)
-    applyNumber = db.Column(db.String, default=edited_invoice_number)
+    applyNumber = db.Column(db.Integer, default=edited_invoice_number)
     applyDate = db.Column(db.Date)
     expiry = db.Column(db.Date)
     title = db.Column(db.String)
@@ -146,6 +146,26 @@ class Invoice_Item(db.Model):
                           default=datetime.now, onupdate=datetime.now)
 
 
+# 見積番号自動生成
+def edited_quotation_number():
+
+    nowYearFormat = datetime.now().strftime('%y')
+    nowYear = datetime.now().year
+    yearStart = date(nowYear, 1, 1)
+    # 年末を含めてしまうのを防ぐ
+    yearEnd = date(nowYear+1, 1, 1)
+    maxNumberForYear = db.session.query(
+        func.max(Quotation.applyNumber)).filter(Quotation.createdAt >= yearStart, Quotation.createdAt < yearEnd).first()[0]
+    if maxNumberForYear:
+        maxNumberForYear_s = str(maxNumberForYear)
+        maxApplyNumber_s = maxNumberForYear_s[2:]
+        maxApplyNumber = int(maxApplyNumber_s)
+        nextNumber = format(maxApplyNumber+1, '0>5')
+    else:
+        nextNumber = '00001'
+    return str(nowYearFormat) + str(nextNumber)
+
+
 class Quotation(db.Model):
 
     __tablename__ = 'quotations'
@@ -153,7 +173,7 @@ class Quotation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     customerName = db.Column(db.String)
-    applyNumber = db.Column(db.Integer)
+    applyNumber = db.Column(db.Integer, default=edited_quotation_number)
     applyDate = db.Column(db.Date)
     expiry = db.Column(db.Date)
     title = db.Column(db.String)
