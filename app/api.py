@@ -226,8 +226,8 @@ def invoice_create():
         applyNumber=data.get('applyNumber'),
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
-        expiry=datetime.strptime(
-            data.get('expiry'), "%Y-%m-%d") if data.get('expiry') else None,
+        deadLine=datetime.strptime(
+            data.get('deadLine'), "%Y-%m-%d") if data.get('deadLine') else None,
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
@@ -253,8 +253,8 @@ def invoice_update(id):
     invoice.applyNumber = data.get('applyNumber')
     invoice.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
-    invoice.expiry = datetime.strptime(
-        data.get('expiry'), "%Y-%m-%d") if data.get('expiry') else None
+    invoice.deadLine = datetime.strptime(
+        data.get('deadLine'), "%Y-%m-%d") if data.get('deadLine') else None
     invoice.title = data.get('title')
     invoice.memo = data.get('memo')
     invoice.remarks = data.get('remarks')

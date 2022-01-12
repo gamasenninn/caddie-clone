@@ -89,7 +89,7 @@
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '請求番号' },
                           {  key: 'applyDate', label: '日付' },
-                          {  key: 'expiry', label: '請求書有効期限' },
+                          {  key: 'deadLine', label: '支払期限' },
                           {  key: 'title', label: '件名' },
                           {  key: 'memo', label: 'メモ' },
                           {  key: 'delete', label: '' },
@@ -162,9 +162,9 @@
                                     <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm" type="date">
                                     </b-form-input>
                                 </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
-                                    label-for="expiry">
-                                    <b-form-input v-model="invoice.expiry" id="expiry" size="sm" type="date">
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="支払期限"
+                                    label-for="deadLine">
+                                    <b-form-input v-model="invoice.deadLine" id="deadLine" size="sm" type="date">
                                     </b-form-input>
                                 </b-form-group>
                             </b-col>
