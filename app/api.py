@@ -619,11 +619,10 @@ def unit_destroy(id):
     return jsonify({"result": "OK", "id": id, "data": ''})
 
 
-# 設定(Setting)
-@app.route('/settings', methods=['GET'])
-def setting_index():
-    setting = Setting.query.all()
-    return jsonify(SettingSchema(many=True).dump(setting))
+@app.route('/setting', methods=['GET'])
+def setting_show():
+    setting = Setting.query.filter(Setting.id == 1).first()
+    return jsonify(SettingSchema().dump(setting))
 
 
 @app.route('/setting/<id>', methods=['PUT'])
