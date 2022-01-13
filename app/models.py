@@ -123,6 +123,7 @@ class Invoice(db.Model):
     memo = db.Column(db.String)
     remarks = db.Column(db.String)
     isTaxExp = db.Column(db.Boolean, nullable=False, default=True)
+    isDelete = db.Column(db.Boolean, nullable=False, default=False)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
@@ -180,6 +181,7 @@ class Quotation(db.Model):
     memo = db.Column(db.String)
     remarks = db.Column(db.String)
     isTaxExp = db.Column(db.Boolean, nullable=False, default=True)
+    isDelete = db.Column(db.Boolean, nullable=False, default=False)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
