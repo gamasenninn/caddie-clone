@@ -188,7 +188,7 @@ def item_destroy(id):
 # -----請求書(Invoices)-----
 @app.route('/invoices', methods=['GET'])
 def invoice_index():
-    invoices = Invoice.query.all()
+    invoices = Invoice.query.filter(Invoice.isDelete == False).all()
     return jsonify(InvoiceSchema(many=True).dump(invoices))
 
 
@@ -258,7 +258,6 @@ def invoice_update(id):
     invoice.memo = data.get('memo')
     invoice.remarks = data.get('remarks')
     invoice.isTaxExp = data.get('isTaxExp')
-    invoice.isDelete = data.get('isDelete')
 
     if data.get('invoice_items'):
         update_list = []
@@ -282,6 +281,14 @@ def invoice_update(id):
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/invoice_delete/<id>', methods=['PUT'])
+def invoice_destroy(id):
+    invoice = Invoice.query.filter(Invoice.id == id).one()
+    invoice.isDelete = True
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ""})
 
 
 # 請求書＿商品(Invoice_Items)
@@ -349,7 +356,7 @@ def invoice_item_destroy(id):
 # 見積書(Quotations)
 @app.route('/quotations', methods=['GET'])
 def quotation_index():
-    quotations = Quotation.query.all()
+    quotations = Quotation.query.filter(Quotation.isDelete == False).all()
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
@@ -419,7 +426,6 @@ def quotation_update(id):
     quotation.memo = data.get('memo')
     quotation.remarks = data.get('remarks')
     quotation.isTaxExp = data.get('isTaxExp')
-    quotation.isDelete = data.get('isDelete')
 
     if data.get('quotation_items'):
         update_list = []
@@ -442,6 +448,14 @@ def quotation_update(id):
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/quotation_delete/<id>', methods=['PUT'])
+def quotation_destroy(id):
+    quotation = Quotation.query.filter(Quotation.id == id).one()
+    quotation.isDelete = True
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ""})
 
 
 # 見積書＿商品(Quotation_Items)

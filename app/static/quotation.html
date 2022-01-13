@@ -375,9 +375,10 @@
                             console.log(response);
                         });
                 },
+                // axios.deleteは使わず、isDeleteをTrueに
                 deleteQuotation: async function (item) {
                     self = this;
-                    await axios.delete("/quotation/" + item.id)
+                    await axios.put("/quotation_delete/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             self.quotation = '';
