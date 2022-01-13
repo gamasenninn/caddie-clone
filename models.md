@@ -62,6 +62,7 @@
 | memo        | メモ           | text     |  アプリ利用者に見えるもの                                 | 
 | remarks     | 備考           | text     |  印刷時に表示されるもの                                   |
 | isTaxExp    | 内税・外税     | boolean   |  内税・外税のチェック                                      | 
+| isDelete    | 削除済み       | boolean   |  請求書は削除するのではなく、これにチェックする               | 
 | createdAt   | 作成日時       | datetime  |                                                           | 
 | updatedAt   | 更新日時       | datetime  |                                                           | 
 
@@ -97,6 +98,7 @@
 | memo        | メモ           | text     | アプリ利用者に見えるもの                                 | 
 | remarks     | 備考           | text     | 印刷時に表示されるもの                                   | 
 | isTaxExp    | 内税・外税      | boolean  | 内税・外税のチェック                                     | 
+| isDelete    | 削除済み       | boolean  |  見積書は削除するのではなく、これにチェックする              | 
 | createdAt   | 作成日時       | datetime |                                                          | 
 | updatedAt   | 更新日時       | datetime |                                                          | 
 
