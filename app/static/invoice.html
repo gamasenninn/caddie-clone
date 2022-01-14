@@ -375,9 +375,10 @@
                             console.log(response);
                         });
                 },
+                // axios.deleteは使わず、isDeleteをTrueに
                 deleteInvoice: async function (item) {
                     self = this;
-                    await axios.delete("/invoice/" + item.id)
+                    await axios.put("/invoice_delete/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             self.invoice = '';
