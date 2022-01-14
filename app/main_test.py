@@ -107,6 +107,11 @@ def open_pdf(file):
     return app.send_static_file("pdf/"+file)
 
 
+@app.route('/unit-page')
+def unitPage():
+    return app.send_static_file('unit.html')
+
+
 @app.route('/setting-page')
 def settingPage():
     return app.send_static_file('setting.html')
