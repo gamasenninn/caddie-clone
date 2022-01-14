@@ -192,6 +192,12 @@ def invoice_index():
     return jsonify(InvoiceSchema(many=True).dump(invoices))
 
 
+@app.route('/dust-invoices', methods=['GET'])
+def dust_invoice_index():
+    dust_invoices = Invoice.query.filter(Invoice.isDelete == True).all()
+    return jsonify(InvoiceSchema(many=True).dump(dust_invoices))
+
+
 @app.route('/invoice/<id>', methods=['GET'])
 def invoice_show(id):
     invoiceCount = Invoice.query.filter(Invoice.id == id).count()
@@ -358,6 +364,12 @@ def invoice_item_destroy(id):
 def quotation_index():
     quotations = Quotation.query.filter(Quotation.isDelete == False).all()
     return jsonify(QuotationSchema(many=True).dump(quotations))
+
+
+@app.route('/dust-quotations', methods=['GET'])
+def dust_quotation_index():
+    dust_quotations = Quotation.query.filter(Quotation.isDelete == True).all()
+    return jsonify(QuotationSchema(many=True).dump(dust_quotations))
 
 
 @app.route('/quotation/<id>', methods=['GET'])

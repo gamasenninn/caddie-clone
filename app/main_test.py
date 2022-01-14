@@ -81,6 +81,16 @@ def settingPage():
     return app.send_static_file('setting.html')
 
 
+@app.route('/invoice-dust-page')
+def invoiceDustPage():
+    return app.send_static_file('invoice_dust.html')
+
+
+@app.route('/quotation-dust-page')
+def quotationDustPage():
+    return app.send_static_file('quotation_dust.html')
+
+
 if __name__ == '__main__':
 
     app.run(host='0.0.0.0', port=5010)
