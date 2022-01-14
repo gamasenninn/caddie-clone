@@ -1,0 +1,263 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+        <link href="images/favicon.ico" rel="shortcut icon">
+        -->
+    <title>単位管理</title>
+    <!-- Load required Bootstrap and BootstrapVue CSS -->
+
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+    <!-- Load fontawesome -->
+    <!-- link href="./css/all.css" rel="stylesheet" -->
+    <!--load all styles -->
+    <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+        crossorigin="anonymous"></script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <b-row class="bg pt-2 pb-2">
+            <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+                        class='mr-2'></a>単位登録</b-col>
+        </b-row>
+
+        <!-- サイドバー -->
+        <template>
+            <div>
+                <b-button v-b-toggle.sidebar-no-header>メニュー</b-button>
+                <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" no-header shadow>
+                    <template #default="{ hide }">
+                        <div class="p-3">
+                            <h4 id="sidebar-no-header-title" style="float: left; width: 75%;">遷移メニュー</h4>
+                            <b-button variant="danger" block @click="hide" style="float: right; width: 15%;">✖
+                            </b-button>
+                            <b-img src="https://free-materials.com/adm/wp-content/uploads/2020/10/logo_07-1024x1024.png"
+                                style="width: 100%; height: 50px; margin: 10px 0px;"></b-img>
+                            <nav class="mb-3">
+                                <b-nav vertical>
+                                    <b-button variant="primary" block href="/customer-page"><i
+                                            class="fas fa-building"></i>　得意先
+                                    </b-button>
+                                    <b-button variant="primary" block href="/item-page"><i class="fas fa-box"></i>　商　品
+                                    </b-button>
+                                    <b-button variant="primary" block href="/invoice-page"><i
+                                            class="fas fa-copy"></i>　請求書</b-button>
+                                    <b-button variant="primary" block href="/quotation-page"><i
+                                            class="far fa-copy"></i>　見積書</b-button>
+                                </b-nav>
+                            </nav>
+                        </div>
+                    </template>
+                </b-sidebar>
+            </div>
+        </template>
+
+        <!-- 一覧表示 -->
+        <div v-if="pageName=='index'">
+            <b-row class="mt-5">
+                <b-col></b-col>
+                <b-col cols="10">
+                    <b-row>
+                        <b-col>
+                            <b-button variant="success" @click="changeMode('store');UnitAddRow();">＋新規作成</b-button>
+                        </b-col>
+                        <b-col class="text-right">
+                            <b-button href="/setting-page">設定画面へ</b-button>
+                        </b-col>
+                    </b-row>
+                    <b-card border-variant="white" class="mb-3 text-center" header="単位一覧" header-border-variant="light">
+                        <b-table responsive hover small id="unittable" sort-by="ID" small label="Table Options"
+                            :items=units :fields="[
+                          {  key: 'update', label: '' },
+                          {  key: 'id', label: 'No.' },
+                          {  key: 'unitName', label: '単位名' },
+                          {  key: 'delete', label: '', class: 'text-right' },
+                        ]" :tbody-tr-class="rowClass">
+                            <template v-slot:cell(update)="data">
+                                <b-button variant="info" @click="changeMode('show');selectUnit(data.item);"><i
+                                        class="fas fa-edit"></i>
+                                </b-button>
+                            </template>
+                            <template v-slot:cell(delete)="data">
+                                <b-button variant="danger" @click="deleteUnit(data.item)"><i
+                                        class="fas fa-trash-alt"></i>
+                                </b-button>
+                            </template>
+                        </b-table>
+                    </b-card>
+                </b-col>
+                <b-col></b-col>
+            </b-row>
+        </div>
+
+        <!-- 新規作成・詳細(更新)ページ -->
+        <div v-if="pageName=='show' || pageName=='store'">
+            <b-row class="mt-5">
+                <b-col></b-col>
+                <!--- 本体 -->
+                <b-col cols=10>
+                    <b-button @click="changeMode('index');getUnits();">＜</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="単位入力" header-border-variant="light">
+                        <b-row>
+                            <b-col>
+
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位名"
+                                    label-for="unitName">
+                                    <b-form-input v-model="unit.unitName" id="unitName" size="sm">
+                                    </b-form-input>
+                                </b-form-group>
+
+
+                            </b-col>
+                        </b-row>
+                    </b-card>
+
+                </b-col> <!-- 本体 -->
+                <b-col></b-col>
+
+            </b-row>
+        </div>
+
+        <!-- 空行 -->
+        <b-row class="mb-5"></b-row>
+        <b-row class="mb-5"></b-row>
+        <b-row class="mb-5"></b-row>
+
+        <!-- 更新・取消ボタンのフッター -->
+        <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
+            class="fixed-bottom footer">
+            <div class="d-flex justify-content-end">
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(unit)">適用</b-button>
+                <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
+            </div>
+        </b-card>
+
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                pageName: 'index',
+                units: [],               //全件unit
+                unit: [],                //選択中のunit
+            },
+            methods: {
+                // ---Units---
+                getUnits: async function () {
+                    self = this;
+                    await axios.get("/units")
+                        .then(function (response) {
+                            console.log(response);
+                            self.units = response.data;
+                        });
+                },
+                bulkUpsert(item) {
+                    if (!item.id) {
+                        this.insertUnit(item);
+                        this.toast("新規作成しました");
+                    }
+                    else {
+                        this.updateUnit(item);
+                        this.toast("更新しました");
+                    }
+                },
+                insertUnit: async function (item) {
+                    self = this;
+                    await axios.post("/unit", item)
+                        .then(function (response) {
+                            Vue.set(self.unit, 'id', response.data.id)
+                            self.getUnit(self.unit);
+                            self.unit.isInsert = false;
+                        });
+                },
+                updateUnit: async function (item) {
+                    self = this;
+                    await axios.put("/unit/" + item.id, item)
+                        .then(function (response) {
+                            self.getUnit(self.unit);
+                            console.log(response);
+                        });
+                },
+                deleteUnit: async function (item) {
+                    self = this;
+                    await axios.delete("/unit/" + item.id)
+                        .then(function (response) {
+                            console.log(response);
+                            self.unit = '';
+                            self.getUnits();
+                        });
+                },
+                UnitAddRow: function () {
+                    self = this;
+                    self.units.push({
+                        isInsert: true,
+                    });
+                    self.unit = self.units.slice(-1)[0];
+                },
+                selectUnit: function (item) {
+                    this.unit = item;
+                    console.log(this.unit);
+                },
+                getUnit: async function (item) {
+                    self = this;
+                    await axios.get("/unit/" + item.id)
+                        .then(function (response) {
+                            console.log(response);
+                            for (const [key, value] of Object.entries(response.data)) {
+                                console.log(key, value);
+                                self.$set(self.unit, key, value);
+                            }
+                        });
+                },
+                rowClass: function (item, type) {
+                    if (!item || type !== 'row') return
+                    if (!item.id) return "d-none";
+                },
+                toast(toaster, append = false) {
+                    this.$bvToast.toast(`${toaster}`, {
+                        title: `確認`,
+                        toaster: 'b-toaster-top-right',
+                        solid: true,
+                        appendToast: append,
+                    })
+                },
+                // ページ変更
+                changeMode(pageName) {
+                    this.pageName = pageName;
+                },
+            },
+            mounted: function () {
+                this.getUnits();
+            },
+        })
+
+
+    </script>
+
+</body>
+
+</html>

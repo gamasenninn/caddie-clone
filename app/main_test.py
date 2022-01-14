@@ -71,6 +71,11 @@ def itemPage():
     return app.send_static_file('item.html')
 
 
+@app.route('/unit-page')
+def unitPage():
+    return app.send_static_file('unit.html')
+
+
 @app.route('/setting-page')
 def settingPage():
     return app.send_static_file('setting.html')
