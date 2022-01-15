@@ -4,3 +4,4 @@
 *.db-journal
 pdfmaker/pdf/
 pdfmaker/static/pdf/
+pdfmaker/app/__pycache__/pdf_maker.cpython-38.pyc
