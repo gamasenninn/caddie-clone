@@ -1,5 +1,7 @@
 # soho-caddie
 
-なるべく簡単に見積書や請求書を出力したい。  
-そういった要望をもとに開発を始めます。  
+You can easily create quotes and invoices with this application.
+Back end of this system is built in Python, Flask, SQLite, etc., that is easy to customize.
+And, the View layer uses Vue.js and is effective for design changes.
+
 
