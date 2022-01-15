@@ -186,6 +186,7 @@
                           {  key: 'itemId', label: '商品ID' ,sortable: true},
                           {  key: 'itemName', label: '商品名' ,sortable: true},
                           {  key: 'count',   label: '個数' },
+                          {  key: 'unit',   label: '単位' },
                           {  key: 'price', label: '値段' },
                           {  key: 'amount', label: '金額' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
@@ -217,6 +218,9 @@
                         </template>
                         <template v-slot:cell(count)="data">
                             <b-form-input v-model="data.item.count" type="number" size="sm"></b-form-input>
+                        </template>
+                        <template v-slot:cell(unit)="data">
+                            <b-form-select v-model="data.item.unit" :options="units" size="sm"></b-form-select>
                         </template>
                         <template v-slot:cell(price)="data">
                             <b-form-input v-model="data.item.price" type="number" size="sm"></b-form-input>
@@ -331,6 +335,7 @@
                 quotationItem: [],            //選択中のquotationItem
                 customers: [],
                 items: [],
+                units: [],
             },
             methods: {
                 // ---Quotations---
@@ -434,6 +439,14 @@
                     if (!item || type !== 'row') return
                     if (!item.id) return "d-none";
                 },
+                getUnits: async function () {
+                    self = this;
+                    await axios.get("/units")
+                        .then(function (response) {
+                            console.log(response);
+                            self.units = response.data.map(item => item['unitName']);
+                        });
+                },
                 toast(toaster, append = false) {
                     this.$bvToast.toast(`${toaster}`, {
                         title: `確認`,
@@ -479,6 +492,7 @@
                 this.getQuotations();
                 this.getCustomers();
                 this.getItems();
+                this.getUnits();
             },
             computed: {
                 // 逐次、数量＊単価の合計をする

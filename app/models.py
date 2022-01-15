@@ -142,6 +142,7 @@ class Invoice_Item(db.Model):
     price = db.Column(db.Integer)
     cost = db.Column(db.Integer)
     count = db.Column(db.Integer)
+    unit = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
@@ -200,6 +201,7 @@ class Quotation_Item(db.Model):
     price = db.Column(db.Integer)
     cost = db.Column(db.Integer)
     count = db.Column(db.Integer)
+    unit = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)

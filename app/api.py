@@ -219,6 +219,7 @@ def invoice_create():
                 itemId=item.get('itemId'),
                 price=item.get('price'),
                 count=item.get('count'),
+                unit=item.get('unit'),
                 itemName=item.get('itemName'),
             )
             for item in data.get('invoice_items')
@@ -331,6 +332,7 @@ def invoice_item_create():
         price=data.get('price'),
         cost=data.get('cost'),
         count=data.get('count'),
+        unit=data.get('unit'),
     )
     db.session.add(newInvoiceItem)
     db.session.commit()
@@ -348,6 +350,7 @@ def invoice_item_update(id):
     invoiceItem.price = data.get('price')
     invoiceItem.cost = data.get('cost')
     invoiceItem.count = data.get('count')
+    invoiceItem.unit = data.get('unit')
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -393,6 +396,7 @@ def quotation_create():
                 itemId=item.get('itemId'),
                 price=item.get('price'),
                 count=item.get('count'),
+                unit=item.get('unit'),
                 itemName=item.get('itemName'),
             )
             for item in data.get('quotation_items')
@@ -506,6 +510,7 @@ def quotation_item_create():
         price=data.get('price'),
         cost=data.get('cost'),
         count=data.get('count'),
+        unit=data.get('unit'),
     )
     db.session.add(newQuotationItem)
     db.session.commit()
@@ -523,6 +528,7 @@ def quotation_item_update(id):
     quotationItem.price = data.get('price')
     quotationItem.cost = data.get('cost')
     quotationItem.count = data.get('count')
+    quotationItem.unit = data.get('unit')
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
