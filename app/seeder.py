@@ -84,15 +84,15 @@ def seeder():
     print('----Invoice_Items----')
     invoice_items = [
         Invoice_Item(id=1, invoiceId=1, itemId=1,
-                     itemName='りんご', price=100, cost=50, count=5),
+                     itemName='りんご', price=100, cost=50, count=5, unit="個"),
         Invoice_Item(id=2, invoiceId=1, itemId=2,
-                     itemName='鉛筆', price=20, cost=5, count=10),
+                     itemName='鉛筆', price=20, cost=5, count=10, unit="本"),
         Invoice_Item(id=3, invoiceId=2, itemId=2,
-                     itemName='鉛筆', price=30, cost=5, count=15),
+                     itemName='鉛筆', price=30, cost=5, count=15, unit="本"),
         Invoice_Item(id=4, invoiceId=2, itemId=3,
-                     itemName='ラジオ', price=1100, cost=300, count=2),
+                     itemName='ラジオ', price=1100, cost=300, count=2, unit="台"),
         Invoice_Item(id=5, invoiceId=3, itemId=1,
-                     itemName='りんご', price=120, cost=50, count=30),
+                     itemName='りんご', price=120, cost=50, count=30, unit="個"),
     ]
     db.session.add_all(invoice_items)
     db.session.commit()
@@ -122,15 +122,15 @@ def seeder():
     print('----Quotation_Items----')
     quotation_items = [
         Quotation_Item(id=1, quotationId=1, itemId=1,
-                       itemName='りんご', price=100, cost=50, count=5),
+                       itemName='りんご', price=100, cost=50, count=5, unit="個"),
         Quotation_Item(id=2, quotationId=1, itemId=2,
-                       itemName='鉛筆', price=20, cost=5, count=10),
+                       itemName='鉛筆', price=20, cost=5, count=10, unit="本"),
         Quotation_Item(id=3, quotationId=2, itemId=2,
-                       itemName='鉛筆', price=30, cost=5, count=15),
+                       itemName='鉛筆', price=30, cost=5, count=15, unit="本"),
         Quotation_Item(id=4, quotationId=2, itemId=3,
-                       itemName='ラジオ', price=1100, cost=300, count=2),
+                       itemName='ラジオ', price=1100, cost=300, count=2, unit="台"),
         Quotation_Item(id=5, quotationId=3, itemId=1,
-                       itemName='りんご', price=120, cost=50, count=30),
+                       itemName='りんご', price=120, cost=50, count=30, unit="個"),
     ]
     db.session.add_all(quotation_items)
     db.session.commit()
