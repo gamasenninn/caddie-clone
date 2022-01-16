@@ -152,6 +152,7 @@ def item_create():
     data = request.json
     newItem = Item(
         itemName=data.get('itemName'),
+        itemCode=data.get('itemCode'),
         unit=data.get('unit'),
         basePrice=data.get('basePrice'),
         baseCost=data.get('baseCost'),
@@ -169,6 +170,7 @@ def item_update(id):
     item = Item.query.filter(Item.id == id).one()
 
     item.itemName = data.get('itemName')
+    item.itemCode = data.get('itemCode')
     item.unit = data.get('unit')
     item.basePrice = data.get('basePrice')
     item.baseCost = data.get('baseCost')
