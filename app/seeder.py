@@ -49,11 +49,11 @@ def seeder():
     # -----Items-----
     print('----Items----')
     items = [
-        Item(id=1, itemName='りんご', unit='個', basePrice=100,
+        Item(id=1, itemName='りんご', itemCode='AA001', unit='個', basePrice=100,
              baseCost=50, memo='これはりんごのメモです'),
-        Item(id=2, itemName='鉛筆', unit='本', basePrice=20,
+        Item(id=2, itemName='鉛筆', itemCode='BA001', unit='本', basePrice=20,
              baseCost=5, memo='これは鉛筆のメモです'),
-        Item(id=3, itemName='ラジオ', unit='台', basePrice=1000,
+        Item(id=3, itemName='ラジオ', itemCode='CA001', unit='台', basePrice=1000,
              baseCost=300, memo='これはラジオのメモです'),
     ]
     db.session.add_all(items)

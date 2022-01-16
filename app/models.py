@@ -65,6 +65,7 @@ class Item(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     itemName = db.Column(db.String)
+    itemCode = db.Column(db.String)
     unit = db.Column(db.String)
     basePrice = db.Column(db.Integer)
     baseCost = db.Column(db.Integer)
