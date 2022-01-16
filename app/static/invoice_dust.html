@@ -474,6 +474,7 @@
                 itemSelect(record) {
                     Vue.set(self.invoiceItem, 'itemId', record.id);
                     Vue.set(self.invoiceItem, 'itemName', record.itemName);
+                    Vue.set(self.invoiceItem, 'unit', record.unit);
                     Vue.set(self.invoiceItem, 'price', record.basePrice);
                     Vue.set(self.invoiceItem, 'cost', record.baseCost);
                     this.$refs['items-modal'].hide()
@@ -497,7 +498,7 @@
             computed: {
                 // 逐次、数量＊単価の合計をする
                 sum: function () {
-                    if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 }　//初期立ち上がりでのエラー抑制
+                    if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                     return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * invoice_item.price)).reduce(function (a, b) { return a + b }, 0);
                 },
                 // 得意先選択モーダルの検索機能
