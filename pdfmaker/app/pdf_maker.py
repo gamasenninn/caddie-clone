@@ -229,6 +229,9 @@ def cv(src_l):
     try:
         if src_l[0] == "P": 
             return Paragraph(src_l[1],PS(**styles[src_l[2]]))
+        elif  src_l[0] == "PF":
+            val = src_l[3].format(src_l[1])
+            return Paragraph(val,PS(**styles[src_l[2]]))
         elif  src_l[0] == "E":
             return eval(src_l[1])
         elif  src_l[0] == "EP":
