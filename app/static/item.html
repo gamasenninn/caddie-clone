@@ -141,7 +141,7 @@
                             <b-col>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                     label-for="unit">
-                                    <b-form-input v-model="item.unit" id="unit" size="sm"></b-form-input>
+                                    <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="メモ">
@@ -181,6 +181,7 @@
                 pageName: 'index',
                 items: [],               //全件item
                 item: [],                //選択中のitem
+                units: [],
             },
             methods: {
                 // ---Items---
@@ -254,6 +255,14 @@
                     if (!item || type !== 'row') return
                     if (!item.id) return "d-none";
                 },
+                getUnits: async function () {
+                    self = this;
+                    await axios.get("/units")
+                        .then(function (response) {
+                            console.log(response);
+                            self.units = response.data.map(item => item['unitName']);
+                        });
+                },
                 toast(toaster, append = false) {
                     this.$bvToast.toast(`${toaster}`, {
                         title: `確認`,
@@ -269,6 +278,7 @@
             },
             mounted: function () {
                 this.getItems();
+                this.getUnits();
             },
         })
 
