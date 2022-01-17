@@ -2,7 +2,7 @@ from api import app
 import sys
 import json
 import uuid
-from flask import redirect,request
+from flask import redirect, request
 sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
 
@@ -75,8 +75,15 @@ def customerPage():
 def itemPage():
     return app.send_static_file('item.html')
 
-#------pdf maker -------
-@app.route('/pdfmaker',methods=["GET","POST"])
+
+@app.route('/memo-page')
+def memoPage():
+    return app.send_static_file('memo.html')
+
+# ------pdf maker -------
+
+
+@app.route('/pdfmaker', methods=["GET", "POST"])
 def makepdf():
 
     if request.method == "GET":
@@ -84,25 +91,27 @@ def makepdf():
     elif request.method == "POST":
         d = request.json
         uuid_file_name = str(uuid.uuid1())+".pdf"
-        alter_file_name = pd.pdf_maker(d,file_name=uuid_file_name)
+        alter_file_name = pd.pdf_maker(d, file_name=uuid_file_name)
         return alter_file_name
+
 
 @app.route('/pdfmaker/<json_file>')
 def makepdf_file(json_file):
-    with open( f'./{json_file}.json', mode='r', encoding='utf-8') as f:
+    with open(f'./{json_file}.json', mode='r', encoding='utf-8') as f:
         d = json.load(f)
 
     uuid_file_name = str(uuid.uuid1())+".pdf"
-    alter_file_name = pd.pdf_maker(d,file_name=uuid_file_name)
+    alter_file_name = pd.pdf_maker(d, file_name=uuid_file_name)
 
-    #------BytesIOを使えば、ファイル作成は必要ない(今回は使わない) ----
+    # ------BytesIOを使えば、ファイル作成は必要ない(今回は使わない) ----
     #pdfdata = pdf_maker(d,is_BytesIO=True)
     #response = make_response(pdfdata)
     #response.mimetype = "application/pdf"
-    #return response
+    # return response
     return alter_file_name
 
-@app.route('/pdf/<file>',methods=["GET"])
+
+@app.route('/pdf/<file>', methods=["GET"])
 def open_pdf(file):
     return app.send_static_file("pdf/"+file)
 
