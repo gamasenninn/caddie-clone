@@ -6,7 +6,7 @@ from models import *
 def seeder():
 
     models = [User, Customer, Item, Invoice,
-              Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Setting]
+              Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker, Setting]
 
     for model in models:
         db.session.query(model).delete()
@@ -49,11 +49,11 @@ def seeder():
     # -----Items-----
     print('----Items----')
     items = [
-        Item(id=1, itemName='りんご', itemCode='AA001', unit='個', basePrice=100,
+        Item(id=1, itemName='りんご', itemCode='11111', model='APP001', category='食料品', maker='apple青果店', unit='個', basePrice=100,
              baseCost=50, memo='これはりんごのメモです'),
-        Item(id=2, itemName='鉛筆', itemCode='BA001', unit='本', basePrice=20,
+        Item(id=2, itemName='鉛筆', itemCode='22222', model='PEN001', category='事務用品', maker='トンビ鉛筆', unit='本', basePrice=20,
              baseCost=5, memo='これは鉛筆のメモです'),
-        Item(id=3, itemName='ラジオ', itemCode='CA001', unit='台', basePrice=1000,
+        Item(id=3, itemName='ラジオ', itemCode='33333', model='RAD001', category='家電', maker='zony', unit='台', basePrice=1000,
              baseCost=300, memo='これはラジオのメモです'),
     ]
     db.session.add_all(items)
@@ -166,6 +166,34 @@ def seeder():
     units = Unit.query.all()
     for unit in units:
         print(unit.unitName)
+
+    # -----Categories-----
+    print('----Categories----')
+    categories = [
+        Category(id=1, categoryName='食料品'),
+        Category(id=2, categoryName='事務用品'),
+        Category(id=3, categoryName='家電'),
+    ]
+    db.session.add_all(categories)
+    db.session.commit()
+
+    categories = Category.query.all()
+    for category in categories:
+        print(category.categoryName)
+
+    # -----Makers-----
+    print('----Makers----')
+    makers = [
+        Maker(id=1, makerName='個'),
+        Maker(id=2, makerName='本'),
+        Maker(id=3, makerName='台'),
+    ]
+    db.session.add_all(makers)
+    db.session.commit()
+
+    makers = Maker.query.all()
+    for maker in makers:
+        print(maker.makerName)
 
     # -----Setting-----
     print('----Setting----')
