@@ -67,6 +67,8 @@
                                             class="fas fa-copy"></i>　請求書</b-button>
                                     <b-button variant="primary" block href="/quotation-page"><i
                                             class="far fa-copy"></i>　見積書</b-button>
+                                    <b-button variant="primary" block href="/memo-page"><i
+                                            class="fas fa-book-open"></i>　メ　モ</b-button>
                                 </b-nav>
                             </nav>
                         </div>
@@ -107,8 +109,7 @@
             </b-row>
         </div>
 
-        <style>
-            /*
+
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
             <b-row class="mt-5">
@@ -116,63 +117,19 @@
                 <!--- 本体 -->
                 <b-col cols=10>
                     <b-button @click="changeMode('index');getMemos();">＜</b-button>
-                    <b-card border-variant="white" class="mb-3 text-center" header="メモ入力"
-                        header-border-variant="light">
+                    <b-card border-variant="white" class="mb-3 text-center" header="メモ入力" header-border-variant="light">
                         <b-row>
                             <b-col>
 
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先名"
-                                    label-for="memoName">
-                                    <b-form-input v-model="memo.memoName" id="memoName" size="sm">
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
+                                    label-for="title">
+                                    <b-form-input v-model="memo.title" id="title" size="sm">
                                     </b-form-input>
                                 </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
-                                    label-for="postNumber">
-                                    <b-form-input v-model="memo.postNumber" id="postNumber" size="sm">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="電話番号"
-                                    label-for="telNumber">
-                                    <b-form-input v-model="memo.telNumber" id="telNumber" size="sm">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ホームページURL"
-                                    label-for="url">
-                                    <b-form-input v-model="memo.url" id="url" size="sm">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
-                                    label-for="manager">
-                                    <b-form-input v-model="memo.manager" id="manager" size="sm">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
-                                    label-for="representative">
-                                    <b-form-input v-model="memo.representative" id="representative" size="sm">
-                                    </b-form-input>
-                                </b-form-group>
-                            </b-col>
-                            <b-col>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="敬称"
-                                    label-for="honorificTitle">
-                                    <b-form-input v-model="memo.honorificTitle" id="honorificTitle" size="sm">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所"
-                                    label-for="address">
-                                    <b-form-input v-model="memo.address" id="address" size="sm"></b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="FAX番号"
-                                    label-for="faxNumber">
-                                    <b-form-input v-model="memo.faxNumber" id="faxNumber" size="sm"></b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
-                                    label-for="email">
-                                    <b-form-input v-model="memo.email" id="email" size="sm"></b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
-                                    label-for="memo">
-                                    <b-form-textarea v-model="memo.memo" size="sm" rows="4"></b-form-textarea>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="内容"
+                                    label-for="content">
+                                    <b-form-textarea v-model="memo.content" size="sm" rows="10" max-rows="20">
+                                    </b-form-textarea>
                                 </b-form-group>
 
                             </b-col>
@@ -199,7 +156,6 @@
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
-        */
         </style>
 
     </div>
