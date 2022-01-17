@@ -118,6 +118,9 @@ def make_row(detail,bdata):
         for f in fields:
             k = f['key']
             val = b_row.get(k) #値の取得
+            #print("row val:", val,type(val))
+            if not val:
+                val=''
 
             if 'eval' in f:
                 val = eval(str(f.get('eval')))
@@ -169,8 +172,6 @@ def make_detail(detail,bdata):
 
     bt.setStyle(TableStyle(t_styles))
 
-
-
     return bt
 
 
@@ -197,13 +198,13 @@ def footer(canvas, doc):
     if canvas._pageNumber == 1:
         for di in defPdf['header']['drawImages']:
             cmd = f'canvas.drawImage{di[0]}'
-            print(cmd)
+            #print(cmd)
             eval(cmd)
 
 
     for di in defPdf['footer']['drawImages']:
         cmd = f'canvas.drawImage{di[0]}'
-        print(cmd)
+        #print(cmd)
         eval(cmd)
 
 
@@ -350,8 +351,7 @@ if __name__ == '__main__':
         json_file_name = args[1]
     else:
         print("パラメータエラー\n")
-        sys.exit()
-        
+        sys.exit()        
 
     with open( json_file_name, mode='r', encoding='utf-8') as f:
         d = json.load(f)
