@@ -126,6 +126,11 @@ def categoryPage():
     return app.send_static_file('category.html')
 
 
+@app.route('/maker-page')
+def makerPage():
+    return app.send_static_file('maker.html')
+
+
 @app.route('/setting-page')
 def settingPage():
     return app.send_static_file('setting.html')
