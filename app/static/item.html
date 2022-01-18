@@ -87,8 +87,8 @@
                             <b-button variant="success" @click="changeMode('store');ItemAddRow();">＋新規作成</b-button>
                         </b-col>
                         <b-col class="text-right">
-                            <b-button href="/category-page">カテゴリ登録画面へ</b-button>
-                            <b-button href="/maker-page">メーカー登録画面へ</b-button>
+                            <b-button href="/category-page">カテゴリ一覧画面へ</b-button>
+                            <b-button href="/maker-page">メーカー一覧画面へ</b-button>
                         </b-col>
                     </b-row>
                     <b-card border-variant="white" class="mb-3 text-center" header="商品一覧" header-border-variant="light">
@@ -168,6 +168,11 @@
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー"
                                     label-for="maker">
                                     <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="型式"
+                                    label-for="model">
+                                    <b-form-input v-model="item.model" id="model" size="sm">
+                                    </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="メモ">
