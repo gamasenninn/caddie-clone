@@ -7,7 +7,7 @@
     <!--
         <link href="images/favicon.ico" rel="shortcut icon">
         -->
-    <title>商品管理</title>
+    <title>カテゴリ管理</title>
     <!-- Load required Bootstrap and BootstrapVue CSS -->
 
     <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
@@ -41,7 +41,7 @@
     <div id="app" v-cloak>
         <b-row class="bg pt-2 pb-2">
             <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
-                        class='mr-2'></a>商品入力</b-col>
+                        class='mr-2'></a>カテゴリ登録</b-col>
         </b-row>
 
         <!-- サイドバー -->
@@ -84,35 +84,28 @@
                 <b-col cols="10">
                     <b-row>
                         <b-col>
-                            <b-button variant="success" @click="changeMode('store');ItemAddRow();">＋新規作成</b-button>
+                            <b-button variant="success" @click="changeMode('store');CategoryAddRow();">＋新規作成</b-button>
                         </b-col>
                         <b-col class="text-right">
-                            <b-button href="/category-page">カテゴリ登録画面へ</b-button>
-                            <b-button href="/maker-page">メーカー登録画面へ</b-button>
+                            <b-button href="/item-page">商品画面へ</b-button>
                         </b-col>
                     </b-row>
-                    <b-card border-variant="white" class="mb-3 text-center" header="商品一覧" header-border-variant="light">
-                        <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
-                            :items=items :fields="[
+                    <b-card border-variant="white" class="mb-3 text-center" header="カテゴリ一覧"
+                        header-border-variant="light">
+                        <b-table responsive hover small id="categorytable" sort-by="ID" small label="Table Options"
+                            :items=categories :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
-                          {  key: 'itemName', label: '商品名' },
-                          {  key: 'itemCode', label: '商品コード' },
-                          {  key: 'category', label: 'カテゴリ' },
-                          {  key: 'maker', label: 'メーカー' },
-                          {  key: 'unit', label: '単位' },
-                          {  key: 'basePrice', label: '単価' },
-                          {  key: 'baseCost', label: '原価単価' },
-                          {  key: 'memo', label: 'メモ' },
-                          {  key: 'delete', label: '' },
+                          {  key: 'categoryName', label: 'カテゴリ名' },
+                          {  key: 'delete', label: '', class: 'text-right' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectItem(data.item);"><i
+                                <b-button variant="info" @click="changeMode('show');selectCategory(data.item);"><i
                                         class="fas fa-edit"></i>
                                 </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteItem(data.item)"><i
+                                <b-button variant="danger" @click="deleteCategory(data.item)"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -129,50 +122,19 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getItems();">＜</b-button>
-                    <b-card border-variant="white" class="mb-3 text-center" header="商品入力" header-border-variant="light">
+                    <b-button @click="changeMode('index');getCategories();">＜</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="カテゴリ入力"
+                        header-border-variant="light">
                         <b-row>
                             <b-col>
 
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
-                                    label-for="itemName">
-                                    <b-form-input v-model="item.itemName" id="itemName" size="sm">
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ名"
+                                    label-for="categoryName">
+                                    <b-form-input v-model="category.categoryName" id="categoryName" size="sm">
                                     </b-form-input>
                                 </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
-                                    label-for="category">
-                                    <b-form-select v-model="item.category" :options="categories" size="sm">
-                                    </b-form-select>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
-                                    label-for="unit">
-                                    <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価"
-                                    label-for="basePrice">
-                                    <b-form-input v-model="item.basePrice" id="basePrice" size="sm" type="number">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価原価"
-                                    label-for="baseCost">
-                                    <b-form-input v-model="item.baseCost" id="baseCost" size="sm" type="number">
-                                    </b-form-input>
-                                </b-form-group>
-                            </b-col>
-                            <b-col>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品コード"
-                                    label-for="itemCode">
-                                    <b-form-input v-model="item.itemCode" id="itemCode" size="sm">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー"
-                                    label-for="maker">
-                                    <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
-                                    label-for="メモ">
-                                    <b-form-textarea v-model="item.memo" size="sm" rows="4"></b-form-textarea>
-                                </b-form-group>
+
+
                             </b-col>
                         </b-row>
                     </b-card>
@@ -181,7 +143,6 @@
                 <b-col></b-col>
 
             </b-row>
-
         </div>
 
         <!-- 空行 -->
@@ -193,7 +154,7 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(item)">適用</b-button>
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(category)">適用</b-button>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -205,107 +166,80 @@
             el: '#app',
             data: {
                 pageName: 'index',
-                items: [],               //全件item
-                item: [],                //選択中のitem
-                units: [],
-                categories: [],
-                makers: [],
+                categories: [],               //全件category
+                category: [],                //選択中のcategory
             },
             methods: {
-                // ---Items---
-                getItems: async function () {
+                // ---Categories---
+                getCategories: async function () {
                     self = this;
-                    await axios.get("/items")
+                    await axios.get("/categories")
                         .then(function (response) {
                             console.log(response);
-                            self.items = response.data;
+                            self.categories = response.data;
                         });
                 },
                 bulkUpsert(item) {
                     if (!item.id) {
-                        this.insertItem(item);
+                        this.insertCategory(item);
                         this.toast("新規作成しました");
                     }
                     else {
-                        this.updateItem(item);
+                        this.updateCategory(item);
                         this.toast("更新しました");
                     }
                 },
-                insertItem: async function (item) {
+                insertCategory: async function (item) {
                     self = this;
-                    await axios.post("/item", item)
+                    await axios.post("/category", item)
                         .then(function (response) {
-                            Vue.set(self.item, 'id', response.data.id)
-                            self.getItem(self.item);
-                            self.item.isInsert = false;
+                            Vue.set(self.category, 'id', response.data.id)
+                            self.getCategory(self.category);
+                            self.category.isInsert = false;
                         });
                 },
-                updateItem: async function (item) {
+                updateCategory: async function (item) {
                     self = this;
-                    await axios.put("/item/" + item.id, item)
+                    await axios.put("/category/" + item.id, item)
                         .then(function (response) {
-                            self.getItem(self.item);
+                            self.getCategory(self.category);
                             console.log(response);
                         });
                 },
-                deleteItem: async function (item) {
+                deleteCategory: async function (item) {
                     self = this;
-                    await axios.delete("/item/" + item.id)
+                    await axios.delete("/category/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.item = '';
-                            self.getItems();
+                            self.category = '';
+                            self.getCategories();
                         });
                 },
-                ItemAddRow: function () {
+                CategoryAddRow: function () {
                     self = this;
-                    self.items.push({
+                    self.categories.push({
                         isInsert: true,
                     });
-                    self.item = self.items.slice(-1)[0];
+                    self.category = self.categories.slice(-1)[0];
                 },
-                selectItem: function (item) {
-                    this.item = item;
-                    console.log(this.item);
+                selectCategory: function (item) {
+                    this.category = item;
+                    console.log(this.category);
                 },
-                getItem: async function (item) {
+                getCategory: async function (item) {
                     self = this;
-                    await axios.get("/item/" + item.id)
+                    await axios.get("/category/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             for (const [key, value] of Object.entries(response.data)) {
                                 console.log(key, value);
-                                self.$set(self.item, key, value);
+                                self.$set(self.category, key, value);
                             }
                         });
                 },
                 rowClass: function (item, type) {
                     if (!item || type !== 'row') return
                     if (!item.id) return "d-none";
-                },
-                getUnits: async function () {
-                    self = this;
-                    await axios.get("/units")
-                        .then(function (response) {
-                            console.log(response);
-                            self.units = response.data.map(item => item['unitName']);
-                        });
-                },
-                getCategories: async function () {
-                    self = this;
-                    await axios.get('/categories')
-                        .then(function (response) {
-                            console.log(response);
-                            self.categories = response.data.map(item => item['categoryName'])
-                        });
-                },
-                getMakers: async function () {
-                    self = this;
-                    await axios.get('/makers')
-                        .then(function (response) {
-                            console.log(response);
-                            self.makers = response.data.map(item => item['makerName'])
-                        });
                 },
                 toast(toaster, append = false) {
                     this.$bvToast.toast(`${toaster}`, {
@@ -321,10 +255,7 @@
                 },
             },
             mounted: function () {
-                this.getItems();
-                this.getUnits();
                 this.getCategories();
-                this.getMakers();
             },
         })
 
