@@ -1,3 +1,4 @@
+from pyexpat import model
 from app import db, app, ma
 from datetime import datetime
 from datetime import date
@@ -66,6 +67,9 @@ class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     itemName = db.Column(db.String)
     itemCode = db.Column(db.String)
+    model = db.Column(db.String)
+    category = db.Column(db.String)
+    maker = db.Column(db.String)
     unit = db.Column(db.String)
     basePrice = db.Column(db.Integer)
     baseCost = db.Column(db.Integer)
@@ -231,6 +235,28 @@ class Unit(db.Model):
                           default=datetime.now, onupdate=datetime.now)
 
 
+class Category(db.Model):
+
+    __tablename__ = 'category'
+
+    id = db.Column(db.Integer, primary_key=True)
+    categoryName = db.Column(db.String)
+    createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updatedAt = db.Column(db.DateTime, nullable=False,
+                          default=datetime.now, onupdate=datetime.now)
+
+
+class Maker(db.Model):
+
+    __tablename__ = 'maker'
+
+    id = db.Column(db.Integer, primary_key=True)
+    makerName = db.Column(db.String)
+    createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updatedAt = db.Column(db.DateTime, nullable=False,
+                          default=datetime.now, onupdate=datetime.now)
+
+
 class Setting(db.Model):
 
     __tablename__ = 'settings'
@@ -310,6 +336,16 @@ class MemoSchema(ma.SQLAlchemyAutoSchema):
 class UnitSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Unit
+
+
+class CategorySchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Category
+
+
+class MakerSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Maker
 
 
 class SettingSchema(ma.SQLAlchemyAutoSchema):

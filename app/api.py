@@ -153,6 +153,9 @@ def item_create():
     newItem = Item(
         itemName=data.get('itemName'),
         itemCode=data.get('itemCode'),
+        model=data.get('model'),
+        category=data.get('category'),
+        maker=data.get('maker'),
         unit=data.get('unit'),
         basePrice=data.get('basePrice'),
         baseCost=data.get('baseCost'),
@@ -171,6 +174,9 @@ def item_update(id):
 
     item.itemName = data.get('itemName')
     item.itemCode = data.get('itemCode')
+    item.model = data.get('model')
+    item.category = data.get('category')
+    item.maker = data.get('maker')
     item.unit = data.get('unit')
     item.basePrice = data.get('basePrice')
     item.baseCost = data.get('baseCost')
@@ -635,6 +641,100 @@ def unit_update(id):
 @app.route('/unit/<id>', methods=['DELETE'])
 def unit_destroy(id):
     unit = Unit.query.filter(Unit.id == id).delete()
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ''})
+
+
+# カテゴリー(categories)
+@app.route('/categories', methods=['GET'])
+def category_index():
+    categories = Category.query.all()
+    return jsonify(CategorySchema(many=True).dump(categories))
+
+
+@app.route('/category/<id>', methods=['GET'])
+def category_show(id):
+    categoryCount = Category.query.filter(Category.id == id).count()
+    if categoryCount:
+        category = Category.query.filter(Category.id == id).first()
+        return jsonify(CategorySchema().dump(category))
+    else:
+        return jsonify([])
+
+
+@app.route('/category', methods=['POST'])
+def category_create():
+    data = request.json
+    newCategory = Category(
+        categoryName=data.get('categoryName'),
+    )
+    db.session.add(newCategory)
+    db.session.commit()
+    id = newCategory.id
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/category/<id>', methods=['PUT'])
+def category_update(id):
+    data = request.json
+    category = Category.query.filter(Category.id == id).one()
+
+    category.categoryName = data.get('categoryName')
+
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/category/<id>', methods=['DELETE'])
+def category_destroy(id):
+    category = Category.query.filter(Category.id == id).delete()
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ''})
+
+
+# メーカー(Makers)
+@app.route('/makers', methods=['GET'])
+def maker_index():
+    makers = Maker.query.all()
+    return jsonify(MakerSchema(many=True).dump(makers))
+
+
+@app.route('/maker/<id>', methods=['GET'])
+def maker_show(id):
+    makerCount = Maker.query.filter(Maker.id == id).count()
+    if makerCount:
+        maker = Maker.query.filter(Maker.id == id).first()
+        return jsonify(MakerSchema().dump(maker))
+    else:
+        return jsonify([])
+
+
+@app.route('/maker', methods=['POST'])
+def maker_create():
+    data = request.json
+    newMaker = Maker(
+        makerName=data.get('makerName'),
+    )
+    db.session.add(newMaker)
+    db.session.commit()
+    id = newMaker.id
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/maker/<id>', methods=['PUT'])
+def maker_update(id):
+    data = request.json
+    maker = Maker.query.filter(Maker.id == id).one()
+
+    maker.makerName = data.get('makerName')
+
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/maker/<id>', methods=['DELETE'])
+def maker_destroy(id):
+    maker = Maker.query.filter(Maker.id == id).delete()
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
