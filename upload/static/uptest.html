@@ -137,7 +137,7 @@
             getFileList: async function (fid) {
                 self = this;
                 //url = "http://localhost/file_list";
-                url = "file_list2/"+fid;
+                url = "file-list/"+fid;
                 await axios.get(url)
                     .then(function (response) {
                         console.log(response.data);
@@ -172,7 +172,7 @@
                     }
                 }
                 console.log(flist,thumbs)
-                url= "delete_files";
+                url= "delete-files";
                 
                 await axios.delete(url,
                         {

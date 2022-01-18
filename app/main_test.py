@@ -6,6 +6,7 @@ from flask import redirect, request
 sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
 
+
 @app.route('/test')
 def test():
     return "Hello TEST!"

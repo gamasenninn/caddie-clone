@@ -6,7 +6,7 @@ import json
 import os
 import glob
 from PIL import Image, ImageDraw, ImageFilter
-from make_thumb import make_thumb,chext #サムネイル作成関数
+from upload import make_thumb,chext,save_file,remove_files #サムネイル作成関数
 
 app = Flask(__name__)
 #CORS(app, support_credentials=True)
@@ -26,38 +26,21 @@ def upload_file():
         make_response(jsonify({'result':'uploadFile is required.'}))
     f = request.files["file"]
     id= request.form['fileId'] 
-
-    os.makedirs(f'./static/upload/{id}', exist_ok=True)
-    file_path = f'./static/upload/{id}/{f.filename}'
-    f.save(file_path)
-    
-    make_thumb(file_path,f"./static/upload/{id}/thumbs")
-
-    response = {
-        "text":"OK",
-        "fileId": id,
-        "filename": f.filename,      
-        "mimetype": f.mimetype,      
-    }
+    dir_path = "./static/upload" 
+    response = save_file(id,dir_path,f)
     return  jsonify(response)
 
-@app.route("/delete_files",methods=['DELETE'])
+@app.route("/delete-files",methods=['DELETE'])
 #@cross_origin(supports_credentials=True)
 
 def delete_files():
     dict_data = json.loads(request.data.decode())
-
-    for f in dict_data['files']:
-        os.remove(f)
-
-    for f in dict_data['thumbs']:
-        os.remove(f)
-
-    response={"result":"OK"}
+    response = remove_files(dict_data)
     return  jsonify(response)
 
-@app.route("/file_list/<fid>",methods=['GET'])
+#@app.route("/file-list/<fid>",methods=['GET'])
 #@cross_origin(supports_credentials=True)
+'''
 def get_file_list(fid):
     file_path_list = glob.glob(f'upload/{fid}/*')
     file_path_list = [".static/"+f.replace('\\','/') for f in file_path_list ]
@@ -67,10 +50,14 @@ def get_file_list(fid):
         "list": file_path_list,
         "file_names" : file_names 
     }
-    message = jsonify(j_flist)
-    return message
+    j_flist2 =[]
+    for list, file_name in zip(file_path_list,file_names):
+        j_flist2.append({ "list":list, "file_names": file_name})
 
-@app.route("/file_list2/<fid>",methods=['GET'])
+    message = jsonify(j_flist2)
+    return message
+'''
+@app.route("/file-list/<fid>",methods=['GET'])
 #@cross_origin(supports_credentials=True)
 def get_file_list2(fid):
 
@@ -94,7 +81,7 @@ def get_file_list2(fid):
     message = jsonify(arry)
     return message
 
-@app.route('/test')
+@app.route('/test-upload')
 def uptest():
     return app.send_static_file('./uptest.html')
 

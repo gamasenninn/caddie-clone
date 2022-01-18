@@ -91,9 +91,9 @@ def make_thumb(filename,save_dir="./thumbs"):
         ext = "unknown"
 
     if icon[ext]['isImage']:
-        print("FILE:",filename)
-        print("SAVE_DIR:",save_dir)
-        print("BASE NAME:",basename)
+        #print("FILE:",filename)
+        #print("SAVE_DIR:",save_dir)
+        #print("BASE NAME:",basename)
         im = Image.open(filename)
         thumb_width = frame['width']
 
@@ -112,6 +112,34 @@ def make_thumb(filename,save_dir="./thumbs"):
  
 
     return
+
+def save_file(id,dir_path,f):
+    os.makedirs(f'{dir_path}/{id}', exist_ok=True)
+    file_path = f'{dir_path}/{id}/{f.filename}'
+    f.save(file_path)
+    
+    make_thumb(file_path,f"{dir_path}/{id}/thumbs")
+
+    response = {
+        "text":"OK",
+        "fileId": id,
+        "filename": f.filename,      
+        "mimetype": f.mimetype,      
+    }
+    return response
+
+def remove_files(dict_list):
+
+    for f in dict_list['files']:
+        os.remove(f)
+
+    for f in dict_list['thumbs']:
+        os.remove(f)
+
+    return {"result":"OK"}
+
+def get_files(dir_path):
+    pass
 
 
 
