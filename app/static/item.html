@@ -89,6 +89,9 @@
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'itemName', label: '商品名' },
+                          {  key: 'itemCode', label: '商品コード' },
+                          {  key: 'category', label: 'カテゴリ' },
+                          {  key: 'maker', label: 'メーカー' },
                           {  key: 'unit', label: '単位' },
                           {  key: 'basePrice', label: '単価' },
                           {  key: 'baseCost', label: '原価単価' },
@@ -128,7 +131,15 @@
                                     <b-form-input v-model="item.itemName" id="itemName" size="sm">
                                     </b-form-input>
                                 </b-form-group>
-
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
+                                    label-for="category">
+                                    <b-form-select v-model="item.category" :options="categories" size="sm">
+                                    </b-form-select>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
+                                    label-for="unit">
+                                    <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
+                                </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価"
                                     label-for="basePrice">
                                     <b-form-input v-model="item.basePrice" id="basePrice" size="sm" type="number">
@@ -141,9 +152,14 @@
                                 </b-form-group>
                             </b-col>
                             <b-col>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
-                                    label-for="unit">
-                                    <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品コード"
+                                    label-for="itemCode">
+                                    <b-form-input v-model="item.itemCode" id="itemCode" size="sm">
+                                    </b-form-input>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー"
+                                    label-for="maker">
+                                    <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="メモ">
@@ -184,6 +200,8 @@
                 items: [],               //全件item
                 item: [],                //選択中のitem
                 units: [],
+                categories: [],
+                makers: [],
             },
             methods: {
                 // ---Items---
@@ -265,6 +283,22 @@
                             self.units = response.data.map(item => item['unitName']);
                         });
                 },
+                getCategories: async function () {
+                    self = this;
+                    await axios.get('/categories')
+                        .then(function (response) {
+                            console.log(response);
+                            self.categories = response.data.map(item => item['categoryName'])
+                        });
+                },
+                getMakers: async function () {
+                    self = this;
+                    await axios.get('/makers')
+                        .then(function (response) {
+                            console.log(response);
+                            self.makers = response.data.map(item => item['makerName'])
+                        });
+                },
                 toast(toaster, append = false) {
                     this.$bvToast.toast(`${toaster}`, {
                         title: `確認`,
@@ -281,6 +315,8 @@
             mounted: function () {
                 this.getItems();
                 this.getUnits();
+                this.getCategories();
+                this.getMakers();
             },
         })
 
