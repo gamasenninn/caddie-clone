@@ -129,7 +129,6 @@
         el: '#app',
         data: {
             isList: true,
-//            files: [],
             dicFiles:[],
             fileId: '001',
         },
@@ -141,8 +140,6 @@
                 await axios.get(url)
                     .then(function (response) {
                         console.log(response.data);
-                        //self.files = response.data.list;
-                        //self.files = response.data;
                         let arry =[];
                         for(const f of response.data){
                             if (f.isfile){
@@ -167,8 +164,6 @@
                         console.log(f.thumb_path,f.isActive)
                         flist.push(f.path)
                         thumbs.push(f.thumb_path)
-                        //flist.push(f.path.replace("upload/",''))
-                        //thumbs.push(f.thumb_path.replace("upload/",''))
                     }
                 }
                 console.log(flist,thumbs)
