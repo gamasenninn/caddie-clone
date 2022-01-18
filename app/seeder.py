@@ -184,9 +184,9 @@ def seeder():
     # -----Makers-----
     print('----Makers----')
     makers = [
-        Maker(id=1, makerName='個'),
-        Maker(id=2, makerName='本'),
-        Maker(id=3, makerName='台'),
+        Maker(id=1, makerName='apple青果店'),
+        Maker(id=2, makerName='トンビ鉛筆'),
+        Maker(id=3, makerName='zony'),
     ]
     db.session.add_all(makers)
     db.session.commit()

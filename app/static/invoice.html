@@ -212,13 +212,23 @@
                                     label-for="searchItemWord">
                                     <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"></b-form-input>
                                 </b-form-group>
+                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="カテゴリ"
+                                    label-for="searchItemSelectCategory">
+                                    <b-form-select v-model="searchItemSelectCategory" :options="categories" size="sm">
+                                    </b-form-select>
+                                </b-form-group>
+                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="メーカー"
+                                    label-for="searchItemSelectMaker">
+                                    <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
+                                    </b-form-select>
+                                </b-form-group>
                                 <b-table hover striped small sort-by="ID" id="items-table" :items="searchItems"
                                     @row-clicked="itemSelect" label="Table Options" :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'itemName', label: '商品名' },
                                   {  key: 'unit',   label: '単位' },
                                   {  key: 'basePrice',  label: '単価' },
-                                  {  key: 'cost',  label: '原価' },
+                                  {  key: 'baseCost',  label: '原価' },
                                   {  key: 'memo', label: 'メモ' },
                                 ]"></b-table>
                             </b-modal>
@@ -341,6 +351,8 @@
             data: {
                 pageName: 'index',
                 searchItemWord: '',
+                searchItemSelectCategory: '',
+                searchItemSelectMaker: '',
                 searchCustomerWord: '',
                 invoices: [],               //全件invoice
                 invoice: [],                //選択中のinvoice
@@ -348,6 +360,8 @@
                 customers: [],
                 items: [],
                 units: [],
+                categories: [],
+                makers: [],
             },
             methods: {
                 // ---Invoices---
@@ -469,6 +483,24 @@
                             self.units = response.data.map(item => item['unitName']);
                         });
                 },
+                getCategories: async function () {
+                    self = this;
+                    await axios.get("/categories")
+                        .then(function (response) {
+                            console.log(response);
+                            self.categories = response.data.map(item => item['categoryName']);
+                            self.categories.unshift('')
+                        });
+                },
+                getMakers: async function () {
+                    self = this;
+                    await axios.get("/makers")
+                        .then(function (response) {
+                            console.log(response);
+                            self.makers = response.data.map(item => item['makerName']);
+                            self.makers.unshift('')
+                        });
+                },
                 toast(toaster, append = false) {
                     this.$bvToast.toast(`${toaster}`, {
                         title: `確認`,
@@ -526,6 +558,8 @@
                 this.getCustomers();
                 this.getItems();
                 this.getUnits();
+                this.getCategories();
+                this.getMakers();
             },
             computed: {
                 // 逐次、数量＊単価の合計をする
@@ -543,7 +577,10 @@
                 // TODO:商品コードを実装次第、商品コードでの検索もできるようにする
                 searchItems: function () {
                     return this.items.filter(item => {
-                        return item.itemName.includes(this.searchItemWord);
+                        return (
+                            item.itemName.includes(this.searchItemWord) || item.itemCode.includes(this.searchItemWord) || item.model.includes(this.searchItemWord)) &&
+                            item.category.includes(this.searchItemSelectCategory) &&
+                            item.maker.includes(this.searchItemSelectMaker);
                     });
                 },
             },
@@ -552,9 +589,9 @@
 
     </script>
     <script>
-        function getPdfData(){
+        function getPdfData() {
             h = {
-                myCompanyName : "テスト会社",
+                myCompanyName: "テスト会社",
                 category: "請求書",
                 dueDate: "2021-08-22",
                 person: "小野",
@@ -575,15 +612,15 @@
                 totalLabel: "合計金額",
                 total: 0
             };
-            if (app.invoice.isTaxExp){
+            if (app.invoice.isTaxExp) {
                 sum.amount = app.sum
-                sum.tax = parseInt(app.sum*0.1);
-                sum.total = parseInt(app.sum*1.1);
-            }else{
+                sum.tax = parseInt(app.sum * 0.1);
+                sum.total = parseInt(app.sum * 1.1);
+            } else {
                 sum.amountLabel = "小計(税込み)",
-                sum.amount = app.sum;
+                    sum.amount = app.sum;
                 sum.total = app.sum;
-                sum.tax = parseInt(sum.total*0.1)                
+                sum.tax = parseInt(sum.total * 0.1)
             }
 
             return {
@@ -606,16 +643,16 @@
                         "table_infos": [
                             {
                                 "table": [
-                                    [["P", app.invoice.customerName, "client"], ["P", '請求番号:'+app.invoice.applyNumber, "sm_r"]],
+                                    [["P", app.invoice.customerName, "client"], ["P", '請求番号:' + app.invoice.applyNumber, "sm_r"]],
                                     ["", ""],
                                     ["", ["P", h.myCompanyName, "md_l_b"]],
                                     ["", ""],
-                                    ["", ["P", '鹿沼店:'+h.myAddress1, "sm_r"]],
-                                    ["", ["P", 'TEL: '+ h.myTel1, "sm_r"]],
+                                    ["", ["P", '鹿沼店:' + h.myAddress1, "sm_r"]],
+                                    ["", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
                                     ["", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
-                                    ["", ["P", '千渡店:'+ h.myAddress2, "sm_r"]],
-                                    ["", ["P", 'TEL: '+ h.myTel2, "sm_r"]],
-                                    ["", ["P", '担当者: '+ h.person, "sm_l"]]
+                                    ["", ["P", '千渡店:' + h.myAddress2, "sm_r"]],
+                                    ["", ["P", 'TEL: ' + h.myTel2, "sm_r"]],
+                                    ["", ["P", '担当者: ' + h.person, "sm_l"]]
                                 ],
                                 "col_widths": ["E", "[110*mm, 70*mm]"],
                                 "table_style": [
@@ -639,7 +676,7 @@
                                 { "key": "count", "label": "数量", "width": 15, "p_style": "sm_r", "format": "{:,}" },
                                 { "key": "unit", "label": "単位", "width": 15, "p_style": "sm_r" },
                                 { "key": "price", "label": "単価", "width": 25, "p_style": "sm_r", "format": "{:,}" },
-                                { "key": "calcPrice", "label": "金額", "width": 25, "p_style": "sm_r","format": "{:,}" }
+                                { "key": "calcPrice", "label": "金額", "width": 25, "p_style": "sm_r", "format": "{:,}" }
                             ],
                             "styles": [
                                 ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
@@ -728,7 +765,7 @@
                         "textColor": "#000000"
                     }
                 },
-            }   
+            }
         } 
     </script>
 </body>

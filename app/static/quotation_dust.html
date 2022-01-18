@@ -206,13 +206,23 @@
                                     label-for="searchItemWord">
                                     <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"></b-form-input>
                                 </b-form-group>
+                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="カテゴリ"
+                                    label-for="searchItemSelectCategory">
+                                    <b-form-select v-model="searchItemSelectCategory" :options="categories" size="sm">
+                                    </b-form-select>
+                                </b-form-group>
+                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="メーカー"
+                                    label-for="searchItemSelectMaker">
+                                    <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
+                                    </b-form-select>
+                                </b-form-group>
                                 <b-table hover striped small sort-by="ID" id="items-table" :items="searchItems"
                                     @row-clicked="itemSelect" label="Table Options" :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'itemName', label: '商品名' },
                                   {  key: 'unit',   label: '単位' },
                                   {  key: 'basePrice',  label: '単価' },
-                                  {  key: 'cost',  label: '原価' },
+                                  {  key: 'baseCost',  label: '原価' },
                                   {  key: 'memo', label: 'メモ' },
                                 ]"></b-table>
                             </b-modal>
@@ -331,6 +341,8 @@
             data: {
                 pageName: 'index',
                 searchItemWord: '',
+                searchItemSelectCategory: '',
+                searchItemSelectMaker: '',
                 searchCustomerWord: '',
                 quotations: [],               //全件quotation
                 quotation: [],                //選択中のquotation
@@ -338,6 +350,8 @@
                 customers: [],
                 items: [],
                 units: [],
+                categories: [],
+                makers: [],
             },
             methods: {
                 // ---Quotations---
@@ -449,6 +463,24 @@
                             self.units = response.data.map(item => item['unitName']);
                         });
                 },
+                getCategories: async function () {
+                    self = this;
+                    await axios.get("/categories")
+                        .then(function (response) {
+                            console.log(response);
+                            self.categories = response.data.map(item => item['categoryName']);
+                            self.categories.unshift('')
+                        });
+                },
+                getMakers: async function () {
+                    self = this;
+                    await axios.get("/makers")
+                        .then(function (response) {
+                            console.log(response);
+                            self.makers = response.data.map(item => item['makerName']);
+                            self.makers.unshift('')
+                        });
+                },
                 toast(toaster, append = false) {
                     this.$bvToast.toast(`${toaster}`, {
                         title: `確認`,
@@ -496,6 +528,8 @@
                 this.getCustomers();
                 this.getItems();
                 this.getUnits();
+                this.getCategories();
+                this.getMakers();
             },
             computed: {
                 // 逐次、数量＊単価の合計をする
@@ -513,7 +547,10 @@
                 // TODO:商品コードを実装次第、商品コードでの検索もできるようにする
                 searchItems: function () {
                     return this.items.filter(item => {
-                        return item.itemName.includes(this.searchItemWord);
+                        return (
+                            item.itemName.includes(this.searchItemWord) || item.itemCode.includes(this.searchItemWord) || item.model.includes(this.searchItemWord)) &&
+                            item.category.includes(this.searchItemSelectCategory) &&
+                            item.maker.includes(this.searchItemSelectMaker);
                     });
                 },
             },
