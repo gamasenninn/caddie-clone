@@ -82,7 +82,15 @@
             <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('store');ItemAddRow();">＋新規作成</b-button>
+                    <b-row>
+                        <b-col>
+                            <b-button variant="success" @click="changeMode('store');ItemAddRow();">＋新規作成</b-button>
+                        </b-col>
+                        <b-col class="text-right">
+                            <b-button href="/category-page">カテゴリ登録画面へ</b-button>
+                            <b-button href="/maker-page">メーカー登録画面へ</b-button>
+                        </b-col>
+                    </b-row>
                     <b-card border-variant="white" class="mb-3 text-center" header="商品一覧" header-border-variant="light">
                         <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
                             :items=items :fields="[

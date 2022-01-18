@@ -7,7 +7,7 @@
     <!--
         <link href="images/favicon.ico" rel="shortcut icon">
         -->
-    <title>単位管理</title>
+    <title>カテゴリ管理</title>
     <!-- Load required Bootstrap and BootstrapVue CSS -->
 
     <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
@@ -41,7 +41,7 @@
     <div id="app" v-cloak>
         <b-row class="bg pt-2 pb-2">
             <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
-                        class='mr-2'></a>単位登録</b-col>
+                        class='mr-2'></a>カテゴリ登録</b-col>
         </b-row>
 
         <!-- サイドバー -->
@@ -84,27 +84,28 @@
                 <b-col cols="10">
                     <b-row>
                         <b-col>
-                            <b-button variant="success" @click="changeMode('store');UnitAddRow();">＋新規作成</b-button>
+                            <b-button variant="success" @click="changeMode('store');CategoryAddRow();">＋新規作成</b-button>
                         </b-col>
                         <b-col class="text-right">
-                            <b-button href="/setting-page">設定画面へ</b-button>
+                            <b-button href="/item-page">商品画面へ</b-button>
                         </b-col>
                     </b-row>
-                    <b-card border-variant="white" class="mb-3 text-center" header="単位一覧" header-border-variant="light">
-                        <b-table responsive hover small id="unittable" sort-by="ID" small label="Table Options"
-                            :items=units :fields="[
+                    <b-card border-variant="white" class="mb-3 text-center" header="カテゴリ一覧"
+                        header-border-variant="light">
+                        <b-table responsive hover small id="categorytable" sort-by="ID" small label="Table Options"
+                            :items=categories :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
-                          {  key: 'unitName', label: '単位名' },
+                          {  key: 'categoryName', label: 'カテゴリ名' },
                           {  key: 'delete', label: '', class: 'text-right' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectUnit(data.item);"><i
+                                <b-button variant="info" @click="changeMode('show');selectCategory(data.item);"><i
                                         class="fas fa-edit"></i>
                                 </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteUnit(data.item)"><i
+                                <b-button variant="danger" @click="deleteCategory(data.item)"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -121,14 +122,15 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getUnits();">＜</b-button>
-                    <b-card border-variant="white" class="mb-3 text-center" header="単位入力" header-border-variant="light">
+                    <b-button @click="changeMode('index');getCategories();">＜</b-button>
+                    <b-card border-variant="white" class="mb-3 text-center" header="カテゴリ入力"
+                        header-border-variant="light">
                         <b-row>
                             <b-col>
 
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位名"
-                                    label-for="unitName">
-                                    <b-form-input v-model="unit.unitName" id="unitName" size="sm">
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ名"
+                                    label-for="categoryName">
+                                    <b-form-input v-model="category.categoryName" id="categoryName" size="sm">
                                     </b-form-input>
                                 </b-form-group>
 
@@ -152,7 +154,7 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(unit)">適用</b-button>
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(category)">適用</b-button>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -164,74 +166,74 @@
             el: '#app',
             data: {
                 pageName: 'index',
-                units: [],               //全件unit
-                unit: [],                //選択中のunit
+                categories: [],               //全件category
+                category: [],                //選択中のcategory
             },
             methods: {
-                // ---Units---
-                getUnits: async function () {
+                // ---Categories---
+                getCategories: async function () {
                     self = this;
-                    await axios.get("/units")
+                    await axios.get("/categories")
                         .then(function (response) {
                             console.log(response);
-                            self.units = response.data;
+                            self.categories = response.data;
                         });
                 },
                 bulkUpsert(item) {
                     if (!item.id) {
-                        this.insertUnit(item);
+                        this.insertCategory(item);
                         this.toast("新規作成しました");
                     }
                     else {
-                        this.updateUnit(item);
+                        this.updateCategory(item);
                         this.toast("更新しました");
                     }
                 },
-                insertUnit: async function (item) {
+                insertCategory: async function (item) {
                     self = this;
-                    await axios.post("/unit", item)
+                    await axios.post("/category", item)
                         .then(function (response) {
-                            Vue.set(self.unit, 'id', response.data.id)
-                            self.getUnit(self.unit);
-                            self.unit.isInsert = false;
+                            Vue.set(self.category, 'id', response.data.id)
+                            self.getCategory(self.category);
+                            self.category.isInsert = false;
                         });
                 },
-                updateUnit: async function (item) {
+                updateCategory: async function (item) {
                     self = this;
-                    await axios.put("/unit/" + item.id, item)
+                    await axios.put("/category/" + item.id, item)
                         .then(function (response) {
-                            self.getUnit(self.unit);
+                            self.getCategory(self.category);
                             console.log(response);
                         });
                 },
-                deleteUnit: async function (item) {
+                deleteCategory: async function (item) {
                     self = this;
-                    await axios.delete("/unit/" + item.id)
+                    await axios.delete("/category/" + item.id)
                         .then(function (response) {
                             console.log(response);
-                            self.unit = '';
-                            self.getUnits();
+                            self.category = '';
+                            self.getCategories();
                         });
                 },
-                UnitAddRow: function () {
+                CategoryAddRow: function () {
                     self = this;
-                    self.units.push({
+                    self.categories.push({
                         isInsert: true,
                     });
-                    self.unit = self.units.slice(-1)[0];
+                    self.category = self.categories.slice(-1)[0];
                 },
-                selectUnit: function (item) {
-                    this.unit = item;
-                    console.log(this.unit);
+                selectCategory: function (item) {
+                    this.category = item;
+                    console.log(this.category);
                 },
-                getUnit: async function (item) {
+                getCategory: async function (item) {
                     self = this;
-                    await axios.get("/unit/" + item.id)
+                    await axios.get("/category/" + item.id)
                         .then(function (response) {
                             console.log(response);
                             for (const [key, value] of Object.entries(response.data)) {
                                 console.log(key, value);
-                                self.$set(self.unit, key, value);
+                                self.$set(self.category, key, value);
                             }
                         });
                 },
@@ -253,7 +255,7 @@
                 },
             },
             mounted: function () {
-                this.getUnits();
+                this.getCategories();
             },
         })
 
