@@ -574,18 +574,27 @@
                     })
                 },
                 // 商品選択モーダルの検索機能
-                // TODO:商品コードを実装次第、商品コードでの検索もできるようにする
                 searchItems: function () {
                     return this.items.filter(item => {
-                        return (
-                            item.itemName.includes(this.searchItemWord) || item.itemCode.includes(this.searchItemWord) || item.model.includes(this.searchItemWord)) &&
-                            item.category.includes(this.searchItemSelectCategory) &&
-                            item.maker.includes(this.searchItemSelectMaker);
+                        return (searchFilter(item.itemName, this.searchItemWord) ||
+                            searchFilter(item.itemCode, this.searchItemWord) ||
+                            searchFilter(item.model, this.searchItemWord)) &&
+                            searchFilter(item.category, this.searchItemSelectCategory) &&
+                            searchFilter(item.maker, this.searchItemSelectMaker);
                     });
                 },
             },
         })
 
+        function searchFilter(searchTarget, searchWord) {
+            if ((searchTarget === null && searchWord === '') || (searchTarget !== null && searchWord === '')) {
+                return true;
+            }
+            if (searchTarget === null && searchWord !== '') {
+                return false;
+            }
+            return searchTarget.includes(searchWord);
+        };
 
     </script>
     <script>
