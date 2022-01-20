@@ -35,6 +35,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
+
+    <!-- 日付フォーマット -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ja.min.js"
+        integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -82,23 +90,32 @@
             <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('store');InvoiceAddRow();">＋新規作成</b-button>
                     <b-card border-variant="white" class="mb-3 text-center" header="削除済み請求書一覧"
                         header-border-variant="light">
                         <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
                             :items=invoices :fields="[
-                          {  key: 'update', label: '' },
+                          {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '請求番号' },
                           {  key: 'applyDate', label: '日付' },
                           {  key: 'deadLine', label: '支払期限' },
                           {  key: 'title', label: '件名' },
                           {  key: 'memo', label: 'メモ' },
-                        ]" :tbody-tr-class="rowClass">
-                            <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);"><i
-                                        class="fas fa-edit"></i>
+                          {  key: 'updatedAt', label: '削除日時' },
+                        ]">
+                            <template v-slot:cell(show)="data">
+                                <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);">
+                                    <b-icon icon="journal-text"></b-icon>
                                 </b-button>
+                            </template>
+                            <template v-slot:cell(applyDate)="data">
+                                <p class="text-left pl-2" id="applyDate">{{formatDate(data.item.applyDate)}}</p>
+                            </template>
+                            <template v-slot:cell(deadLine)="data">
+                                <p class="text-left pl-2" id="deadLine">{{formatDate(data.item.deadLine)}}</p>
+                            </template>
+                            <template v-slot:cell(updatedAt)="data">
+                                <p class="text-left pl-2" id="updatedAt">{{formatDateTime(data.item.updatedAt)}}</p>
                             </template>
                         </b-table>
                     </b-card>
@@ -108,13 +125,13 @@
         </div>
 
         <!-- 新規作成・詳細(更新)ページ -->
-        <div v-if="pageName=='show' || pageName=='store'">
+        <div v-if="pageName=='show'">
             <b-row class="mt-5">
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
                     <b-button @click="changeMode('index');getInvoices();">＜</b-button>
-                    <b-card border-variant="white" class="mb-3 text-center" header="削除済み請求書入力"
+                    <b-card border-variant="white" class="mb-3 text-center" header="削除済み請求書参照"
                         header-border-variant="light">
                         <b-row>
                             <b-col>
@@ -126,42 +143,20 @@
 
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="customer" class="customer">
-                                    <b-form-input v-model="invoice.customerName" id="customerName" size="sm"
-                                        @dblclick="$bvModal.show('customer-modal')"
-                                        v-on:keydown.enter="onKeyDownCustomer">
-                                    </b-form-input>
-                                    <!-- 得意先一覧モーダル -->
-                                    <b-modal size="xl" id="customer-modal">
-                                        <p>顧客を選択してください</p>
-                                        <b-form-group label-cols="2" label-size="sm" label-align="center" label="検索"
-                                            label-for="searchCustomerWord">
-                                            <b-form-input v-model="searchCustomerWord" id="searchCustomerWord"
-                                                size="sm">
-                                            </b-form-input>
-                                        </b-form-group>
-                                        <b-table hover striped small sort-by="ID" id="customer-table"
-                                            :items="searchCustomers" @row-clicked="customerSelect" label="Table Options"
-                                            :fields="[
-                                  {  key: 'id', label: 'No.' },
-                                  {  key: 'customerName', label: '顧客名' },
-                                  {  key: 'postNum',   label: '郵便番号' },
-                                  {  key: 'address',  label: '住所' },
-                                  {  key: 'telNumber',  label: '電話番号' },
-                                  {  key: 'representative', label: '代表者名' },
-                                  {  key: 'memo', label: 'メモ' },
-                                ]"></b-table>
-                                    </b-modal>
+                                    <p class="text-left pl-2" id="customerName">{{invoice.customerName}}</p>
                                 </b-form-group>
 
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
                                     label-for="applyDate">
-                                    <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm" type="date">
-                                    </b-form-input>
+                                    <p class="text-left pl-2" id="applyDate">{{formatDate(invoice.applyDate)}}</p>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="支払期限"
                                     label-for="deadLine">
-                                    <b-form-input v-model="invoice.deadLine" id="deadLine" size="sm" type="date">
-                                    </b-form-input>
+                                    <p class="text-left pl-2" id="deadLine">{{formatDate(invoice.deadLine)}}</p>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="削除日時"
+                                    label-for="updatedAt">
+                                    <p class="text-left pl-2" id="updatedAt">{{formatDateTime(invoice.updatedAt)}}</p>
                                 </b-form-group>
                             </b-col>
                             <b-col>
@@ -171,11 +166,11 @@
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                     label-for="title">
-                                    <b-form-input v-model="invoice.title" id="title" size="sm"></b-form-input>
+                                    <p class="text-left pl-2" id="title">{{invoice.title}}</p>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
-                                    label-for="メモ">
-                                    <b-form-textarea v-model="invoice.memo" size="sm" rows="4"></b-form-textarea>
+                                    label-for="memo">
+                                    <p class="text-left pl-2" id="memo">{{invoice.memo}}</p>
                                 </b-form-group>
                             </b-col>
                         </b-row>
@@ -190,52 +185,20 @@
                           {  key: 'count',   label: '個数' },
                           {  key: 'unit',   label: '単位' },
                           {  key: 'price', label: '値段' },
-                          {  key: 'amount', label: '金額' },
+                          {  key: 'amount', label: '金額',class:'text-right' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
-                          {  key: 'delete', label: '削除',class:'text-center' },
                         ]">
                         <template v-slot:cell(itemName)="data">
-                            <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
-                                @dblclick="showModalItems(); selectInvoiceItem(data.item);"
-                                v-on:keydown.enter="selectInvoiceItem(data.item);onKeyDownItem();">
-                            </b-form-textarea>
-
-                            <b-modal size="xl" ref="items-modal">
-                                <p>商品を選択してください</p>
-                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="検索"
-                                    label-for="searchItemWord">
-                                    <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"></b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="カテゴリ"
-                                    label-for="searchItemSelectCategory">
-                                    <b-form-select v-model="searchItemSelectCategory" :options="categories" size="sm">
-                                    </b-form-select>
-                                </b-form-group>
-                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="メーカー"
-                                    label-for="searchItemSelectMaker">
-                                    <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
-                                    </b-form-select>
-                                </b-form-group>
-                                <b-table hover striped small sort-by="ID" id="items-table" :items="searchItems"
-                                    @row-clicked="itemSelect" label="Table Options" :fields="[
-                                  {  key: 'id', label: 'No.' },
-                                  {  key: 'itemName', label: '商品名' },
-                                  {  key: 'unit',   label: '単位' },
-                                  {  key: 'basePrice',  label: '単価' },
-                                  {  key: 'baseCost',  label: '原価' },
-                                  {  key: 'memo', label: 'メモ' },
-                                ]"></b-table>
-                            </b-modal>
-
+                            <p>{{data.item.itemName}}</p>
                         </template>
                         <template v-slot:cell(count)="data">
-                            <b-form-input v-model="data.item.count" type="number" size="sm"></b-form-input>
+                            <p>{{data.item.count}}</p>
                         </template>
                         <template v-slot:cell(unit)="data">
-                            <b-form-select v-model="data.item.unit" :options="units" size="sm"></b-form-select>
+                            <p>{{data.item.unit}}</p>
                         </template>
                         <template v-slot:cell(price)="data">
-                            <b-form-input v-model="data.item.price" type="number" size="sm"></b-form-input>
+                            <p>{{data.item.price}}</p>
                         </template>
                         <template v-slot:cell(amount)="data">
                             <p class="text-right">{{data.item.count*data.item.price|nf}}</p>
@@ -251,8 +214,7 @@
                                 <b-col cols=4>
                                     <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="原価:"
                                         label-for="cost">
-                                        <b-form-input v-model="data.item.cost" id="cost" size="sm">
-                                        </b-form-input>
+                                        <p>{{data.item.cost}}</p>
                                     </b-form-group>
                                 </b-col>
                                 <b-col>
@@ -268,19 +230,8 @@
                           field.key == 'hinmei' ? '10%': '5%'}">
                         </template> -->
 
-                        <template v-slot:cell(delete)="data">
-                            <b-button variant="danger" class="fas fa-trash-alt" @click="deleteInvoiceItem(data.item)">
-                            </b-button>
-                        </template>
-
                     </b-table>
 
-                    <!-- 商品項目を追加するプラスボタン -->
-                    <b-row class="d-flex justify-content-end" id="item_add">
-                        <b-col cols="16" md="auto">
-                            <b-button pill variant="primary" @click="addRowInvoiceItem();">✙</b-button>
-                        </b-col>
-                    </b-row>
 
                     <div class="mt-5"></div>
 
@@ -304,8 +255,7 @@
 
                     <!-- 備考欄 -->
                     <b-card border-variant="white" class="mb-3 text-center" header="備考欄" header-border-variant="light">
-                        <b-form-textarea v-model="invoice.remarks" id="remarks" size="sm" type="text" rows="3">
-                        </b-form-textarea>
+                        <p class="text-left">{{invoice.remarks}}</p>
                     </b-card>
 
                 </b-col> <!-- 本体 -->
@@ -321,10 +271,8 @@
         <b-row class="mb-5"></b-row>
 
         <!-- 更新・取消ボタンのフッター -->
-        <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
-            class="fixed-bottom footer">
+        <b-card v-if="pageName=='show'" bg-variant="dark" text-variant="white" class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(invoice)">適用</b-button>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -340,18 +288,9 @@
             el: '#app',
             data: {
                 pageName: 'index',
-                searchItemWord: '',
-                searchItemSelectCategory: '',
-                searchItemSelectMaker: '',
-                searchCustomerWord: '',
                 invoices: [],               //全件invoice
                 invoice: [],                //選択中のinvoice
                 invoiceItem: [],            //選択中のinvoiceItem
-                customers: [],
-                items: [],
-                units: [],
-                categories: [],
-                makers: [],
             },
             methods: {
                 // ---Invoices---
@@ -363,49 +302,9 @@
                             self.invoices = response.data;
                         });
                 },
-                bulkUpsert(item) {
-                    if (!item.id) {
-                        this.insertInvoice(item);
-                        this.toast("新規作成しました");
-                    }
-                    else {
-                        this.updateInvoice(item);
-                        this.toast("更新しました");
-                    }
-                },
-                insertInvoice: async function (item) {
-                    self = this;
-                    await axios.post("/invoice", item)
-                        .then(function (response) {
-                            Vue.set(self.invoice, 'id', response.data.id)
-                            self.getInvoice(self.invoice);
-                            self.invoice.isInsert = false;
-                        });
-                },
-                updateInvoice: async function (item) {
-                    self = this;
-                    await axios.put("/invoice/" + item.id, item)
-                        .then(function (response) {
-                            self.getInvoice(self.invoice);
-                            console.log(response);
-                        });
-                },
-                InvoiceAddRow: function () {
-                    self = this;
-                    self.invoices.push({
-                        isInsert: true,
-                        invoice_items: [],
-                    });
-                    self.invoice = self.invoices.slice(-1)[0];
-                    Vue.set(self.invoice, 'isTaxExp', true);
-                },
                 selectInvoice: function (item) {
                     this.invoice = item;
                     console.log(this.invoice);
-                },
-                selectInvoiceItem: function (item) {
-                    this.invoiceItem = item;
-                    console.log(this.invoiceItem);
                 },
                 getInvoice: async function (item) {
                     self = this;
@@ -416,69 +315,6 @@
                                 console.log(key, value);
                                 self.$set(self.invoice, key, value);
                             }
-                        });
-                },
-                deleteInvoiceItem: async function (item) {
-                    self = this;
-                    await axios.delete("/invoice_item/" + item.id)
-                        .then(function (response) {
-                            console.log(response);
-                            self.getInvoice(self.invoice);
-                        });
-                },
-                addRowInvoiceItem: function () {
-                    if (this.invoice.length === 0) {
-                        alert('請求書を選択してください');
-                        return;
-                    }
-                    this.invoice.invoice_items.push({
-                        invoiceId: this.invoice.id
-                    })
-                },
-                getCustomers: async function () {
-                    self = this;
-                    await axios.get("/customers")
-                        .then(function (response) {
-                            console.log(response);
-                            self.customers = response.data;
-                        });
-                },
-                getItems: async function () {
-                    self = this;
-                    await axios.get("/items")
-                        .then(function (response) {
-                            console.log(response);
-                            self.items = response.data;
-                        });
-                },
-                rowClass: function (item, type) {
-                    if (!item || type !== 'row') return
-                    if (!item.id) return "d-none";
-                },
-                getUnits: async function () {
-                    self = this;
-                    await axios.get("/units")
-                        .then(function (response) {
-                            console.log(response);
-                            self.units = response.data.map(item => item['unitName']);
-                        });
-                },
-                getCategories: async function () {
-                    self = this;
-                    await axios.get("/categories")
-                        .then(function (response) {
-                            console.log(response);
-                            self.categories = response.data.map(item => item['categoryName']);
-                            self.categories.unshift('')
-                        });
-                },
-                getMakers: async function () {
-                    self = this;
-                    await axios.get("/makers")
-                        .then(function (response) {
-                            console.log(response);
-                            self.makers = response.data.map(item => item['makerName']);
-                            self.makers.unshift('')
                         });
                 },
                 toast(toaster, append = false) {
@@ -493,65 +329,21 @@
                 changeMode(pageName) {
                     this.pageName = pageName;
                 },
-                // 顧客名モーダル選択時
-                customerSelect(record) {
-                    Vue.set(self.invoice, 'customerId', record.id);
-                    Vue.set(self.invoice, 'customerName', record.customerName);
-                    this.$bvModal.hide("customer-modal");
+                formatDate(date) {
+                    if (!!date) return moment(date).format("YYYY年MM月DD日");
                 },
-                // 顧客名入力→Enter
-                onKeyDownCustomer(record) {
-                    console.log(record);
-                    Vue.set(self.invoice, 'customerId', null);
-                },
-                // 商品名モーダル選択時
-                itemSelect(record) {
-                    Vue.set(self.invoiceItem, 'itemId', record.id);
-                    Vue.set(self.invoiceItem, 'itemName', record.itemName);
-                    Vue.set(self.invoiceItem, 'unit', record.unit);
-                    Vue.set(self.invoiceItem, 'price', record.basePrice);
-                    Vue.set(self.invoiceItem, 'cost', record.baseCost);
-                    this.$refs['items-modal'].hide()
-                },
-                // 商品名入力→Enter
-                onKeyDownItem(record) {
-                    console.log(record);
-                    Vue.set(self.invoiceItem, 'itemId', null);
-                },
-                // 商品名モーダル表示 モーダルのダブり表示防止
-                showModalItems() {
-                    this.$refs['items-modal'].show()
+                formatDateTime(datetime) {
+                    if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
                 },
             },
             mounted: function () {
                 this.getInvoices();
-                this.getCustomers();
-                this.getItems();
-                this.getUnits();
-                this.getCategories();
-                this.getMakers();
             },
             computed: {
                 // 逐次、数量＊単価の合計をする
                 sum: function () {
                     if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                     return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * invoice_item.price)).reduce(function (a, b) { return a + b }, 0);
-                },
-                // 得意先選択モーダルの検索機能
-                searchCustomers: function () {
-                    return this.customers.filter(customer => {
-                        return customer.customerName.includes(this.searchCustomerWord) || String(customer.id).includes(this.searchCustomerWord);
-                    })
-                },
-                // 商品選択モーダルの検索機能
-                // TODO:商品コードを実装次第、商品コードでの検索もできるようにする
-                searchItems: function () {
-                    return this.items.filter(item => {
-                        return (
-                            item.itemName.includes(this.searchItemWord) || item.itemCode.includes(this.searchItemWord) || item.model.includes(this.searchItemWord)) &&
-                            item.category.includes(this.searchItemSelectCategory) &&
-                            item.maker.includes(this.searchItemSelectMaker);
-                    });
                 },
             },
         })
