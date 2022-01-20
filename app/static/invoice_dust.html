@@ -35,6 +35,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
+
+    <!-- 日付フォーマット -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ja.min.js"
+        integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -86,18 +94,28 @@
                         header-border-variant="light">
                         <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
                             :items=invoices :fields="[
-                          {  key: 'update', label: '' },
+                          {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '請求番号' },
                           {  key: 'applyDate', label: '日付' },
                           {  key: 'deadLine', label: '支払期限' },
                           {  key: 'title', label: '件名' },
                           {  key: 'memo', label: 'メモ' },
+                          {  key: 'updatedAt', label: '削除日時' },
                         ]">
-                            <template v-slot:cell(update)="data">
+                            <template v-slot:cell(show)="data">
                                 <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);">
                                     <b-icon icon="journal-text"></b-icon>
                                 </b-button>
+                            </template>
+                            <template v-slot:cell(applyDate)="data">
+                                <p class="text-left pl-2" id="applyDate">{{formatDate(data.item.applyDate)}}</p>
+                            </template>
+                            <template v-slot:cell(expiry)="data">
+                                <p class="text-left pl-2" id="deadLine">{{formatDate(data.item.deadLine)}}</p>
+                            </template>
+                            <template v-slot:cell(updatedAt)="data">
+                                <p class="text-left pl-2" id="updatedAt">{{formatDateTime(data.item.updatedAt)}}</p>
                             </template>
                         </b-table>
                     </b-card>
@@ -130,11 +148,15 @@
 
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
                                     label-for="applyDate">
-                                    <p class="text-left pl-2" id="applyDate">{{invoice.applyDate}}</p>
+                                    <p class="text-left pl-2" id="applyDate">{{formatDate(invoice.applyDate)}}</p>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="支払期限"
                                     label-for="deadLine">
-                                    <p class="text-left pl-2" id="deadLine">{{invoice.deadLine}}</p>
+                                    <p class="text-left pl-2" id="deadLine">{{formatDate(invoice.deadLine)}}</p>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="削除日時"
+                                    label-for="updatedAt">
+                                    <p class="text-left pl-2" id="updatedAt">{{formatDateTime(invoice.updatedAt)}}</p>
                                 </b-form-group>
                             </b-col>
                             <b-col>
@@ -306,6 +328,12 @@
                 // ページ変更
                 changeMode(pageName) {
                     this.pageName = pageName;
+                },
+                formatDate(date) {
+                    if (!!date) return moment(date).format("YYYY年MM月DD日");
+                },
+                formatDateTime(datetime) {
+                    if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
                 },
             },
             mounted: function () {
