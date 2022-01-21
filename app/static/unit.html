@@ -231,10 +231,12 @@
                         isInsert: true,
                     });
                     self.unit = self.units.slice(-1)[0];
+                    localStorage.setItem('unit',JSON.stringify(self.unit)) //リロードのためのストア
                 },
                 selectUnit: function (item) {
                     this.unit = item;
                     console.log(this.unit);
+                    localStorage.setItem('unit',JSON.stringify(item)) //リロードのためのストア
                 },
                 getUnit: async function (item) {
                     self = this;
@@ -261,6 +263,7 @@
                 },
             },
             mounted: function () {
+                this.unit = JSON.parse(localStorage.getItem('unit')); //リロードのためのレストア
                 this.getUnits();
             },
             router,
