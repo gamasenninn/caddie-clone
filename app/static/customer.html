@@ -103,7 +103,7 @@
                                 </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteCustomer(data.item)"><i
+                                <b-button variant="danger" @click="showDeleteModal();selectCustomer(data.item);"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -113,6 +113,19 @@
                 <b-col></b-col>
             </b-row>
         </div>
+
+        <b-modal ref="deleteModal" hide-footer>
+            <div class="d-block text-center">
+                <h3>削除しますか？</h3>
+            </div>
+            <b-row>
+                <b-col></b-col>
+                <b-button variant="danger" @click="deleteCustomer(customer);hideDeleteModal();">はい</b-button>
+                <b-col></b-col>
+                <b-button @click="hideDeleteModal();">いいえ</b-button>
+                <b-col></b-col>
+            </b-row>
+        </b-modal>
 
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
@@ -298,6 +311,12 @@
                 // ページ変更
                 changeMode(pageName) {
                     this.pageName = pageName;
+                },
+                showDeleteModal() {
+                    this.$refs['deleteModal'].show()
+                },
+                hideDeleteModal() {
+                    this.$refs['deleteModal'].hide()
                 },
             },
             mounted: function () {
