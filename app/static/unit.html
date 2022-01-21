@@ -110,7 +110,7 @@
                                 </router-link>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteUnit(data.item)"><i
+                                <b-button variant="danger" @click="showDeleteModal();selectUnit(data.item);"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -120,6 +120,20 @@
                 <b-col></b-col>
             </b-row>
         </div>
+
+        <!-- 削除モーダル -->
+        <b-modal ref="deleteModal" hide-footer>
+            <div class="d-block text-center">
+                <h3>削除しますか？</h3>
+            </div>
+            <b-row>
+                <b-col></b-col>
+                <b-button variant="danger" @click="deleteUnit(unit);hideDeleteModal();">はい</b-button>
+                <b-col></b-col>
+                <b-button variant="info" @click="hideDeleteModal();">いいえ</b-button>
+                <b-col></b-col>
+            </b-row>
+        </b-modal>
 
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
@@ -260,6 +274,12 @@
                         solid: true,
                         appendToast: append,
                     })
+                },
+                showDeleteModal() {
+                    this.$refs['deleteModal'].show()
+                },
+                hideDeleteModal() {
+                    this.$refs['deleteModal'].hide()
                 },
             },
             mounted: function () {
