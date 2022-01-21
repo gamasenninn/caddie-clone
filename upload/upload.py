@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 import os
+import glob
 
 frame ={
     "width": 150,
@@ -138,9 +139,25 @@ def remove_files(dict_list):
 
     return {"result":"OK"}
 
-def get_files(dir_path):
-    pass
+def get_flist(id,dir_path):
+    file_path_list = glob.glob(f'{dir_path}/{id}/*')
+    arry = []
+    for f in file_path_list:
+        if os.path.isfile(f):
 
+            dict_flist = { 
+                "path": os.path.split(f)[0]+"/"+os.path.split(f)[1],
+                "filename" : os.path.split(f)[1], 
+                "dir" : os.path.split(f)[0],
+                "thumb_path":  chext(os.path.split(f)[0]+"/thumbs/"+os.path.split(f)[1]),
+                "type": os.path.splitext(f)[1].replace('.','').lower(),
+                "isfile": os.path.isfile(f),
+                "isdir": os.path.isdir(f),
+                "status": os.stat(f),
+            }
+            #app.logger.debug(dict_flist)
+            arry.append(dict_flist)
+    return arry
 
 
 if __name__ == "__main__":
