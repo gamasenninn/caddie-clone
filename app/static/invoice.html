@@ -352,8 +352,8 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button pill variant="info" class="mr-3" @click="bulkUpsert(invoice)" id="upsert" size="lg"><i
-                        class="far fa-save"></i></b-button>
+                <b-button pill variant="info" class="mr-3" @click="bulkUpsert(invoice);changeMode('index');" id="upsert"
+                    size="lg"><i class="far fa-save"></i></b-button>
                 <b-tooltip target="upsert" title="適用"></b-tooltip>
                 <b-button pill variant="info" @click="pdfout" id="pdfout" size="lg"><i class="fas fa-print"></i>
                 </b-button>
