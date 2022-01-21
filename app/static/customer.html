@@ -114,15 +114,16 @@
             </b-row>
         </div>
 
+        <!-- 削除モーダル -->
         <b-modal ref="deleteModal" hide-footer>
             <div class="d-block text-center">
                 <h3>削除しますか？</h3>
             </div>
             <b-row>
                 <b-col></b-col>
-                <b-button variant="danger" @click="deleteCustomer(customer);hideDeleteModal();">はい</b-button>
+                <b-button variant="danger" @click="deleteCustomer(customer);hideDeleteModal();">は　い</b-button>
                 <b-col></b-col>
-                <b-button @click="hideDeleteModal();">いいえ</b-button>
+                <b-button variant="info" @click="hideDeleteModal();">いいえ</b-button>
                 <b-col></b-col>
             </b-row>
         </b-modal>

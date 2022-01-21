@@ -116,7 +116,7 @@
                                 <p class="text-left pl-2" id="expiry">{{formatDate(data.item.expiry)}}</p>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteQuotation(data.item)"><i
+                                <b-button variant="danger" @click="showDeleteModal();selectQuotation(data.item);"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -126,6 +126,20 @@
                 <b-col></b-col>
             </b-row>
         </div>
+
+        <!-- 削除モーダル -->
+        <b-modal ref="deleteModal" hide-footer>
+            <div class="d-block text-center">
+                <h3>削除しますか？</h3>
+            </div>
+            <b-row>
+                <b-col></b-col>
+                <b-button variant="danger" @click="deleteQuotation(quotation);hideDeleteModal();">はい</b-button>
+                <b-col></b-col>
+                <b-button variant="info" @click="hideDeleteModal();">いいえ</b-button>
+                <b-col></b-col>
+            </b-row>
+        </b-modal>
 
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
@@ -530,6 +544,12 @@
                 // ページ変更
                 changeMode(pageName) {
                     this.pageName = pageName;
+                },
+                showDeleteModal() {
+                    this.$refs['deleteModal'].show()
+                },
+                hideDeleteModal() {
+                    this.$refs['deleteModal'].hide()
                 },
                 // 顧客名モーダル選択時
                 customerSelect(record) {
