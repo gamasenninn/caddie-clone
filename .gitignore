@@ -5,3 +5,4 @@
 pdfmaker/pdf/
 pdfmaker/static/pdf/
 pdfmaker/app/__pycache__/
+app/static/upload/
