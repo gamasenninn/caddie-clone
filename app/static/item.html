@@ -112,7 +112,7 @@
                                 </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteItem(data.item)"><i
+                                <b-button variant="danger" @click="showDeleteModal();selectItem(data.item);"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -122,6 +122,20 @@
                 <b-col></b-col>
             </b-row>
         </div>
+
+        <!-- 削除モーダル -->
+        <b-modal ref="deleteModal" hide-footer>
+            <div class="d-block text-center">
+                <h3>削除しますか？</h3>
+            </div>
+            <b-row>
+                <b-col></b-col>
+                <b-button variant="danger" @click="deleteItem(item);hideDeleteModal();">はい</b-button>
+                <b-col></b-col>
+                <b-button variant="info" @click="hideDeleteModal();">いいえ</b-button>
+                <b-col></b-col>
+            </b-row>
+        </b-modal>
 
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
@@ -198,7 +212,7 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(item)">適用</b-button>
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(item);changeMode('index');">適用</b-button>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -323,6 +337,12 @@
                 // ページ変更
                 changeMode(pageName) {
                     this.pageName = pageName;
+                },
+                showDeleteModal() {
+                    this.$refs['deleteModal'].show()
+                },
+                hideDeleteModal() {
+                    this.$refs['deleteModal'].hide()
                 },
             },
             mounted: function () {

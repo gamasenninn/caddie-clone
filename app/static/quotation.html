@@ -35,6 +35,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
+
+    <!-- 日付フォーマット -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ja.min.js"
+        integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -101,8 +109,14 @@
                                         class="fas fa-edit"></i>
                                 </b-button>
                             </template>
+                            <template v-slot:cell(applyDate)="data">
+                                <p class="text-left pl-2" id="applyDate">{{formatDate(data.item.applyDate)}}</p>
+                            </template>
+                            <template v-slot:cell(expiry)="data">
+                                <p class="text-left pl-2" id="expiry">{{formatDate(data.item.expiry)}}</p>
+                            </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="deleteQuotation(data.item)"><i
+                                <b-button variant="danger" @click="showDeleteModal();selectQuotation(data.item);"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
@@ -112,6 +126,20 @@
                 <b-col></b-col>
             </b-row>
         </div>
+
+        <!-- 削除モーダル -->
+        <b-modal ref="deleteModal" hide-footer>
+            <div class="d-block text-center">
+                <h3>削除しますか？</h3>
+            </div>
+            <b-row>
+                <b-col></b-col>
+                <b-button variant="danger" @click="deleteQuotation(quotation);hideDeleteModal();">はい</b-button>
+                <b-col></b-col>
+                <b-button variant="info" @click="hideDeleteModal();">いいえ</b-button>
+                <b-col></b-col>
+            </b-row>
+        </b-modal>
 
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
@@ -207,21 +235,29 @@
                             </b-form-textarea>
 
                             <b-modal size="xl" ref="items-modal">
-                                <p>商品を選択してください</p>
-                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="検索"
-                                    label-for="searchItemWord">
-                                    <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"></b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="カテゴリ"
-                                    label-for="searchItemSelectCategory">
-                                    <b-form-select v-model="searchItemSelectCategory" :options="categories" size="sm">
-                                    </b-form-select>
-                                </b-form-group>
-                                <b-form-group label-cols="2" label-size="sm" label-align="center" label="メーカー"
-                                    label-for="searchItemSelectMaker">
-                                    <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
-                                    </b-form-select>
-                                </b-form-group>
+                                <b-row>
+                                    <b-col class="text-center">
+                                        <p>商品を選択してください</p>
+                                    </b-col>
+                                    <b-col>
+                                        <b-form-group label-cols="2" label-size="sm" label-align="center"
+                                            label-for="searchItemWord" label-class="fas fa-search">
+                                            <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm">
+                                            </b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label-cols="2" label-size="sm" label-align="center" label="カテゴリ"
+                                            label-for="searchItemSelectCategory">
+                                            <b-form-select v-model="searchItemSelectCategory" :options="categories"
+                                                size="sm">
+                                            </b-form-select>
+                                        </b-form-group>
+                                        <b-form-group label-cols="2" label-size="sm" label-align="center" label="メーカー"
+                                            label-for="searchItemSelectMaker">
+                                            <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
+                                            </b-form-select>
+                                        </b-form-group>
+                                    </b-col>
+                                </b-row>
                                 <b-table hover striped small sort-by="ID" id="items-table" :items="searchItems"
                                     @row-clicked="itemSelect" label="Table Options" :fields="[
                                   {  key: 'id', label: 'No.' },
@@ -330,7 +366,7 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(quotation)">適用</b-button>
+                <b-button variant="info" class="mr-3" @click="bulkUpsert(quotation);changeMode('index');">適用</b-button>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -509,6 +545,12 @@
                 changeMode(pageName) {
                     this.pageName = pageName;
                 },
+                showDeleteModal() {
+                    this.$refs['deleteModal'].show()
+                },
+                hideDeleteModal() {
+                    this.$refs['deleteModal'].hide()
+                },
                 // 顧客名モーダル選択時
                 customerSelect(record) {
                     Vue.set(self.quotation, 'customerId', record.id);
@@ -538,6 +580,12 @@
                 showModalItems() {
                     this.$refs['items-modal'].show()
                 },
+                formatDate(date) {
+                    if (!!date) return moment(date).format("YYYY年MM月DD日");
+                },
+                formatDateTime(date) {
+                    if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
+                }
             },
             mounted: function () {
                 this.getQuotations();
@@ -560,18 +608,27 @@
                     })
                 },
                 // 商品選択モーダルの検索機能
-                // TODO:商品コードを実装次第、商品コードでの検索もできるようにする
                 searchItems: function () {
                     return this.items.filter(item => {
-                        return (
-                            item.itemName.includes(this.searchItemWord) || item.itemCode.includes(this.searchItemWord) || item.model.includes(this.searchItemWord)) &&
-                            item.category.includes(this.searchItemSelectCategory) &&
-                            item.maker.includes(this.searchItemSelectMaker);
+                        return (searchFilter(item.itemName, this.searchItemWord) ||
+                            searchFilter(item.itemCode, this.searchItemWord) ||
+                            searchFilter(item.model, this.searchItemWord)) &&
+                            searchFilter(item.category, this.searchItemSelectCategory) &&
+                            searchFilter(item.maker, this.searchItemSelectMaker);
                     });
                 },
             },
         })
 
+        function searchFilter(searchTarget, searchWord) {
+            if ((searchTarget === null && searchWord === '') || (searchTarget !== null && searchWord === '')) {
+                return true;
+            }
+            if (searchTarget === null && searchWord !== '') {
+                return false;
+            }
+            return searchTarget.includes(searchWord);
+        };
 
     </script>
 
