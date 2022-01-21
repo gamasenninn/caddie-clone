@@ -160,7 +160,9 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(unit)">適用</b-button>
+                <router-link to="?page=index">
+                    <b-button variant="info" class="mr-3" @click="bulkUpsert(unit)">適用</b-button>
+                </router-link>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -170,7 +172,7 @@
     <script>
         const router = new VueRouter({
         })
-        
+
         var app = new Vue({
             el: '#app',
             data: {
