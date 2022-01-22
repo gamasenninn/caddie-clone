@@ -7,7 +7,7 @@ from flask import Flask,request,json, jsonify,Response,make_response
 
 sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
-from upload.upload import make_thumb,chext,save_file,remove_files,get_flist
+from upload.upload import make_thumb,chext,save_file,remove_files2,get_flist
 
 
 @app.route('/test')
@@ -155,31 +155,24 @@ def quotationDustPage():
 def uptest():
     return app.send_static_file('./uptest.html')
 
-@app.route("/upload",methods=['POST'])
-def upload_file():
+@app.route("/upload-files/<dir_path>",methods=['POST'])
+def upload_file(dir_path):
     if 'file' not in request.files:
         make_response(jsonify({'result':'uploadFile is required.'}))
     f = request.files["file"]
     id= request.form['fileId'] 
-    dir_path = "./static/upload" 
+    dir_path = "./static/"+ dir_path 
     return  jsonify(save_file(id,dir_path,f))
 
 @app.route("/delete-files",methods=['DELETE'])
 def delete_files():
     dict_data = json.loads(request.data.decode())
-    return  jsonify(remove_files(dict_data))
+    return  jsonify(remove_files2(dict_data))
 
-@app.route("/file-list/<fid>",methods=['GET'])
-def get_file_list(fid):
-
-    return jsonify(get_flist(fid,"./static/upload"))
-
-@app.route('/upload/<fid>/thumbs/<file>')
-def upimage(fid,file):
-    app.logger.debug(f"{fid}:{file}")
-    return app.send_static_file(f'./upload/{fid}/thumbs/{file}')
-
+@app.route("/list-files/<dir_path>/<fid>",methods=['GET'])
+def get_file_list(dir_path,fid):
+    return jsonify(get_flist(fid,f"./static/{dir_path}"))
 
 if __name__ == '__main__':
 
-    app.run(host='0.0.0.0', port=5010)
+    app.run(host='0.0.0.0', port=5010,debug=True)

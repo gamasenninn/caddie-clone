@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 import os
 import glob
@@ -139,6 +140,15 @@ def remove_files(dict_list):
 
     return {"result":"OK"}
 
+def remove_files2(dict_files):   #ファイルリストそのまま受ける
+
+    for f in dict_files:
+        if f.get('isSelect'):
+            if f.get('path') : os.remove(f['path']) ;
+            if f.get('thumbPath') : os.remove(f['thumbPath']) ;
+
+    return {"result":"OK"}
+
 def get_flist(id,dir_path):
     file_path_list = glob.glob(f'{dir_path}/{id}/*')
     arry = []
@@ -149,11 +159,12 @@ def get_flist(id,dir_path):
                 "path": os.path.split(f)[0]+"/"+os.path.split(f)[1],
                 "filename" : os.path.split(f)[1], 
                 "dir" : os.path.split(f)[0],
-                "thumb_path":  chext(os.path.split(f)[0]+"/thumbs/"+os.path.split(f)[1]),
+                "thumbPath":  chext(os.path.split(f)[0]+"/thumbs/"+os.path.split(f)[1]),
                 "type": os.path.splitext(f)[1].replace('.','').lower(),
                 "isfile": os.path.isfile(f),
                 "isdir": os.path.isdir(f),
                 "status": os.stat(f),
+                "isSelect":False
             }
             #app.logger.debug(dict_flist)
             arry.append(dict_flist)
