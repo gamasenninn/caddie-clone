@@ -35,6 +35,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
+
+    <!-- VueRouter -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 </head>
 
 <body>
@@ -84,7 +87,10 @@
                 <b-col cols="10">
                     <b-row>
                         <b-col>
-                            <b-button variant="success" @click="changeMode('store');CategoryAddRow();">＋新規作成</b-button>
+                            <router-link to="?page=store">
+                                <b-button variant="success" @click="CategoryAddRow();">＋新規作成
+                                </b-button>
+                            </router-link>
                         </b-col>
                         <b-col class="text-right">
                             <b-button href="/item-page">商品画面へ</b-button>
@@ -100,9 +106,11 @@
                           {  key: 'delete', label: '', class: 'text-right' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectCategory(data.item);"><i
-                                        class="fas fa-edit"></i>
-                                </b-button>
+                                <router-link to="?page=show">
+                                    <b-button variant="info" @click="selectCategory(data.item);"><i
+                                            class="fas fa-edit"></i>
+                                    </b-button>
+                                </router-link>
                             </template>
                             <template v-slot:cell(delete)="data">
                                 <b-button variant="danger" @click="showDeleteModal();selectCategory(data.item);"><i
@@ -136,7 +144,9 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getCategories();">＜</b-button>
+                    <router-link to="?page=index">
+                        <b-button @click="getCategories();">＜</b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="カテゴリ入力"
                         header-border-variant="light">
                         <b-row>
@@ -168,7 +178,10 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(category);changeMode('index');">適用</b-button>
+                <router-link to="?page=index">
+                    <b-button variant="info" class="mr-3" @click="bulkUpsert(category);">適用
+                    </b-button>
+                </router-link>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -176,10 +189,12 @@
     </div>
 
     <script>
+        const router = new VueRouter({
+        })
+
         var app = new Vue({
             el: '#app',
             data: {
-                pageName: 'index',
                 categories: [],               //全件category
                 category: [],                //選択中のcategory
             },
@@ -208,7 +223,7 @@
                     await axios.post("/category", item)
                         .then(function (response) {
                             Vue.set(self.category, 'id', response.data.id)
-                            self.getCategory(self.category);
+                            self.getCategories();
                             self.category.isInsert = false;
                         });
                 },
@@ -216,7 +231,7 @@
                     self = this;
                     await axios.put("/category/" + item.id, item)
                         .then(function (response) {
-                            self.getCategory(self.category);
+                            self.getCategories();
                             console.log(response);
                         });
                 },
@@ -235,10 +250,12 @@
                         isInsert: true,
                     });
                     self.category = self.categories.slice(-1)[0];
+                    localStorage.setItem('category', JSON.stringify(self.category))
                 },
                 selectCategory: function (item) {
                     this.category = item;
                     console.log(this.category);
+                    localStorage.setItem('category', JSON.stringify(item))
                 },
                 getCategory: async function (item) {
                     self = this;
@@ -263,10 +280,6 @@
                         appendToast: append,
                     })
                 },
-                // ページ変更
-                changeMode(pageName) {
-                    this.pageName = pageName;
-                },
                 showDeleteModal() {
                     this.$refs['deleteModal'].show()
                 },
@@ -275,8 +288,16 @@
                 },
             },
             mounted: function () {
+                this.category = JSON.parse(localStorage.getItem('category'));
                 this.getCategories();
             },
+            router,
+            computed: {
+                pageName() {
+                    if (this.$route.query.page == undefined) return 'index';
+                    return this.$route.query.page;
+                },
+            }
         })
 
 
