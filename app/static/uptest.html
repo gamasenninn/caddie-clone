@@ -2,8 +2,7 @@
 <style>
     .trim-img {
         object-fit: cover;
-      }
-
+    }
 </style>
 
 <meta charset="utf-8">
@@ -54,59 +53,88 @@
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
 <style>
-.image-box {
-    position: relative;
-}
+    .image-box {
+        position: relative;
+    }
 
-.image-in-check {
-    width: 15px;
-    height: 15px;
-    color: #ffffff;
-    background-color: #2779bd;
-    display: flex;
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    font-size: 1.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-    
-    position: absolute;
-    top: -20;
-    left: 10;
-}
+    .image-in-check {
+        width: 20px;
+        height: 20px;
+        color: #ffffff;
+        background-color: #2779bd;
+        display: flex;
+        /*justify-content: center;*/
+        /*align-items: center;*/
+        font-size: 1.5rem;
+        border-radius: 50%;
+        cursor: pointer;
 
+        position: absolute;
+        top:  15;
+        left: 10;
+    }
+
+    .file-list{
+        display: flex;
+        flex-wrap: wrap;
+    }
 </style>
 
 
 <div id="app">
 
-    <h3>フォルダーIDを指定してください。</h3><br/>
-    <b-form-input type="text" v-model="fileId" ></b-form-input>
-    <b-button @click="getFileList(fileId)" >読込</b-button>
+    <h3>フォルダーIDを指定してください。</h3><br />
+    <b-form-input type="text" v-model="fileId"></b-form-input>
+    <b-button @click="getFileList(fileId)">読込</b-button>
+    <h2 class="mt-5">現在選択されているファイルは次のとおりです。</h2><br />
+    <div v-if="selectedImgUrl">
+        <img :src="selectedImgUrl" width="90" height="90" />
+    </div>
+    <div v-if="selectImgUrl">
+        <img :src="selectImgUrl" height="480" />
+        <b-button @click="selectedImgUrl=selectImgUrl">選択</b-button>
+    </div>
+    <div class="file-list">
+        <template v-for="f in dicFiles">
+                <b-card style="width: 10rem;" 
+                    :img-src= "'../'+f.thumbPath"
+                    img-top
+                    @click="selectImgUrl='../'+f.path"
+                >
+                    <b-card-text>{{f.filename}}</b-card-text>
+                    <!-- input type="checkbox" v-model="f.isSelect" class="image-in-check"> -->
+                </b-card>
+        </template>    
+    </div>
+    <h2 class="mt-5">現在登録されているファイルは次のとおりです。</h2><br />
+    <p>
+        <b-button @click="deleteFiles(fileId)">削除</b-button>
+    </p>
+    <div class="file-list">
+        <template v-for="f in dicFiles">
+                <b-card style="width: 10rem;" 
+                    :img-src= "'../'+f.thumbPath"
+                    img-top
+                >
+                    <b-card-text>{{f.filename}}</b-card-text>
+                    <input type="checkbox" v-model="f.isSelect" class="image-in-check"> 
+                </b-card>
+        </template>    
+    </div>
 
-    <h2 class="mt-5">現在登録されているファイルは次のとおりです。</h2><br/>
-    <p><b-button @click="deleteFiles(fileId)" >削除</b-button></p>
-    <template v-for="f in dicFiles">
-        <span class="image-box">
-            <img :src="'../'+f.thumb_path" width="90" height=90 class="trim-img ml-2 mt-2">
-            <input type="checkbox" v-model="f.isActive" class="image-in-check">
-        </span>
-
-    </template>
-
-    <h3 class="mt-5">アップロードファイル</h3><br/>
+    <h3 class="mt-5">アップロードファイル</h3><br />
 
     <b-card style="max-width: 20rem">
-        <form action="upload-files" class="dropzone" id="my-dropzone">
-            <input hidden type="text" name="fileId" v-model="fileId" >
+        <form action="upload-files/upload" class="dropzone" id="my-dropzone">
+            <input hidden type="text" name="fileId" v-model="fileId">
 
             <input hidden type="file" name="file" id="my-dropzone" multiple>
-        </form>    
+        </form>
     </b-card>
     <script>
         Dropzone.options.myDropzone = { // camelized version of the `id`
             dictDefaultMessage: 'ここにファイルをドロップしてね',
-            init: function(){
+            init: function () {
                 this.on("complete", file => {
                     console.log("complete A file has been added");
                     this.removeFile(file);
@@ -115,8 +143,8 @@
             }
         };
     </script>
-<br/><br/>
-   
+    <br /><br />
+
 </div>
 
 <script>
@@ -128,71 +156,49 @@
     var app = new Vue({
         el: '#app',
         data: {
+            upDirPath: "upload",
             isList: true,
-            dicFiles:[],
+            dicFiles: [],
             fileId: '001',
+            selectImgUrl: "",
+            selectedImgUrl: ""
         },
         methods: {
             getFileList: async function (fid) {
                 self = this;
-                //url = "http://localhost/file_list";
-                url = "file-list/"+fid;
+                url = "list-files/" + self.upDirPath + "/" + fid;
                 await axios.get(url)
                     .then(function (response) {
                         console.log(response.data);
-                        let arry =[];
-                        for(const f of response.data){
-                            if (f.isfile){
-                                f.isActive = null
-                                arry.push(f)
-                            }
-                        }
-                        self.dicFiles=arry;
+                        self.dicFiles = response.data;  
                     })
-                    .catch(error => {
-                        console.log(error);
-                        alert("ネットワークエラーです。ローカルサーバーは立ち上がっていますか？")
-                    });
             },
-            deleteFiles: async function(fid){
+            deleteFiles: async function (fid) {
                 self = this;
-                let flist=[];
-                let thumbs=[];
-                for(const f of this.dicFiles){
-                    if(f.isActive){
-                        console.log(f.path,f.isActive)
-                        console.log(f.thumb_path,f.isActive)
-                        flist.push(f.path)
-                        thumbs.push(f.thumb_path)
+                url = "delete-files";
+                await axios.delete(url, { 
+                    data:self.dicFiles
+                }
+                ).then(function (response) {
+                    console.log(response.data);
+                    self.getFileList(fid);
+                });
+            },
+            selectFile: async function(fid){
+                self = this;
+                for (f of self.dicFiles){
+                    if(f.isSelect){
+                        console.log("match:",f.path);
+                        self.selectImgUrl = f.path;
+                        break;
                     }
                 }
-                console.log(flist,thumbs)
-                url= "delete-files";
-                
-                await axios.delete(url,
-                        {
-                            headers:{
-                                'Content-Type': 'application/json'
-                            },
-                            data:{
-                                files: flist,
-                                thumbs: thumbs
-                            }
-                        }
-                    )    
-                    .then(function (response) {
-                        console.log(response.data);
-                        self.getFileList(fid);
-                    });                
-            }
-
+            }         
         },
         mounted: function () {
             this.getFileList('001');
- 
-
         }
     });
 </script>
 
-</html >
+</html>

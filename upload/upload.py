@@ -1,5 +1,7 @@
+from asyncio.windows_events import NULL
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 import os
+import glob
 
 frame ={
     "width": 150,
@@ -91,9 +93,9 @@ def make_thumb(filename,save_dir="./thumbs"):
         ext = "unknown"
 
     if icon[ext]['isImage']:
-        print("FILE:",filename)
-        print("SAVE_DIR:",save_dir)
-        print("BASE NAME:",basename)
+        #print("FILE:",filename)
+        #print("SAVE_DIR:",save_dir)
+        #print("BASE NAME:",basename)
         im = Image.open(filename)
         thumb_width = frame['width']
 
@@ -113,6 +115,60 @@ def make_thumb(filename,save_dir="./thumbs"):
 
     return
 
+def save_file(id,dir_path,f):
+    os.makedirs(f'{dir_path}/{id}', exist_ok=True)
+    file_path = f'{dir_path}/{id}/{f.filename}'
+    f.save(file_path)
+    
+    make_thumb(file_path,f"{dir_path}/{id}/thumbs")
+
+    response = {
+        "text":"OK",
+        "fileId": id,
+        "filename": f.filename,      
+        "mimetype": f.mimetype,      
+    }
+    return response
+
+def remove_files(dict_list):
+
+    for f in dict_list['files']:
+        os.remove(f)
+
+    for f in dict_list['thumbs']:
+        os.remove(f)
+
+    return {"result":"OK"}
+
+def remove_files2(dict_files):   #ファイルリストそのまま受ける
+
+    for f in dict_files:
+        if f.get('isSelect'):
+            if f.get('path') : os.remove(f['path']) ;
+            if f.get('thumbPath') : os.remove(f['thumbPath']) ;
+
+    return {"result":"OK"}
+
+def get_flist(id,dir_path):
+    file_path_list = glob.glob(f'{dir_path}/{id}/*')
+    arry = []
+    for f in file_path_list:
+        if os.path.isfile(f):
+
+            dict_flist = { 
+                "path": os.path.split(f)[0]+"/"+os.path.split(f)[1],
+                "filename" : os.path.split(f)[1], 
+                "dir" : os.path.split(f)[0],
+                "thumbPath":  chext(os.path.split(f)[0]+"/thumbs/"+os.path.split(f)[1]),
+                "type": os.path.splitext(f)[1].replace('.','').lower(),
+                "isfile": os.path.isfile(f),
+                "isdir": os.path.isdir(f),
+                "status": os.stat(f),
+                "isSelect":False
+            }
+            #app.logger.debug(dict_flist)
+            arry.append(dict_flist)
+    return arry
 
 
 if __name__ == "__main__":

@@ -159,12 +159,12 @@
                             <b-col></b-col>
                             <b-col cols="4">
                                 <p>会社ロゴ</p>
-                                <img src="images/mn_customer.png" width="100%">
+                                <img :src="setting.logoFilePath" width="100%">
                             </b-col>
                             <b-col></b-col>
                             <b-col cols="4">
                                 <p>印鑑ロゴ</p>
-                                <img src="images/mn_customer.png" width="100%">
+                                <img :src="setting.stampFilePath" width="100%">
                             </b-col>
                             <b-col></b-col>
                         </b-row>
@@ -193,14 +193,21 @@
                             <b-col></b-col>
                             <b-col cols="4">
                                 <p>会社ロゴアップロード</p>
-                                <form action="/file-upload" class="dropzone" id="my-awesome-dropzone">
+                                <form action="upload-files/asset" class="dropzone" id="logo-dropzone">
+                                    <input hidden type="text" name="fileId" v-model="fileId2">
+
+                                    <input hidden type="file" name="file" id="logo-dropzone" multiple>
                                 </form>
+                            </form>
                             </b-col>
                             <b-col></b-col>
                             <b-col cols="4">
                                 <p>印鑑アップロード</p>
-                                <form action="/file-upload" class="dropzone" id="my-awesome-dropzone">
-                                </form>
+                                    <form action="upload-files/asset" class="dropzone" id="stamp-dropzone">
+                                        <input hidden type="text" name="fileId" v-model="fileId">
+
+                                        <input hidden type="file" name="file" id="stamp-dropzone" multiple>
+                                    </form>
                             </b-col>
                             <b-col></b-col>
                         </b-row>
@@ -217,8 +224,30 @@
 
             </b-row>
 
-        </div>
 
+        </div>
+        <script>
+            Dropzone.options.stampDropzone = { 
+                dictDefaultMessage: 'ここに印鑑用ファイルをドロップしてください',
+                init: function () {
+                    this.on("complete", file => {
+                        console.log("complete A file has been added:",app.fileId,file);
+                        this.removeFile(file);
+                        app.setting.stampFilePath = "./static/asset/stamp/"+file.upload.filename
+                    });
+                }
+            };            
+            Dropzone.options.logoDropzone = { 
+                dictDefaultMessage: 'ここにロゴ用ファイルをドロップしてください',
+                init: function () {
+                    this.on("complete", file => {
+                        console.log("complete A file has been added:",app.fileId,file);
+                        this.removeFile(file);
+                        app.setting.logoFilePath = "./static/asset/logo/"+file.upload.filename
+                    });
+                }
+            };            
+        </script>
         <!-- 空行 -->
         <b-row class="mb-5"></b-row>
         <b-row class="mb-5"></b-row>
@@ -239,6 +268,8 @@
             el: '#app',
             data: {
                 setting: [],                //選択中のsetting
+                fileId: 'stamp',
+                fileId2: 'logo'
             },
             methods: {
                 // ---Settings---
