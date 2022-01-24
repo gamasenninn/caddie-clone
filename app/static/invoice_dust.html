@@ -273,7 +273,8 @@
         <!-- 更新・取消ボタンのフッター -->
         <b-card v-if="pageName=='show'" bg-variant="dark" text-variant="white" class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
+                <b-button pill variant="info" size="lg" @click="alert('印刷しました。')"><i class="fas fa-print"></i>
+                </b-button>
             </div>
         </b-card>
 

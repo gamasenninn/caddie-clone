@@ -234,28 +234,40 @@
                                 v-on:keydown.enter="selectInvoiceItem(data.item);onKeyDownItem();">
                             </b-form-textarea>
 
-                            <b-modal size="xl" ref="items-modal">
+                            <b-modal size="xl" ref="items-modal" title="商品一覧">
                                 <b-row>
-                                    <b-col class="text-center">
-                                        <p>商品を選択してください</p>
+                                    <b-col>
                                     </b-col>
                                     <b-col>
-                                        <b-form-group label-cols="4" label-size="sm" label-align="center"
-                                            label-for="searchItemWord" label-class="fas fa-search">
-                                            <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm">
-                                            </b-form-input>
-                                        </b-form-group>
-                                        <b-form-group label-cols="4" label-size="sm" label-align="center" label="カテゴリ"
-                                            label-for="searchItemSelectCategory">
-                                            <b-form-select v-model="searchItemSelectCategory" :options="categories"
-                                                size="sm">
-                                            </b-form-select>
-                                        </b-form-group>
-                                        <b-form-group label-cols="4" label-size="sm" label-align="center" label="メーカー"
-                                            label-for="searchItemSelectMaker">
-                                            <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
-                                            </b-form-select>
-                                        </b-form-group>
+                                        <b-row class="mb-1">
+                                            <b-col cols="4" class="text-center">
+                                                <label for="searchItemWord"><i class="fas fa-search"></i></label>
+                                            </b-col>
+                                            <b-col cols="8">
+                                                <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm">
+                                                </b-form-input>
+                                            </b-col>
+                                        </b-row>
+                                        <b-row class="mb-1">
+                                            <b-col cols="4" class="text-center">
+                                                <label for="searchItemSelectCategory">カテゴリ</label>
+                                            </b-col>
+                                            <b-col cols="8">
+                                                <b-form-select v-model="searchItemSelectCategory" :options="categories"
+                                                    size="sm">
+                                                </b-form-select>
+                                            </b-col>
+                                        </b-row>
+                                        <b-row class="mb-2">
+                                            <b-col cols="4" class="text-center">
+                                                <label for="searchItemSelectMaker">メーカー</label>
+                                            </b-col>
+                                            <b-col cols="8">
+                                                <b-form-select v-model="searchItemSelectMaker" :options="makers"
+                                                    size="sm">
+                                                </b-form-select>
+                                            </b-col>
+                                        </b-row>
                                     </b-col>
                                 </b-row>
                                 <b-table hover striped small sort-by="ID" id="items-table" :items="searchItems"
@@ -366,14 +378,26 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button pill variant="info" class="mr-3" @click="bulkUpsert(invoice);changeMode('index');" id="upsert"
-                    size="lg"><i class="far fa-save"></i></b-button>
-                <b-tooltip target="upsert" title="適用"></b-tooltip>
-                <b-button pill variant="info" @click="pdfout" id="pdfout" size="lg"><i class="fas fa-print"></i>
+                <b-button pill variant="info" class="mr-3" @click="showUpsertModal();" id="showUpsertModal">適用
                 </b-button>
-                <b-tooltip target="pdfout" title="印刷"></b-tooltip>
+                <b-button pill variant="info" @click="pdfout" id="pdfout"><i class="fas fa-print"></i></b-button>
             </div>
         </b-card>
+
+        <!-- 保存モーダル -->
+        <b-modal ref="upsertModal" hide-footer>
+            <div class="d-block text-center">
+                <h3>保存しますか？</h3>
+            </div>
+            <b-row>
+                <b-col></b-col>
+                <b-button variant="success" @click="bulkUpsert(invoice);hideUpsertModal();changeMode('index');">はい
+                </b-button>
+                <b-col></b-col>
+                <b-button @click="hideUpsertModal();">いいえ</b-button>
+                <b-col></b-col>
+            </b-row>
+        </b-modal>
 
     </div>
 
@@ -412,11 +436,9 @@
                 bulkUpsert(item) {
                     if (!item.id) {
                         this.insertInvoice(item);
-                        this.toast("新規作成しました");
                     }
                     else {
                         this.updateInvoice(item);
-                        this.toast("更新しました");
                     }
                 },
                 insertInvoice: async function (item) {
@@ -537,14 +559,6 @@
                             self.makers.unshift('')
                         });
                 },
-                toast(toaster, append = false) {
-                    this.$bvToast.toast(`${toaster}`, {
-                        title: `確認`,
-                        toaster: 'b-toaster-top-right',
-                        solid: true,
-                        appendToast: append,
-                    })
-                },
                 // ページ変更
                 changeMode(pageName) {
                     this.pageName = pageName;
@@ -554,6 +568,12 @@
                 },
                 hideDeleteModal() {
                     this.$refs['deleteModal'].hide()
+                },
+                showUpsertModal() {
+                    this.$refs['upsertModal'].show();
+                },
+                hideUpsertModal() {
+                    this.$refs['upsertModal'].hide();
                 },
                 // 顧客名モーダル選択時
                 customerSelect(record) {
