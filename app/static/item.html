@@ -35,6 +35,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
+
+    <!-- VueRouter -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 </head>
 
 <body>
@@ -84,7 +87,10 @@
                 <b-col cols="10">
                     <b-row>
                         <b-col>
-                            <b-button variant="success" @click="changeMode('store');ItemAddRow();">＋新規作成</b-button>
+                            <router-link to="?page=store">
+                                <b-button variant="success" @click="ItemAddRow();">＋新規作成
+                                </b-button>
+                            </router-link>
                         </b-col>
                         <b-col class="text-right">
                             <b-button href="/category-page">カテゴリ一覧画面へ</b-button>
@@ -107,9 +113,10 @@
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectItem(data.item);"><i
-                                        class="fas fa-edit"></i>
-                                </b-button>
+                                <router-link to="?page=show">
+                                    <b-button variant="info" @click="selectItem(data.item);"><i class="fas fa-edit"></i>
+                                    </b-button>
+                                </router-link>
                             </template>
                             <template v-slot:cell(delete)="data">
                                 <b-button variant="danger" @click="showDeleteModal();selectItem(data.item);"><i
@@ -143,7 +150,9 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getItems();">＜</b-button>
+                    <router-link to="?page=index">
+                        <b-button @click="getItems();">＜</b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="商品入力" header-border-variant="light">
                         <b-row>
                             <b-col>
@@ -212,7 +221,10 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(item);changeMode('index');">適用</b-button>
+                <router-link to="?page=index">
+                    <b-button variant="info" class="mr-3" @click="bulkUpsert(item);">適用
+                    </b-button>
+                </router-link>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -220,10 +232,12 @@
     </div>
 
     <script>
+        const router = new VueRouter({
+        })
+
         var app = new Vue({
             el: '#app',
             data: {
-                pageName: 'index',
                 items: [],               //全件item
                 item: [],                //選択中のitem
                 units: [],
@@ -255,7 +269,7 @@
                     await axios.post("/item", item)
                         .then(function (response) {
                             Vue.set(self.item, 'id', response.data.id)
-                            self.getItem(self.item);
+                            self.getItems();
                             self.item.isInsert = false;
                         });
                 },
@@ -263,7 +277,7 @@
                     self = this;
                     await axios.put("/item/" + item.id, item)
                         .then(function (response) {
-                            self.getItem(self.item);
+                            self.getItems();
                             console.log(response);
                         });
                 },
@@ -282,10 +296,12 @@
                         isInsert: true,
                     });
                     self.item = self.items.slice(-1)[0];
+                    localStorage.setItem('item', JSON.stringify(self.item))
                 },
                 selectItem: function (item) {
                     this.item = item;
                     console.log(this.item);
+                    localStorage.setItem('item', JSON.stringify(item))
                 },
                 getItem: async function (item) {
                     self = this;
@@ -334,10 +350,6 @@
                         appendToast: append,
                     })
                 },
-                // ページ変更
-                changeMode(pageName) {
-                    this.pageName = pageName;
-                },
                 showDeleteModal() {
                     this.$refs['deleteModal'].show()
                 },
@@ -346,11 +358,19 @@
                 },
             },
             mounted: function () {
+                this.item = JSON.parse(localStorage.getItem('item'));
                 this.getItems();
                 this.getUnits();
                 this.getCategories();
                 this.getMakers();
             },
+            router,
+            computed: {
+                pageName() {
+                    if (this.$route.query.page == undefined) return 'index';
+                    return this.$route.query.page;
+                },
+            }
         })
 
 

@@ -35,6 +35,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
+
+    <!-- VueRouter -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 </head>
 
 <body>
@@ -82,7 +85,10 @@
             <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('store');MemoAddRow();">＋新規作成</b-button>
+                    <router-link to="?page=store">
+                        <b-button variant="success" @click="MemoAddRow();">＋新規作成
+                        </b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="メモ一覧" header-border-variant="light">
                         <b-table responsive hover small id="memotable" sort-by="ID" small label="Table Options"
                             :items=memos :fields="[
@@ -93,9 +99,10 @@
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectMemo(data.item);"><i
-                                        class="fas fa-edit"></i>
-                                </b-button>
+                                <router-link to="?page=show">
+                                    <b-button variant="info" @click="selectMemo(data.item);"><i class="fas fa-edit"></i>
+                                    </b-button>
+                                </router-link>
                             </template>
                             <template v-slot:cell(delete)="data">
                                 <b-button variant="danger" @click="showDeleteModal();selectMemo(data.item);"><i
@@ -129,7 +136,9 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getMemos();">＜</b-button>
+                    <router-link to="?page=index">
+                        <b-button @click="getMemos();">＜</b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="メモ入力" header-border-variant="light">
                         <b-row>
                             <b-col>
@@ -165,7 +174,10 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(memo);changeMode('index');">適用</b-button>
+                <router-link to="?page=index">
+                    <b-button variant="info" class="mr-3" @click="bulkUpsert(memo);">適用
+                    </b-button>
+                </router-link>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -174,10 +186,12 @@
     </div>
 
     <script>
+        const router = new VueRouter({
+        })
+
         var app = new Vue({
             el: '#app',
             data: {
-                pageName: 'index',
                 memos: [],               //全件memo
                 memo: [],                //選択中のmemo
             },
@@ -206,7 +220,7 @@
                     await axios.post("/memo", item)
                         .then(function (response) {
                             Vue.set(self.memo, 'id', response.data.id)
-                            self.getMemo(self.memo);
+                            self.getMemos();
                             self.memo.isInsert = false;
                         });
                 },
@@ -214,7 +228,7 @@
                     self = this;
                     await axios.put("/memo/" + item.id, item)
                         .then(function (response) {
-                            self.getMemo(self.memo);
+                            self.getMemos();
                             console.log(response);
                         });
                 },
@@ -233,10 +247,12 @@
                         isInsert: true,
                     });
                     self.memo = self.memos.slice(-1)[0];
+                    localStorage.setItem('memo', JSON.stringify(self.memo))
                 },
                 selectMemo: function (item) {
                     this.memo = item;
                     console.log(this.memo);
+                    localStorage.setItem('memo', JSON.stringify(item))
                 },
                 getMemo: async function (item) {
                     self = this;
@@ -261,10 +277,6 @@
                         appendToast: append,
                     })
                 },
-                // ページ変更
-                changeMode(pageName) {
-                    this.pageName = pageName;
-                },
                 showDeleteModal() {
                     this.$refs['deleteModal'].show()
                 },
@@ -273,8 +285,16 @@
                 },
             },
             mounted: function () {
+                this.memo = JSON.parse(localStorage.getItem('memo'));
                 this.getMemos();
             },
+            router,
+            computed: {
+                pageName() {
+                    if (this.$route.query.page == undefined) return 'index';
+                    return this.$route.query.page;
+                },
+            }
         })
 
 
