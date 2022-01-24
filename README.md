@@ -19,7 +19,7 @@ $docker build -t scaddie:0.1 .
 2.Run the docker image
 
 ```
-$docker run -d -it --name scaddie -p 5001:80 scaddiebuild -t scaddie:0.1 .
+$docker run -d -it --name scaddie -p 5001:80 scaddiebuild -t scaddie:0.1
 ```
 
 2.Brawse scaddie page
