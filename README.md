@@ -22,7 +22,7 @@ $docker build -t scaddie:0.1 .
 $docker run -d -it --name scaddie -p 5001:80 scaddie:0.1
 ```
 
-2.Brawse scaddie page
+2.Brawse soho-caddie page
 
 ```
 http://<your sever IP>:5001
