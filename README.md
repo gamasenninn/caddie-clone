@@ -8,6 +8,30 @@ OK!
 As you like!  
 We adopted SQLAlchemy as the SQL wrapper. You can use any DBMS that it supports.  
 
-## How to use
+## Get started
 
-I'll explain how to use it later ....
+1.Make the docker image
+
+```
+$docker build -t scaddie:0.1 .
+```
+
+2.Run the docker image
+
+```
+$docker run -d iit --name scaddie -p 5001:80 scaddiebuild -t scaddie:0.1 .
+```
+
+2.Brawse scaddie page
+
+```
+http://<your sever IP>:5001
+```
+If you can see "HelloWorld!" ,it does working
+
+```
+http://<your sever IP>:5001/invoice-page
+```
+
+Can you see INVOICE ?  
+Congratulations!!
