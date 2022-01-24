@@ -35,6 +35,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
+
+    <!-- VueRouter -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 </head>
 
 <body>
@@ -82,7 +85,10 @@
             <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('store');CustomerAddRow();">＋新規作成</b-button>
+                    <router-link to="?page=store">
+                        <b-button variant="success" @click="CustomerAddRow();">＋新規作成
+                        </b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="得意先一覧"
                         header-border-variant="light">
                         <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
@@ -98,9 +104,11 @@
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectCustomer(data.item);"><i
-                                        class="fas fa-edit"></i>
-                                </b-button>
+                                <router-link to="?page=show">
+                                    <b-button variant="info" @click="selectCustomer(data.item);"><i
+                                            class="fas fa-edit"></i>
+                                    </b-button>
+                                </router-link>
                             </template>
                             <template v-slot:cell(delete)="data">
                                 <b-button variant="danger" @click="showDeleteModal();selectCustomer(data.item);"><i
@@ -134,7 +142,9 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getCustomers();">＜</b-button>
+                    <router-link to="?page=index">
+                        <b-button @click="getCustomers();">＜</b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="得意先入力"
                         header-border-variant="light">
                         <b-row>
@@ -214,7 +224,10 @@
         <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
             class="fixed-bottom footer">
             <div class="d-flex justify-content-end">
-                <b-button variant="info" class="mr-3" @click="bulkUpsert(customer);changeMode('index');">適用</b-button>
+                <router-link to="?page=index">
+                    <b-button variant="info" class="mr-3" @click="bulkUpsert(customer);">適用
+                    </b-button>
+                </router-link>
                 <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
             </div>
         </b-card>
@@ -222,10 +235,12 @@
     </div>
 
     <script>
+        const router = new VueRouter({
+        })
+
         var app = new Vue({
             el: '#app',
             data: {
-                pageName: 'index',
                 customers: [],               //全件customer
                 customer: [],                //選択中のcustomer
             },
@@ -254,7 +269,7 @@
                     await axios.post("/customer", item)
                         .then(function (response) {
                             Vue.set(self.customer, 'id', response.data.id)
-                            self.getCustomer(self.customer);
+                            self.getCustomers();
                             self.customer.isInsert = false;
                         });
                 },
@@ -262,7 +277,7 @@
                     self = this;
                     await axios.put("/customer/" + item.id, item)
                         .then(function (response) {
-                            self.getCustomer(self.customer);
+                            self.getCustomers();
                             console.log(response);
                         });
                 },
@@ -281,10 +296,12 @@
                         isInsert: true,
                     });
                     self.customer = self.customers.slice(-1)[0];
+                    localStorage.setItem('customer', JSON.stringify(self.customer))
                 },
                 selectCustomer: function (item) {
                     this.customer = item;
                     console.log(this.customer);
+                    localStorage.setItem('customer', JSON.stringify(item))
                 },
                 getCustomer: async function (item) {
                     self = this;
@@ -309,10 +326,6 @@
                         appendToast: append,
                     })
                 },
-                // ページ変更
-                changeMode(pageName) {
-                    this.pageName = pageName;
-                },
                 showDeleteModal() {
                     this.$refs['deleteModal'].show()
                 },
@@ -321,8 +334,16 @@
                 },
             },
             mounted: function () {
+                this.customer = JSON.parse(localStorage.getItem('customer'));
                 this.getCustomers();
             },
+            router,
+            computed: {
+                pageName() {
+                    if (this.$route.query.page == undefined) return 'index';
+                    return this.$route.query.page;
+                },
+            }
         })
 
 
