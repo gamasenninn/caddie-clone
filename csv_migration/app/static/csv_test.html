@@ -1,0 +1,94 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+    <link href="images/favicon.ico" rel="shortcut icon">
+    -->
+    <title>アップロード</title>
+    <!-- Load required Bootstrap and BootstrapVue CSS -->
+
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+    <!-- Load fontawesome -->
+    <!-- link href="./css/all.css" rel="stylesheet" -->
+    <!--load all styles -->
+    <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+        crossorigin="anonymous"></script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+    <!-- 各種便利なツール塁です必要なときに随時使用のこと
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue-image-lightbox@6.4.0/dist/vue-image-lightbox.min.js"></script>
+    <script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
+    <script src="./jsQR.js"></script>
+    <script src="https://cozmo.github.io/jsQR/jsQR.js"></script>
+    -->
+
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+</head>
+
+<body>
+aaaa
+    <template>
+        <div id="app" v-cloak>
+            <div class="imgContent">
+                <!-- <div class="imagePreview">
+              <img :src="uploadedImage" style="width:100%;" />
+            </div> -->
+                <input type="file" class="file_input" name="file" @change="onFileChange">
+                <button @click='onUploadImage'>画像判定してくだちい・・・</button>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                uploadedImage: "",
+            },
+            methods: {
+                onFileChange: function (e) {
+                    let reader = new FileReader()
+                    reader.onload = (e) => {
+                        this.uploadedImage = e.target.result;
+                    }
+                },
+                onUploadImage: async function () {
+                    var params = new FormData()
+                    params.append('image', this.uploadedImage)
+                    // Axiosを用いてFormData化したデータをFlaskへPostしています。
+                    axios.post(`${API_URL}/classification`, params).then(function (response) {
+                        console.log(response)
+                    })
+                }
+            }
+        })
+    </script>
+
+</body>
+
+
+</html>
