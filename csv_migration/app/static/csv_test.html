@@ -50,47 +50,23 @@
 </head>
 
 <body>
-    iiii
     <div id="app" v-cloak>
-        <!-- <template> -->
-        <!-- <div class="imgContent">
-                <input type="file" class="file_input" name="file" @change="onFileChange">
-                <button @click='onUploadImage'>画像判定してくだちい・・・</button>
-            </div> -->
-
         <b-card style="max-width: 20rem">
-            <form action="upload-files" class="dropzone" id="my-dropzone">
+            <form action="upload" class="dropzone" id="my-dropzone">
                 <input hidden type="text" name="fileId" v-model="fileId">
 
                 <input hidden type="file" name="file" id="my-dropzone" multiple>
             </form>
         </b-card>
-        <!-- </template> -->
     </div>
 
     <script>
         var app = new Vue({
             el: '#app',
             data: {
-                isList: true,
-                dicFiles: [],
                 fileId: '001',
             },
             methods: {
-                onFileChange: function (e) {
-                    let reader = new FileReader()
-                    reader.onload = (e) => {
-                        this.uploadedImage = e.target.result;
-                    }
-                },
-                onUploadImage: async function () {
-                    var params = new FormData()
-                    params.append('image', this.uploadedImage)
-                    // Axiosを用いてFormData化したデータをFlaskへPostしています。
-                    axios.post(`${API_URL}/classification`, params).then(function (response) {
-                        console.log(response)
-                    })
-                }
             }
         })
 
@@ -100,7 +76,6 @@
                 this.on("complete", file => {
                     console.log("complete A file has been added");
                     this.removeFile(file);
-                    app.getFileList(app.fileId);
                 });
             }
         };
