@@ -1,9 +1,15 @@
+from statistics import mode
 from api import app
 import sys
 import json
 import uuid
 from flask import redirect, request
 from flask import Flask,request,json, jsonify,Response,make_response
+import importlib
+from models import *
+import os
+import sys
+import csv
 
 sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
@@ -172,6 +178,38 @@ def delete_files():
 @app.route("/list-files/<dir_path>/<fid>",methods=['GET'])
 def get_file_list(dir_path,fid):
     return jsonify(get_flist(fid,f"./static/{dir_path}"))
+
+# ----- csv_upload_test -----
+@app.route('/csv_test')
+def CsvTest():
+    return app.send_static_file('csv_test.html')
+
+
+@app.route('/upload', methods=['POST'])
+def CsvUpload():
+    file = request.files['file']
+    file.save('csv/Customer.csv')
+    import_csv()
+    return "test"
+
+def import_csv():
+    # fixtures_dir = app.config['FIXTURES_DIR']
+    fixtures_dir = 'csv/'
+    models = importlib.import_module('models')
+
+    for file_name in os.listdir(fixtures_dir):
+        class_name = file_name.replace(".csv", "").capitalize()
+        print(class_name)
+        Klass = getattr(models, class_name)
+        with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
+            reader = csv.reader(csv_file, delimiter=',')
+            header = next(reader)
+            for row in reader:
+                klass = Klass()
+                for i in range(len(header)):
+                    setattr(klass, header[i], row[i])
+                db.session.add(klass)
+            db.session.commit()
 
 if __name__ == '__main__':
 
