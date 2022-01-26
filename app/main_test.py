@@ -1,4 +1,3 @@
-from statistics import mode
 from api import app
 import sys
 import json
@@ -8,7 +7,6 @@ from flask import Flask,request,json, jsonify,Response,make_response
 import importlib
 from models import *
 import os
-import sys
 import csv
 
 sys.path.append('../')
@@ -192,6 +190,7 @@ def CsvUpload():
     import_csv()
     return "test"
 
+
 def import_csv():
     # fixtures_dir = app.config['FIXTURES_DIR']
     fixtures_dir = 'csv/'
@@ -211,6 +210,7 @@ def import_csv():
                 db.session.add(klass)
             db.session.commit()
 
+
 if __name__ == '__main__':
 
-    app.run(host='0.0.0.0', port=5010,debug=True)
+    app.run(host='0.0.0.0', port=5010, debug=True)
