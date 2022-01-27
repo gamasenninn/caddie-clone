@@ -149,6 +149,11 @@ def settingPage():
     return app.send_static_file('setting.html')
 
 
+@app.route('/csv-upload-page')
+def csvUploadPage():
+    return app.send_static_file('csv_upload.html')
+
+
 @app.route('/invoice-dust-page')
 def invoiceDustPage():
     return app.send_static_file('invoice_dust.html')
