@@ -3,3 +3,5 @@
 /static/pdf
 *.db
 *.db-journal
+csv/*
+!.gitkeep
