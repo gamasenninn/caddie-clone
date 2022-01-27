@@ -149,6 +149,26 @@
 
 <br>
 
+## Categories
+
+| 項目         | 和名       | タイプ   | 備考 | 
+| ------------ | ---------- | -------- | ---- | 
+| id           | id         | integer  |      | 
+| categoryName | カテゴリ名 | text      |      | 
+| createdAt    | 作成日時   | datetime |      | 
+| updatedAt    | 更新日時   | datetime |      |
+
+<br>
+
+## Makers
+
+| 項目         | 和名       | タイプ   | 備考 | 
+| ------------ | ---------- | -------- | ---- | 
+| id           | id         | integer  |      | 
+| makerName    | メーカー名  | text     |      | 
+| createdAt    | 作成日時   | datetime |      | 
+| updatedAt    | 更新日時   | datetime |      |
+
 ## Setting
 
 | 項目名                   | 和名             | タイプ       | 備考                     | 
