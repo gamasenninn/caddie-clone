@@ -187,7 +187,7 @@ def get_file_list(dir_path, fid):
 
 
 # ----- csv_upload_test -----
-@app.route('/csv_test')
+@app.route('/csv-test')
 def CsvTest():
     return app.send_static_file('csv_test.html')
 
@@ -195,19 +195,20 @@ def CsvTest():
 @app.route('/upload', methods=['POST'])
 def CsvUpload():
     file = request.files['file']
-    file.save('csv/Customer.csv')
+    target = request.form['selected']
+    file.save('csv/'+target + '.csv')
     import_csv()
     return "test"
 
 
 def import_csv():
-    # fixtures_dir = app.config['FIXTURES_DIR']
     fixtures_dir = 'csv/'
     models = importlib.import_module('models')
+    dirList = os.listdir(fixtures_dir)
+    dirList.remove('.gitkeep')
 
-    for file_name in os.listdir(fixtures_dir):
+    for file_name in dirList:
         class_name = file_name.replace(".csv", "").capitalize()
-        print(class_name)
         Klass = getattr(models, class_name)
         with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
             reader = csv.reader(csv_file, delimiter=',')
