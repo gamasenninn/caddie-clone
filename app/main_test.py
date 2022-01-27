@@ -219,6 +219,7 @@ def import_csv():
                     setattr(klass, header[i], row[i])
                 db.session.add(klass)
             db.session.commit()
+        os.remove('csv/'+file_name)
 
 
 if __name__ == '__main__':

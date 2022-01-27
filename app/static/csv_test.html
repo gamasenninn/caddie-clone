@@ -78,13 +78,15 @@
             methods: {
                 submit: function () {
                     myDropzone.processQueue();
-                }
+                },
             }
         })
 
         Dropzone.options.myDropzone = { // camelized version of the `id`
             dictDefaultMessage: 'ここにファイルをドロップしてね',
             autoProcessQueue: false,
+            maxFiles: 1,
+            addRemoveLinks: true,
             init: function () {
                 myDropzone = this;
                 this.on("complete", file => {
