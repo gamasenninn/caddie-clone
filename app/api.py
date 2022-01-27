@@ -5,9 +5,9 @@ import json
 from datetime import date
 
 
-@app.route('/')
-def index():
-    return 'HelloWorld!'
+#@app.route('/')
+#def index():
+#    return 'HelloWorld!'
 
 
 # -----ユーザー(Users)-----
@@ -773,4 +773,4 @@ def setting_update(id):
 
 if __name__ == '__main__':
 
-    app.run(host='0.0.0.0', port=5010)
+    app.run(host='0.0.0.0', port=5010,debug=True)
