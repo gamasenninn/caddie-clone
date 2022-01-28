@@ -23,37 +23,13 @@ login_manager = LoginManager()
 login_manager.login_view = 'get_login'
 login_manager.init_app(app)
 
-
 class LoginUser(UserMixin):
     def __init__(self, user_id):
         self.id = user_id
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return LoginUser(user_id)
-
-
-def check_user(user_id, password):
-
-    user = User.query.filter_by(name=user_id).first()
-    if user:
-        app.logger.debug(user)
-
-        #res = {"user_id": "admin", "password": "admin"}
-        if user.password == password:
-            return True
-        else:
-            return False
-    else:
-        return False
-
-    if res:
-        if res['user_id'] == user_id and res['password'] == password:
-            return True
-        else:
-            return False
-
 
 @app.route('/')
 def home():
@@ -64,25 +40,19 @@ def home():
 def get_login():
     return app.send_static_file('login.html')
 
-
 @app.route('/login', methods=['POST'])
 def login_post():
     user_id = request.form["userId"]
     password = request.form["password"]
-    if(request.method == "POST"):
-        if check_user(user_id, password):
+    checkUser = User.query.filter_by(name=user_id).first()
+    if checkUser:
+        if checkUser.password == password:
             user = LoginUser(user_id)
-            #user =User('user01')
-            # login_user(users.get(user_check[request.form["username"]]["id"]))
             login_user(user)
             next = request.args.get('next')
             return redirect(next or '/')
         else:
-            # return abort(401)
             return redirect('/login')
-    else:
-        return app.send_static_file('home-page.html')
-
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -91,7 +61,6 @@ def logout():
     return redirect('/')
 
 # ------　ユーザー認証ここまで -------
-
 
 @app.route('/test')
 def test():
@@ -228,8 +197,12 @@ def makerPage():
 @app.route('/setting-page')
 @login_required
 def settingPage():
-    return app.send_static_file('setting.html')
-
+    #user_id = current_user.id
+    checkUser = User.query.filter_by(name=current_user.id).first()
+    if checkUser:
+        if checkUser.role == "admin":
+            return app.send_static_file('setting.html')
+    return redirect('/login')
 
 @app.route('/csv-upload-page')
 def csvUploadPage():
