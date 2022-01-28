@@ -15,7 +15,8 @@ import pdfmaker.app.pdf_maker as pd
 from upload.upload import make_thumb,chext,save_file,remove_files2,get_flist
 
 # ------　ユーザー認証 -------
-app.secret_key = b'fTxrhQcsXuHbTEmWzGeA'
+#app.secret_key = b'fTxrhQcsXuHbTEmWzGeA'
+app.secret_key = os.urandom(24)
 login_manager = LoginManager()
 login_manager.login_view = 'get_login'
 login_manager.init_app(app)
@@ -33,7 +34,17 @@ def load_user(user_id):
 
 def check_user(user_id, password):
 
-    res = {"user_id": "admin", "password": "admin"}
+    user = User.query.filter_by(name=user_id).first()
+    if user:
+        app.logger.debug(user)
+
+        #res = {"user_id": "admin", "password": "admin"}
+        if user.password == password:
+            return True
+        else:
+            return False
+    else:
+        return False
 
     if res:
         if res['user_id'] == user_id and res['password'] == password:
@@ -54,10 +65,8 @@ def get_login():
 
 @app.route('/login', methods=['POST'])
 def login_post():
-    #data = request.json
     user_id = request.form["userId"]
     password = request.form["password"]
-    # return jsonify(request.form)
     if(request.method == "POST"):
         if check_user(user_id, password):
             user = LoginUser(user_id)
@@ -76,7 +85,8 @@ def login_post():
 @app.route('/logout', methods=['GET'])
 def logout():
     logout_user()
-    return redirect('/login')
+    #return redirect('/login')
+    return redirect('/')
 
 # ------　ユーザー認証ここまで -------
 
