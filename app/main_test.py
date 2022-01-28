@@ -277,7 +277,7 @@ def CsvUpload():
     target = request.form['selected']
     file.save('csv/'+target + '.csv')
     upsert_csv()
-    return jsonify({"result":"ok"})
+    return jsonify({"result": "ok"})
 
 
 def upsert_csv():
