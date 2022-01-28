@@ -1,3 +1,5 @@
+from sqlalchemy import insert, true
+from sqlalchemy.dialects.sqlite import insert
 from api import app
 import sys
 import json
@@ -284,12 +286,11 @@ def CsvUpload():
     file = request.files['file']
     target = request.form['selected']
     file.save('csv/'+target + '.csv')
-    # import_csv()
-    update_csv()
-    return "test"
+    upsert_csv()
+    return jsonify({"result": "ok"})
 
 
-def update_csv():
+def upsert_csv():
     fixtures_dir = 'csv/'
     models = importlib.import_module('models')
     dirList = os.listdir(fixtures_dir)
@@ -302,34 +303,59 @@ def update_csv():
             reader = csv.reader(csv_file, delimiter=',')
             header = next(reader)
             for row in reader:
-                updateList=[]
-                columnDic={}
+                columnDic = {}
                 for i in range(len(header)):
-                    columnDic[header[i]]=row[i]
-                    updateList.append(columnDic)
-                db.session.bulk_update_mappings(model_class, updateList)
+                    columnDic[header[i]] = row[i]
+                insert_stmt = insert(model_class).values(columnDic)
+                do_update_stmt = insert_stmt.on_conflict_do_update(
+                    index_elements=['id'], set_=columnDic)
+                db.session.execute(do_update_stmt)
             db.session.commit()
         os.remove('csv/'+file_name)
 
-def import_csv():
-    fixtures_dir = 'csv/'
-    models = importlib.import_module('models')
-    dirList = os.listdir(fixtures_dir)
-    dirList.remove('.gitkeep')
 
-    for file_name in dirList:
-        class_name = file_name.replace(".csv", "").capitalize()
-        Klass = getattr(models, class_name)
-        with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
-            reader = csv.reader(csv_file, delimiter=',')
-            header = next(reader)
-            for row in reader:
-                klass = Klass()
-                for i in range(len(header)):
-                    setattr(klass, header[i], row[i])
-                db.session.add(klass)
-            db.session.commit()
-        os.remove('csv/'+file_name)
+# def update_csv():
+#     fixtures_dir = 'csv/'
+#     models = importlib.import_module('models')
+#     dirList = os.listdir(fixtures_dir)
+#     dirList.remove('.gitkeep')
+
+#     for file_name in dirList:
+#         class_name = file_name.replace(".csv", "").capitalize()
+#         model_class = getattr(models, class_name)
+#         with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
+#             reader = csv.reader(csv_file, delimiter=',')
+#             header = next(reader)
+#             for row in reader:
+#                 updateList=[]
+#                 columnDic={}
+#                 for i in range(len(header)):
+#                     columnDic[header[i]]=row[i]
+#                     updateList.append(columnDic)
+#                 db.session.bulk_update_mappings(model_class, updateList)
+#                 db.session.commit()
+#             # db.session.commit()
+#         os.remove('csv/'+file_name)
+
+# def import_csv():
+#     fixtures_dir = 'csv/'
+#     models = importlib.import_module('models')
+#     dirList = os.listdir(fixtures_dir)
+#     dirList.remove('.gitkeep')
+
+#     for file_name in dirList:
+#         class_name = file_name.replace(".csv", "").capitalize()
+#         Klass = getattr(models, class_name)
+#         with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
+#             reader = csv.reader(csv_file, delimiter=',')
+#             header = next(reader)
+#             for row in reader:
+#                 klass = Klass()
+#                 for i in range(len(header)):
+#                     setattr(klass, header[i], row[i])
+#                 db.session.add(klass)
+#             db.session.commit()
+#         os.remove('csv/'+file_name)
 
 
 if __name__ == '__main__':
