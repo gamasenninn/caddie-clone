@@ -3,6 +3,8 @@ from app import db, app, ma
 from datetime import datetime
 from datetime import date
 from sqlalchemy.sql import func
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.sql import Insert
 
 
 class User(db.Model):
@@ -41,23 +43,24 @@ class Customer(db.Model):
     invoices = db.relationship('Invoice', backref='customer')
     quotations = db.relationship('Quotation', backref='customer')
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'customerName': self.customerName,
-            'honorificTitle': self.honorificTitle,
-            'postNumber': self.postNumber,
-            'address': self.address,
-            'telNumber': self.telNumber,
-            'faxNumber': self.faxNumber,
-            'url': self.url,
-            'email': self.email,
-            'manager': self.manager,
-            'representative': self.representative,
-            'memo': self.memo,
-            'createdAt': self.createdAt,
-            'updatedAt': self.updatedAt,
-        }
+
+def to_dict(self):
+    return {
+        'id': self.id,
+        'customerName': self.customerName,
+        'honorificTitle': self.honorificTitle,
+        'postNumber': self.postNumber,
+        'address': self.address,
+        'telNumber': self.telNumber,
+        'faxNumber': self.faxNumber,
+        'url': self.url,
+        'email': self.email,
+        'manager': self.manager,
+        'representative': self.representative,
+        'memo': self.memo,
+        'createdAt': self.createdAt,
+        'updatedAt': self.updatedAt,
+    }
 
 
 class Item(db.Model):
@@ -286,6 +289,7 @@ class Setting(db.Model):
 
 
 # -----Json変換-----
+
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
