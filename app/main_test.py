@@ -14,76 +14,87 @@ sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
 from upload.upload import make_thumb,chext,save_file,remove_files2,get_flist
 
-#------　ユーザー認証 -------
+# ------　ユーザー認証 -------
 app.secret_key = b'fTxrhQcsXuHbTEmWzGeA'
 login_manager = LoginManager()
 login_manager.login_view = 'get_login'
 login_manager.init_app(app)
 
+
 class LoginUser(UserMixin):
     def __init__(self, user_id):
         self.id = user_id
 
+
 @login_manager.user_loader
 def load_user(user_id):
-  return LoginUser(user_id)
+    return LoginUser(user_id)
 
-def check_user(user_id,password):
 
-    res = {"user_id":"admin","password":"admin"}
+def check_user(user_id, password):
+
+    res = {"user_id": "admin", "password": "admin"}
 
     if res:
-      if res['user_id'] == user_id and res['password'] == password:
-        return True
-      else:
-        return False
+        if res['user_id'] == user_id and res['password'] == password:
+            return True
+        else:
+            return False
+
 
 @app.route('/')
 def home():
     return app.send_static_file('home.html')
 
-@app.route('/login',methods=['GET'])
+
+@app.route('/login', methods=['GET'])
 def get_login():
     return app.send_static_file('login.html')
 
-@app.route('/login',methods=['POST'])
+
+@app.route('/login', methods=['POST'])
 def login_post():
     #data = request.json
     user_id = request.form["userId"]
     password = request.form["password"]
-    #return jsonify(request.form)
+    # return jsonify(request.form)
     if(request.method == "POST"):
-        if  check_user(user_id,password):
+        if check_user(user_id, password):
             user = LoginUser(user_id)
             #user =User('user01')
-            #login_user(users.get(user_check[request.form["username"]]["id"]))
+            # login_user(users.get(user_check[request.form["username"]]["id"]))
             login_user(user)
             next = request.args.get('next')
             return redirect(next or '/')
         else:
-            #return abort(401)
+            # return abort(401)
             return redirect('/login')
     else:
         return app.send_static_file('home-page.html')
 
-@app.route('/logout',methods=['GET'])
-def logout():
-  logout_user()
-  return redirect('/login')
 
-#------　ユーザー認証ここまで -------
+@app.route('/logout', methods=['GET'])
+def logout():
+    logout_user()
+    return redirect('/login')
+
+# ------　ユーザー認証ここまで -------
+
 
 @app.route('/test')
 def test():
     return "Hello TEST!"
 
+
 @app.route('/test-view-r')
 def rootn():
     return app.send_static_file('test_view_r.html')
 
+
 @app.route('/test-view-crud')
 def crud_test():
     return app.send_static_file('test_view_crud.html')
+
 
 @app.route('/test-view-crud2')
 def crud_test2():
@@ -208,6 +219,11 @@ def settingPage():
     return app.send_static_file('setting.html')
 
 
+@app.route('/csv-upload-page')
+def csvUploadPage():
+    return app.send_static_file('csv_upload.html')
+
+
 @app.route('/invoice-dust-page')
 @login_required
 def invoiceDustPage():
@@ -258,9 +274,32 @@ def CsvUpload():
     file = request.files['file']
     target = request.form['selected']
     file.save('csv/'+target + '.csv')
-    import_csv()
+    # import_csv()
+    update_csv()
     return "test"
 
+
+def update_csv():
+    fixtures_dir = 'csv/'
+    models = importlib.import_module('models')
+    dirList = os.listdir(fixtures_dir)
+    dirList.remove('.gitkeep')
+
+    for file_name in dirList:
+        class_name = file_name.replace(".csv", "").capitalize()
+        model_class = getattr(models, class_name)
+        with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
+            reader = csv.reader(csv_file, delimiter=',')
+            header = next(reader)
+            for row in reader:
+                updateList=[]
+                columnDic={}
+                for i in range(len(header)):
+                    columnDic[header[i]]=row[i]
+                    updateList.append(columnDic)
+                db.session.bulk_update_mappings(model_class, updateList)
+            db.session.commit()
+        os.remove('csv/'+file_name)
 
 def import_csv():
     fixtures_dir = 'csv/'
