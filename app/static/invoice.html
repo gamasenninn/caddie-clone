@@ -46,6 +46,7 @@
 
     <!-- soho caddie component-->
     <script src="static/component/sc-menu.js"></script>
+    <script src="static/component/select-modal.js"></script>
 </head>
 
 <body>
@@ -89,8 +90,8 @@
                                 <p class="text-left pl-2" id="deadLine">{{formatDate(data.item.deadLine)}}</p>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="showDeleteModal();selectInvoice(data.item);"><i
-                                        class="fas fa-trash-alt"></i>
+                                <b-button v-b-modal="'deleteModal'" variant="danger" @click="selectInvoice(data.item);">
+                                    <i class="fas fa-trash-alt"></i>
                                 </b-button>
                             </template>
                         </b-table>
@@ -101,18 +102,7 @@
         </div>
 
         <!-- 削除モーダル -->
-        <b-modal ref="deleteModal" hide-footer>
-            <div class="d-block text-center">
-                <h3>削除しますか？</h3>
-            </div>
-            <b-row>
-                <b-col></b-col>
-                <b-button variant="danger" @click="deleteInvoice(invoice);hideDeleteModal();">はい</b-button>
-                <b-col></b-col>
-                <b-button variant="info" @click="hideDeleteModal();">いいえ</b-button>
-                <b-col></b-col>
-            </b-row>
-        </b-modal>
+        <select-modal modal-name='deleteModal' modal-message='削除しますか？' @selected="deleteModalProcess($event);" />
 
         <!-- 新規作成・詳細(更新)ページ -->
         <div v-if="pageName=='show' || pageName=='store'">
@@ -536,11 +526,11 @@
                 changeMode(pageName) {
                     this.pageName = pageName;
                 },
-                showDeleteModal() {
-                    this.$refs['deleteModal'].show()
-                },
-                hideDeleteModal() {
-                    this.$refs['deleteModal'].hide()
+                deleteModalProcess(result) {
+                    this.$bvModal.hide('deleteModal');
+                    if (result === true) {
+                        this.deleteInvoice(this.invoice);
+                    }
                 },
                 showUpsertModal() {
                     this.$refs['upsertModal'].show();
