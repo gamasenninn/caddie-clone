@@ -77,7 +77,7 @@
                                 <p>インポート先テーブルを選択してください。</p>
                                 <b-form-select v-model="selected" :options="target"></b-form-select>
                                 <div class="mt-3">Selected: <strong>{{ selected }}</strong></div>
-                                <b-button @click="submit();">送信</b-button>
+                                <b-button variant="success" @click="submit();">送信</b-button>
                             </b-col>
                             <b-col></b-col>
                         </b-row>
@@ -86,6 +86,21 @@
                 <b-col></b-col>
             </b-row>
         </div>
+
+        <!-- インポート結果モーダル -->
+        <b-modal ref="resultModal" hide-footer>
+            <template #modal-title>
+                {{title}}
+            </template>
+            <div class="d-block text-center">
+                <p>{{message}}</p>
+            </div>
+            <b-row>
+                <b-col class="text-center">
+                    <b-button class="mt-3" @click="hideResultModal();">閉じる</b-button>
+                </b-col>
+            </b-row>
+        </b-modal>
 
     </div>
 
@@ -98,16 +113,26 @@
                     { value: null, text: '選択してください' }, { value: "User", text: 'ユーザー' }, { value: "Customer", text: '得意先' }, { value: "Item", text: '商品' },
                     { value: "Invoice", text: '請求書' }, { value: "Invoice_Item", text: '請求書商品' }, { value: "Quotation", text: '見積書' }, { value: "Quotation_Item", text: '見積書商品' },
                     { value: "Memo", text: 'メモ' }, { value: "Unit", text: '単位' }, { value: "Category", text: 'カテゴリー' }, { value: "Maker", text: 'メーカー' },
-                ]
+                ],
+                message: '',
+                title: '',
             },
             methods: {
                 submit: function () {
                     if (this.selected === null) {
-                        alert('インポート先を指定してください');
+                        app.title = "リジェクト";
+                        app.message = 'インポート先を指定してください';
+                        app.showResultModal();
                     }
                     myDropzone.processQueue();
                 },
-            }
+                showResultModal: function () {
+                    this.$refs['resultModal'].show();
+                },
+                hideResultModal: function () {
+                    this.$refs['resultModal'].hide();
+                }
+            },
         })
 
         Dropzone.options.myDropzone = { // camelized version of the `id`
@@ -118,10 +143,17 @@
             init: function () {
                 myDropzone = this;
                 this.on('error', function (file, response) {
-                    alert('CSVを正しい形式で書いてください');
+                    console.log(response);
+                    app.title = "エラー";
+                    app.message = response.message;
+                    app.showResultModal();
+                    this.removeFile(file);
                 });
-                this.on("complete", file => {
-                    console.log("complete A file has been added");
+                this.on("success", function (file, response) {
+                    console.log(response);
+                    app.title = "アップロード成功";
+                    app.message = response.message;
+                    app.showResultModal();
                     this.removeFile(file);
                 });
             }

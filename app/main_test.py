@@ -259,8 +259,11 @@ def CsvUpload():
     file = request.files['file']
     target = request.form['selected']
     file.save('csv/'+target + '.csv')
-    upsert_csv()
-    return jsonify({"result": "ok"})
+    try:
+        upsert_csv()
+    except:
+        return jsonify({"result": "error", "message": "更新に失敗しました。CSVを正しく入力してください。"}), 500
+    return jsonify({"result": "ok", "message": "更新に成功しました"})
 
 
 def upsert_csv():
@@ -282,9 +285,21 @@ def upsert_csv():
                 insert_stmt = insert(model_class).values(columnDic)
                 do_update_stmt = insert_stmt.on_conflict_do_update(
                     index_elements=['id'], set_=columnDic)
-                db.session.execute(do_update_stmt)
-            db.session.commit()
-        os.remove('csv/'+file_name)
+                try:
+                    db.session.execute(do_update_stmt)
+                except:
+                    db.session.rollback()
+                    db.session.close()
+                    csv_file.close()
+                    os.remove('csv/'+file_name)
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
+                db.session.close()
+            finally:
+                csv_file.close()
+                os.remove('csv/'+file_name)
 
 
 # def update_csv():
