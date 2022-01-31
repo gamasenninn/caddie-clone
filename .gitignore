@@ -1,8 +1,7 @@
-/__pycache__
+__pycache__
 /migrations
 *.db
 *.db-journal
-pdfmaker/pdf/
-pdfmaker/static/pdf/
-pdfmaker/app/__pycache__/
 app/static/upload/
+app/pdfmaker/app/static/pdf/
+app/upload/static/upload/
