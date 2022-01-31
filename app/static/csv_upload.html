@@ -82,6 +82,33 @@
                             <b-col></b-col>
                         </b-row>
                     </b-card>
+                    <b-card border-variant="white" class="mb-3 text-center" header="説明" header-border-variant="light">
+                        <p>CSVは以下の記述ルールでお願いします。</p>
+                        <h3>
+                            <b-badge>Rule1</b-badge>
+                        </h3>
+                        <b-img src="./static/images/how_to_csv1.png"></b-img>
+                        <p class="mt-3 mb-5">CSVにはカラム一覧・レコードをセットで記入してください。<br>
+                            レコード内のフィールドの数はカラム数と一致するようお願いします。<br>
+                            CSVの中にidの記述を含めると、テーブルをUpsertで更新します。<br>
+                            例えばDB内にID:1,2のレコードが既に存在し、CSVにID:1~3までの記述をしているとすると、<br>
+                            csv内のID:1,2の内容で上書きし、3のものはInsertでDBに挿入されます。
+                        </p>
+                        <h3>
+                            <b-badge>Rule2</b-badge>
+                        </h3>
+                        <b-img src="./static/images/how_to_csv2.png"></b-img>
+                        <p class="mt-3 mb-5">また、カラム一覧・レコード内のフィールド共にIDの情報を含めずにアップロードをする事で、Insertに切り替える事ができます。<br>
+                            既にDB内に消えたら困るデータが存在している際はこちらを利用してください。
+                        </p>
+                        <h3>
+                            <b-badge>Rule3</b-badge>
+                        </h3>
+                        <b-img src="./static/images/how_to_csv3.png"></b-img>
+                        <p class="mt-3 mb-5">最後に注意点として、CSV内にはカラム一覧をDBの全項目分記入し、フィールドがnullのものはカンマで区切ってください。<br>
+                            これをしないとUpdateの際に未記入部分がUpdateされず、前回のデータが残ります。<br>
+                        </p>
+                    </b-card>
                 </b-col>
                 <b-col></b-col>
             </b-row>
