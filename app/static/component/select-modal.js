@@ -8,7 +8,9 @@ Vue.component('select-modal', {
             </div>
             <b-row>
                 <b-col></b-col>
-                <b-button variant="danger" @click="isResult=true;select();">はい</b-button>
+                <router-link to="?page=index">
+                    <b-button variant="danger" @click="isResult=true;select();">はい</b-button>
+                </router-link>
                 <b-col></b-col>
                 <b-button variant="info" @click="isResult=false;select();">いいえ</b-button>
                 <b-col></b-col>
