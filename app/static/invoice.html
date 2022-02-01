@@ -472,8 +472,8 @@
                             });
                     }
                     else {
-                        var index = this.invoice.invoice_items.indexOf(item);
-                        this.invoice.invoice_items.splice(index);
+                        let indexNum = this.invoice.invoice_items.indexOf(item);
+                        this.invoice.invoice_items.splice(indexNum, 1);
                     }
                 },
                 addRowInvoiceItem: function () {
