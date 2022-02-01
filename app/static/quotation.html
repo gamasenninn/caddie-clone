@@ -44,6 +44,9 @@
         integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <!-- VueRouter -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
     <!-- soho caddie component-->
     <script src="static/component/sc-menu.js"></script>
     <script src="static/component/select-modal.js"></script>
@@ -64,7 +67,9 @@
             <b-row class="mt-5">
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-button variant="success" @click="changeMode('store');QuotationAddRow();">＋新規作成</b-button>
+                    <router-link to="?page=store">
+                        <b-button variant="success" @click="QuotationAddRow();">＋新規作成</b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="見積書一覧"
                         header-border-variant="light">
                         <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
@@ -79,9 +84,11 @@
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                             <template v-slot:cell(update)="data">
-                                <b-button variant="info" @click="changeMode('show');selectQuotation(data.item);"><i
-                                        class="fas fa-edit"></i>
-                                </b-button>
+                                <router-link to="?page=show">
+                                    <b-button variant="info" @click="selectQuotation(data.item);"><i
+                                            class="fas fa-edit"></i>
+                                    </b-button>
+                                </router-link>
                             </template>
                             <template v-slot:cell(applyDate)="data">
                                 <p class="text-left pl-2" id="applyDate">{{formatDate(data.item.applyDate)}}</p>
@@ -111,7 +118,9 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getQuotations();">＜</b-button>
+                    <router-link to="?page=index">
+                        <b-button @click="getQuotations();">＜</b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="見積書入力"
                         header-border-variant="light">
                         <b-row>
@@ -359,10 +368,12 @@
             return val.toLocaleString();
         });
 
+        const router = new VueRouter({
+        })
+
         var app = new Vue({
             el: '#app',
             data: {
-                pageName: 'index',
                 searchItemWord: '',
                 searchItemSelectCategory: '',
                 searchItemSelectMaker: '',
@@ -399,7 +410,7 @@
                     await axios.post("/quotation", item)
                         .then(function (response) {
                             Vue.set(self.quotation, 'id', response.data.id)
-                            self.getQuotation(self.quotation);
+                            self.getQuotations();
                             self.quotation.isInsert = false;
                         });
                 },
@@ -407,7 +418,7 @@
                     self = this;
                     await axios.put("/quotation/" + item.id, item)
                         .then(function (response) {
-                            self.getQuotation(self.quotation);
+                            self.getQuotations();
                             console.log(response);
                         });
                 },
@@ -428,11 +439,13 @@
                         quotation_items: [],
                     });
                     self.quotation = self.quotations.slice(-1)[0];
+                    localStorage.setItem('quotation', JSON.stringify(self.quotation));
                     Vue.set(self.quotation, 'isTaxExp', true);
                 },
                 selectQuotation: function (item) {
                     this.quotation = item;
                     console.log(this.quotation);
+                    localStorage.setItem('quotation', JSON.stringify(item))
                 },
                 selectQuotationItem: function (item) {
                     this.quotationItem = item;
@@ -512,10 +525,6 @@
                             self.makers.unshift('')
                         });
                 },
-                // ページ変更
-                changeMode(pageName) {
-                    this.pageName = pageName;
-                },
                 modalShow: function (item, modalName) {
                     this.quotation = item;
                     console.log(this.quotation);
@@ -531,7 +540,6 @@
                     this.$bvModal.hide('upsertModal');
                     if (result === true) {
                         this.bulkUpsert(this.quotation);
-                        this.changeMode('index');
                     }
                 },
                 // 顧客名モーダル選択時
@@ -571,6 +579,7 @@
                 }
             },
             mounted: function () {
+                this.quotation = JSON.parse(localStorage.getItem('quotation'));
                 this.getQuotations();
                 this.getCustomers();
                 this.getItems();
@@ -578,7 +587,12 @@
                 this.getCategories();
                 this.getMakers();
             },
+            router,
             computed: {
+                pageName() {
+                    if (this.$route.query.page == undefined) return 'index';
+                    return this.$route.query.page;
+                },
                 // 逐次、数量＊単価の合計をする
                 sum: function () {
                     if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
