@@ -436,7 +436,7 @@
                     self = this;
                     self.invoices.push({
                         isInsert: true,
-                        invoice_items: [],
+                        invoice_items: [{}, {}, {}, {}, {}],
                     });
                     self.invoice = self.invoices.slice(-1)[0];
                     localStorage.setItem('invoice', JSON.stringify(self.invoice));
