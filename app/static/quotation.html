@@ -464,11 +464,17 @@
                 },
                 deleteQuotationItem: async function (item) {
                     self = this;
-                    await axios.delete("/quotation_item/" + item.id)
-                        .then(function (response) {
-                            console.log(response);
-                            self.getQuotation(self.quotation);
-                        });
+                    if (item.id) {
+                        await axios.delete("/quotation_item/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                self.getQuotation(self.quotation);
+                            });
+                    }
+                    else {
+                        let indexNum = this.quotation.quotation_items.indexOf(item);
+                        this.quotation.quotation_items.splice(indexNum, 1);
+                    }
                 },
                 addRowQuotationItem: function () {
                     if (this.quotation.length === 0) {
