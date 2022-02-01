@@ -44,6 +44,9 @@
         integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <!-- VueRouter -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
     <!-- soho caddie component-->
     <script src="static/component/sc-menu.js"></script>
 </head>
@@ -77,9 +80,11 @@
                           {  key: 'updatedAt', label: '削除日時' },
                         ]">
                             <template v-slot:cell(show)="data">
-                                <b-button variant="info" @click="changeMode('show');selectInvoice(data.item);">
-                                    <b-icon icon="journal-text"></b-icon>
-                                </b-button>
+                                <router-link to="?page=show">
+                                    <b-button variant="info" @click="selectInvoice(data.item);">
+                                        <b-icon icon="journal-text"></b-icon>
+                                    </b-button>
+                                </router-link>
                             </template>
                             <template v-slot:cell(applyDate)="data">
                                 <p class="text-left pl-2" id="applyDate">{{formatDate(data.item.applyDate)}}</p>
@@ -103,7 +108,9 @@
                 <b-col></b-col>
                 <!--- 本体 -->
                 <b-col cols=10>
-                    <b-button @click="changeMode('index');getInvoices();">＜</b-button>
+                    <router-link to="?page=index">
+                        <b-button @click="getInvoices();">＜</b-button>
+                    </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="削除済み請求書参照"
                         header-border-variant="light">
                         <b-row>
@@ -258,10 +265,12 @@
             return val.toLocaleString();
         });
 
+        const router = new VueRouter({
+        })
+
         var app = new Vue({
             el: '#app',
             data: {
-                pageName: 'index',
                 invoices: [],               //全件invoice
                 invoice: [],                //選択中のinvoice
                 invoiceItem: [],            //選択中のinvoiceItem
@@ -279,6 +288,7 @@
                 selectInvoice: function (item) {
                     this.invoice = item;
                     console.log(this.invoice);
+                    localStorage.setItem('invoice', JSON.stringify(item));
                 },
                 getInvoice: async function (item) {
                     self = this;
@@ -299,10 +309,6 @@
                         appendToast: append,
                     })
                 },
-                // ページ変更
-                changeMode(pageName) {
-                    this.pageName = pageName;
-                },
                 formatDate(date) {
                     if (!!date) return moment(date).format("YYYY年MM月DD日");
                 },
@@ -311,9 +317,15 @@
                 },
             },
             mounted: function () {
+                this.invoice = JSON.parse(localStorage.getItem('invoice'));
                 this.getInvoices();
             },
+            router,
             computed: {
+                pageName() {
+                    if (this.$route.query.page == undefined) return 'index';
+                    return this.$route.query.page;
+                },
                 // 逐次、数量＊単価の合計をする
                 sum: function () {
                     if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
