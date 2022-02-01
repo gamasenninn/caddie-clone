@@ -464,11 +464,17 @@
                 },
                 deleteInvoiceItem: async function (item) {
                     self = this;
-                    await axios.delete("/invoice_item/" + item.id)
-                        .then(function (response) {
-                            console.log(response);
-                            self.getInvoice(self.invoice);
-                        });
+                    if (item.id) {
+                        await axios.delete("/invoice_item/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                self.getInvoice(self.invoice);
+                            });
+                    }
+                    else {
+                        var index = this.invoice.invoice_items.indexOf(item);
+                        this.invoice.invoice_items.splice(index);
+                    }
                 },
                 addRowInvoiceItem: function () {
                     if (this.invoice.length === 0) {
