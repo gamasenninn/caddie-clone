@@ -436,7 +436,7 @@
                     self = this;
                     self.quotations.push({
                         isInsert: true,
-                        quotation_items: [],
+                        quotation_items: [{}, {}, {}, {}, {}],
                     });
                     self.quotation = self.quotations.slice(-1)[0];
                     localStorage.setItem('quotation', JSON.stringify(self.quotation));
