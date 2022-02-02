@@ -5,16 +5,16 @@ import sys
 import json
 import uuid
 from flask import redirect, request
-from flask import Flask,request,json, jsonify,Response,make_response
-from flask_login import LoginManager , UserMixin , login_required ,login_user, logout_user,current_user
+from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory
+from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 import importlib
 from models import *
 import os
 import csv
 
-#sys.path.append('../')
+# sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
-from upload.upload import make_thumb,chext,save_file,remove_files2,get_flist
+from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist
 
 # ------　ユーザー認証 -------
 app.secret_key = os.urandom(24)
@@ -22,13 +22,16 @@ login_manager = LoginManager()
 login_manager.login_view = 'get_login'
 login_manager.init_app(app)
 
+
 class LoginUser(UserMixin):
     def __init__(self, user_id):
         self.id = user_id
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return LoginUser(user_id)
+
 
 @app.route('/')
 def home():
@@ -38,6 +41,7 @@ def home():
 @app.route('/login', methods=['GET'])
 def get_login():
     return app.send_static_file('login.html')
+
 
 @app.route('/login', methods=['POST'])
 def login_post():
@@ -53,13 +57,15 @@ def login_post():
         else:
             return redirect('/login')
 
+
 @app.route('/logout', methods=['GET'])
 def logout():
     logout_user()
-    #return redirect('/login')
+    # return redirect('/login')
     return redirect('/')
 
 # ------　ユーザー認証ここまで -------
+
 
 @app.route('/test')
 def test():
@@ -203,6 +209,7 @@ def settingPage():
             return app.send_static_file('setting.html')
     return redirect('/login')
 
+
 @app.route('/csv-upload-page')
 def csvUploadPage():
     return app.send_static_file('csv_upload.html')
@@ -343,6 +350,37 @@ def upsert_csv():
 #                 db.session.add(klass)
 #             db.session.commit()
 #         os.remove('csv/'+file_name)
+
+# ----- csv_export -----
+@app.route('/csv-export', methods=['POST'])
+def CsvExport():
+    data = request.json
+    class_name = data.get('tableName')
+
+    models = importlib.import_module('models')
+    model_class = getattr(models, class_name)
+    model_schema = getattr(models, class_name+"Schema")
+    columnlist = model_class.__table__.columns.keys()  # カラムリスト取得
+
+    result = model_class.query.all()
+    dataList = model_schema(many=True).dump(result)  # dict型のテーブル内データ
+
+    with open('test.csv', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(columnlist)
+        for d in dataList:
+            sortList = []
+            for column in columnlist:
+                sortList.append(d[column])  # 並び順整形
+            writer.writerow(sortList)
+        f.close()
+
+    downloadFileName = os.getcwd() + 'test.csv'
+    downloadFile = 'test.csv'
+
+    return send_file(downloadFile, as_attachment=True,
+                     download_name=downloadFileName,
+                     mimetype='application/csv')
 
 
 if __name__ == '__main__':

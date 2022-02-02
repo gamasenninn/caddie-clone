@@ -62,6 +62,12 @@
         <b-form-select v-model="selected" :options="target"></b-form-select>
         <div class="mt-3">Selected: <strong>{{ selected }}</strong></div>
         <b-button @click="submit();">送信</b-button>
+
+        <p>-------------------------------------------------------</p>
+        <p>エクスポートするテーブルを選択してください</p>
+        <b-form-select v-model="selected_export.tableName" :options="target"></b-form-select>
+        <div class="mt-3">Selected: <strong>{{ selected_export.tableName }}</strong></div>
+        <b-button @click="submit_export(selected_export);">エクスポート</b-button>
     </div>
 
     <script>
@@ -69,6 +75,7 @@
             el: '#app',
             data: {
                 selected: null,
+                selected_export: { tableName: null },
                 target: [
                     { value: null, text: '選択してください' }, { value: "User", text: 'ユーザー' }, { value: "Customer", text: '得意先' }, { value: "Item", text: '商品' },
                     { value: "Invoice", text: '請求書' }, { value: "Invoice_Item", text: '請求書商品' }, { value: "Quotation", text: '見積書' }, { value: "Quotation_Item", text: '見積書商品' },
@@ -78,6 +85,14 @@
             methods: {
                 submit: function () {
                     myDropzone.processQueue();
+                },
+                submit_export: async function (item) {
+                    self = this;
+                    console.log(item);
+                    await axios.post("/csv-export", item)
+                        .then(function (response) {
+                            console.log(response);
+                        });
                 },
             }
         })
