@@ -53,7 +53,7 @@
     <div id="app" v-cloak>
         <p>csvをインポートしてください。</p>
         <b-card style="max-width: 20rem">
-            <form action="upload" class="dropzone" id="my-dropzone">
+            <form action="csv-import" class="dropzone" id="my-dropzone">
                 <input hidden type="text" name="selected" v-model="selected">
                 <input hidden type="file" name="file" id="my-dropzone" multiple>
             </form>
@@ -92,6 +92,12 @@
                     await axios.post("/csv-export", item)
                         .then(function (response) {
                             console.log(response);
+                            let data = response.data;
+                            const blob = new Blob([data], { type: 'application/csv' })
+                            let link = document.createElement('a')
+                            link.href = window.URL.createObjectURL(blob)
+                            link.download = 'test.csv'
+                            link.click()
                         });
                 },
             }

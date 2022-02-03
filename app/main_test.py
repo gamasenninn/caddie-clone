@@ -260,7 +260,7 @@ def CsvTest():
     return app.send_static_file('csv_test.html')
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/csv-import', methods=['POST'])
 def CsvUpload():
     file = request.files['file']
     target = request.form['selected']
@@ -365,7 +365,7 @@ def CsvExport():
     result = model_class.query.all()
     dataList = model_schema(many=True).dump(result)  # dict型のテーブル内データ
 
-    with open('test.csv', 'w', newline="") as f:
+    with open('test.csv', 'w', encoding='utf-8', newline="") as f:
         writer = csv.writer(f)
         writer.writerow(columnlist)
         for d in dataList:
