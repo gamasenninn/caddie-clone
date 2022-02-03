@@ -12,6 +12,7 @@ RUN pip install flask-marshmallow
 RUN pip install marshmallow-sqlalchemy
 RUN pip install Flask-Migrate 
 RUN pip install Pillow 
+RUN pip install flask-login
 
 # Setup initial Database
 #RUN rm -r migrations
