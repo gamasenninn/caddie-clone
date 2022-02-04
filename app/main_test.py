@@ -260,11 +260,11 @@ def CsvTest():
     return app.send_static_file('csv_test.html')
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/csv-import', methods=['POST'])
 def CsvUpload():
     file = request.files['file']
-    target = request.form['selected']
-    file.save('csv/'+target + '.csv')
+    target = request.form['selected_import']
+    file.save('csv/import/'+target + '.csv')
     try:
         upsert_csv()
     except:
@@ -273,7 +273,7 @@ def CsvUpload():
 
 
 def upsert_csv():
-    fixtures_dir = 'csv/'
+    fixtures_dir = 'csv/import/'
     models = importlib.import_module('models')
     dirList = os.listdir(fixtures_dir)
     dirList.remove('.gitkeep')
@@ -297,7 +297,7 @@ def upsert_csv():
                     db.session.rollback()
                     db.session.close()
                     csv_file.close()
-                    os.remove('csv/'+file_name)
+                    os.remove(fixtures_dir+file_name)
             try:
                 db.session.commit()
             except:
@@ -305,7 +305,7 @@ def upsert_csv():
                 db.session.close()
             finally:
                 csv_file.close()
-                os.remove('csv/'+file_name)
+                os.remove(fixtures_dir+file_name)
 
 
 # def update_csv():
@@ -356,6 +356,7 @@ def upsert_csv():
 def CsvExport():
     data = request.json
     class_name = data.get('tableName')
+    fixtures_dir = 'csv/export/'
 
     models = importlib.import_module('models')
     model_class = getattr(models, class_name)
@@ -365,7 +366,7 @@ def CsvExport():
     result = model_class.query.all()
     dataList = model_schema(many=True).dump(result)  # dict型のテーブル内データ
 
-    with open('test.csv', 'w', newline="") as f:
+    with open(fixtures_dir+'test.csv', 'w', encoding='utf-8', newline="") as f:
         writer = csv.writer(f)
         writer.writerow(columnlist)
         for d in dataList:
@@ -375,8 +376,8 @@ def CsvExport():
             writer.writerow(sortList)
         f.close()
 
-    downloadFileName = os.getcwd() + 'test.csv'
-    downloadFile = 'test.csv'
+    downloadFileName = os.getcwd() + fixtures_dir+'test.csv'
+    downloadFile = fixtures_dir+'test.csv'
 
     return send_file(downloadFile, as_attachment=True,
                      download_name=downloadFileName,
