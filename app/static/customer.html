@@ -115,56 +115,67 @@
 
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先名"
                                     label-for="customerName">
-                                    <b-form-input v-model="customer.customerName" id="customerName" size="sm">
+                                    <b-form-input v-model="customer.customerName" id="customerName" size="sm"
+                                        @keydown.enter="enterInput" tabindex="0">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
                                     label-for="postNumber">
-                                    <b-form-input v-model="customer.postNumber" id="postNumber" size="sm">
+                                    <b-form-input v-model="customer.postNumber" id="postNumber" size="sm"
+                                        @keydown.enter="enterInput" tabindex="2">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="電話番号"
                                     label-for="telNumber">
-                                    <b-form-input v-model="customer.telNumber" id="telNumber" size="sm">
+                                    <b-form-input v-model="customer.telNumber" id="telNumber" size="sm"
+                                        @keydown.enter="enterInput" tabindex="4">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ホームページURL"
                                     label-for="url">
-                                    <b-form-input v-model="customer.url" id="url" size="sm">
+                                    <b-form-input v-model="customer.url" id="url" size="sm" @keydown.enter="enterInput"
+                                        tabindex="6">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
                                     label-for="manager">
-                                    <b-form-input v-model="customer.manager" id="manager" size="sm">
+                                    <b-form-input v-model="customer.manager" id="manager" size="sm"
+                                        @keydown.enter="enterInput" tabindex="8">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
                                     label-for="representative">
-                                    <b-form-input v-model="customer.representative" id="representative" size="sm">
+                                    <b-form-input v-model="customer.representative" id="representative" size="sm"
+                                        @keydown.enter="enterInput" tabindex="9">
                                     </b-form-input>
                                 </b-form-group>
                             </b-col>
                             <b-col>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="敬称"
                                     label-for="honorificTitle">
-                                    <b-form-input v-model="customer.honorificTitle" id="honorificTitle" size="sm">
+                                    <b-form-input v-model="customer.honorificTitle" id="honorificTitle" size="sm"
+                                        @keydown.enter="enterInput" tabindex="1">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所"
                                     label-for="address">
-                                    <b-form-input v-model="customer.address" id="address" size="sm"></b-form-input>
+                                    <b-form-input v-model="customer.address" id="address" size="sm"
+                                        @keydown.enter="enterInput" tabindex="3"></b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="FAX番号"
                                     label-for="faxNumber">
-                                    <b-form-input v-model="customer.faxNumber" id="faxNumber" size="sm"></b-form-input>
+                                    <b-form-input v-model="customer.faxNumber" id="faxNumber" size="sm"
+                                        @keydown.enter="enterInput" tabindex="5"></b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
                                     label-for="email">
-                                    <b-form-input v-model="customer.email" id="email" size="sm"></b-form-input>
+                                    <b-form-input v-model="customer.email" id="email" size="sm"
+                                        @keydown.enter="enterInput" tabindex="7"></b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="memo">
-                                    <b-form-textarea v-model="customer.memo" size="sm" rows="4"></b-form-textarea>
+                                    <b-form-textarea v-model="customer.memo" size="sm" rows="4" tabindex="10">
+                                    </b-form-textarea>
                                 </b-form-group>
 
                             </b-col>
@@ -297,6 +308,11 @@
                     if (result === true) {
                         this.bulkUpsert(this.customer);
                     }
+                },
+                enterInput(event) {
+                    const tabindex = Number(event.target.getAttribute('tabindex'));
+                    const nextTabindex = tabindex + 1;
+                    document.querySelector(`[tabindex="${nextTabindex}"]`).focus();
                 },
             },
             mounted: function () {
