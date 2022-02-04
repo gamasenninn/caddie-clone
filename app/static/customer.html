@@ -74,7 +74,7 @@
                           {  key: 'postNumber', label: '郵便番号' },
                           {  key: 'address', label: '住所' },
                           {  key: 'telNumber', label: '電話番号' },
-                          {  key: 'manager', label: '担当者' },
+                          {  key: 'faxNumber', label: 'FAX番号' },
                           {  key: 'memo', label: 'メモ' },
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
@@ -120,7 +120,8 @@
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
                                     label-for="postNumber">
-                                    <b-form-input v-model="customer.postNumber" id="postNumber" size="sm">
+                                    <b-form-input v-model="customer.postNumber" id="postNumber" size="sm"
+                                        :formatter="formatter_postNum">
                                     </b-form-input>
                                 </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="電話番号"
@@ -133,14 +134,14 @@
                                     <b-form-input v-model="customer.url" id="url" size="sm">
                                     </b-form-input>
                                 </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
-                                    label-for="manager">
-                                    <b-form-input v-model="customer.manager" id="manager" size="sm">
-                                    </b-form-input>
-                                </b-form-group>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
                                     label-for="representative">
                                     <b-form-input v-model="customer.representative" id="representative" size="sm">
+                                    </b-form-input>
+                                </b-form-group>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
+                                    label-for="manager">
+                                    <b-form-input v-model="customer.manager" id="manager" size="sm">
                                     </b-form-input>
                                 </b-form-group>
                             </b-col>
@@ -298,6 +299,14 @@
                         this.bulkUpsert(this.customer);
                     }
                 },
+                formatter_postNum(value) {
+                    if (value.length === 7 && !value.includes('-')) {
+                        var firstValue = value.slice(0, 3);
+                        var lastValue = value.slice(3, 7);
+                        return firstValue + '-' + lastValue;
+                    }
+                    return value;
+                }
             },
             mounted: function () {
                 this.customer = JSON.parse(localStorage.getItem('customer'));
