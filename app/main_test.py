@@ -56,6 +56,8 @@ def login_post():
             return redirect(next or '/')
         else:
             return redirect('/login')
+    else:
+        return redirect('/login')
 
 
 @app.route('/logout', methods=['GET'])
