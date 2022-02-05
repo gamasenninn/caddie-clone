@@ -317,11 +317,12 @@
                 modalShow: function (item, modalName) {
                     this.item = item;
                     console.log(this.item);
+                    //document.getElementById('modal-confirm').focus();
                     this.$bvModal.show(modalName);
                     // モーダル内の要素を取得するには処理を遅らせる
-                    window.setTimeout(function () {
-                        document.getElementById('modal-confirm').focus();
-                    }, 1);
+                    //window.setTimeout(function () {
+                    //    document.getElementById('modal-confirm').focus();
+                    //}, 1);
                 },
                 deleteModalProcess(result) {
                     this.$bvModal.hide('deleteModal');
