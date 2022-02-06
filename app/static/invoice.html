@@ -126,18 +126,26 @@
                     <b-card border-variant="white" class="mb-3 text-center" header="請求書入力"
                         header-border-variant="light">
                         <b-row>
-                            <b-col>
-
+                            <b-col sm>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
                                     label-for="customerId">
                                     <p class="text-left pl-2" id="customerId">{{invoice.customerId}}</p>
                                 </b-form-group>
-
+                            </b-col>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
+                                    label-for="applyNumber">
+                                    <p class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}</p>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col sm>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                     label-for="customer" class="customer">
                                     <b-form-input v-model="invoice.customerName" id="customerName" size="sm"
                                         @dblclick="$bvModal.show('customer-modal')"
-                                        v-on:keydown.enter="onKeyDownCustomer" @keydown.enter="enterInput" tabindex="0">
+                                        v-on:keydown.enter="onKeyDownCustomer">
                                     </b-form-input>
                                     <!-- 得意先一覧モーダル -->
                                     <b-modal size="xl" id="customer-modal">
@@ -161,36 +169,40 @@
                                 ]"></b-table>
                                     </b-modal>
                                 </b-form-group>
-
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
-                                    label-for="applyDate">
-                                    <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm"
-                                        @keydown.enter="enterInput" tabindex="2" type="date">
-                                    </b-form-input>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="支払期限"
-                                    label-for="deadLine">
-                                    <b-form-input v-model="invoice.deadLine" id="deadLine" size="sm"
-                                        @keydown.enter="enterInput" tabindex="3" type="date">
+                            </b-col>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
+                                    label-for="title">
+                                    <b-form-input v-model="invoice.title" id="title" size="sm">
                                     </b-form-input>
                                 </b-form-group>
                             </b-col>
-                            <b-col>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
-                                    label-for="applyNumber">
-                                    <p class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}</p>
+                        </b-row>
+                        <b-row>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
+                                    label-for="applyDate">
+                                    <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm" type="date">
+                                    </b-form-input>
                                 </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
-                                    label-for="title">
-                                    <b-form-input v-model="invoice.title" id="title" size="sm"
-                                        @keydown.enter="enterInput" tabindex="1"></b-form-input>
+                            </b-col>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="支払期限"
+                                    label-for="deadLine">
+                                    <b-form-input v-model="invoice.deadLine" id="deadLine" size="sm" type="date">
+                                    </b-form-input>
                                 </b-form-group>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col sm>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="メモ">
-                                    <b-form-textarea v-model="invoice.memo" size="sm" tabindex="4" rows="4">
+                                    <b-form-textarea v-model="invoice.memo" size="sm" rows="4">
                                     </b-form-textarea>
                                 </b-form-group>
                             </b-col>
+                            <b-col sm></b-col>
                         </b-row>
                     </b-card>
 
@@ -554,11 +566,6 @@
                         this.bulkUpsert(this.invoice);
                     }
                 },
-                enterInput(event) {
-                    const tabindex = Number(event.target.getAttribute('tabindex'));
-                    const nextTabindex = tabindex + 1;
-                    document.querySelector(`[tabindex="${nextTabindex}"]`).focus();
-                },
                 // 顧客名モーダル選択時
                 customerSelect(record) {
                     Vue.set(self.invoice, 'customerId', record.id);
@@ -590,17 +597,17 @@
                 },
                 pdfout: async function () {
                     self = this;
-                    h.customerName =  self.invoice.customerName;
-                    h.applyNumber =  self.invoice.applyNumber;
+                    h.customerName = self.invoice.customerName;
+                    h.applyNumber = self.invoice.applyNumber;
                     if (this.invoice.isTaxExp) {
-                            sum.amount = this.sum
-                            sum.tax = parseInt(this.sum * 0.1);
-                            sum.total = parseInt(this.sum * 1.1);
+                        sum.amount = this.sum
+                        sum.tax = parseInt(this.sum * 0.1);
+                        sum.total = parseInt(this.sum * 1.1);
                     } else {
-                            sum.amountLabel = "小計(税込み)";
-                            sum.amount = this.sum;
-                            sum.total = this.sum;
-                            sum.tax = parseInt(sum.total - sum.total/1.1)
+                        sum.amountLabel = "小計(税込み)";
+                        sum.amount = this.sum;
+                        sum.total = this.sum;
+                        sum.tax = parseInt(sum.total - sum.total / 1.1)
                     };
 
                     pdfData = getPdfData();
@@ -669,4 +676,5 @@
 
     </script>
 </body>
+
 </html>
