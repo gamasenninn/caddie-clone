@@ -119,43 +119,58 @@
                     <b-card border-variant="white" class="mb-3 text-center" header="削除済み見積書参照"
                         header-border-variant="light">
                         <b-row>
-                            <b-col>
-
+                            <b-col sm>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
                                     label-for="customerId">
                                     <p class="text-left pl-2" id="customerId">{{quotation.customerId}}</p>
                                 </b-form-group>
-
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
-                                    label-for="customer" class="customer">
-                                    <p class="text-left pl-2" id="customerName">{{quotation.customerName}}</p>
-                                </b-form-group>
-
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
-                                    label-for="applyDate">
-                                    <p class="text-left pl-2" id="applyDate">{{formatDate(quotation.applyDate)}}</p>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
-                                    label-for="expiry">
-                                    <p class="text-left pl-2" id="expiry">{{formatDate(quotation.expiry)}}</p>
-                                </b-form-group>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="削除日時"
-                                    label-for="updatedAt">
-                                    <p class="text-left pl-2" id="updatedAt">{{formatDateTime(quotation.updatedAt)}}</p>
-                                </b-form-group>
                             </b-col>
-                            <b-col>
+                            <b-col sm>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
                                     label-for="applyNumber">
                                     <p class="text-left pl-2" id="applyNumber">{{quotation.applyNumber}}</p>
                                 </b-form-group>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
+                                    label-for="customer" class="customer">
+                                    <p class="text-left pl-2" id="customerName">{{quotation.customerName}}</p>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                     label-for="title">
                                     <p class="text-left pl-2" id="title">{{quotation.title}}</p>
                                 </b-form-group>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
+                                    label-for="applyDate">
+                                    <p class="text-left pl-2" id="applyDate">{{formatDate(quotation.applyDate)}}</p>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
+                                    label-for="expiry">
+                                    <p class="text-left pl-2" id="expiry">{{formatDate(quotation.expiry)}}</p>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col sm>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                     label-for="memo">
                                     <p class="text-left pl-2" id="memo">{{quotation.memo}}</p>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="削除日時"
+                                    label-for="updatedAt">
+                                    <p class="text-left pl-2" id="updatedAt">{{formatDateTime(quotation.updatedAt)}}</p>
                                 </b-form-group>
                             </b-col>
                         </b-row>
