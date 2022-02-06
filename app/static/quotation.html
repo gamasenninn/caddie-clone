@@ -50,6 +50,8 @@
     <!-- soho caddie component-->
     <script src="static/component/sc-menu.js"></script>
     <script src="static/component/select-modal.js"></script>
+    <script src="static/component/def-pdf.js"></script>
+
 </head>
 
 <body>
@@ -358,7 +360,7 @@
                 <b-button pill variant="info" class="mr-3" @click="modalShow(quotation,'upsertModal');"
                     id="showUpsertModal">適用
                 </b-button>
-                <b-button pill variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i></b-button>
+                <b-button pill variant="info" @click="pdfout"><i class="fas fa-print"></i></b-button>
             </div>
         </b-card>
 
@@ -591,7 +593,33 @@
                 },
                 formatDateTime(date) {
                     if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
-                }
+                },
+                pdfout: async function () {
+                    self = this;
+                    h.category = "見積書"
+                    h.numberLabel = "見積番号:"
+                    h.customerName =  self.quotation.customerName;
+                    h.applyNumber =  self.quotation.applyNumber;
+                    h.memo = self.quotation.memo;
+                    if (this.quotation.isTaxExp) {
+                            sum.amount = this.sum
+                            sum.tax = parseInt(this.sum * 0.1);
+                            sum.total = parseInt(this.sum * 1.1);
+                    } else {
+                            sum.amountLabel = "小計(税込み)";
+                            sum.amount = this.sum;
+                            sum.total = this.sum;
+                            sum.tax = parseInt(sum.total - sum.total/1.1)
+                    };
+
+                    pdfData = getPdfData();
+                    pdfData.data.bdata = self.quotation.quotation_items;
+                    pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
+                    await axios.post("/pdfmaker", pdfData)
+                        .then(function (response) {
+                            window.open('/pdf/' + response.data)
+                        });
+                },
             },
             mounted: function () {
                 this.quotation = JSON.parse(localStorage.getItem('quotation'));

@@ -1,4 +1,5 @@
 h = {
+    numberLabel: "請求番号:",
     customerName: "テスト商店",
     applyNumber: "00000001",
     myCompanyName: "テスト会社",
@@ -43,7 +44,7 @@ function getPdfData() {
                 "table_infos": [
                     {
                         "table": [
-                            [["P", h.customerName, "client"], ["P", '請求番号:' + h.applyNumber, "sm_r"]],
+                            [["P", h.customerName, "client"], ["P", h.numberLabel + h.applyNumber, "sm_r"]],
                             ["", ""],
                             ["", ["P", h.myCompanyName, "md_l_b"]],
                             ["", ""],
