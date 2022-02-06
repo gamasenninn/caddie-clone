@@ -213,6 +213,7 @@ def settingPage():
 
 
 @app.route('/csv-upload-page')
+@login_required
 def csvUploadPage():
     return app.send_static_file('csv_upload.html')
 
@@ -309,51 +310,9 @@ def upsert_csv():
                 csv_file.close()
                 os.remove(fixtures_dir+file_name)
 
-
-# def update_csv():
-#     fixtures_dir = 'csv/'
-#     models = importlib.import_module('models')
-#     dirList = os.listdir(fixtures_dir)
-#     dirList.remove('.gitkeep')
-
-#     for file_name in dirList:
-#         class_name = file_name.replace(".csv", "").capitalize()
-#         model_class = getattr(models, class_name)
-#         with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
-#             reader = csv.reader(csv_file, delimiter=',')
-#             header = next(reader)
-#             for row in reader:
-#                 updateList=[]
-#                 columnDic={}
-#                 for i in range(len(header)):
-#                     columnDic[header[i]]=row[i]
-#                     updateList.append(columnDic)
-#                 db.session.bulk_update_mappings(model_class, updateList)
-#                 db.session.commit()
-#             # db.session.commit()
-#         os.remove('csv/'+file_name)
-
-# def import_csv():
-#     fixtures_dir = 'csv/'
-#     models = importlib.import_module('models')
-#     dirList = os.listdir(fixtures_dir)
-#     dirList.remove('.gitkeep')
-
-#     for file_name in dirList:
-#         class_name = file_name.replace(".csv", "").capitalize()
-#         Klass = getattr(models, class_name)
-#         with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
-#             reader = csv.reader(csv_file, delimiter=',')
-#             header = next(reader)
-#             for row in reader:
-#                 klass = Klass()
-#                 for i in range(len(header)):
-#                     setattr(klass, header[i], row[i])
-#                 db.session.add(klass)
-#             db.session.commit()
-#         os.remove('csv/'+file_name)
-
 # ----- csv_export -----
+
+
 @app.route('/csv-export', methods=['POST'])
 def CsvExport():
     data = request.json
@@ -384,6 +343,18 @@ def CsvExport():
     return send_file(downloadFile, as_attachment=True,
                      download_name=downloadFileName,
                      mimetype='application/csv')
+
+# ----- admin_db_init -----
+
+
+@app.route('/db-init-page')
+@login_required
+def dbInitPage():
+    checkUser = User.query.filter_by(name=current_user.id).first()
+    if checkUser:
+        if checkUser.role == "admin":
+            return app.send_static_file('db_init.html')
+    return redirect('/login')
 
 
 if __name__ == '__main__':
