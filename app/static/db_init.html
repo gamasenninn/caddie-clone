@@ -1,1 +1,98 @@
-hoge
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+        <link href="images/favicon.ico" rel="shortcut icon">
+        -->
+    <title>CSVアップロード画面</title>
+    <!-- Load required Bootstrap and BootstrapVue CSS -->
+
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.css" />
+
+    <!-- Load fontawesome -->
+    <!-- link href="./css/all.css" rel="stylesheet" -->
+    <!--load all styles -->
+    <!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+        crossorigin="anonymous"></script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue-icons.min.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+    <!-- VueRouter -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+    <!-- soho caddie component-->
+    <script src="static/component/sc-menu.js"></script>
+    <script src="static/component/select-modal.js"></script>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <b-row class="bg pt-2 pb-2">
+            <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+                        class='mr-2'></a>CSVアップロード</b-col>
+            <b-col class="text-right mr-5 mt-3">
+                <!-- サイドバー -->
+                <sc-menu></sc-menu>
+            </b-col>
+        </b-row>
+
+        <div>
+            <b-row class="mt-5">
+                <b-col></b-col>
+                <b-col cols=10>
+                    <b-card border-variant="white" class="mb-3 text-center" header="DB初期化"
+                        header-border-variant="light">
+                        <p>DBの初期化を行います。</p>
+                        <p>ご利用には十分気を付けてご利用ください。</p>
+                        <b-button class="mt-5" variant="danger" size="lg" @click="modalShow('dbInitModal')">DB初期化
+                        </b-button>
+                    </b-card>
+                </b-col>
+            </b-row>
+
+            <!-- 削除モーダル -->
+            <select-modal-static modal-name='dbInitModal' modal-message='本当によろしいですか？'
+                @selected="initModalProcess($event);" />
+
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            methods: {
+                modalShow: function (modalName) {
+                    this.$bvModal.show(modalName);
+                },
+                initModalProcess(result) {
+                    this.$bvModal.hide('dbInitModal');
+                    if (result === true) {
+                        alert('全削除');
+                    }
+                },
+            },
+        })
+    </script>
+
+</body>
+
+</html>
