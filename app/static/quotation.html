@@ -57,12 +57,13 @@
 <body>
     <div id="app" v-cloak>
         <b-row class="bg pt-2 pb-2">
-            <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+            <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
                         class='mr-2'></a>見積書入力</b-col>
+            <b-col class="text-right mr-5 mt-3">
+                <!-- サイドバー -->
+                <sc-menu></sc-menu>
+            </b-col>
         </b-row>
-
-        <!-- サイドバー -->
-        <sc-menu></sc-menu>
 
         <!-- 一覧表示 -->
         <div v-if="pageName=='index'">
@@ -604,18 +605,18 @@
                     self = this;
                     h.category = "見積書"
                     h.numberLabel = "見積番号:"
-                    h.customerName =  self.quotation.customerName;
-                    h.applyNumber =  self.quotation.applyNumber;
+                    h.customerName = self.quotation.customerName;
+                    h.applyNumber = self.quotation.applyNumber;
                     h.memo = self.quotation.memo;
                     if (this.quotation.isTaxExp) {
-                            sum.amount = this.sum
-                            sum.tax = parseInt(this.sum * 0.1);
-                            sum.total = parseInt(this.sum * 1.1);
+                        sum.amount = this.sum
+                        sum.tax = parseInt(this.sum * 0.1);
+                        sum.total = parseInt(this.sum * 1.1);
                     } else {
-                            sum.amountLabel = "小計(税込み)";
-                            sum.amount = this.sum;
-                            sum.total = this.sum;
-                            sum.tax = parseInt(sum.total - sum.total/1.1)
+                        sum.amountLabel = "小計(税込み)";
+                        sum.amount = this.sum;
+                        sum.total = this.sum;
+                        sum.tax = parseInt(sum.total - sum.total / 1.1)
                     };
 
                     pdfData = getPdfData();
