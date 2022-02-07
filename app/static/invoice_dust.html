@@ -54,12 +54,13 @@
 <body>
     <div id="app" v-cloak>
         <b-row class="bg pt-2 pb-2">
-            <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+            <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
                         class='mr-2'></a>削除済み請求書参照</b-col>
+            <b-col class="text-right mr-5 mt-3">
+                <!-- サイドバー -->
+                <sc-menu></sc-menu>
+            </b-col>
         </b-row>
-
-        <!-- サイドバー -->
-        <sc-menu></sc-menu>
 
         <!-- 一覧表示 -->
         <div v-if="pageName=='index'">

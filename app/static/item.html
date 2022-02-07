@@ -48,12 +48,13 @@
 <body>
     <div id="app" v-cloak>
         <b-row class="bg pt-2 pb-2">
-            <b-col sm="3" class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+            <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
                         class='mr-2'></a>商品入力</b-col>
+            <b-col class="text-right mr-5 mt-3">
+                <!-- サイドバー -->
+                <sc-menu></sc-menu>
+            </b-col>
         </b-row>
-
-        <!-- サイドバー -->
-        <sc-menu></sc-menu>
 
         <!-- 一覧表示 -->
         <div v-if="pageName=='index'">
@@ -117,59 +118,70 @@
                         <b-button @click="getItems();">＜</b-button>
                     </router-link>
                     <b-card border-variant="white" class="mb-3 text-center" header="商品入力" header-border-variant="light">
-                        
+
                         <b-row>
                             <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名" label-for="itemName">
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
+                                    label-for="itemName">
                                     <b-form-input v-model="item.itemName" id="itemName" size="sm"></b-form-input>
-                                </b-form-group>                                
+                                </b-form-group>
                             </b-col>
                             <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品コード" label-for="itemCode">
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品コード"
+                                    label-for="itemCode">
                                     <b-form-input v-model="item.itemCode" id="itemCode" size="sm"></b-form-input>
                                 </b-form-group>
                             </b-col>
                         </b-row>
                         <b-row>
                             <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ" label-for="category">
-                                    <b-form-select v-model="item.category" :options="categories" size="sm"></b-form-select>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
+                                    label-for="category">
+                                    <b-form-select v-model="item.category" :options="categories" size="sm">
+                                    </b-form-select>
                                 </b-form-group>
                             </b-col>
                             <b-col sm>
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
                                     <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
-                                </b-form-group>                                    
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位" label-for="unit">
-                                    <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
-                                </b-form-group>                                    
-                            </b-col>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="型式" label-for="model">
-                                    <b-form-input v-model="item.model" id="model" size="sm" ></b-form-input>
                                 </b-form-group>
                             </b-col>
                         </b-row>
                         <b-row>
                             <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価" label-for="basePrice">
-                                    <b-form-input v-model="item.basePrice" id="basePrice" size="sm" type="number"></b-form-input>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
+                                    label-for="unit">
+                                    <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
+                                </b-form-group>
+                            </b-col>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="型式"
+                                    label-for="model">
+                                    <b-form-input v-model="item.model" id="model" size="sm"></b-form-input>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col sm>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価"
+                                    label-for="basePrice">
+                                    <b-form-input v-model="item.basePrice" id="basePrice" size="sm" type="number">
+                                    </b-form-input>
                                     </b-form-input>
                                 </b-form-group>
                             </b-col>
                             <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価原価" label-for="baseCost">
-                                    <b-form-input v-model="item.baseCost" id="baseCost" size="sm" type="number"></b-form-input>
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価原価"
+                                    label-for="baseCost">
+                                    <b-form-input v-model="item.baseCost" id="baseCost" size="sm" type="number">
+                                    </b-form-input>
                                 </b-form-group>
                             </b-col>
                         </b-row>
                         <b-row>
                             <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ" label-for="メモ">
+                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
+                                    label-for="メモ">
                                     <b-form-textarea v-model="item.memo" size="sm" rows="4"></b-form-textarea>
                                 </b-form-group>
                             </b-col>
