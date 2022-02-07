@@ -5,7 +5,7 @@ import sys
 import json
 import uuid
 from flask import redirect, request
-from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory
+from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory,render_template
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 import importlib
 from models import *
@@ -35,8 +35,8 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    return app.send_static_file('home.html')
-
+    #return app.send_static_file('home.html')
+    return render_template('home.html')
 
 @app.route('/login', methods=['GET'])
 def get_login():
@@ -140,7 +140,8 @@ def customerPage():
 @app.route('/item-page')
 @login_required
 def itemPage():
-    return app.send_static_file('item.html')
+    #return app.send_static_file('item.html')
+    return render_template('item.html')
 
 
 @app.route('/memo-page')
