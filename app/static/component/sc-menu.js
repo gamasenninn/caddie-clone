@@ -1,8 +1,8 @@
-Vue.component('sc-menu',{
+Vue.component('sc-menu', {
     template: `  
     <div>
-    <b-button size="lg" v-b-toggle.sidebar-no-header><i class="fas fa-bars"></i></b-button>
-    <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" no-header shadow>
+    <b-button size="lg" v-b-toggle.sidebar-right><i class="fas fa-bars"></i></b-button>
+    <b-sidebar id="sidebar-right" aria-labelledby="sidebar-right-title" no-header right shadow>
         <template #default="{ hide }">
             <div class="p-3">
                 <h4 id="sidebar-no-header-title" style="float: left; width: 75%;">遷移メニュー</h4>
