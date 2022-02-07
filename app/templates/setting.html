@@ -1,0 +1,266 @@
+<% extends "head.html" %>
+    <% block content %>
+        <div id="app" v-cloak>
+            <b-row class="bg pt-2 pb-2">
+                <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+                            class='mr-2'></a>各種情報設定</b-col>
+                <b-col class="text-right mr-5 mt-3">
+                    <!-- サイドバー -->
+                    <sc-menu></sc-menu>
+                </b-col>
+            </b-row>
+
+
+            <!-- 新規作成・詳細(更新)ページ -->
+            <div>
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <!--- 本体 -->
+                    <b-col cols=10>
+                        <b-card border-variant="white" class="mb-3 text-center" header="会社情報"
+                            header-border-variant="light">
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="会社名"
+                                        label-for="companyName">
+                                        <b-form-input v-model="setting.companyName" id="companyName" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
+                                        label-for="representative">
+                                        <b-form-input v-model="setting.representative" id="representative" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
+                                        label-for="postNumber">
+                                        <b-form-input v-model="setting.postNumber" id="postNumber" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所"
+                                        label-for="address">
+                                        <b-form-input v-model="setting.address" id="address" size="sm"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="電話番号"
+                                        label-for="telNumber">
+                                        <b-form-input v-model="setting.telNumber" id="telNumber" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="FAX番号"
+                                        label-for="faxNumber">
+                                        <b-form-input v-model="setting.faxNumber" id="faxNumber" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ホームページURL"
+                                        label-for="url">
+                                        <b-form-input v-model="setting.url" id="url" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
+                                        label-for="email">
+                                        <b-form-input v-model="setting.email" id="email" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                        </b-card>
+
+                    </b-col> <!-- 本体 -->
+                    <b-col></b-col>
+
+                </b-row>
+
+            </div>
+
+            <div>
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <!--- 本体 -->
+                    <b-col cols=10>
+                        <b-card border-variant="white" class="mb-3 text-center" header="印鑑・ロゴアップロード"
+                            header-border-variant="light">
+                            会社ロゴをアップロードできます。ロゴはトップページ、サイドバー、見積書・請求書に使用されます。<br>
+                            印鑑をアップロードできます。印鑑は見積書・請求書に使用されます。<br>
+                            画像サイズは○○×○○以内のものを使用し、PNGまたはJPEG形式のみとなります。
+                            <b-row class="mt-5">
+                                <b-col></b-col>
+                                <b-col cols="4">
+                                    <p>会社ロゴ</p>
+                                    <img :src="setting.logoFilePath" width="100%">
+                                </b-col>
+                                <b-col></b-col>
+                                <b-col cols="4">
+                                    <p>印鑑ロゴ</p>
+                                    <img :src="setting.stampFilePath" width="100%">
+                                </b-col>
+                                <b-col></b-col>
+                            </b-row>
+                            <b-row class="mt-5">
+                                <b-col></b-col>
+                                <b-col cols="4">
+                                    <p>会社ロゴの印刷時の表示</p>
+                                    <div class="isPrintDisplay">
+                                        <b-form-checkbox v-model="setting.isDisplayQuotationLogo">見積書</b-form-checkbox>
+                                        <b-form-checkbox v-model="setting.isDisplayInvoiceLogo">請求書</b-form-checkbox>
+                                        <b-form-checkbox v-model="setting.isDisplayDeliveryLogo">納品書</b-form-checkbox>
+                                    </div>
+                                </b-col>
+                                <b-col></b-col>
+                                <b-col cols="4">
+                                    <p>印鑑の印刷時の表示</p>
+                                    <div class="isPrintDisplay">
+                                        <b-form-checkbox v-model="setting.isDisplayQuotationStamp">見積書</b-form-checkbox>
+                                        <b-form-checkbox v-model="setting.isDisplayInvoiceStamp">請求書</b-form-checkbox>
+                                        <b-form-checkbox v-model="setting.isDisplayDeliveryStamp">納品書</b-form-checkbox>
+                                    </div>
+                                </b-col>
+                                <b-col></b-col>
+                            </b-row>
+                            <b-row class="mt-5">
+                                <b-col></b-col>
+                                <b-col cols="4">
+                                    <p>会社ロゴアップロード</p>
+                                    <form action="upload-files/asset" class="dropzone" id="logo-dropzone">
+                                        <input hidden type="text" name="fileId" v-model="fileId2">
+
+                                        <input hidden type="file" name="file" id="logo-dropzone" multiple>
+                                    </form>
+                                    </form>
+                                </b-col>
+                                <b-col></b-col>
+                                <b-col cols="4">
+                                    <p>印鑑アップロード</p>
+                                    <form action="upload-files/asset" class="dropzone" id="stamp-dropzone">
+                                        <input hidden type="text" name="fileId" v-model="fileId">
+
+                                        <input hidden type="file" name="file" id="stamp-dropzone" multiple>
+                                    </form>
+                                </b-col>
+                                <b-col></b-col>
+                            </b-row>
+                        </b-card>
+
+                        <div>
+                            <b-row class="mt-5">
+                                <b-button href="/unit-page">単位登録画面へ</b-button>
+                                <b-button href="/csv-upload-page" class="ml-3">CSVアップロード画面へ</b-button>
+                            </b-row>
+                            <b-row class="mt-2">
+                                <b-button href="/invoice-dust-page">削除済み請求書ページへ</b-button>
+                                <b-button href="/quotation-dust-page" class="ml-3">削除済み見積書ページへ</b-button>
+                            </b-row>
+                            <b-row class="mt-2">
+                                <b-button href="/db-init-page"></b-button>
+                            </b-row>
+                        </div>
+
+                    </b-col> <!-- 本体 -->
+                    <b-col></b-col>
+
+                </b-row>
+
+
+            </div>
+            <script>
+                Dropzone.options.stampDropzone = {
+                    dictDefaultMessage: 'ここに印鑑用ファイルをドロップしてください',
+                    init: function () {
+                        this.on("complete", file => {
+                            console.log("complete A file has been added:", app.fileId, file);
+                            this.removeFile(file);
+                            app.setting.stampFilePath = "./static/asset/stamp/" + file.upload.filename
+                        });
+                    }
+                };
+                Dropzone.options.logoDropzone = {
+                    dictDefaultMessage: 'ここにロゴ用ファイルをドロップしてください',
+                    init: function () {
+                        this.on("complete", file => {
+                            console.log("complete A file has been added:", app.fileId, file);
+                            this.removeFile(file);
+                            app.setting.logoFilePath = "./static/asset/logo/" + file.upload.filename
+                        });
+                    }
+                };            
+            </script>
+            <!-- 空行 -->
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+
+            <!-- 更新・取消ボタンのフッター -->
+            <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
+                <div class="d-flex justify-content-end">
+                    <b-button variant="info" class="mr-3" @click="bulkUpsert(setting)">適用</b-button>
+                    <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
+                </div>
+            </b-card>
+
+        </div>
+
+        <script>
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    setting: [],                //選択中のsetting
+                    fileId: 'stamp',
+                    fileId2: 'logo'
+                },
+                methods: {
+                    // ---Settings---
+                    bulkUpsert(item) {
+                        this.updateSetting(item);
+                        this.toast("更新しました");
+                    },
+                    updateSetting: async function (item) {
+                        self = this;
+                        await axios.put("/setting/1", item)
+                            .then(function (response) {
+                                self.getSetting(self.setting);
+                                console.log(response);
+                            });
+                    },
+                    getSetting: async function () {
+                        self = this;
+                        await axios.get("/setting")
+                            .then(function (response) {
+                                console.log(response);
+                                self.setting = response.data
+                            });
+                    },
+                    toast(toaster, append = false) {
+                        this.$bvToast.toast(`${toaster}`, {
+                            title: `確認`,
+                            toaster: 'b-toaster-top-right',
+                            solid: true,
+                            appendToast: append,
+                        })
+                    },
+                },
+                mounted: function () {
+                    this.getSetting();
+                },
+            })
+
+
+        </script>
+        <% endblock %>

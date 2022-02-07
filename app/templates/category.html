@@ -1,0 +1,227 @@
+<% extends "head.html" %>
+    <% block content %>
+        <div id="app" v-cloak>
+            <b-row class="bg pt-2 pb-2">
+                <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+                            class='mr-2'></a>カテゴリ登録</b-col>
+                <b-col class="text-right mr-5 mt-3">
+                    <!-- サイドバー -->
+                    <sc-menu></sc-menu>
+                </b-col>
+            </b-row>
+
+            <!-- 一覧表示 -->
+            <div v-if="pageName=='index'">
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <b-col cols="10">
+                        <b-row>
+                            <b-col>
+                                <router-link to="?page=store">
+                                    <b-button variant="success" @click="CategoryAddRow();">＋新規作成
+                                    </b-button>
+                                </router-link>
+                            </b-col>
+                            <b-col class="text-right">
+                                <b-button href="/item-page">商品画面へ</b-button>
+                            </b-col>
+                        </b-row>
+                        <b-card border-variant="white" class="mb-3 text-center" header="カテゴリ一覧"
+                            header-border-variant="light">
+                            <b-table responsive hover small id="categorytable" sort-by="ID" small label="Table Options"
+                                :items=categories :fields="[
+                          {  key: 'update', label: '' },
+                          {  key: 'id', label: 'No.' },
+                          {  key: 'categoryName', label: 'カテゴリ名' },
+                          {  key: 'delete', label: '', class: 'text-right' },
+                        ]" :tbody-tr-class="rowClass">
+                                <template v-slot:cell(update)="data">
+                                    <router-link to="?page=show">
+                                        <b-button variant="info" @click="selectCategory(data.item);"><i
+                                                class="fas fa-edit"></i>
+                                        </b-button>
+                                    </router-link>
+                                </template>
+                                <template v-slot:cell(delete)="data">
+                                    <b-button variant="danger" @click="modalShow(data.item,'deleteModal');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </b-button>
+                                </template>
+                            </b-table>
+                        </b-card>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+                <!-- 削除モーダル -->
+                <select-modal modal-name='deleteModal' modal-message='削除しますか？'
+                    @selected="deleteModalProcess($event);" />
+            </div>
+
+            <!-- 新規作成・詳細(更新)ページ -->
+            <div v-if="pageName=='show' || pageName=='store'">
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <!--- 本体 -->
+                    <b-col cols=10>
+                        <router-link to="?page=index">
+                            <b-button @click="getCategories();">＜</b-button>
+                        </router-link>
+                        <b-card border-variant="white" class="mb-3 text-center" header="カテゴリ入力"
+                            header-border-variant="light">
+                            <b-row>
+                                <b-col>
+
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ名"
+                                        label-for="categoryName">
+                                        <b-form-input v-model="category.categoryName" id="categoryName" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+
+
+                                </b-col>
+                            </b-row>
+                        </b-card>
+
+                    </b-col> <!-- 本体 -->
+                    <b-col></b-col>
+
+                </b-row>
+            </div>
+
+            <!-- 空行 -->
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+
+            <!-- 更新・取消ボタンのフッター -->
+            <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
+                class="fixed-bottom footer">
+                <div class="d-flex justify-content-end">
+                    <b-button pill variant="info" class="mr-3" @click="modalShow(category,'upsertModal');"
+                        id="showUpsertModal">適用
+                    </b-button>
+                    <b-button pill variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i></b-button>
+                </div>
+            </b-card>
+
+            <!-- 保存モーダル -->
+            <select-modal modal-name='upsertModal' modal-message='保存しますか？' @selected="upsertModalProcess($event);" />
+
+        </div>
+
+        <script>
+            const router = new VueRouter({
+            })
+
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    categories: [],               //全件category
+                    category: [],                //選択中のcategory
+                },
+                methods: {
+                    // ---Categories---
+                    getCategories: async function () {
+                        self = this;
+                        await axios.get("/categories")
+                            .then(function (response) {
+                                console.log(response);
+                                self.categories = response.data;
+                            });
+                    },
+                    bulkUpsert(item) {
+                        if (!item.id) {
+                            this.insertCategory(item);
+                        }
+                        else {
+                            this.updateCategory(item);
+                        }
+                    },
+                    insertCategory: async function (item) {
+                        self = this;
+                        await axios.post("/category", item)
+                            .then(function (response) {
+                                Vue.set(self.category, 'id', response.data.id)
+                                self.getCategories();
+                                self.category.isInsert = false;
+                            });
+                    },
+                    updateCategory: async function (item) {
+                        self = this;
+                        await axios.put("/category/" + item.id, item)
+                            .then(function (response) {
+                                self.getCategories();
+                                console.log(response);
+                            });
+                    },
+                    deleteCategory: async function (item) {
+                        self = this;
+                        await axios.delete("/category/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                self.category = '';
+                                self.getCategories();
+                            });
+                    },
+                    CategoryAddRow: function () {
+                        self = this;
+                        self.categories.push({
+                            isInsert: true,
+                        });
+                        self.category = self.categories.slice(-1)[0];
+                        localStorage.setItem('category', JSON.stringify(self.category))
+                    },
+                    selectCategory: function (item) {
+                        this.category = item;
+                        console.log(this.category);
+                        localStorage.setItem('category', JSON.stringify(item))
+                    },
+                    getCategory: async function (item) {
+                        self = this;
+                        await axios.get("/category/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                for (const [key, value] of Object.entries(response.data)) {
+                                    console.log(key, value);
+                                    self.$set(self.category, key, value);
+                                }
+                            });
+                    },
+                    rowClass: function (item, type) {
+                        if (!item || type !== 'row') return
+                        if (!item.id) return "d-none";
+                    },
+                    modalShow: function (item, modalName) {
+                        this.category = item;
+                        console.log(this.category);
+                        this.$bvModal.show(modalName);
+                    },
+                    deleteModalProcess(result) {
+                        this.$bvModal.hide('deleteModal');
+                        if (result === true) {
+                            this.deleteCategory(this.category);
+                        }
+                    },
+                    upsertModalProcess(result) {
+                        this.$bvModal.hide('upsertModal');
+                        if (result === true) {
+                            this.bulkUpsert(this.category);
+                        }
+                    },
+                },
+                mounted: function () {
+                    this.category = JSON.parse(localStorage.getItem('category'));
+                    this.getCategories();
+                },
+                router,
+                computed: {
+                    pageName() {
+                        if (this.$route.query.page == undefined) return 'index';
+                        return this.$route.query.page;
+                    },
+                }
+            })
+
+
+        </script>
+        <% endblock %>
