@@ -210,6 +210,7 @@
                 mounted: function () {
                     this.memo = JSON.parse(localStorage.getItem('memo'));
                     this.getMemos();
+                    document.querySelector('title').textContent = 'メモ管理';
                 },
                 router,
                 computed: {
