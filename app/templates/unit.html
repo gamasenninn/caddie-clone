@@ -1,0 +1,227 @@
+<% extends "head.html" %>
+    <% block content %>
+        <div id="app" v-cloak>
+            <b-row class="bg pt-2 pb-2">
+                <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+                            class='mr-2'></a>単位登録</b-col>
+                <b-col class="text-right mr-5 mt-3">
+                    <!-- サイドバー -->
+                    <sc-menu></sc-menu>
+                </b-col>
+            </b-row>
+
+            <!-- 一覧表示 -->
+            <div v-if="pageName=='index'">
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <b-col cols="10">
+                        <b-row>
+                            <b-col>
+                                <router-link to="?page=store">
+                                    <b-button variant="success" @click="UnitAddRow();">＋新規作成</b-button>
+                                </router-link>
+                            </b-col>
+                            <b-col class="text-right">
+                                <b-button href="/setting-page">設定画面へ</b-button>
+                            </b-col>
+                        </b-row>
+                        <b-card border-variant="white" class="mb-3 text-center" header="単位一覧"
+                            header-border-variant="light">
+                            <b-table responsive hover small id="unittable" sort-by="ID" small label="Table Options"
+                                :items=units :fields="[
+                          {  key: 'update', label: '' },
+                          {  key: 'id', label: 'No.' },
+                          {  key: 'unitName', label: '単位名' },
+                          {  key: 'delete', label: '', class: 'text-right' },
+                        ]" :tbody-tr-class="rowClass">
+                                <template v-slot:cell(update)="data">
+                                    <router-link to="?page=show">
+                                        <b-button variant="info" @click="selectUnit(data.item);"><i
+                                                class="fas fa-edit"></i>
+                                        </b-button>
+                                    </router-link>
+                                </template>
+                                <template v-slot:cell(delete)="data">
+                                    <b-button variant="danger" @click="modalShow(data.item,'deleteModal');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </b-button>
+                                </template>
+                            </b-table>
+                        </b-card>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+                <!-- 削除モーダル -->
+                <select-modal modal-name='deleteModal' modal-message='削除しますか？'
+                    @selected="deleteModalProcess($event);" />
+            </div>
+
+            <!-- 新規作成・詳細(更新)ページ -->
+            <div v-if="pageName=='show' || pageName=='store'">
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <!--- 本体 -->
+                    <b-col cols=10>
+                        <router-link to="?page=index">
+                            <b-button @click="getUnits();">＜</b-button>
+                        </router-link>
+                        <b-card border-variant="white" class="mb-3 text-center" header="単位入力"
+                            header-border-variant="light">
+                            <b-row>
+                                <b-col>
+
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位名"
+                                        label-for="unitName">
+                                        <b-form-input v-model="unit.unitName" id="unitName" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+
+
+                                </b-col>
+                            </b-row>
+                        </b-card>
+
+                    </b-col> <!-- 本体 -->
+                    <b-col></b-col>
+
+                </b-row>
+            </div>
+
+            <!-- 空行 -->
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+
+            <!-- 更新・取消ボタンのフッター -->
+            <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
+                class="fixed-bottom footer">
+                <div class="d-flex justify-content-end">
+                    <b-button pill variant="info" class="mr-3" @click="modalShow(unit,'upsertModal');"
+                        id="showUpsertModal">
+                        適用
+                    </b-button>
+                    <b-button pill variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i></b-button>
+                </div>
+            </b-card>
+
+            <!-- 保存モーダル -->
+            <select-modal modal-name='upsertModal' modal-message='保存しますか？' @selected="upsertModalProcess($event);" />
+
+        </div>
+
+        <script>
+            const router = new VueRouter({
+            })
+
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    units: [],               //全件unit
+                    unit: [],                //選択中のunit
+                },
+                methods: {
+                    // ---Units---
+                    getUnits: async function () {
+                        self = this;
+                        await axios.get("/units")
+                            .then(function (response) {
+                                console.log(response);
+                                self.units = response.data;
+                            });
+                    },
+                    bulkUpsert(item) {
+                        if (!item.id) {
+                            this.insertUnit(item);
+                        }
+                        else {
+                            this.updateUnit(item);
+                        }
+                    },
+                    insertUnit: async function (item) {
+                        self = this;
+                        await axios.post("/unit", item)
+                            .then(function (response) {
+                                Vue.set(self.unit, 'id', response.data.id)
+                                self.getUnits();
+                                self.unit.isInsert = false;
+                            });
+                    },
+                    updateUnit: async function (item) {
+                        self = this;
+                        await axios.put("/unit/" + item.id, item)
+                            .then(function (response) {
+                                self.getUnits();
+                                console.log(response);
+                            });
+                    },
+                    deleteUnit: async function (item) {
+                        self = this;
+                        await axios.delete("/unit/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                self.unit = '';
+                                self.getUnits();
+                            });
+                    },
+                    UnitAddRow: function () {
+                        self = this;
+                        self.units.push({
+                            isInsert: true,
+                        });
+                        self.unit = self.units.slice(-1)[0];
+                        localStorage.setItem('unit', JSON.stringify(self.unit)) //リロードのためのストア
+                    },
+                    selectUnit: function (item) {
+                        this.unit = item;
+                        console.log(this.unit);
+                        localStorage.setItem('unit', JSON.stringify(item)) //リロードのためのストア
+                    },
+                    getUnit: async function (item) {
+                        self = this;
+                        await axios.get("/unit/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                for (const [key, value] of Object.entries(response.data)) {
+                                    console.log(key, value);
+                                    self.$set(self.unit, key, value);
+                                }
+                            });
+                    },
+                    rowClass: function (item, type) {
+                        if (!item || type !== 'row') return
+                        if (!item.id) return "d-none";
+                    },
+                    modalShow: function (item, modalName) {
+                        this.unit = item;
+                        console.log(this.unit);
+                        this.$bvModal.show(modalName);
+                    },
+                    deleteModalProcess(result) {
+                        this.$bvModal.hide('deleteModal');
+                        if (result === true) {
+                            this.deleteUnit(this.unit);
+                        }
+                    },
+                    upsertModalProcess(result) {
+                        this.$bvModal.hide('upsertModal');
+                        if (result === true) {
+                            this.bulkUpsert(this.unit);
+                        }
+                    },
+                },
+                mounted: function () {
+                    this.unit = JSON.parse(localStorage.getItem('unit')); //リロードのためのレストア
+                    this.getUnits();
+                },
+                router,
+                computed: {
+                    pageName() {
+                        if (this.$route.query.page == undefined) return 'index';
+                        return this.$route.query.page;
+                    },
+                }
+            })
+
+
+        </script>
+        <% endblock %>

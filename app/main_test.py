@@ -35,12 +35,11 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    #return app.send_static_file('home.html')
     return render_template('home.html')
 
 @app.route('/login', methods=['GET'])
 def get_login():
-    return app.send_static_file('login.html')
+    return render_template('login.html')
 
 
 @app.route('/login', methods=['POST'])
@@ -63,7 +62,6 @@ def login_post():
 @app.route('/logout', methods=['GET'])
 def logout():
     logout_user()
-    # return redirect('/login')
     return redirect('/')
 
 # ------　ユーザー認証ここまで -------
@@ -116,37 +114,36 @@ def crud_test6():
 
 @app.route('/home-page')
 def homePage():
-    return app.send_static_file('home.html')
+    return render_template('home.html')
 
 
 @app.route('/invoice-page')
 @login_required
 def invoicePage():
-    return app.send_static_file('invoice.html')
+    return render_template('invoice.html')
 
 
 @app.route('/quotation-page')
 @login_required
 def quotationPage():
-    return app.send_static_file('quotation.html')
+    return render_template('quotation.html')
 
 
 @app.route('/customer-page')
 @login_required
 def customerPage():
-    return app.send_static_file('customer.html')
+    return render_template('customer.html')
 
 
 @app.route('/item-page')
 @login_required
 def itemPage():
-    #return app.send_static_file('item.html')
     return render_template('item.html')
 
 
 @app.route('/memo-page')
 def memoPage():
-    return app.send_static_file('memo.html')
+    return render_template('memo.html')
 
 # ------pdf maker -------
 
@@ -187,48 +184,47 @@ def open_pdf(file):
 @app.route('/unit-page')
 @login_required
 def unitPage():
-    return app.send_static_file('unit.html')
+    return render_template('unit.html')
 
 
 @app.route('/category-page')
 @login_required
 def categoryPage():
-    return app.send_static_file('category.html')
+    return render_template('category.html')
 
 
 @app.route('/maker-page')
 @login_required
 def makerPage():
-    return app.send_static_file('maker.html')
+    return render_template('maker.html')
 
 
 @app.route('/setting-page')
 @login_required
 def settingPage():
-    #user_id = current_user.id
     checkUser = User.query.filter_by(name=current_user.id).first()
     if checkUser:
         if checkUser.role == "admin":
-            return app.send_static_file('setting.html')
+            return render_template('setting.html')
     return redirect('/login')
 
 
 @app.route('/csv-upload-page')
 @login_required
 def csvUploadPage():
-    return app.send_static_file('csv_upload.html')
+    return render_template('csv_upload.html')
 
 
 @app.route('/invoice-dust-page')
 @login_required
 def invoiceDustPage():
-    return app.send_static_file('invoice_dust.html')
+    return render_template('invoice_dust.html')
 
 
 @app.route('/quotation-dust-page')
 @login_required
 def quotationDustPage():
-    return app.send_static_file('quotation_dust.html')
+    return render_template('quotation_dust.html')
 
 
 # --------- UPLOAD function ----------
@@ -354,7 +350,7 @@ def dbInitPage():
     checkUser = User.query.filter_by(name=current_user.id).first()
     if checkUser:
         if checkUser.role == "admin":
-            return app.send_static_file('db_init.html')
+            return render_template('db_init.html')
     return redirect('/login')
 
 

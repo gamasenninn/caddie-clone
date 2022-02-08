@@ -39,6 +39,14 @@
     <!-- VueRouter -->
     <script src="https://unpkg.com/vue-router@3.5.2/dist/vue-router.js"></script>
 
+    <!-- 日付フォーマット -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ja.min.js"
+        integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <!-- soho caddie component-->
     <script src="static/component/sc-menu.js"></script>
     <script src="static/component/select-modal.js"></script>
@@ -46,9 +54,9 @@
 
 <body>
 
-<% block content %>
-<!--- contents here -->
-<% endblock %>
+    <% block content %>
+        <!--- contents here -->
+        <% endblock %>
 
 </body>
 
