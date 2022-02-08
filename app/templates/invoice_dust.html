@@ -290,6 +290,7 @@
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
                     this.getInvoices();
+                    document.querySelector('title').textContent = '削除済み請求書管理';
                 },
                 router,
                 computed: {
