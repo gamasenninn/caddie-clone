@@ -180,28 +180,6 @@
 
 
             </div>
-            <script>
-                Dropzone.options.stampDropzone = {
-                    dictDefaultMessage: 'ここに印鑑用ファイルをドロップしてください',
-                    init: function () {
-                        this.on("complete", file => {
-                            console.log("complete A file has been added:", app.fileId, file);
-                            this.removeFile(file);
-                            app.setting.stampFilePath = "./static/asset/stamp/" + file.upload.filename
-                        });
-                    }
-                };
-                Dropzone.options.logoDropzone = {
-                    dictDefaultMessage: 'ここにロゴ用ファイルをドロップしてください',
-                    init: function () {
-                        this.on("complete", file => {
-                            console.log("complete A file has been added:", app.fileId, file);
-                            this.removeFile(file);
-                            app.setting.logoFilePath = "./static/asset/logo/" + file.upload.filename
-                        });
-                    }
-                };            
-            </script>
             <!-- 空行 -->
             <b-row class="mb-5"></b-row>
             <b-row class="mb-5"></b-row>
@@ -261,6 +239,26 @@
                 },
             })
 
+            Dropzone.options.stampDropzone = {
+                dictDefaultMessage: 'ここに印鑑用ファイルをドロップしてください',
+                init: function () {
+                    this.on("complete", file => {
+                        console.log("complete A file has been added:", app.fileId, file);
+                        this.removeFile(file);
+                        app.setting.stampFilePath = "./static/asset/stamp/" + file.upload.filename
+                    });
+                }
+            };
+            Dropzone.options.logoDropzone = {
+                dictDefaultMessage: 'ここにロゴ用ファイルをドロップしてください',
+                init: function () {
+                    this.on("complete", file => {
+                        console.log("complete A file has been added:", app.fileId, file);
+                        this.removeFile(file);
+                        app.setting.logoFilePath = "./static/asset/logo/" + file.upload.filename
+                    });
+                }
+            };
 
         </script>
         <% endblock %>
