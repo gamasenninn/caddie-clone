@@ -212,6 +212,7 @@
                 mounted: function () {
                     this.maker = JSON.parse(localStorage.getItem('maker'));
                     this.getMakers();
+                    document.querySelector('title').textContent = 'メーカー管理';
                 },
                 router,
                 computed: {

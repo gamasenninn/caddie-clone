@@ -113,6 +113,9 @@
                         this.$refs['resultModal'].hide();
                     }
                 },
+                mounted: function () {
+                    document.querySelector('title').textContent = 'CSVアップロード';
+                }
             })
 
             Dropzone.options.myDropzone = { // camelized version of the `id`

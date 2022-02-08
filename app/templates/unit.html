@@ -212,6 +212,7 @@
                 mounted: function () {
                     this.unit = JSON.parse(localStorage.getItem('unit')); //リロードのためのレストア
                     this.getUnits();
+                    document.querySelector('title').textContent = '単位管理';
                 },
                 router,
                 computed: {

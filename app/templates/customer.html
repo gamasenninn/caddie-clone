@@ -298,6 +298,7 @@
                 mounted: function () {
                     this.customer = JSON.parse(localStorage.getItem('customer'));
                     this.getCustomers();
+                    document.querySelector('title').textContent = '得意先管理';
                 },
                 router,
                 computed: {
