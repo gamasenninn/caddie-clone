@@ -28,7 +28,7 @@ Vue.component('select-modal', {
     },
     methods: {
         select() {
-            this.$emit("selected", this.isResult);
+            this.$emit("selected", isResult);
         },
         focusOK() {
             this.$refs.focusThis.focus();
@@ -64,7 +64,7 @@ Vue.component('select-modal-static', {
     },
     methods: {
         select() {
-            this.$emit("selected", this.isResult);
+            this.$emit("selected", isResult);
         },
         focusOK() {
             this.$refs.focusThis.focus();
