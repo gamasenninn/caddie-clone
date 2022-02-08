@@ -27,8 +27,6 @@ Vue.component('sc-menu', {
                                 class="far fa-copy"></i>　見積書</b-button>
                         <b-button variant="primary" block href="/memo-page"><i
                                 class="fas fa-book-open"></i>　メ　モ</b-button>
-                        <b-button variant="warning" block href="/login"><i
-                                class="fas fa-book-open"></i>　ログイン</b-button>
                         <b-button variant="warning" block href="/logout"><i
                                 class="fas fa-book-open"></i>　ログアウト</b-button>
                     </b-nav>

@@ -34,6 +34,7 @@ def load_user(user_id):
 
 
 @app.route('/')
+@login_required
 def home():
     return render_template('home.html')
 
