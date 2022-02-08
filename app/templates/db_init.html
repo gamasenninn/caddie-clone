@@ -47,7 +47,7 @@
                     },
                     dbInit: async function () {
                         self = this;
-                        await axios.get("/db-init")
+                        await axios.delete("/db-init")
                             .then(function (response) {
                                 console.log(response);
                             });

@@ -356,7 +356,7 @@ def dbInitPage():
     return redirect('/login')
 
 
-@app.route('/db-init')
+@app.route('/db-init', methods=["DELETE"])
 @login_required
 def dbInit():
     checkUser = User.query.filter_by(name=current_user.id).first()
