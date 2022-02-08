@@ -22,6 +22,7 @@
                             </b-button>
                         </b-card>
                     </b-col>
+                    <b-col></b-col>
                 </b-row>
 
                 <!-- 削除モーダル -->
@@ -41,8 +42,15 @@
                     initModalProcess(result) {
                         this.$bvModal.hide('dbInitModal');
                         if (result === true) {
-                            alert('全削除');
+                            this.dbInit();
                         }
+                    },
+                    dbInit: async function () {
+                        self = this;
+                        await axios.get("/db-init")
+                            .then(function (response) {
+                                console.log(response);
+                            });
                     },
                 },
                 mounted: function () {
