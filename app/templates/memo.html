@@ -19,7 +19,7 @@
                             <b-button variant="success" @click="MemoAddRow();">＋新規作成
                             </b-button>
                         </router-link>
-                        <b-card border-variant="white" class="mb-3 text-center" header="メモ一覧"
+                        <b-card sticky-header="1000px" border-variant="white" class="mb-3 text-center" header="メモ一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="memotable" sort-by="ID" small label="Table Options"
                                 :items=memos :fields="[

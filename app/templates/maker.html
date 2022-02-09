@@ -28,8 +28,8 @@
                         </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="メーカー一覧"
                             header-border-variant="light">
-                            <b-table responsive hover small id="makertable" sort-by="ID" small label="Table Options"
-                                :items=makers :fields="[
+                            <b-table sticky-header="1000px" responsive hover small id="makertable" sort-by="ID" small
+                                label="Table Options" :items=makers :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'makerName', label: 'メーカー名' },
