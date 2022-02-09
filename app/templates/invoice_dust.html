@@ -22,8 +22,8 @@
                         </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="削除済み請求書一覧"
                             header-border-variant="light">
-                            <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
-                                :items=invoices :fields="[
+                            <b-table sticky-header="1000px" responsive hover small id="invoicetable" sort-by="ID" small
+                                label="Table Options" :items=invoices :fields="[
                           {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '請求番号' },

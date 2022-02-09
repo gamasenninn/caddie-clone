@@ -41,8 +41,8 @@
                         </router-link>
                         <b-card border-variant="white" class="mb-3 text-center" header="見積書一覧"
                             header-border-variant="light">
-                            <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
-                                :items=quotations :fields="[
+                            <b-table sticky-header="1000px" responsive hover small id="quotationtable" sort-by="ID"
+                                small label="Table Options" :items=quotations :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '見積番号' },
