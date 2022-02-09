@@ -3,10 +3,35 @@
 
 <script src="https://riversun.github.io/jsframe/jsframe.js"></script>
 
+<div id="app">
+  <b-button size="lg" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
+
+  <b-img src="https://free-materials.com/adm/wp-content/uploads/2020/10/logo_07-1024x1024.png"
+  style="width: 50%; " center ></b-img>
+  
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+          item:[],
+        },
+        methods:{
+          openMenu: function(){
+            frame00.show();
+          }
+        }
+      });
+
+</script>
+
 <script>
       const jsFrame = new JSFrame();
-      let _left = 500;
-      let _top = 200;
+      let _left = 250;
+      let _top = 50;
+
+      frameDict = {};
 
 
       //-------------menu-----------------
@@ -17,116 +42,56 @@
         url: '/mw-menu',
 
         urlLoaded: (frame) => {
+          frame.on('#customer', 'click', (_frame, evt) => {
+            openWindow('/customer-page','得意先','customer');
+          });
+          frame.on('#item', 'click', (_frame, evt) => {
+            openWindow('/item-page','商品','item');
+          });
           frame.on('#invoice', 'click', (_frame, evt) => {
-            //jsFrame.showToast({html:'得意先が選択された！'});
-            invoice();
+            openWindow('/invoice-page','請求書','invoice');
           });
           frame.on('#quotation', 'click', (_frame, evt) => {
-            //jsFrame.showToast({html:'得意先が選択された！'});
-            quotation();
+            openWindow('/quotation-page','見積書','quotation');
           });
           frame.on('#memo', 'click', (_frame, evt) => {
-            //jsFrame.showToast({html:'得意先が選択された！'});
-            openWindow('/memo-page');
+            openWindow('/memo-page','メモ','memo');
+          });
+          frame.on('#logout', 'click', (_frame, evt) => {
+            window.location.href = '/logout';
+          });
+          frame.on('closeButton', 'click', (_frame, evt) => {
+            frame.hide();
           });
 
-          frame.on('#my_button_02', 'click', (_frame, evt) => {
-            _frame.closeFrame();
-            showToast(`${_frame.getName()} closed by clicking ${evt.target.id}`);
-          });
         }
       });
       frame00.show();
 
-
-
-
-
-    //---------invoice--------
-    function invoice(){
-      const frame01 = jsFrame.create({
-      title: 'invoice',
-      name: 'invoice',
-      left: 400, top: 160, width: 900, height: 700,
-      url: '/invoice-page',
-
-      // If you specify "urlLoaded",
-      // you can specify a callback when the iframe content is finished loading
-      urlLoaded: (frame) => {
-        // You can use the on method to register an event listener for an element in an iframe
-        frame.on('#my_button_01', 'click', (_frame, evt) => {
-          // In this case, frame and _frame refer to the same object.
-          showToast(`Clicked ${_frame.getName()}'s ${evt.target.id}`);
-        });
-
-        frame.on('#my_button_02', 'click', (_frame, evt) => {
-          _frame.closeFrame();
-          showToast(`${_frame.getName()} closed by clicking ${evt.target.id}`);
-        });
-
-        frame.on('#my_button_03', 'click', (_frame, evt) => {
-          showToast(`Clicked ${_frame.getName()}'s ${evt.target.id}`);
-        });
-      }
-    });
-    frame01.show();
-
-    }
     //------------------------------
-    function quotation(){
-      const frame02 = jsFrame.create({
-        title: 'quotes',
-        name: 'quotes',
-        left: 500, top: 260, width: 900, height: 700,
-        //URL to display in iframe
-        url: '/quotation-page',
-
-        // If you specify "urlLoaded",
-        // you can specify a callback when the iframe content is finished loading
-        urlLoaded: (frame) => {
-          // You can use the on method to register an event listener for an element in an iframe
-          frame.on('#my_button_01', 'click', (_frame, evt) => {
-            // In this case, frame and _frame refer to the same object.
-            jsFrame.showToast(`Clicked ${_frame.getName()}'s ${evt.target.id}`);
-          });
-        }
-      });
-      frame02.show();
-    }
-    //------------------------------
-    function openWindow(url){
+    function openWindow(url,title,name){
       const frame = jsFrame.create({
-        title: 'quotes',
-        name: 'quotes',
-        left: _left, top: _top, width: 900, height: 700,
-        //URL to display in iframe
+        title: title,
+        name: name,
+        left: _left, top: _top, width: 1000, height: 700,
+        style: {
+                backgroundColor: 'rgba(255,255,255,0.9)',
+            },
         url: url,
       });
+      frame.on('#pdfBtn', 'click', (_frame, evt) => {
+            openWindow('/memo-page','メモ','memo');
+          });
       frame.show();
       _left += 50; 
       _top += 50;
-      if ( _left > 600 ) _left -= 200   
-      if ( _top > 400 ) _top -= 200   
-    }
-    //start();
+      if ( _left > 600 ) _left -= 400   
+      if ( _top > 400 ) _top -= 300   
 
-            //プリセットアピアランスをプリセット名で指定する
-    const frame09 = jsFrame.create({
-            title: 'Yosemite style',
-            left: 20, top: 20, width: 320, height: 220,
-            appearanceName: 'yosemite',//プリセット名は 'yosemite','redstone','popup'
-            style: {
-                backgroundColor: 'rgba(255,255,255,0.9)',
-            },
-            html: '<div style="padding:10px;">プリセット名で指定する</div>'
-    }).show();
+      frameDict[name] = frame;
+
+    }
 
 </script>
-<!--
-<div
-        style="font-size: 12px; color: white; position: fixed; right: 10px; bottom: 10px">
-</div>
-
--->
 
 <% endblock %>

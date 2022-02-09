@@ -1,5 +1,6 @@
 <% extends "head.html" %>
     <% block content %>
+    
         <style>
             .td-count {
                 max-width: 75px;
@@ -352,7 +353,7 @@
             <select-modal modal-name='upsertModal' modal-message='保存しますか？' @selected="upsertModalProcess($event);" />
 
         </div>
-
+        <script src="static/component/def-pdf.js"></script>
         <script>
             Vue.filter('nf', function (val) {
                 return val.toLocaleString();
