@@ -1,29 +1,106 @@
 <% extends "head.html" %>
     <% block content %>
+        <style>
+            .td-postNumber {
+                width: 80px;
+            }
+
+            .td-telNumber {
+                width: 120px;
+            }
+
+            /* ----- ヘッダー追従 ----- */
+            #global-nav {
+                width: 100%;
+                z-index: 1;
+            }
+
+            #global-nav div {
+                background-color: rgba(255, 255, 255, 0.4);
+            }
+
+            #global-nav.m_fixed {
+                left: 0;
+                position: fixed;
+                top: 0;
+            }
+
+            #global-nav .inner {
+                padding-bottom: 0;
+                padding-top: 0;
+                margin: 0 auto;
+                max-width: 100%;
+                padding: 80px 0;
+                width: 768px;
+            }
+
+            .global-list {
+                display: flex;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .global-item {
+                border-left: 1px solid #fff;
+                width: 20%;
+            }
+
+            .global-item:last-child {
+                border-right: 1px solid #fff;
+                margin-right: 0;
+            }
+
+            .global-item a {
+                background: #16244e;
+                color: #fff;
+                display: block;
+                line-height: 50px;
+                text-align: center;
+                text-decoration: none;
+                opacity: 0.5;
+            }
+        </style>
+
         <div id="app" v-cloak>
-            <b-row class="bg pt-2 pb-2">
-                <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
-                            class='mr-2'></a>削除済み請求書参照</b-col>
-                <b-col class="text-right mr-5 mt-3">
-                    <!-- サイドバー -->
-                    <sc-menu></sc-menu>
+            <b-row>
+                <b-col></b-col>
+                <b-col cols="10">
+                    <b-row class="bg pt-2 pb-2">
+                        <b-col class="h5 mt-3">削除済み請求書参照</b-col>
+                        <b-col class="text-right mr-5 mt-3">
+                            <!-- サイドバー -->
+                            <sc-menu></sc-menu>
+                        </b-col>
+                    </b-row>
                 </b-col>
+                <b-col></b-col>
             </b-row>
+            <nav id="global-nav">
+                <b-card v-if="pageName=='index'">
+                    <b-row>
+                        <b-col></b-col>
+                        <b-col cols="10">
+                            <b-row>
+                                <b-col class="text-right">
+                                    <b-button pill href="/setting-page">設定ページへ</b-button>
+                                </b-col>
+                            </b-row>
+                        </b-col>
+                        <b-col></b-col>
+                    </b-row>
+                </b-card>
+            </nav>
 
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">
-                <b-row class="mt-5">
+                <b-row class="mt-1">
                     <b-col></b-col>
                     <b-col cols="10">
-                        <b-row>
-                            <b-col class="text-right">
-                                <b-button href="/setting-page">設定ページへ</b-button>
-                            </b-col>
-                        </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="削除済み請求書一覧"
                             header-border-variant="light">
-                            <b-table sticky-header="1000px" responsive hover small id="invoicetable" sort-by="ID" small
-                                label="Table Options" :items=invoices :fields="[
+                            <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
+                                :items=invoices :fields="[
                           {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '請求番号' },
@@ -306,6 +383,18 @@
                 },
             })
 
+            // ヘッダー追従
+            var navPos = jQuery('#global-nav').offset().top; // グローバルメニューの位置
+            var navHeight = jQuery('#global-nav').outerHeight(); // グローバルメニューの高さ
+            jQuery(window).on('scroll', function () {
+                if (jQuery(this).scrollTop() > navPos) {
+                    jQuery('body').css('padding-top', navHeight);
+                    jQuery('#global-nav').addClass('m_fixed');
+                } else {
+                    jQuery('body').css('padding-top', 0);
+                    jQuery('#global-nav').removeClass('m_fixed');
+                }
+            });
 
         </script>
         <% endblock %>

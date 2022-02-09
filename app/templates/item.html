@@ -1,35 +1,113 @@
 <% extends "head.html" %>
-<% block content %>
-    <div id="app" v-cloak>
-        <b-row class="bg pt-2 pb-2">
-            <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
-                        class='mr-2'></a>商品入力</b-col>
-            <b-col class="text-right mr-5 mt-3">
-                <!-- サイドバー -->
-                <sc-menu></sc-menu>
-            </b-col>
-        </b-row>
+    <% block content %>
+        <style>
+            .td-postNumber {
+                width: 80px;
+            }
 
-        <!-- 一覧表示 -->
-        <div v-if="pageName=='index'">
-            <b-row class="mt-5">
+            .td-telNumber {
+                width: 120px;
+            }
+
+            /* ----- ヘッダー追従 ----- */
+            #global-nav {
+                width: 100%;
+                z-index: 1;
+            }
+
+            #global-nav div {
+                background-color: rgba(255, 255, 255, 0.4);
+            }
+
+            #global-nav.m_fixed {
+                left: 0;
+                position: fixed;
+                top: 0;
+            }
+
+            #global-nav .inner {
+                padding-bottom: 0;
+                padding-top: 0;
+                margin: 0 auto;
+                max-width: 100%;
+                padding: 80px 0;
+                width: 768px;
+            }
+
+            .global-list {
+                display: flex;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .global-item {
+                border-left: 1px solid #fff;
+                width: 20%;
+            }
+
+            .global-item:last-child {
+                border-right: 1px solid #fff;
+                margin-right: 0;
+            }
+
+            .global-item a {
+                background: #16244e;
+                color: #fff;
+                display: block;
+                line-height: 50px;
+                text-align: center;
+                text-decoration: none;
+                opacity: 0.5;
+            }
+        </style>
+
+        <div id="app" v-cloak>
+            <b-row>
                 <b-col></b-col>
                 <b-col cols="10">
-                    <b-row>
-                        <b-col>
-                            <router-link to="?page=store">
-                                <b-button variant="success" @click="ItemAddRow();">＋新規作成
-                                </b-button>
-                            </router-link>
-                        </b-col>
-                        <b-col class="text-right">
-                            <b-button href="/category-page">カテゴリ一覧画面へ</b-button>
-                            <b-button href="/maker-page">メーカー一覧画面へ</b-button>
+                    <b-row class="bg pt-2 pb-2">
+                        <b-col class="h5 mt-3">商品一覧</b-col>
+                        <b-col class="text-right mr-5 mt-3">
+                            <!-- サイドバー -->
+                            <sc-menu></sc-menu>
                         </b-col>
                     </b-row>
-                    <b-card border-variant="white" class="mb-3 text-center" header="商品一覧" header-border-variant="light">
-                        <b-table sticky-header="1000px" responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
-                            :items=items :fields="[
+                </b-col>
+                <b-col></b-col>
+            </b-row>
+            <nav id="global-nav">
+                <b-card v-if="pageName=='index'">
+                    <b-row>
+                        <b-col></b-col>
+                        <b-col cols="10">
+                            <b-row>
+                                <b-col>
+                                    <router-link to="?page=store">
+                                        <b-button pill variant="success" class="mr-3" @click="ItemAddRow();">＋新規作成
+                                        </b-button>
+                                    </router-link>
+                                </b-col>
+                                <b-col class="text-right">
+                                    <b-button pill href="/category-page">カテゴリ一覧へ</b-button>
+                                    <b-button pill href="/maker-page">メーカー一覧へ</b-button>
+                                </b-col>
+                            </b-row>
+                        </b-col>
+                        <b-col></b-col>
+                    </b-row>
+                </b-card>
+            </nav>
+
+            <!-- 一覧表示 -->
+            <div v-if="pageName=='index'">
+                <b-row class="mt-1">
+                    <b-col></b-col>
+                    <b-col cols="10">
+                        <b-card border-variant="white" class="mb-3 text-center" header="商品一覧"
+                            header-border-variant="light">
+                            <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
+                                :items=items :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'itemName', label: '商品名' },
@@ -42,279 +120,296 @@
                           {  key: 'memo', label: 'メモ' },
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
-                            <template v-slot:cell(update)="data">
-                                <router-link to="?page=show">
-                                    <b-button variant="info" @click="selectItem(data.item);"><i class="fas fa-edit"></i>
+                                <template v-slot:cell(update)="data">
+                                    <router-link to="?page=show">
+                                        <b-button variant="info" @click="selectItem(data.item);"><i
+                                                class="fas fa-edit"></i>
+                                        </b-button>
+                                    </router-link>
+                                </template>
+                                <template v-slot:cell(delete)="data">
+                                    <b-button variant="danger" @click="modalShow(data.item,'deleteModal');">
+                                        <i class="fas fa-trash-alt"></i>
                                     </b-button>
-                                </router-link>
-                            </template>
-                            <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" @click="modalShow(data.item,'deleteModal');">
-                                    <i class="fas fa-trash-alt"></i>
-                                </b-button>
-                            </template>
-                        </b-table>
-                    </b-card>
-                </b-col>
-                <b-col></b-col>
-            </b-row>
-            <!-- 削除モーダル -->
-            <select-modal modal-name='deleteModal' modal-message='削除しますか？' @selected="deleteModalProcess($event);" />
-        </div>
-
-        <!-- 新規作成・詳細(更新)ページ -->
-        <div v-if="pageName=='show' || pageName=='store'">
-            <b-row class="mt-5">
-                <b-col></b-col>
-                <!--- 本体 -->
-                <b-col cols=10>
-                    <router-link to="?page=index">
-                        <b-button @click="getItems();">＜</b-button>
-                    </router-link>
-                    <b-card border-variant="white" class="mb-3 text-center" header="商品入力" header-border-variant="light">
-
-                        <b-row>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
-                                    label-for="itemName">
-                                    <b-form-input v-model="item.itemName" id="itemName" size="sm"></b-form-input>
-                                </b-form-group>
-                            </b-col>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品コード"
-                                    label-for="itemCode">
-                                    <b-form-input v-model="item.itemCode" id="itemCode" size="sm"></b-form-input>
-                                </b-form-group>
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
-                                    label-for="category">
-                                    <b-form-select v-model="item.category" :options="categories" size="sm">
-                                    </b-form-select>
-                                </b-form-group>
-                            </b-col>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
-                                    <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
-                                </b-form-group>
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
-                                    label-for="unit">
-                                    <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
-                                </b-form-group>
-                            </b-col>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="型式"
-                                    label-for="model">
-                                    <b-form-input v-model="item.model" id="model" size="sm"></b-form-input>
-                                </b-form-group>
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価"
-                                    label-for="basePrice">
-                                    <b-form-input v-model="item.basePrice" id="basePrice" size="sm" type="number">
-                                    </b-form-input>
-                                    </b-form-input>
-                                </b-form-group>
-                            </b-col>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価原価"
-                                    label-for="baseCost">
-                                    <b-form-input v-model="item.baseCost" id="baseCost" size="sm" type="number">
-                                    </b-form-input>
-                                </b-form-group>
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            <b-col sm>
-                                <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
-                                    label-for="メモ">
-                                    <b-form-textarea v-model="item.memo" size="sm" rows="4"></b-form-textarea>
-                                </b-form-group>
-                            </b-col>
-                            <b-col sm>
-                            </b-col>
-                        </b-row>
-                    </b-card>
-
-                </b-col> <!-- 本体 -->
-                <b-col></b-col>
-
-            </b-row>
-
-        </div>
-        <!-- 空行 -->
-        <b-row class="mb-5"></b-row>
-        <b-row class="mb-5"></b-row>
-        <b-row class="mb-5"></b-row>
-
-        <!-- 更新・取消ボタンのフッター -->
-        <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
-            class="fixed-bottom footer">
-            <div class="d-flex justify-content-end">
-                <b-button pill variant="info" class="mr-3" @click="modalShow(item,'upsertModal');" id="showUpsertModal">
-                    適用
-                </b-button>
-                <b-button pill variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i></b-button>
+                                </template>
+                            </b-table>
+                        </b-card>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+                <!-- 削除モーダル -->
+                <select-modal modal-name='deleteModal' modal-message='削除しますか？'
+                    @selected="deleteModalProcess($event);" />
             </div>
-        </b-card>
 
-        <!-- 保存モーダル -->
-        <select-modal modal-name='upsertModal' modal-message='保存しますか？' @selected="upsertModalProcess($event);" />
+            <!-- 新規作成・詳細(更新)ページ -->
+            <div v-if="pageName=='show' || pageName=='store'">
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <!--- 本体 -->
+                    <b-col cols=10>
+                        <router-link to="?page=index">
+                            <b-button @click="getItems();">＜</b-button>
+                        </router-link>
+                        <b-card border-variant="white" class="mb-3 text-center" header="商品入力"
+                            header-border-variant="light">
 
-    </div>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
+                                        label-for="itemName">
+                                        <b-form-input v-model="item.itemName" id="itemName" size="sm"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品コード"
+                                        label-for="itemCode">
+                                        <b-form-input v-model="item.itemCode" id="itemCode" size="sm"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
+                                        label-for="category">
+                                        <b-form-select v-model="item.category" :options="categories" size="sm">
+                                        </b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
+                                        <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
+                                        label-for="unit">
+                                        <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="型式"
+                                        label-for="model">
+                                        <b-form-input v-model="item.model" id="model" size="sm"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価"
+                                        label-for="basePrice">
+                                        <b-form-input v-model="item.basePrice" id="basePrice" size="sm" type="number">
+                                        </b-form-input>
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価原価"
+                                        label-for="baseCost">
+                                        <b-form-input v-model="item.baseCost" id="baseCost" size="sm" type="number">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
+                                        label-for="メモ">
+                                        <b-form-textarea v-model="item.memo" size="sm" rows="4"></b-form-textarea>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                </b-col>
+                            </b-row>
+                        </b-card>
 
-    <script>
-        const router = new VueRouter({
-        })
+                    </b-col> <!-- 本体 -->
+                    <b-col></b-col>
 
-        var app = new Vue({
-            el: '#app',
-            data: {
-                items: [],               //全件item
-                item: [],                //選択中のitem
-                units: [],
-                categories: [],
-                makers: [],
-            },
-            methods: {
-                // ---Items---
-                getItems: async function () {
-                    self = this;
-                    await axios.get("/items")
-                        .then(function (response) {
-                            console.log(response);
-                            self.items = response.data;
-                        });
-                },
-                bulkUpsert(item) {
-                    if (!item.id) {
-                        this.insertItem(item);
-                    }
-                    else {
-                        this.updateItem(item);
-                    }
-                },
-                insertItem: async function (item) {
-                    self = this;
-                    await axios.post("/item", item)
-                        .then(function (response) {
-                            Vue.set(self.item, 'id', response.data.id)
-                            self.getItems();
-                            self.item.isInsert = false;
-                        });
-                },
-                updateItem: async function (item) {
-                    self = this;
-                    await axios.put("/item/" + item.id, item)
-                        .then(function (response) {
-                            self.getItems();
-                            console.log(response);
-                        });
-                },
-                deleteItem: async function (item) {
-                    self = this;
-                    await axios.delete("/item/" + item.id)
-                        .then(function (response) {
-                            console.log(response);
-                            self.item = '';
-                            self.getItems();
-                        });
-                },
-                ItemAddRow: function () {
-                    self = this;
-                    self.items.push({
-                        isInsert: true,
-                    });
-                    self.item = self.items.slice(-1)[0];
-                    localStorage.setItem('item', JSON.stringify(self.item))
-                },
-                selectItem: function (item) {
-                    this.item = item;
-                    console.log(this.item);
-                    localStorage.setItem('item', JSON.stringify(item))
-                },
-                getItem: async function (item) {
-                    self = this;
-                    await axios.get("/item/" + item.id)
-                        .then(function (response) {
-                            console.log(response);
-                            for (const [key, value] of Object.entries(response.data)) {
-                                console.log(key, value);
-                                self.$set(self.item, key, value);
-                            }
-                        });
-                },
-                rowClass: function (item, type) {
-                    if (!item || type !== 'row') return
-                    if (!item.id) return "d-none";
-                },
-                getUnits: async function () {
-                    self = this;
-                    await axios.get("/units")
-                        .then(function (response) {
-                            console.log(response);
-                            self.units = response.data.map(item => item['unitName']);
-                        });
-                },
-                getCategories: async function () {
-                    self = this;
-                    await axios.get('/categories')
-                        .then(function (response) {
-                            console.log(response);
-                            self.categories = response.data.map(item => item['categoryName'])
-                        });
-                },
-                getMakers: async function () {
-                    self = this;
-                    await axios.get('/makers')
-                        .then(function (response) {
-                            console.log(response);
-                            self.makers = response.data.map(item => item['makerName'])
-                        });
-                },
-                modalShow: function (item, modalName) {
-                    this.item = item;
-                    console.log(this.item);
-                    this.$bvModal.show(modalName);
-                },
-                deleteModalProcess(result) {
-                    this.$bvModal.hide('deleteModal');
-                    if (result === true) {
-                        this.deleteItem(this.item);
-                    }
-                },
-                upsertModalProcess(result) {
-                    this.$bvModal.hide('upsertModal');
-                    if (result === true) {
-                        this.bulkUpsert(this.item);
-                    }
-                },
-            },
-            mounted: function () {
-                this.item = JSON.parse(localStorage.getItem('item'));
-                this.getItems();
-                this.getUnits();
-                this.getCategories();
-                this.getMakers();
-                document.querySelector('title').textContent = '商品管理';
-            },
-            router,
-            computed: {
-                pageName() {
-                    if (this.$route.query.page == undefined) return 'index';
-                    return this.$route.query.page;
-                },
-            }
-        })
+                </b-row>
 
-    </script>
+            </div>
+            <!-- 空行 -->
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
 
-<% endblock %>
+            <!-- 更新・取消ボタンのフッター -->
+            <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
+                class="fixed-bottom footer">
+                <div class="d-flex justify-content-end">
+                    <b-button pill variant="info" class="mr-3" @click="modalShow(item,'upsertModal');"
+                        id="showUpsertModal">
+                        適用
+                    </b-button>
+                    <b-button pill variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i></b-button>
+                </div>
+            </b-card>
+
+            <!-- 保存モーダル -->
+            <select-modal modal-name='upsertModal' modal-message='保存しますか？' @selected="upsertModalProcess($event);" />
+
+        </div>
+
+        <script>
+            const router = new VueRouter({
+            })
+
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    items: [],               //全件item
+                    item: [],                //選択中のitem
+                    units: [],
+                    categories: [],
+                    makers: [],
+                },
+                methods: {
+                    // ---Items---
+                    getItems: async function () {
+                        self = this;
+                        await axios.get("/items")
+                            .then(function (response) {
+                                console.log(response);
+                                self.items = response.data;
+                            });
+                    },
+                    bulkUpsert(item) {
+                        if (!item.id) {
+                            this.insertItem(item);
+                        }
+                        else {
+                            this.updateItem(item);
+                        }
+                    },
+                    insertItem: async function (item) {
+                        self = this;
+                        await axios.post("/item", item)
+                            .then(function (response) {
+                                Vue.set(self.item, 'id', response.data.id)
+                                self.getItems();
+                                self.item.isInsert = false;
+                            });
+                    },
+                    updateItem: async function (item) {
+                        self = this;
+                        await axios.put("/item/" + item.id, item)
+                            .then(function (response) {
+                                self.getItems();
+                                console.log(response);
+                            });
+                    },
+                    deleteItem: async function (item) {
+                        self = this;
+                        await axios.delete("/item/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                self.item = '';
+                                self.getItems();
+                            });
+                    },
+                    ItemAddRow: function () {
+                        self = this;
+                        self.items.push({
+                            isInsert: true,
+                        });
+                        self.item = self.items.slice(-1)[0];
+                        localStorage.setItem('item', JSON.stringify(self.item))
+                    },
+                    selectItem: function (item) {
+                        this.item = item;
+                        console.log(this.item);
+                        localStorage.setItem('item', JSON.stringify(item))
+                    },
+                    getItem: async function (item) {
+                        self = this;
+                        await axios.get("/item/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                for (const [key, value] of Object.entries(response.data)) {
+                                    console.log(key, value);
+                                    self.$set(self.item, key, value);
+                                }
+                            });
+                    },
+                    rowClass: function (item, type) {
+                        if (!item || type !== 'row') return
+                        if (!item.id) return "d-none";
+                    },
+                    getUnits: async function () {
+                        self = this;
+                        await axios.get("/units")
+                            .then(function (response) {
+                                console.log(response);
+                                self.units = response.data.map(item => item['unitName']);
+                            });
+                    },
+                    getCategories: async function () {
+                        self = this;
+                        await axios.get('/categories')
+                            .then(function (response) {
+                                console.log(response);
+                                self.categories = response.data.map(item => item['categoryName'])
+                            });
+                    },
+                    getMakers: async function () {
+                        self = this;
+                        await axios.get('/makers')
+                            .then(function (response) {
+                                console.log(response);
+                                self.makers = response.data.map(item => item['makerName'])
+                            });
+                    },
+                    modalShow: function (item, modalName) {
+                        this.item = item;
+                        console.log(this.item);
+                        this.$bvModal.show(modalName);
+                    },
+                    deleteModalProcess(result) {
+                        this.$bvModal.hide('deleteModal');
+                        if (result === true) {
+                            this.deleteItem(this.item);
+                        }
+                    },
+                    upsertModalProcess(result) {
+                        this.$bvModal.hide('upsertModal');
+                        if (result === true) {
+                            this.bulkUpsert(this.item);
+                        }
+                    },
+                },
+                mounted: function () {
+                    this.item = JSON.parse(localStorage.getItem('item'));
+                    this.getItems();
+                    this.getUnits();
+                    this.getCategories();
+                    this.getMakers();
+                    document.querySelector('title').textContent = '商品管理';
+                },
+                router,
+                computed: {
+                    pageName() {
+                        if (this.$route.query.page == undefined) return 'index';
+                        return this.$route.query.page;
+                    },
+                }
+            })
+
+            // ヘッダー追従
+            var navPos = jQuery('#global-nav').offset().top; // グローバルメニューの位置
+            var navHeight = jQuery('#global-nav').outerHeight(); // グローバルメニューの高さ
+            jQuery(window).on('scroll', function () {
+                if (jQuery(this).scrollTop() > navPos) {
+                    jQuery('body').css('padding-top', navHeight);
+                    jQuery('#global-nav').addClass('m_fixed');
+                } else {
+                    jQuery('body').css('padding-top', 0);
+                    jQuery('#global-nav').removeClass('m_fixed');
+                }
+            });
+
+        </script>
+
+        <% endblock %>
