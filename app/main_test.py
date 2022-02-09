@@ -384,6 +384,16 @@ def dbInit():
             return jsonify({"status": 200, "result": "ok", "data": data, "message": "データを全削除しました。"})
     return jsonify({"status": 403, "result": "権限エラー", "message": "権限がありません"})
 
+@app.route('/mw')
+@login_required
+def mw():
+    return render_template('mw.html')
+
+@app.route('/mw-menu')
+@login_required
+def mw_menu():
+    return render_template('mw_menu.html')
+
 
 if __name__ == '__main__':
 
