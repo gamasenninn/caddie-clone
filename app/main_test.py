@@ -5,7 +5,7 @@ import sys
 import json
 import uuid
 from flask import redirect, request
-from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory,render_template
+from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory, render_template
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 import importlib
 from models import *
@@ -37,6 +37,7 @@ def load_user(user_id):
 @login_required
 def home():
     return render_template('home.html')
+
 
 @app.route('/login', methods=['GET'])
 def get_login():
@@ -353,6 +354,29 @@ def dbInitPage():
         if checkUser.role == "admin":
             return render_template('db_init.html')
     return redirect('/login')
+
+
+@app.route('/db-init', methods=["DELETE"])
+@login_required
+def dbInit():
+    checkUser = User.query.filter_by(name=current_user.id).first()
+    if checkUser:
+        if checkUser.role == 'admin':
+            db.session.query(Customer).delete()
+            db.session.query(Item).delete()
+            db.session.query(Invoice).delete()
+            db.session.query(Invoice_Item).delete()
+            db.session.query(Quotation).delete()
+            db.session.query(Quotation_Item).delete()
+            db.session.query(Memo).delete()
+            db.session.query(Unit).delete()
+            db.session.query(Category).delete()
+            db.session.query(Maker).delete()
+            db.session.commit()
+            data = db.session.query(
+                Customer, Item, Invoice, Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker).all()
+            return jsonify({"status": 200, "result": "ok", "data": data, "message": "データを全削除しました。"})
+    return jsonify({"status": 403, "result": "権限エラー", "message": "権限がありません"})
 
 
 if __name__ == '__main__':
