@@ -1,0 +1,244 @@
+<% extends "head.html" %>
+    <% block content %>
+        <div id="app" v-cloak>
+            <b-row class="bg pt-2 pb-2">
+                <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+                            class='mr-2'></a>ユーザー管理</b-col>
+                <b-col class="text-right mr-5 mt-3">
+                    <!-- サイドバー -->
+                    <sc-menu></sc-menu>
+                </b-col>
+            </b-row>
+
+            <!-- 一覧表示 -->
+            <div v-if="pageName=='index'">
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <b-col cols="10">
+                        <b-row>
+                            <b-col>
+                                <router-link to="?page=store">
+                                    <b-button variant="success" @click="UserAddRow();">＋新規作成
+                                    </b-button>
+                                </router-link>
+                            </b-col>
+                        </b-row>
+                        <!-- <style>/* -->
+                        <b-card border-variant="white" class="mb-3 text-center" header="ユーザー一覧"
+                            header-border-variant="light">
+                            <b-table sticky-header="1000px" responsive hover small id="usertable" sort-by="ID" small
+                                label="Table Options" :items=users :fields="[
+                          {  key: 'update', label: '' },
+                          {  key: 'id', label: 'No.' },
+                          {  key: 'name', label: 'ユーザー名' },
+                          {  key: 'password', label: 'パスワード' },
+                          {  key: 'group', label: 'グループ' },
+                          {  key: 'role', label: '権限' },
+                          {  key: 'delete', label: '', class: 'text-right' },
+                        ]" :tbody-tr-class="rowClass">
+                                <template v-slot:cell(update)="data">
+                                    <router-link to="?page=show">
+                                        <b-button variant="info" @click="selectUser(data.item);"><i
+                                                class="fas fa-edit"></i>
+                                        </b-button>
+                                    </router-link>
+                                </template>
+                                <template v-slot:cell(delete)="data">
+                                    <b-button variant="danger" @click="modalShow(data.item,'deleteModal');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </b-button>
+                                </template>
+                            </b-table>
+                        </b-card>
+                        <!-- */</style> -->
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+                <!-- 削除モーダル -->
+                <select-modal modal-name='deleteModal' modal-message='削除しますか？'
+                    @selected="deleteModalProcess($event);" />
+            </div>
+
+            <!-- <style>/* -->
+            <!-- 新規作成・詳細(更新)ページ -->
+            <div v-if="pageName=='show' || pageName=='store'">
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <!--- 本体 -->
+                    <b-col cols=10>
+                        <router-link to="?page=index">
+                            <b-button @click="getUsers();">＜</b-button>
+                        </router-link>
+                        <b-card border-variant="white" class="mb-3 text-center" header="ユーザー入力"
+                            header-border-variant="light">
+
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ユーザー名"
+                                        label-for="name">
+                                        <b-form-input v-model="user.name" id="name" size="sm"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="パスワード"
+                                        label-for="password">
+                                        <b-form-input v-model="user.password" id="password" size="sm"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="グループ"
+                                        label-for="group">
+                                        <b-form-input v-model="user.group" id="group" size="sm"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="権限"
+                                        label-for="role">
+                                        <b-form-select v-model="user.role" size="sm" :options="[
+                                        {  value: 'admin', text: 'admin' },
+                                        {  value: 'user', text: 'user' },
+                                        ]">
+                                        </b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+
+                        </b-card>
+
+                    </b-col> <!-- 本体 -->
+                    <b-col></b-col>
+
+                </b-row>
+
+            </div>
+            <!-- 空行 -->
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+
+            <!-- 更新・取消ボタンのフッター -->
+            <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
+                class="fixed-bottom footer">
+                <div class="d-flex justify-content-end">
+                    <b-button pill variant="info" class="mr-3" @click="modalShow(user,'upsertModal');"
+                        id="showUpsertModal">
+                        適用
+                    </b-button>
+                    <b-button pill variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i></b-button>
+                </div>
+            </b-card>
+
+            <!-- 保存モーダル -->
+            <select-modal modal-name='upsertModal' modal-message='保存しますか？' @selected="upsertModalProcess($event);" />
+            <!-- */</style> -->
+
+        </div>
+
+        <script>
+            const router = new VueRouter({
+            })
+
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    users: [],               //全件user
+                    user: [],                //選択中のuser
+                },
+                methods: {
+                    // ---Items---
+                    getUsers: async function () {
+                        self = this;
+                        await axios.get("/users")
+                            .then(function (response) {
+                                console.log(response);
+                                self.users = response.data;
+                            });
+                    },
+                    bulkUpsert(item) {
+                        if (!item.id) {
+                            this.insertUser(item);
+                        }
+                        else {
+                            this.updateUser(item);
+                        }
+                    },
+                    insertUser: async function (item) {
+                        self = this;
+                        await axios.post("/user", item)
+                            .then(function (response) {
+                                Vue.set(self.user, 'id', response.data.id)
+                                self.getUsers();
+                                self.user.isInsert = false;
+                            });
+                    },
+                    updateUser: async function (item) {
+                        self = this;
+                        await axios.put("/user/" + item.id, item)
+                            .then(function (response) {
+                                self.getUsers();
+                                console.log(response);
+                            });
+                    },
+                    deleteUser: async function (item) {
+                        self = this;
+                        await axios.delete("/user/" + item.id)
+                            .then(function (response) {
+                                console.log(response);
+                                self.user = '';
+                                self.getUsers();
+                            });
+                    },
+                    UserAddRow: function () {
+                        self = this;
+                        self.users.push({
+                            isInsert: true,
+                        });
+                        self.user = self.users.slice(-1)[0];
+                        localStorage.setItem('user', JSON.stringify(self.user))
+                    },
+                    selectUser: function (item) {
+                        this.user = item;
+                        console.log(this.user);
+                        localStorage.setItem('user', JSON.stringify(item))
+                    },
+                    rowClass: function (item, type) {
+                        if (!item || type !== 'row') return
+                        if (!item.id) return "d-none";
+                    },
+                    modalShow: function (item, modalName) {
+                        this.user = item;
+                        console.log(this.user);
+                        this.$bvModal.show(modalName);
+                    },
+                    deleteModalProcess(result) {
+                        this.$bvModal.hide('deleteModal');
+                        if (result === true) {
+                            this.deleteUser(this.user);
+                        }
+                    },
+                    upsertModalProcess(result) {
+                        this.$bvModal.hide('upsertModal');
+                        if (result === true) {
+                            this.bulkUpsert(this.user);
+                        }
+                    },
+                },
+                mounted: function () {
+                    this.user = JSON.parse(localStorage.getItem('user'));
+                    this.getUsers();
+                    document.querySelector('title').textContent = 'ユーザー管理';
+                },
+                router,
+                computed: {
+                    pageName() {
+                        if (this.$route.query.page == undefined) return 'index';
+                        return this.$route.query.page;
+                    },
+                }
+            })
+
+        </script>
+
+        <% endblock %>

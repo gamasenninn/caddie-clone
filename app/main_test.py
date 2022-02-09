@@ -229,6 +229,12 @@ def quotationDustPage():
     return render_template('quotation_dust.html')
 
 
+@app.route('/user-page')
+@login_required
+def userPage():
+    return render_template('user.html')
+
+
 # --------- UPLOAD function ----------
 @app.route('/test-upload')
 def uptest():
