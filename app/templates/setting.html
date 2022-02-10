@@ -6,7 +6,7 @@
                             class='mr-2'></a>各種情報設定</b-col>
                 <b-col class="text-right mr-5 mt-3">
                     <!-- サイドバー -->
-                    <sc-menu></sc-menu>
+                    <sc-menu v-if="modeName!='mv'"></sc-menu>
                 </b-col>
             </b-row>
 
@@ -199,6 +199,9 @@
         </div>
 
         <script>
+            const router = new VueRouter({
+            });
+
             var app = new Vue({
                 el: '#app',
                 data: {
@@ -241,6 +244,12 @@
                     this.getSetting();
                     document.querySelector('title').textContent = '各種情報設定';
                 },
+                router,
+                computed: {
+                    modeName() {
+                        return this.$route.query.mode;
+                    },
+                }
             })
 
             Dropzone.options.stampDropzone = {

@@ -6,7 +6,7 @@
                             class='mr-2'></a>CSVアップロード</b-col>
                 <b-col class="text-right mr-5 mt-3">
                     <!-- サイドバー -->
-                    <sc-menu></sc-menu>
+                    <sc-menu v-if="modeName!='mv'"></sc-menu>
                 </b-col>
             </b-row>
 
@@ -85,6 +85,9 @@
         </div>
 
         <script>
+            const router = new VueRouter({
+            });
+
             var app = new Vue({
                 el: '#app',
                 data: {
@@ -115,6 +118,12 @@
                 },
                 mounted: function () {
                     document.querySelector('title').textContent = 'CSVアップロード';
+                },
+                router,
+                computed: {
+                    modeName() {
+                        return this.$route.query.mode;
+                    },
                 }
             })
 

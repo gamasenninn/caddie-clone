@@ -62,7 +62,7 @@
                         <b-col class="h5 mt-3">カテゴリー登録</b-col>
                         <b-col class="text-right mr-5 mt-3">
                             <!-- サイドバー -->
-                            <sc-menu></sc-menu>
+                            <sc-menu v-if="modeName!='mv'"></sc-menu>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -288,6 +288,9 @@
                     pageName() {
                         if (this.$route.query.page == undefined) return 'index';
                         return this.$route.query.page;
+                    },
+                    modeName() {
+                        return this.$route.query.mode;
                     },
                 }
             })
