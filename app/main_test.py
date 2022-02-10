@@ -318,32 +318,36 @@ def upsert_csv():
 # ----- csv_export -----
 
 
-@app.route('/csv-export', methods=['POST'])
+@app.route('/csv-export', methods=['GET'])
 def CsvExport():
-    data = request.json
-    class_name = data.get('tableName')
     fixtures_dir = 'csv/export/'
-
     models = importlib.import_module('models')
-    model_class = getattr(models, class_name)
-    model_schema = getattr(models, class_name+"Schema")
-    columnlist = model_class.__table__.columns.keys()  # カラムリスト取得
+    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item",
+                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting"]
 
-    result = model_class.query.all()
-    dataList = model_schema(many=True).dump(result)  # dict型のテーブル内データ
+    with open(fixtures_dir + "export.csv", 'w') as f:
+        f.close()  # 初期化
 
-    with open(fixtures_dir+'test.csv', 'w', encoding='utf-8', newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(columnlist)
-        for d in dataList:
-            sortList = []
-            for column in columnlist:
-                sortList.append(d[column])  # 並び順整形
-            writer.writerow(sortList)
-        f.close()
+    for class_name in classList:
+        model_class = getattr(models, class_name)
+        model_schema = getattr(models, class_name+"Schema")
+        columnlist = model_class.__table__.columns.keys()  # カラムリスト取得
 
-    downloadFileName = os.getcwd() + fixtures_dir+'test.csv'
-    downloadFile = fixtures_dir+'test.csv'
+        result = model_class.query.all()
+        dataList = model_schema(many=True).dump(result)  # dict型のテーブル内データ
+
+        with open(fixtures_dir+'export.csv', 'a', encoding='utf-8', newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(columnlist)
+            for d in dataList:
+                sortList = []
+                for column in columnlist:
+                    sortList.append(d[column])  # 並び順整形
+                writer.writerow(sortList)
+            f.close()
+
+    downloadFileName = os.getcwd() + fixtures_dir+'export.csv'
+    downloadFile = fixtures_dir+'export.csv'
 
     return send_file(downloadFile, as_attachment=True,
                      download_name=downloadFileName,
