@@ -28,3 +28,6 @@
 - vue
    - vue.min.js:v2.6.14
    - vue-router.js:v3.5.2
+
+- jquery
+   - jquery-3.6.0.min.js:3.6.0
