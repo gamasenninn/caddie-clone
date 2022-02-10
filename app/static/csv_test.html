@@ -93,7 +93,7 @@
                             const blob = new Blob([data], { type: 'application/csv' })
                             let link = document.createElement('a')
                             link.href = window.URL.createObjectURL(blob)
-                            link.download = self.selected_export.tableName + '.csv'
+                            link.download = 'export.csv'
                             link.click()
                         });
                 },
