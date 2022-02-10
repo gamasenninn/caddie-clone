@@ -90,7 +90,7 @@
                         <b-col class="h5 mt-3">見積書一覧</b-col>
                         <b-col class="text-right mr-5 mt-3">
                             <!-- サイドバー -->
-                            <sc-menu></sc-menu>
+                            <sc-menu v-if="modeName!='mv'"></sc-menu>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -428,7 +428,7 @@
             <select-modal modal-name='upsertModal' modal-message='保存しますか？' @selected="upsertModalProcess($event);" />
 
         </div>
-        
+
         <script src="static/component/def-pdf.js"></script>
         <script>
             Vue.filter('nf', function (val) {
@@ -692,6 +692,9 @@
                     pageName() {
                         if (this.$route.query.page == undefined) return 'index';
                         return this.$route.query.page;
+                    },
+                    modeName() {
+                        return this.$route.query.mode;
                     },
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
