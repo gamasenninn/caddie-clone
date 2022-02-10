@@ -1,0 +1,97 @@
+<% extends "head.html" %>
+<% block content %>
+
+<script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+
+<div id="app">
+  <b-button size="lg" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
+
+  <b-img src="https://free-materials.com/adm/wp-content/uploads/2020/10/logo_07-1024x1024.png"
+  style="width: 50%; " center ></b-img>
+  
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+          item:[],
+        },
+        methods:{
+          openMenu: function(){
+            frame00.show();
+          }
+        }
+      });
+
+</script>
+
+<script>
+      const jsFrame = new JSFrame();
+      let _left = 250;
+      let _top = 50;
+
+      frameDict = {};
+
+
+      //-------------menu-----------------
+      const frame00 = jsFrame.create({
+        title: 'menu',
+        name: 'menu',
+        left: 0, top: 0, width: 200, height: 700,
+        url: '/mw-menu',
+
+        urlLoaded: (frame) => {
+          frame.on('#customer', 'click', (_frame, evt) => {
+            openWindow('/customer-page','得意先','customer');
+          });
+          frame.on('#item', 'click', (_frame, evt) => {
+            openWindow('/item-page','商品','item');
+          });
+          frame.on('#invoice', 'click', (_frame, evt) => {
+            openWindow('/invoice-page','請求書','invoice');
+          });
+          frame.on('#quotation', 'click', (_frame, evt) => {
+            openWindow('/quotation-page','見積書','quotation');
+          });
+          frame.on('#memo', 'click', (_frame, evt) => {
+            openWindow('/memo-page','メモ','memo');
+          });
+          frame.on('#logout', 'click', (_frame, evt) => {
+            window.location.href = '/logout';
+          });
+          frame.on('closeButton', 'click', (_frame, evt) => {
+            frame.hide();
+          });
+
+        }
+      });
+      frame00.show();
+
+    //------------------------------
+    function openWindow(url,title,name){
+      const frame = jsFrame.create({
+        title: title,
+        name: name,
+        left: _left, top: _top, width: 1000, height: 700,
+        style: {
+                backgroundColor: 'rgba(255,255,255,0.9)',
+            },
+        url: url,
+      });
+      frame.on('#pdfBtn', 'click', (_frame, evt) => {
+            openWindow('/memo-page','メモ','memo');
+          });
+      frame.show();
+      _left += 50; 
+      _top += 50;
+      if ( _left > 600 ) _left -= 400   
+      if ( _top > 400 ) _top -= 300   
+
+      frameDict[name] = frame;
+
+    }
+
+</script>
+
+<% endblock %>
