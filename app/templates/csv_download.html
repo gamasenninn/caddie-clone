@@ -1,0 +1,91 @@
+<% extends "head.html" %>
+    <% block content %>
+        <div id="app" v-cloak>
+            <b-row class="bg pt-2 pb-2">
+                <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
+                            class='mr-2'></a>CSVダウンロード</b-col>
+                <b-col class="text-right mr-5 mt-3">
+                    <!-- サイドバー -->
+                    <sc-menu v-if="modeName!='mw'"></sc-menu>
+                </b-col>
+            </b-row>
+
+            <div>
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <b-col cols=10>
+                        <b-card border-variant="white" class="mb-3 text-center" header="CSVダウンロード"
+                            header-border-variant="light">
+                            <p>CSVのダウンロードを行います。</p>
+                            <b-button class="mt-5" variant="success" size="lg" @click="submit">CSVダウンロード
+                            </b-button>
+                        </b-card>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+            </div>
+
+            <!-- ダウンロード結果モーダル -->
+            <b-modal ref="resultModal" hide-footer>
+                <template #modal-title>
+                    {{title}}
+                </template>
+                <div class="d-block text-center">
+                    <p>{{message}}</p>
+                </div>
+                <b-row>
+                    <b-col class="text-center">
+                        <b-button class="mt-3" @click="hideResultModal();">閉じる</b-button>
+                    </b-col>
+                </b-row>
+            </b-modal>
+
+        </div>
+
+        <script>
+            const router = new VueRouter({
+            });
+
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    message: '',
+                    title: '',
+                },
+                methods: {
+                    submit: async function () {
+                        self = this;
+                        await axios.get("/csv-export")
+                            .then(function (response) {
+                                console.log(response);
+                                app.title = 'ダウンロード完了';
+                                app.message = 'ダウンロードしました。';
+                                let data = response.data;
+                                const blob = new Blob([data], { type: 'application/csv' })
+                                let link = document.createElement('a')
+                                link.href = window.URL.createObjectURL(blob)
+                                link.download = 'export.csv'
+                                link.click()
+                                app.showResultModal();
+                            });
+                    },
+                    showResultModal: function () {
+                        this.$refs['resultModal'].show();
+                    },
+                    hideResultModal: function () {
+                        this.$refs['resultModal'].hide();
+                    }
+                },
+                mounted: function () {
+                    document.querySelector('title').textContent = 'CSVダウンロード';
+                },
+                router,
+                computed: {
+                    modeName() {
+                        return localStorage.getItem('wMode');
+                    },
+
+                }
+            })
+        </script>
+        <% endblock %>
