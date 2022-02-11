@@ -91,7 +91,7 @@
                         <b-col class="h5 mt-3">請求書一覧</b-col>
                         <b-col class="text-right mr-5 mt-3">
                             <!-- サイドバー -->
-                            <sc-menu v-if="modeName!='mv'"></sc-menu>
+                            <sc-menu v-if="modeName!='mw'"></sc-menu>
                         </b-col>
                     </b-row>
                 </b-col>
@@ -691,7 +691,8 @@
                         return this.$route.query.page;
                     },
                     modeName() {
-                        return this.$route.query.mode;
+                        //return this.$route.query.mode;
+                        return localStorage.getItem('wMode');
                     },
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
