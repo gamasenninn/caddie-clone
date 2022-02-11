@@ -352,7 +352,7 @@ def CsvExport():
                 writer.writerow(sortList)
             f.close()
 
-    downloadFileName = os.getcwd() + fixtures_dir+'export.csv'
+    downloadFileName = 'export.csv'
     downloadFile = fixtures_dir+'export.csv'
 
     return send_file(downloadFile, as_attachment=True,
