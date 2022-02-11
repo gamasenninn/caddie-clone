@@ -159,6 +159,13 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
+                                        label-for="department">
+                                        <b-form-input v-model="customer.department" id="department" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
                                         label-for="postNumber">
                                         <b-form-input v-model="customer.postNumber" id="postNumber" size="sm"
@@ -166,10 +173,19 @@
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
+                            </b-row>
+                            <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所1"
                                         label-for="address">
                                         <b-form-input v-model="customer.address" id="address" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所2"
+                                        label-for="address">
+                                        <b-form-input v-model="customer.addressSub" id="address" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -219,6 +235,24 @@
                                         label-for="manager">
                                         <b-form-input v-model="customer.manager" id="manager" size="sm">
                                         </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お客様区分"
+                                        label-for="customerCategory">
+                                        <b-form-radio-group required v-if="" v-model="customer.customerCategory"
+                                            id="customerCategory" :options="[
+                                            {  text: '法人', value: 'corporation' },
+                                            {  text: '個人', value: 'individual' },
+                                            ]"></b-form-radio-group>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="表示しない"
+                                        label-for="isHide">
+                                        <b-form-checkbox v-model="customer.isHide"></b-form-checkbox>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
