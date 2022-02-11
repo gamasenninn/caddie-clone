@@ -217,6 +217,12 @@ def csvUploadPage():
     return render_template('csv_upload.html')
 
 
+@app.route('/csv-download-page')
+@login_required
+def csvDownloadPage():
+    return render_template('csv_download.html')
+
+
 @app.route('/invoice-dust-page')
 @login_required
 def invoiceDustPage():
@@ -346,7 +352,7 @@ def CsvExport():
                 writer.writerow(sortList)
             f.close()
 
-    downloadFileName = os.getcwd() + fixtures_dir+'export.csv'
+    downloadFileName = 'export.csv'
     downloadFile = fixtures_dir+'export.csv'
 
     return send_file(downloadFile, as_attachment=True,
@@ -387,6 +393,7 @@ def dbInit():
                 Customer, Item, Invoice, Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker).all()
             return jsonify({"status": 200, "result": "ok", "data": data, "message": "データを全削除しました。"})
     return jsonify({"status": 403, "result": "権限エラー", "message": "権限がありません"})
+
 
 @app.route('/mw')
 @login_required

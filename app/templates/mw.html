@@ -63,6 +63,9 @@
           frame.on('#logout', 'click', (_frame, evt) => {
             window.location.href = '/logout';
           });
+          frame.on('#setting', 'click', (_frame, evt) => {
+            openWindow('/setting-page','各種設定','setting');
+          });
           frame.on('closeButton', 'click', (_frame, evt) => {
             frame.hide();
           });

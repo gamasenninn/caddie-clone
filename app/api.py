@@ -5,11 +5,6 @@ import json
 from datetime import date
 
 
-#@app.route('/')
-#def index():
-#    return 'HelloWorld!'
-
-
 # -----ユーザー(Users)-----
 @app.route('/users', methods=['GET'])
 def user_index():
@@ -86,14 +81,18 @@ def customer_create():
     newCustomer = Customer(
         customerName=data.get('customerName'),
         honorificTitle=data.get('honorificTitle'),
+        department=data.get('department'),
         postNumber=data.get('postNumber'),
         address=data.get('address'),
+        addressSub=data.get('addressSub'),
         telNumber=data.get('telNumber'),
         faxNumber=data.get('faxNumber'),
         url=data.get('url'),
         email=data.get('email'),
         manager=data.get('manager'),
         representative=data.get('representative'),
+        customerCategory=data.get('customerCategory'),
+        isHide=data.get('isHide'),
         memo=data.get('memo'),
     )
     db.session.add(newCustomer)
@@ -109,14 +108,18 @@ def customer_update(id):
 
     customer.customerName = data.get('customerName')
     customer.honorificTitle = data.get('honorificTitle')
+    customer.department = data.get('department')
     customer.postNumber = data.get('postNumber')
     customer.address = data.get('address')
+    customer.addressSub = data.get('addressSub')
     customer.telNumber = data.get('telNumber')
     customer.faxNumber = data.get('faxNumber')
     customer.url = data.get('url')
     customer.email = data.get('email')
     customer.manager = data.get('manager')
     customer.representative = data.get('representative')
+    customer.customerCategory = data.get('customerCategory')
+    customer.isHide = data.get('isHide')
     customer.memo = data.get('memo')
 
     db.session.commit()
@@ -773,4 +776,4 @@ def setting_update(id):
 
 if __name__ == '__main__':
 
-    app.run(host='0.0.0.0', port=5010,debug=True)
+    app.run(host='0.0.0.0', port=5010, debug=True)
