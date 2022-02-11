@@ -400,6 +400,10 @@ def dbInit():
 def mw():
     return render_template('mw.html')
 
+@app.route('/mw2')
+@login_required
+def mw2():
+    return render_template('mw2.html')
 
 @app.route('/mw-menu')
 @login_required
