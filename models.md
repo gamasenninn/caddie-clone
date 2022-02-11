@@ -19,14 +19,18 @@
 | id              | id              | integer    |                                   | 
 | customerName    | 得意先名         | text       |                                   | 
 | honorificTitle  | 敬称            | text       |                                   | 
+| department      | 部署            | text       |                                   | 
 | postNumber      | 郵便番号        | string(20) |  ハイフンが入ると思ったのでstring | 
-| address         | 住所            | text       |                                   | 
+| address         | 住所1           | text       |                                   | 
+| addressSub      | 住所2           | text       |                                   | 
 | telNumber       | 電話番号         | string(30) |  ハイフンが入ると思ったのでstring | 
 | faxNumber       | FAX番号         | string(30) |  ハイフンが入ると思ったのでstring | 
 | url             | ホームページURL  | text       |                                   | 
 | email           | メールアドレス   | text       |                                   | 
 | manager         | 担当者          | text       |                                   |
 | representative  | 代表者名        | text       |                                   | 
+| customerCategory| お客様区分      | text       |  個人か法人か                      | 
+| isHide          | 表示状態        | boolean    |  得意先情報を隠すかどうか          | 
 | memo            | メモ            | text       |                                   |
 | createdAt       | 作成日時        | datetime   |  作成日時                          |
 | updatedAt       | 更新日時        | datetime   |  更新日時                          | 
