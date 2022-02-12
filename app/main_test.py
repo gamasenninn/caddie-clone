@@ -405,6 +405,11 @@ def mw():
 def mw2():
     return render_template('mw2.html')
 
+@app.route('/mw3')
+@login_required
+def mw3():
+    return render_template('mw3.html')
+
 @app.route('/mw-menu')
 @login_required
 def mw_menu():
