@@ -1,121 +1,230 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>jsPanel basic example</title>
-    <link rel="stylesheet" href="resources/jquery-ui/jquery-ui.complete.min.css"/>
-    <link rel="stylesheet" href="resources/jspanel/jquery.jspanel.css"/>
-    <style>
-        pre{
-            color: blue;
-            padding: 10px 20px;
-            margin: 0;
+<% extends "head.html" %>
+<% block content %>
+
+<!-- jsPanel CSS -->
+<link href="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.css" rel="stylesheet">
+<!-- jsPanel JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.js"></script>
+
+<!-- optional jsPanel extensions -->
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/modal/jspanel.modal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/tooltip/jspanel.tooltip.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/hint/jspanel.hint.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/layout/jspanel.layout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/contextmenu/jspanel.contextmenu.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/dock/jspanel.dock.js"></script>
+
+<div id="app">
+  <b-button size="lg" id="openMenu" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
+
+  <b-img src="https://free-materials.com/adm/wp-content/uploads/2020/10/logo_07-1024x1024.png"
+  style="width: 400; " center ></b-img>
+  
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+          item:[],
+        },
+        methods:{
+          openMenu: function(){
+            openMenu();
+          },
+        },
+        mounted: function(){
+            //localStorage.setItem('wMode',this.modeCheck());
         }
-        .testcontainer{
-            position: absolute;
-            right: 10px;
-            top: 200px;
-            width: 700px;
-            height: 500px;
-            border: 3px solid red;
-        }
-    </style>
-</head>
-<body>
+      });
 
-    <div class="testcontainer">.testcontainer</div>
+</script>
 
-    <h1>Basic example using jsPanel</h1>
-    <h3>Loaded resources: jquery, jquery ui, jquery-ui-touch-punch (only needed to support touch actions for jquery ui), jsPanel.<br>
-        This file does not load Bootstrap, third party icon fonts and third party css animations since they are not necessary to use jsPanel.</h3>
-    <h4>jsPanel Home: <a href="http://jspanel.de/" target="_blank">http://jspanel.de/</a></h4>
-    <h4>jsPanel API: <a href="http://jspanel.de/api/" target="_blank">http://jspanel.de/api/</a></h4>
-    <h4>jsPanel GitHub: <a href="https://github.com/Flyer53/jsPanel" target="_blank">https://github.com/Flyer53/jsPanel</a></h4>
+<script>
 
-    <p>Example 1 creates a naked jsPanel with defaults only:</p>
-    <pre>$.jsPanel();</pre>
-    <button id="btn1">Example 1</button>
+if (localStorage.getItem('wMode')===null){
+  localStorage.setItem('wMode',modeChe());
+}
 
-    <p>Example 2 creates a jsPanel with positioning, title and theme:</p>
-    <pre>$.jsPanel({
-    position: {
-        left: 200,
-        top:  100
+let _left = 100;
+let _top = 100;
+
+function openMenu(){
+  jsPanel.create({
+          headerControls: 'closeOnly sm',
+          headerTitle: 'menu',
+          panelSize: '200 700',
+          contentSize: '300 700',
+          position: 'left-top 0 0',
+          contentOverflow: 'hidden',
+          content: '<div class="mt-2"><iframe src=/mw-menu width=100% height=100%><iframe></div>',
+          callback: function(){
+            $('iframe').on('load',function(){
+              //  $(this).contents().on('click', function(){
+                $(this).contents().find('#customer').on('click', function(){
+                  openWindow('/customer-page','customer','customer')
+                });
+                $(this).contents().find('#item').on('click', function(){
+                  openWindow('/item-page','item','item')
+                });
+                $(this).contents().find('#invoice').on('click', function(){
+                  openWindow('/invoice-page','invoice','invoice')
+                });
+                $(this).contents().find('#quotation').on('click', function(){
+                  openWindow('/quotation-page','quotation','quotation')
+                });
+                $(this).contents().find('#memo').on('click', function(){
+                  openWindow('/memo-page','quotation','quotation')
+                });
+                $(this).contents().find('#setting').on('click', function(){
+                  openWindow('/setting-page','setting','setting')
+                });
+                $(this).contents().find('#logout').on('click', function(){
+                  window.location.href = '/logout';
+                });
+            })
+          }
+  });
+}
+
+function openWindow(url,title,name){
+  jsPanel.create({
+    headerControls: 'sm',
+    headerTitle: title,
+    footerToolbar: '<span>footer</span>',
+    borderRadius: '.5rem',
+    contentOverflow: 'hidden hidden',
+    panelSize: {
+        width: () => window.innerWidth * 0.5,
+        height: '50vh'
     },
-    title:    'jsPanel theme info',
-    theme:    'info'
+    position: { 
+        my: 'center-top',
+        at: 'center-top',
+        //of: 'header',
+        //autoposition: 'down',
+        offsetX: _left,
+        offsetY: _top,
+        //maxTop: 200
+    },
+    content: '<iframe src='+ url +' width=100% height=100%><iframe>',
+  });
+  _left += 40; 
+  _top += 40;
+  if ( _left > 500 ) _left -= 400   
+  if ( _top > 300 ) _top -= 300   
+
+}
+
+
+
+//      frameDict[name] = frame;
+
+openMenu();
+
+window.addEventListener('message', function (e) {
+  //if (event.origin !== "https://example.com") 
+  //  return;
+  console.log(event.origin)
+  //console.log(event.source)
+  if (e.data.action == 'pdfOut') {
+      console.log(e.data.message)
+      openPDF(e.data.message)
+  }
 });
-</pre>
-    <button id="btn2">Example 2</button>
 
-    <p>Example 3 creates a jsPanel with a header toolbar:</p>
-    <button id="btn3">Example 3</button>
+function openPDF(file){
+  url ="pdf/"+file;
+  jsPanel.create({
+    headerControls: 'sm',
+    headerTitle: "PDF VIEWER",
+    footerToolbar: '<span>footer</span>',
+    borderRadius: '.5rem',
+    contentOverflow: 'hidden hidden',
+    panelSize: {
+        width: () => window.innerWidth * 0.3,
+        height: '100vh'
+    },
+    position: { 
+        my: 'right-top',
+        at: 'right-top',
+        offsetX: _left,
+        offsetY: _top,
+        //maxTop: 200
+    },
+    content: '<iframe src='+ url +' width=100% height=100%><iframe>',
+  });
+}
 
-    <p>Example 4 creates a jsPanel within <code>.testcontainer</code> and restricts dragging to within <code>.testcontainer</code>:</p>
-    <pre>$.jsPanel({
-    selector:  '.testcontainer',
-    theme:     'dark',
-    position:  'center',
-    draggable: {
-        containment: "parent"
-    }
-});
-</pre>
-    <button id="btn4">Example 4</button>
+if(localStorage.getItem('wMode')=='mw'){
+  jsPanel.create({
+    headerControls: 'sm',
+    headerTitle: "Open Street Map",
+    footerToolbar: '<span>footer</span>',
+    borderRadius: '.5rem',
+    contentOverflow: 'hidden hidden',
+    panelSize: {
+        width: 500,
+        height: 500
+    },
+    position: { 
+        my: 'left-top',
+        at: 'left-top',
+        offsetX: 250,
+        offsetY: 250,
+        //maxTop: 200
+    },
+    content: `
+      <iframe id="inlineFrameExample"
+      title="Inline Frame Example"
+      width="500"
+      height="500"
+      src="https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik">
+      </iframe>
+    `
+  });
+
+  jsPanel.create({
+    headerControls: 'sm',
+    headerTitle: "Youtube",
+    footerToolbar: '<span>footer</span>',
+    borderRadius: '.5rem',
+    contentOverflow: 'hidden hidden',
+    panelSize: {
+        width: 560,
+        height: 370
+    },
+    position: { 
+        my: 'right-top',
+        at: 'right-top',
+        offsetX: 0,
+        offsetY: 300,
+        //maxTop: 200
+    },
+    content: `
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/NCJZgcvh_Xs" 
+        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
+        clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe> 
+       `
+    });
+
+ }
+
+
+function modeCheck() {
+      var ua = navigator.userAgent;
+      if(ua.indexOf('iPhone') > 0 || ua.indexOf('iPod') > 0 || ua.indexOf('Android') > 0 && ua.indexOf('Mobile') > 0){
+          return 'sm';
+      }else if(ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0){
+          return 'tb';
+      }else{
+          return 'mw';
+      }
+}
 
 
 
-
-
-    <script src="resources/jquery/jquery-2.1.4.min.js"></script>
-    <script src="resources/jquery-ui/jquery-ui-complete.min.js"></script>
-    <script src="resources/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
-    <script src="resources/jspanel/jquery.jspanel.min.js"></script>
-    <script>
-        "use strict";
-
-        $('#btn1').click(function(){
-            $.jsPanel();
-        });
-
-        $('#btn2').click(function(){
-            $.jsPanel({
-                position: {left: 200, top: 100},
-                title: 'jsPanel theme info',
-                theme: 'info'
-            });
-        });
-
-        $('#btn3').click(function(){
-            $.jsPanel({
-                position: {left: 300, top: 150},
-                title: 'jsPanel with header toolbar',
-                theme: 'primary',
-                size:  {width: 750, height: 400},
-                content: '<p>Click show code button to load a file showing the code for this example.</p>',
-                toolbarHeader: [
-                    {
-                        item:     "<button style='cursor:pointer;'>show code</button>",
-                        event:    "click",
-                        callback: function (event) {event.data.content.load('files/code-sample-3.html'); }
-                    }
-                ],
-                callback: function () {
-                    this.content.css('padding', '10px');
-                }
-            });
-        });
-
-        $('#btn4').click(function(){
-            $.jsPanel({
-                selector: '.testcontainer',
-                theme: 'dark',
-                position: 'center',
-                draggable: {
-                    containment: "parent"
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<% endblock %>
