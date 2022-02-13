@@ -344,12 +344,14 @@ def CsvExport():
 
         with open(fixtures_dir+'export.csv', 'a', encoding='utf-8', newline="") as f:
             writer = csv.writer(f)
+            f.write(class_name+'\n')
             writer.writerow(columnlist)
             for d in dataList:
                 sortList = []
                 for column in columnlist:
                     sortList.append(d[column])  # 並び順整形
                 writer.writerow(sortList)
+            f.write('\n\n\n')
             f.close()
 
     downloadFileName = 'export.csv'
@@ -400,10 +402,12 @@ def dbInit():
 def mw():
     return render_template('mw.html')
 
+
 @app.route('/mw2')
 @login_required
 def mw2():
     return render_template('mw2.html')
+
 
 @app.route('/mw-menu')
 @login_required
