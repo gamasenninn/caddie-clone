@@ -12,7 +12,7 @@ Vue.component('sc-menu', {
                     style="width: 50%; " center ></b-img>
                 <nav class="mt-3">
                     <b-nav vertical class="mb-4">
-                        <b-button variant="info" block href="/home-page"><i class="fas fa-home"></i>　TOP
+                        <b-button variant="info" block href="/"><i class="fas fa-home"></i>　TOP
                         </b-button>
                     </b-nav>
                     <b-nav vertical>

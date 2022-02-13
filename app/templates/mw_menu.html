@@ -22,7 +22,10 @@
             <b-button id="setting" block>
                 <i class="fa-solid fa-gear"></i>　各種項目設定
             </b-button>
-            <b-button id="w-mode" block>
+            <b-button v-if="modeName=='mw'" id="tb-mode" block>
+                <i class="fa-solid fa-gear"></i>　タブレットモード
+            </b-button>
+            <b-button v-else id="mw-mode" block>
                 <i class="fa-solid fa-gear"></i>　マルチウィンドウ
             </b-button>
         </div>

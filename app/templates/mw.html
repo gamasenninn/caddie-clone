@@ -1,13 +1,24 @@
 <% extends "head.html" %>
 <% block content %>
 
-<script src="https://riversun.github.io/jsframe/jsframe.js"></script>
+<!-- jsPanel CSS -->
+<link href="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.css" rel="stylesheet">
+<!-- jsPanel JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.js"></script>
+
+<!-- optional jsPanel extensions -->
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/modal/jspanel.modal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/tooltip/jspanel.tooltip.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/hint/jspanel.hint.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/layout/jspanel.layout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/contextmenu/jspanel.contextmenu.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/dock/jspanel.dock.js"></script>
 
 <div id="app">
-  <b-button size="lg" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
+  <b-button size="lg" id="openMenu" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
 
   <b-img src="https://free-materials.com/adm/wp-content/uploads/2020/10/logo_07-1024x1024.png"
-  style="width: 50%; " center ></b-img>
+  style="width: 400; " center ></b-img>
   
 </div>
 
@@ -19,82 +30,217 @@
         },
         methods:{
           openMenu: function(){
-            frame00.show();
-          }
+            openMenu();
+          },
         },
         mounted: function(){
-          localStorage.setItem('wMode','mw')
+            //localStorage.setItem('wMode',this.modeCheck());
         }
       });
 
 </script>
 
 <script>
-      const jsFrame = new JSFrame();
-      let _left = 250;
-      let _top = 50;
 
-      frameDict = {};
+if (localStorage.getItem('wMode')===null){
+  localStorage.setItem('wMode',modeCheck());
+}
+
+let _left = 100;
+let _top = 100;
+
+function openMenu(){
+  jsPanel.create({
+          headerControls: 'closeOnly sm',
+          headerTitle: 'menu',
+          panelSize: '200 700',
+          contentSize: '300 700',
+          position: 'left-top 0 0',
+          contentOverflow: 'hidden',
+          content: '<div class="mt-2"><iframe src=/mw-menu width=100% height=100%><iframe></div>',
+          callback: function(){
+            $('iframe').on('load',function(){
+              //  $(this).contents().on('click', function(){
+                $(this).contents().find('#customer').on('click', function(){
+                  openWindow('/customer-page','customer','customer')
+                });
+                $(this).contents().find('#item').on('click', function(){
+                  openWindow('/item-page','item','item')
+                });
+                $(this).contents().find('#invoice').on('click', function(){
+                  openWindow('/invoice-page','invoice','invoice')
+                });
+                $(this).contents().find('#quotation').on('click', function(){
+                  openWindow('/quotation-page','quotation','quotation')
+                });
+                $(this).contents().find('#memo').on('click', function(){
+                  openWindow('/memo-page','quotation','quotation')
+                });
+                $(this).contents().find('#setting').on('click', function(){
+                  openWindow('/setting-page','setting','setting')
+                });
+                $(this).contents().find('#logout').on('click', function(){
+                  window.location.href = '/logout';
+                });
+                $(this).contents().find('#tb-mode').on('click', function(){
+                  localStorage.setItem('wMode','tb')
+                  window.location.href = '/';
+                });
+                $(this).contents().find('#mw-mode').on('click', function(){
+                  localStorage.setItem('wMode','mw')
+                  window.location.href = '/';
+                });
+            })
+          }
+  });
+}
+
+function openWindow(url,title,name){
+  if(modeName() !=='mw'){
+    window.location.href = url;
+    return
+  } 
+  jsPanel.create({
+    headerControls: 'sm',
+    headerTitle: title,
+    footerToolbar: '<span>footer</span>',
+    borderRadius: '.5rem',
+    contentOverflow: 'hidden hidden',
+    panelSize: {
+        width: () => window.innerWidth * 0.5,
+        height: '50vh'
+    },
+    position: { 
+        my: 'center-top',
+        at: 'center-top',
+        //of: 'header',
+        //autoposition: 'down',
+        offsetX: _left,
+        offsetY: _top,
+        //maxTop: 200
+    },
+    content: '<iframe src='+ url +' width=100% height=100%><iframe>',
+  });
+  _left += 40; 
+  _top += 40;
+  if ( _left > 500 ) _left -= 400   
+  if ( _top > 300 ) _top -= 300   
+
+}
 
 
-      //-------------menu-----------------
-      const frame00 = jsFrame.create({
-        title: 'menu',
-        name: 'menu',
-        left: 0, top: 0, width: 200, height: 700,
-        url: '/mw-menu',
 
-        urlLoaded: (frame) => {
-          frame.on('#customer', 'click', (_frame, evt) => {
-            openWindow('/customer-page','得意先','customer');
-          });
-          frame.on('#item', 'click', (_frame, evt) => {
-            openWindow('/item-page','商品','item');
-          });
-          frame.on('#invoice', 'click', (_frame, evt) => {
-            openWindow('/invoice-page','請求書','invoice');
-          });
-          frame.on('#quotation', 'click', (_frame, evt) => {
-            openWindow('/quotation-page','見積書','quotation');
-          });
-          frame.on('#memo', 'click', (_frame, evt) => {
-            openWindow('/memo-page','メモ','memo');
-          });
-          frame.on('#logout', 'click', (_frame, evt) => {
-            window.location.href = '/logout';
-          });
-          frame.on('#setting', 'click', (_frame, evt) => {
-            openWindow('/setting-page','各種設定','setting');
-          });
-          frame.on('closeButton', 'click', (_frame, evt) => {
-            frame.hide();
-          });
+//      frameDict[name] = frame;
 
-        }
-      });
-      frame00.show();
+openMenu();
 
-    //------------------------------
-    function openWindow(url,title,name){
-      const frame = jsFrame.create({
-        title: title,
-        name: name,
-        left: _left, top: _top, width: 1000, height: 700,
-        style: {
-                backgroundColor: 'rgba(255,255,255,0.9)',
-            },
-        url: url,
-      });
-      frame.show();
-      _left += 50; 
-      _top += 50;
-      if ( _left > 600 ) _left -= 400   
-      if ( _top > 400 ) _top -= 300   
+window.addEventListener('message', function (e) {
+  //if (event.origin !== "https://example.com") 
+  //  return;
+  console.log(event.origin)
+  //console.log(event.source)
+  if (e.data.action == 'pdfOut') {
+      console.log(e.data.message)
+      openPDF(e.data.message)
+  }
+});
 
-      frameDict[name] = frame;
+function openPDF(file){
+  url ="pdf/"+file;
+  jsPanel.create({
+    headerControls: 'sm',
+    headerTitle: "PDF VIEWER",
+    footerToolbar: '<span>footer</span>',
+    borderRadius: '.5rem',
+    contentOverflow: 'hidden hidden',
+    panelSize: {
+        width: () => window.innerWidth * 0.3,
+        height: '100vh'
+    },
+    position: { 
+        my: 'right-top',
+        at: 'right-top',
+        offsetX: _left,
+        offsetY: _top,
+        //maxTop: 200
+    },
+    content: '<iframe src='+ url +' width=100% height=100%><iframe>',
+  });
+}
 
-    }
+if(localStorage.getItem('wMode')=='mw'){
+  jsPanel.create({
+    headerControls: 'sm',
+    headerTitle: "Open Street Map",
+    footerToolbar: '<span>footer</span>',
+    borderRadius: '.5rem',
+    contentOverflow: 'hidden hidden',
+    panelSize: {
+        width: 500,
+        height: 500
+    },
+    position: { 
+        my: 'left-top',
+        at: 'left-top',
+        offsetX: 250,
+        offsetY: 250,
+        //maxTop: 200
+    },
+    content: `
+      <iframe id="inlineFrameExample"
+      title="Inline Frame Example"
+      width="500"
+      height="500"
+      src="https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik">
+      </iframe>
+    `
+  });
+
+  jsPanel.create({
+    headerControls: 'sm',
+    headerTitle: "Youtube",
+    footerToolbar: '<span>footer</span>',
+    borderRadius: '.5rem',
+    contentOverflow: 'hidden hidden',
+    panelSize: {
+        width: 560,
+        height: 370
+    },
+    position: { 
+        my: 'right-top',
+        at: 'right-top',
+        offsetX: 0,
+        offsetY: 300,
+        //maxTop: 200
+    },
+    content: `
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/NCJZgcvh_Xs" 
+        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
+        clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe> 
+       `
+    });
+
+ }
+
+
+function modeCheck() {
+      var ua = navigator.userAgent;
+      if(ua.indexOf('iPhone') > 0 || ua.indexOf('iPod') > 0 || ua.indexOf('Android') > 0 && ua.indexOf('Mobile') > 0){
+          return 'sm';
+      }else if(ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0){
+          return 'tb';
+      }else{
+          return 'mw';
+      }
+}
+
+function modeName(){
+  return localStorage.getItem('wMode');
+}
+
+
 
 </script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <% endblock %>
