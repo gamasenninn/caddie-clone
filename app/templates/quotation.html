@@ -201,6 +201,8 @@
                                                     size="sm">
                                                 </b-form-input>
                                             </b-form-group>
+                                            <b-form-checkbox v-model="isHideOption">表示しないオプションがOFFのもののみ表示
+                                            </b-form-checkbox>
                                             <b-table hover striped small sort-by="ID" id="customer-table"
                                                 :items="searchCustomers" @row-clicked="customerSelect"
                                                 label="Table Options" :fields="[
@@ -352,13 +354,6 @@
                                 </b-row>
                             </template>
 
-                            <!-- <template #table-colgroup="data">
-                            <col v-for="field in data.fields" :key="field.key" :style="{ width:
-                          field.key == 'id' ? '2%':
-                          field.key == 'detail' ? '1%':
-                          field.key == 'hinmei' ? '10%': '5%'}">
-                        </template> -->
-
                             <template v-slot:cell(delete)="data">
                                 <b-button variant="danger" class="fas fa-trash-alt"
                                     @click="deleteQuotationItem(data.item)">
@@ -453,6 +448,7 @@
                     units: [],
                     categories: [],
                     makers: [],
+                    isHideOption: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                 },
                 methods: {
                     // ---Quotations---
@@ -704,9 +700,15 @@
                     },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
+                        if (this.isHideOption === true) {
+                            return this.customers.filter(customer => {
+                                return (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord)) &&
+                                    customer.isHide === false;
+                            });
+                        }
                         return this.customers.filter(customer => {
-                            return customer.customerName.includes(this.searchCustomerWord) || String(customer.id).includes(this.searchCustomerWord);
-                        })
+                            return (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord));
+                        });
                     },
                     // 商品選択モーダルの検索機能
                     searchItems: function () {
