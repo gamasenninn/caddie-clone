@@ -97,8 +97,9 @@
                     <b-col cols="10">
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先一覧"
                             header-border-variant="light">
+                            <b-form-checkbox v-model="isHideOption">表示しないオプションがOFFのもののみ表示</b-form-checkbox>
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
-                                :items=customers :fields="[
+                                :items=customersIndicateIndex :fields="[
                       {  key: 'update', label: '' },
                       {  key: 'id', label: 'No.' },
                       {  key: 'customerName', label: '得意先名' },
@@ -305,6 +306,7 @@
                 data: {
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
+                    isHideOption: false,            // trueの時、customer.isHide=falseのもののみindexに表示
                 },
                 methods: {
                     // ---Customers---
@@ -416,9 +418,14 @@
                         return this.$route.query.page;
                     },
                     modeName() {
-                        //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
                     },
+                    customersIndicateIndex: function () {
+                        if (this.isHideOption === true) {
+                            return this.customers.filter(customer => customer.isHide === false)
+                        }
+                        return this.customers;
+                    }
                 }
             })
 
