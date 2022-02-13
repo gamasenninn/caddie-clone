@@ -36,7 +36,7 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
-    return render_template('home.html')
+    return render_template('mw.html')
 
 
 @app.route('/login', methods=['GET'])
@@ -422,12 +422,15 @@ def mw():
 def mw2():
     return render_template('mw2.html')
 
-
 @app.route('/mw-menu')
 @login_required
 def mw_menu():
     return render_template('mw_menu.html')
 
+@app.route('/leaflet')
+@login_required
+def leaflet():
+    return render_template('leaflet.html')
 
 if __name__ == '__main__':
 

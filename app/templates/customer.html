@@ -288,7 +288,7 @@
                     <b-button pill variant="info" class="mr-3" @click="modalShow(customer,'upsertModal');"
                         id="showUpsertModal">適用
                     </b-button>
-                    <b-button pill variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i></b-button>
+                    <b-button pill variant="info" @click="pdfOut"><i class="fas fa-print"></i></b-button>
                 </div>
             </b-card>
 
@@ -404,6 +404,13 @@
                             return firstValue + '-' + lastValue;
                         }
                         return value;
+                    },
+                    pdfOut: function(){
+                        alert("PDFを表示します");
+                        window.parent.postMessage({
+                            action:'pdfOut',
+                            message: 'this is message'
+                        },"*",);
                     }
                 },
                 mounted: function () {
@@ -441,6 +448,15 @@
                     jQuery('#global-nav').removeClass('m_fixed');
                 }
             });
+
+            function sendMessage(){
+                alert(window.parent);
+                window.parent.postMessage({
+                    action:'pdfOut',
+                    message: 'this is message'
+                },"*",);
+
+            }
 
 
         </script>

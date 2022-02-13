@@ -669,7 +669,14 @@
                         pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
-                                window.open('/pdf/' + response.data)
+                                if(self.modeName=='mw'){
+                                    window.parent.postMessage({
+                                        action:'pdfOut',
+                                        message: response.data
+                                    },"*",);
+                                }else{
+                                    window.open('/pdf/' + response.data)
+                                }
                             });
                     },
                 },
