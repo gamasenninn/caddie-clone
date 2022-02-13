@@ -165,14 +165,14 @@
                                 <b-button href="/unit-page" class="ml-3">　　単位登録画面へ　　</b-button>
                             </b-row>
                             <b-row class="mt-2">
-                                <b-button href="/csv-upload-page">CSVアップロード画面へ</b-button>
-                                <b-button href="/csv-download-page" class="ml-3">CSVダウンロード画面へ</b-button>
-                            </b-row>
-                            <b-row class="mt-2">
                                 <b-button href="/invoice-dust-page">削除済み請求書ページへ</b-button>
                                 <b-button href="/quotation-dust-page" class="ml-3">削除済み見積書ページへ</b-button>
                             </b-row>
-                            <b-row class="mt-2">
+                            <b-row class="mt-2" v-if="myUser.role==='crescom_support'">
+                                <b-button href="/csv-upload-page">CSVアップロード画面へ</b-button>
+                                <b-button href="/csv-download-page" class="ml-3">CSVダウンロード画面へ</b-button>
+                            </b-row>
+                            <b-row class="mt-2" v-if="myUser.role==='crescom_support'">
                                 <b-button href="/db-init-page"></b-button>
                             </b-row>
                         </div>
@@ -207,8 +207,9 @@
                 el: '#app',
                 data: {
                     setting: [],                //選択中のsetting
+                    myUser: [],                 //ログイン中のユーザー情報
                     fileId: 'stamp',
-                    fileId2: 'logo'
+                    fileId2: 'logo',
                 },
                 methods: {
                     // ---Settings---
@@ -232,6 +233,14 @@
                                 self.setting = response.data
                             });
                     },
+                    getLoginUser: async function () {
+                        self = this;
+                        await axios.get("/login-user")
+                            .then(function (response) {
+                                console.log(response);
+                                self.myUser = response.data;
+                            });
+                    },
                     toast(toaster, append = false) {
                         this.$bvToast.toast(`${toaster}`, {
                             title: `確認`,
@@ -243,6 +252,7 @@
                 },
                 mounted: function () {
                     this.getSetting();
+                    this.getLoginUser();
                     document.querySelector('title').textContent = '各種情報設定';
                 },
                 router,

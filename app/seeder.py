@@ -16,11 +16,11 @@ def seeder():
     print('----Users----')
     users = [
         User(id=1, name='tanaka_taro', password='password',
-             group='operator', role='admin'),
+             group='operator', role='crescom_support'),
         User(id=2, name='suzuki_jiro', password='password',
              group='guest', role='admin'),
         User(id=3, name='satou_saburo', password='password',
-             group='guest', role='admin'),
+             group='guest', role='user'),
     ]
     db.session.add_all(users)
     db.session.commit()

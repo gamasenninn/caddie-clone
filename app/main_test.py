@@ -69,6 +69,12 @@ def logout():
 # ------　ユーザー認証ここまで -------
 
 
+@app.route('/login-user', methods=['GET'])
+def login_user_show():
+    user = User.query.filter_by(name=current_user.id).first()
+    return jsonify(UserSchema().dump(user))
+
+
 @app.route('/test')
 def test():
     return "Hello TEST!"
@@ -206,7 +212,7 @@ def makerPage():
 def settingPage():
     checkUser = User.query.filter_by(name=current_user.id).first()
     if checkUser:
-        if checkUser.role == "admin":
+        if checkUser.role == "admin" or checkUser.role == "crescom_support":
             return render_template('setting.html')
     return redirect('/login')
 
@@ -214,13 +220,21 @@ def settingPage():
 @app.route('/csv-upload-page')
 @login_required
 def csvUploadPage():
-    return render_template('csv_upload.html')
+    checkUser = User.query.filter_by(name=current_user.id).first()
+    if checkUser:
+        if checkUser.role == "crescom_support":
+            return render_template('csv_upload.html')
+    return redirect('/login')
 
 
 @app.route('/csv-download-page')
 @login_required
 def csvDownloadPage():
-    return render_template('csv_download.html')
+    checkUser = User.query.filter_by(name=current_user.id).first()
+    if checkUser:
+        if checkUser.role == "crescom_support":
+            return render_template('csv_download.html')
+    return redirect('/login')
 
 
 @app.route('/invoice-dust-page')
@@ -367,7 +381,7 @@ def CsvExport():
 def dbInitPage():
     checkUser = User.query.filter_by(name=current_user.id).first()
     if checkUser:
-        if checkUser.role == "admin":
+        if checkUser.role == "crescom_support":
             return render_template('db_init.html')
     return redirect('/login')
 
@@ -377,7 +391,7 @@ def dbInitPage():
 def dbInit():
     checkUser = User.query.filter_by(name=current_user.id).first()
     if checkUser:
-        if checkUser.role == 'admin':
+        if checkUser.role == 'crescom_support':
             db.session.query(Customer).delete()
             db.session.query(Item).delete()
             db.session.query(Invoice).delete()
@@ -400,10 +414,12 @@ def dbInit():
 def mw():
     return render_template('mw.html')
 
+
 @app.route('/mw2')
 @login_required
 def mw2():
     return render_template('mw2.html')
+
 
 @app.route('/mw-menu')
 @login_required
