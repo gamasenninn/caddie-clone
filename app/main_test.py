@@ -415,6 +415,10 @@ def mw3():
 def mw_menu():
     return render_template('mw_menu.html')
 
+@app.route('/leaflet')
+@login_required
+def leaflet():
+    return render_template('leaflet.html')
 
 if __name__ == '__main__':
 
