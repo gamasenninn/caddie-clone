@@ -107,7 +107,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="商品一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
-                                :items=items :fields="[
+                                :items=items :per-page="perPage" :current-page="currentPage" :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'itemName', label: '商品名' },
@@ -133,6 +133,10 @@
                                     </b-button>
                                 </template>
                             </b-table>
+
+                            <b-pagination v-model="currentPage" :total-rows="currentPageRows" :per-page="perPage"
+                                aria-controls="itemtable"></b-pagination>
+
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -264,6 +268,8 @@
                     units: [],
                     categories: [],
                     makers: [],
+                    perPage: 20,                //ページネーション
+                    currentPage: 1,             //ページネーション
                 },
                 methods: {
                     // ---Items---
@@ -396,6 +402,10 @@
                     modeName() {
                         //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
+                    },
+                    // ページネーション
+                    currentPageRows() {
+                        return this.items.length;
                     },
                 }
             })

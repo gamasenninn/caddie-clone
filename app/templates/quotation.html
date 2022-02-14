@@ -119,7 +119,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="見積書一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
-                                :items=quotations :fields="[
+                                :items=quotations :per-page="perPage" :current-page="quotationsCurrentPage" :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '見積番号' },
@@ -148,6 +148,10 @@
                                     </b-button>
                                 </template>
                             </b-table>
+
+                            <b-pagination v-model="quotationsCurrentPage" :total-rows="quotationsCurrentPageRows"
+                                :per-page="perPage" aria-controls="quotationtable"></b-pagination>
+
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -204,7 +208,8 @@
                                             <b-form-checkbox v-model="isHideOption">表示しないオプションがOFFのもののみ表示
                                             </b-form-checkbox>
                                             <b-table hover striped small sort-by="ID" id="customer-table"
-                                                :items="searchCustomers" @row-clicked="customerSelect"
+                                                :items="searchCustomers" :per-page="perPage"
+                                                :current-page="customersCurrentPage" @row-clicked="customerSelect"
                                                 label="Table Options" :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'customerName', label: '顧客名' },
@@ -214,6 +219,11 @@
                                   {  key: 'representative', label: '代表者名' },
                                   {  key: 'memo', label: 'メモ' },
                                 ]"></b-table>
+
+                                            <b-pagination v-model="customersCurrentPage"
+                                                :total-rows="customersCurrentPageRows" :per-page="perPage"
+                                                aria-controls="customer-table"></b-pagination>
+
                                         </b-modal>
                                     </b-form-group>
                                 </b-col>
@@ -310,7 +320,8 @@
                                         </b-col>
                                     </b-row>
                                     <b-table hover striped small sort-by="ID" id="items-table" :items="searchItems"
-                                        @row-clicked="itemSelect" label="Table Options" :fields="[
+                                        :per-page="perPage" :current-page="itemsCurrentPage" @row-clicked="itemSelect"
+                                        label="Table Options" :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'itemName', label: '商品名' },
                                   {  key: 'unit',   label: '単位' },
@@ -318,6 +329,10 @@
                                   {  key: 'baseCost',  label: '原価' },
                                   {  key: 'memo', label: 'メモ' },
                                 ]"></b-table>
+
+                                    <b-pagination v-model="itemsCurrentPage" :total-rows="itemsCurrentPageRows"
+                                        :per-page="perPage" aria-controls="items-table"></b-pagination>
+
                                 </b-modal>
 
                             </template>
@@ -449,6 +464,10 @@
                     categories: [],
                     makers: [],
                     isHideOption: false,        // trueの時、customer.isHide=falseのもののみindexに表示
+                    perPage: 20,                //ページネーション
+                    quotationsCurrentPage: 1,             //ページネーション
+                    customersCurrentPage: 1,             //ページネーション
+                    itemsCurrentPage: 1,             //ページネーション
                 },
                 methods: {
                     // ---Quotations---
@@ -669,12 +688,12 @@
                         pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
-                                if(self.modeName=='mw'){
+                                if (self.modeName == 'mw') {
                                     window.parent.postMessage({
-                                        action:'pdfOut',
+                                        action: 'pdfOut',
                                         message: response.data
-                                    },"*",);
-                                }else{
+                                    }, "*");
+                                } else {
                                     window.open('/pdf/' + response.data)
                                 }
                             });
@@ -726,6 +745,16 @@
                                 searchFilter(item.category, this.searchItemSelectCategory) &&
                                 searchFilter(item.maker, this.searchItemSelectMaker);
                         });
+                    },
+                    // ページネーション
+                    quotationsCurrentPageRows() {
+                        return this.quotations.length;
+                    },
+                    customersCurrentPageRows() {
+                        return this.customers.length;
+                    },
+                    itemsCurrentPageRows() {
+                        return this.items.length;
                     },
                 },
             })
