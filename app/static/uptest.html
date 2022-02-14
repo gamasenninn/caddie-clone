@@ -28,7 +28,7 @@
     crossorigin="anonymous"></script>
 
 <!-- Load Vue followed by BootstrapVue -->
-<script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.min.js"></script>
 <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
 
 <!-- Load the following for BootstrapVueIcons support -->
@@ -143,6 +143,43 @@
             }
         };
     </script>
+
+    <h2 class="mt-5">ファイルリスト形式。</h2><br />
+    <p>
+        <b-button @click="deleteFiles(fileId)">削除</b-button>
+    </p>
+    <div class="file-list">
+
+        <b-table
+            :fields= "[
+                {key:'image' ,label:'image'},
+                {key:'filename' ,label:'file'}
+            ]"
+            :items= 'dicFiles'
+        > 
+            <template v-slot:cell(image)="data">
+                <b-img :src="data.item.thumbPath" width="90"></b-img>
+            </template>
+        </b-table>
+
+<!--
+        <template v-for="f in dicFiles">
+                <b-card style="width: 10rem;" 
+                    :img-src= "'../'+f.thumbPath"
+                    img-top
+                >
+                    <b-card-text>{{f.filename}}</b-card-text>
+                    <input type="checkbox" v-model="f.isSelect" class="image-in-check"> 
+                </b-card>
+        </template>    
+-->
+
+
+    </div>
+
+
+
+
     <br /><br />
 
 </div>
