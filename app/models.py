@@ -226,6 +226,7 @@ class Memo(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
+    manager = db.Column(db.String)
     content = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,

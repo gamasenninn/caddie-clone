@@ -148,9 +148,9 @@ def seeder():
     # -----Memos-----
     print('----Memos----')
     memos = [
-        Memo(id=1, title='メモのタイトル１', content='メモの内容１'),
-        Memo(id=2, title='メモのタイトル２', content='メモの内容２'),
-        Memo(id=3, title='メモのタイトル３', content='メモの内容３'),
+        Memo(id=1, title='メモのタイトル１', manager='担当者1', content='メモの内容１'),
+        Memo(id=2, title='メモのタイトル２', manager='担当者2', content='メモの内容２'),
+        Memo(id=3, title='メモのタイトル３', manager='担当者3', content='メモの内容３'),
     ]
     db.session.add_all(memos)
     db.session.commit()

@@ -36,7 +36,9 @@
                                 :items=memos :per-page="perPage" :current-page="currentPage" :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'title', label: '件名' },
+                          {  key: 'manager', label: '担当者' },
                           {  key: 'content', label: '内容' },
+                          {  key: 'createdAt', label: '作成日時' },
                           {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
@@ -45,6 +47,9 @@
                                                 class="fas fa-edit"></i>
                                         </b-button>
                                     </router-link>
+                                </template>
+                                <template v-slot:cell(createdAt)="data">
+                                    <p class="text-left pl-2" id="createdAt">{{formatDate(data.item.createdAt)}}</p>
                                 </template>
                                 <template v-slot:cell(delete)="data">
                                     <b-button variant="danger" @click="modalShow(data.item,'deleteModal');">
@@ -74,18 +79,30 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="メモ入力"
                             header-border-variant="light">
                             <b-row>
-                                <b-col>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                         label-for="title">
                                         <b-form-input v-model="memo.title" id="title" size="sm">
                                         </b-form-input>
                                     </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
+                                        label-for="manager">
+                                        <b-form-input v-model="memo.manager" id="manager" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="内容"
                                         label-for="content">
                                         <b-form-textarea v-model="memo.content" size="sm" rows="10" max-rows="20">
                                         </b-form-textarea>
                                     </b-form-group>
                                 </b-col>
+                                <b-col sm></b-col>
                             </b-row>
                         </b-card>
 
@@ -225,6 +242,9 @@
                         if (result === true) {
                             this.bulkUpsert(this.memo);
                         }
+                    },
+                    formatDate(date) {
+                        if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                 },
                 mounted: function () {
