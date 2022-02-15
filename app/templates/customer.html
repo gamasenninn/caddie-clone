@@ -41,7 +41,7 @@
                     <b-col cols="10">
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先一覧"
                             header-border-variant="light">
-                            <b-form-checkbox v-model="isHideOption">表示しないオプションがOFFのもののみ表示</b-form-checkbox>
+                            <b-form-checkbox class="text-right" v-model="isShowAll">全て表示</b-form-checkbox>
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
                                 :items=customersIndicateIndex :per-page="perPage" :current-page="currentPage" :fields="[
                       {  key: 'update', label: '' },
@@ -194,15 +194,11 @@
                                             {  text: '個人', value: 'individual' },
                                             ]"></b-form-radio-group>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="表示しない"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="非表示"
                                         label-for="isHide">
                                         <b-form-checkbox v-model="customer.isHide"></b-form-checkbox>
                                     </b-form-group>
                                 </b-col>
-                            </b-row>
-                            <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="memo">
@@ -210,7 +206,6 @@
                                         </b-form-textarea>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm></b-col>
                             </b-row>
                         </b-card>
 
@@ -259,7 +254,7 @@
                 data: {
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
-                    isHideOption: false,            // trueの時、customer.isHide=falseのもののみindexに表示
+                    isShowAll: false,            // trueの時、全表示
                     perPage: 20,                //ページネーション
                     currentPage: 1,             //ページネーション
                 },
@@ -383,7 +378,7 @@
                         return localStorage.getItem('wMode');
                     },
                     customersIndicateIndex: function () {
-                        if (this.isHideOption === true) {
+                        if (this.isShowAll === false) {
                             return this.customers.filter(customer => customer.isHide === false)
                         }
                         return this.customers;
