@@ -1,14 +1,30 @@
 <% extends "head.html" %>
     <% block content %>
         <div id="app" v-cloak>
-            <b-row class="bg pt-2 pb-2">
-                <b-col class="h5 mt-2 mt-2"><a href='#'><img src='images/crescom_logo_-_300px.jpg' width='40'
-                            class='mr-2'></a>CSVアップロード</b-col>
-                <b-col class="text-right mr-5 mt-3">
-                    <!-- サイドバー -->
-                    <sc-menu v-if="modeName!='mw'"></sc-menu>
-                </b-col>
-            </b-row>
+            <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
+                <b-row>
+                    <b-col></b-col>
+                    <b-col cols="10">
+                        <b-row>
+                            <b-col>
+                            </b-col>
+                            <b-col class="text-right">
+                                <b-button pill href="/setting-page">設定画面へ
+                                </b-button>
+                            </b-col>
+                            <!-- サイドバー -->
+                            <b-col cols="1" class="text-right">
+                                <sc-menu v-if="modeName!='mw'"></sc-menu>
+                            </b-col>
+                        </b-row>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+            </b-card>
+
+            <!-- 空行 -->
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
 
             <div>
                 <b-row class="mt-5">
