@@ -44,7 +44,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="削除済み見積書一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
-                                :items=quotations :fields="[
+                                :items=quotations :per-page="perPage" :current-page="currentPage" :fields="[
                           {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '見積番号' },
@@ -71,6 +71,10 @@
                                     <p class="text-left pl-2" id="updatedAt">{{formatDateTime(data.item.updatedAt)}}</p>
                                 </template>
                             </b-table>
+
+                            <b-pagination v-model="currentPage" :total-rows="currentPageRows" :per-page="perPage"
+                                aria-controls="quotationtable"></b-pagination>
+
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -194,13 +198,6 @@
                                 </b-row>
                             </template>
 
-                            <!-- <template #table-colgroup="data">
-                            <col v-for="field in data.fields" :key="field.key" :style="{ width:
-                          field.key == 'id' ? '2%':
-                          field.key == 'detail' ? '1%':
-                          field.key == 'hinmei' ? '10%': '5%'}">
-                        </template> -->
-
                         </b-table>
 
 
@@ -266,6 +263,8 @@
                     quotations: [],               //全件quotation
                     quotation: [],                //選択中のquotation
                     quotationItem: [],            //選択中のquotationItem
+                    perPage: 20,                //ページネーション
+                    currentPage: 1,             //ページネーション
                 },
                 methods: {
                     // ---Quotations---
@@ -327,6 +326,10 @@
                     sum: function () {
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + b }, 0);
+                    },
+                    // ページネーション
+                    currentPageRows() {
+                        return this.quotations.length;
                     },
                 },
             })

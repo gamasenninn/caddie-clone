@@ -38,7 +38,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="メーカー一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="makertable" sort-by="ID" small label="Table Options"
-                                :items=makers :fields="[
+                                :items=makers :per-page="perPage" :current-page="currentPage" :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'makerName', label: 'メーカー名' },
@@ -57,6 +57,10 @@
                                     </b-button>
                                 </template>
                             </b-table>
+
+                            <b-pagination v-model="currentPage" :total-rows="currentPageRows" :per-page="perPage"
+                                aria-controls="makertable"></b-pagination>
+
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -127,6 +131,8 @@
                 data: {
                     makers: [],               //全件maker
                     maker: [],                //選択中のmaker
+                    perPage: 20,                //ページネーション
+                    currentPage: 1,             //ページネーション
                 },
                 methods: {
                     // ---Makers---
@@ -232,6 +238,10 @@
                     modeName() {
                         //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
+                    },
+                    // ページネーション
+                    currentPageRows() {
+                        return this.makers.length;
                     },
                 }
             })
