@@ -282,15 +282,15 @@ def delete_files():
 
 @app.route("/list-files/<path:dir_path>", methods=['GET'])
 def get_files_list(dir_path):
-    fid = dir_path.split('/')[-1]
+    ##fid = dir_path.split('/')[-1]
     #return f" {fid} / {up_base_dir}{dir_path}"
-    return jsonify(get_flist(fid, f"{up_base_dir}{dir_path}"))
+    return jsonify(get_flist(f"{up_base_dir}{dir_path}"))
 
 @app.route("/get-file/<path:path>", methods=['GET'])
 def get_file(path):
-    target = f"{up_base_dir}{path}"
+    target = f"{path}"
     if os.path.isfile(target):
-        return send_file( f"{up_base_dir}{path}")
+        return send_file( f"{path}")
     else:
         return "File not found",404
 
