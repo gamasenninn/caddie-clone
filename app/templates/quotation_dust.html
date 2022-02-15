@@ -87,9 +87,6 @@
                     <b-col></b-col>
                     <!--- 本体 -->
                     <b-col cols=10>
-                        <router-link to="?page=index">
-                            <b-button @click="getQuotations();">＜</b-button>
-                        </router-link>
                         <b-card border-variant="white" class="mb-3 text-center" header="削除済み見積書参照"
                             header-border-variant="light">
                             <b-row>
@@ -241,10 +238,17 @@
 
             <!-- 更新・取消ボタンのフッター -->
             <b-card v-if="pageName=='show'" bg-variant="dark" text-variant="white" class="fixed-bottom footer">
-                <div class="d-flex justify-content-end">
-                    <b-button pill variant="info" size="lg" @click="alert('印刷しました。')"><i class="fas fa-print"></i>
-                    </b-button>
-                </div>
+                <b-row>
+                    <b-col>
+                        <router-link to="?page=index">
+                            <b-button @click="getQuotations();">＜</b-button>
+                        </router-link>
+                    </b-col>
+                    <b-col class="text-right">
+                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i>
+                        </b-button>
+                    </b-col>
+                </b-row>
             </b-card>
 
         </div>
