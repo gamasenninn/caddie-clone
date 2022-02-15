@@ -256,18 +256,21 @@ def userPage():
 
 
 # --------- UPLOAD function ----------
+
+#up_base_dir = './static/'
+up_base_dir = './static/'
+##up_dir = 'static/upload/'
 @app.route('/test-upload')
 def uptest():
     return app.send_static_file('./uptest.html')
 
-
-@app.route("/upload-files/<dir_path>", methods=['POST'])
+@app.route("/upload-files/<path:dir_path>", methods=['POST'])
 def upload_file(dir_path):
     if 'file' not in request.files:
         make_response(jsonify({'result': 'uploadFile is required.'}))
     f = request.files["file"]
     id = request.form['fileId']
-    dir_path = "./static/" + dir_path
+    dir_path = up_base_dir + dir_path
     return jsonify(save_file(id, dir_path, f))
 
 
@@ -277,10 +280,19 @@ def delete_files():
     return jsonify(remove_files2(dict_data))
 
 
-@app.route("/list-files/<dir_path>/<fid>", methods=['GET'])
-def get_file_list(dir_path, fid):
-    return jsonify(get_flist(fid, f"./static/{dir_path}"))
+@app.route("/list-files/<path:dir_path>", methods=['GET'])
+def get_files_list(dir_path):
+    fid = dir_path.split('/')[-1]
+    #return f" {fid} / {up_base_dir}{dir_path}"
+    return jsonify(get_flist(fid, f"{up_base_dir}{dir_path}"))
 
+@app.route("/get-file/<path:path>", methods=['GET'])
+def get_file(path):
+    target = f"{up_base_dir}{path}"
+    if os.path.isfile(target):
+        return send_file( f"{up_base_dir}{path}")
+    else:
+        return "File not found",404
 
 # ----- csv_upload_test -----
 @app.route('/csv-test')
