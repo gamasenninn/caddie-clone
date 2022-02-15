@@ -99,7 +99,7 @@
                             header-border-variant="light">
                             <b-form-checkbox v-model="isHideOption">表示しないオプションがOFFのもののみ表示</b-form-checkbox>
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
-                                :items=customersIndicateIndex :fields="[
+                                :items=customersIndicateIndex :per-page="perPage" :current-page="currentPage" :fields="[
                       {  key: 'update', label: '' },
                       {  key: 'id', label: 'No.' },
                       {  key: 'customerName', label: '得意先名' },
@@ -122,6 +122,10 @@
                                     </b-button>
                                 </template>
                             </b-table>
+
+                            <b-pagination v-model="currentPage" :total-rows="currentPageRows" :per-page="perPage"
+                                aria-controls="customertable"></b-pagination>
+
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -307,6 +311,8 @@
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
                     isHideOption: false,            // trueの時、customer.isHide=falseのもののみindexに表示
+                    perPage: 20,                //ページネーション
+                    currentPage: 1,             //ページネーション
                 },
                 methods: {
                     // ---Customers---
@@ -405,12 +411,12 @@
                         }
                         return value;
                     },
-                    pdfOut: function(){
+                    pdfOut: function () {
                         alert("PDFを表示します");
                         window.parent.postMessage({
-                            action:'pdfOut',
+                            action: 'pdfOut',
                             message: 'this is message'
-                        },"*",);
+                        }, "*");
                     }
                 },
                 mounted: function () {
@@ -432,7 +438,11 @@
                             return this.customers.filter(customer => customer.isHide === false)
                         }
                         return this.customers;
-                    }
+                    },
+                    // ページネーション
+                    currentPageRows() {
+                        return this.customers.length;
+                    },
                 }
             })
 
@@ -449,12 +459,12 @@
                 }
             });
 
-            function sendMessage(){
+            function sendMessage() {
                 alert(window.parent);
                 window.parent.postMessage({
-                    action:'pdfOut',
+                    action: 'pdfOut',
                     message: 'this is message'
-                },"*",);
+                }, "*");
 
             }
 

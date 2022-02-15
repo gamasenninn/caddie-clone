@@ -98,7 +98,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="ユーザー一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="usertable" sort-by="ID" small label="Table Options"
-                                :items=users :fields="[
+                                :items=users :per-page="perPage" :current-page="currentPage" :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'name', label: 'ユーザー名' },
@@ -120,6 +120,10 @@
                                     </b-button>
                                 </template>
                             </b-table>
+
+                            <b-pagination v-model="currentPage" :total-rows="currentPageRows" :per-page="perPage"
+                                aria-controls="usertable"></b-pagination>
+
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -213,6 +217,8 @@
                 data: {
                     users: [],               //全件user
                     user: [],                //選択中のuser
+                    perPage: 20,                //ページネーション
+                    currentPage: 1,             //ページネーション
                 },
                 methods: {
                     // ---Items---
@@ -307,6 +313,10 @@
                     modeName() {
                         //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
+                    },
+                    // ページネーション
+                    currentPageRows() {
+                        return this.users.length;
                     },
                 }
             })
