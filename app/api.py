@@ -574,6 +574,7 @@ def memo_create():
     data = request.json
     newMemo = Memo(
         title=data.get('title'),
+        manager=data.get('manager'),
         content=data.get('content'),
     )
     db.session.add(newMemo)
@@ -588,6 +589,7 @@ def memo_update(id):
     memo = Memo.query.filter(Memo.id == id).one()
 
     memo.title = data.get('title')
+    memo.manager = data.get('manager')
     memo.content = data.get('content')
 
     db.session.commit()

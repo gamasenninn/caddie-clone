@@ -136,6 +136,7 @@
 | --------- | -------- | -------- | ---- | 
 | id        | id       | integer  |      | 
 | title     | 件名     | text     |      | 
+| manager   | 担当者   | text     |      | 
 | content   | 内容     | text     |      | 
 | createdAt | 作成日時 | datetime |      | 
 | updatedAt | 更新日時 | datetime |      | 
