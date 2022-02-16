@@ -64,6 +64,9 @@
 | id          | id             | integer  |                                                           | 
 | customerId  | 得意先ID       | integer  |  フォーリンキー。                                         | 
 | customerName| 得意先名       | string   |  紐づいたものor入力 両対応できるように                      | 
+| department  | 部署           | string   |                                                          | 
+| manager     | 担当者         | string   |                                                          | 
+| otherPartyManager| 先方担当者| string   |                                                          | 
 | applyNumber | 請求番号       | integer  |  作成時にインクリメント。他の請求書と被らないようにする。 | 
 | applyDate   | 日付           | datetime |  請求書作成日                                             | 
 | deadLine    | 支払期限       | datetime |                                                           | 
@@ -101,6 +104,9 @@
 | id          | id             | integer  |                                                          | 
 | customerId  | 得意先ID       | integer  | フォーリンキー。                                         | 
 | customerName| 得意先名       | string   |  紐づいたものor入力 両対応できるように                     | 
+| department  | 部署           | string   |                                                          | 
+| manager     | 担当者         | string   |                                                          | 
+| otherPartyManager| 先方担当者| string   |                                                          | 
 | applyNumber | 見積番号       | integer  | 作成時にインクリメント。他の見積書と被らないようにする。 | 
 | applyDate   | 日付           | datetime | 見積書作成日                                             | 
 | expiry      | 見積書有効期限  | datetime |                                                          | 

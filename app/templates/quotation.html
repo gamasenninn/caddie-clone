@@ -119,6 +119,23 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
+                                        label-for="applyDate">
+                                        <b-form-input v-model="quotation.applyDate" id="applyDate" size="sm"
+                                            type="date">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
+                                        label-for="expiry">
+                                        <b-form-input v-model="quotation.expiry" id="expiry" size="sm" type="date">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                         label-for="customer" class="customer">
                                         <b-form-input v-model="quotation.customerName" id="customerName" size="sm"
@@ -157,30 +174,37 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
+                                        label-for="department">
+                                        <b-form-input v-model="quotation.department" id="department" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
+                                        label-for="manager">
+                                        <b-form-input v-model="quotation.manager" id="manager" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="先方担当者"
+                                        label-for="otherPartyManager">
+                                        <b-form-input v-model="quotation.otherPartyManager" id="otherPartyManager"
+                                            size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                         label-for="title">
                                         <b-form-input v-model="quotation.title" id="title" size="sm"></b-form-input>
                                     </b-form-group>
                                 </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
-                                        label-for="applyDate">
-                                        <b-form-input v-model="quotation.applyDate" id="applyDate" size="sm"
-                                            type="date">
-                                        </b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
-                                        label-for="expiry">
-                                        <b-form-input v-model="quotation.expiry" id="expiry" size="sm" type="date">
-                                        </b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="メモ">
@@ -188,7 +212,6 @@
                                         </b-form-textarea>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm></b-col>
                             </b-row>
                         </b-card>
 
