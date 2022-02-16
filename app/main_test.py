@@ -259,38 +259,47 @@ def userPage():
 
 #up_base_dir = './static/'
 up_base_dir = './static/'
+static_dir = './static'
+data_dir = './data'
+up_dir = static_dir
+def check_base_dir(base):
+    if base == 's': return static_dir
+    elif base == 'd': return data_dir
+    else: return static_dir
+
 ##up_dir = 'static/upload/'
 @app.route('/test-upload')
 def uptest():
     return render_template('./uptest.html')
 
-@app.route("/upload-files/<path:dir_path>", methods=['POST'])
-def upload_file(dir_path):
+@app.route("/upload-files/<base>/<path:dir_path>", methods=['POST'])
+def upload_file(base,dir_path):
     if 'file' not in request.files:
         make_response(jsonify({'result': 'uploadFile is required.'}))
     f = request.files["file"]
     id = request.form['fileId']
-    dir_path = up_base_dir + dir_path
+    dir_path = check_base_dir(base)+"/" + dir_path
     return jsonify(save_file(id, dir_path, f))
 
 
-@app.route("/delete-files", methods=['DELETE'])
-def delete_files():
+@app.route("/delete-files/<base>", methods=['DELETE'])
+def delete_files(base):
+    base_dir = check_base_dir(base)
     dict_data = json.loads(request.data.decode())
-    return jsonify(remove_files2(dict_data))
+    return jsonify(remove_files2(dict_data,base_dir))
 
 
-@app.route("/list-files/<path:dir_path>", methods=['GET'])
-def get_files_list(dir_path):
+@app.route("/list-files/<base>/<path:dir_path>", methods=['GET'])
+def get_files_list(base,dir_path):
     ##fid = dir_path.split('/')[-1]
     #return f" {fid} / {up_base_dir}{dir_path}"
-    return jsonify(get_flist(f"{up_base_dir}{dir_path}"))
+    return jsonify(get_flist(check_base_dir(base),dir_path))
 
 @app.route("/get-file/<path:path>", methods=['GET'])
 def get_file(path):
-    target = f"{path}"
+    target = f"{up_dir}/{path}"
     if os.path.isfile(target):
-        return send_file( f"{path}")
+        return send_file(target)
     else:
         return "File not found",404
 

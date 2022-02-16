@@ -125,7 +125,7 @@
     <h3 class="mt-5">アップロードファイル</h3><br />
 
     <b-card style="max-width: 20rem">
-        <form action="upload-files/upload" class="dropzone" id="my-dropzone">
+        <form action="upload-files/s/upload" class="dropzone" id="my-dropzone">
             <input hidden type="text" name="fileId" v-model="fileId">
 
             <input hidden type="file" name="file" id="my-dropzone" multiple>
@@ -209,7 +209,7 @@
         methods: {
             getFileList: async function (fid) {
                 self = this;
-                url = "list-files/" + self.upDirPath + "/" + fid;
+                url = "list-files/s/" + self.upDirPath + "/" + fid;
                 await axios.get(url)
                     .then(function (response) {
                         console.log(response.data);
@@ -218,7 +218,7 @@
             },
             deleteFiles: async function (fid) {
                 self = this;
-                url = "delete-files";
+                url = "delete-files/s";
                 await axios.delete(url, { 
                     data:self.dicFiles
                 }
