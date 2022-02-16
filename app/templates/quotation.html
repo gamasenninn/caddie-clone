@@ -134,7 +134,7 @@
                                                     size="sm">
                                                 </b-form-input>
                                             </b-form-group>
-                                            <b-form-checkbox v-model="isHideOption">表示しないオプションがOFFのもののみ表示
+                                            <b-form-checkbox class="text-right" v-model="isShowAll">全て表示
                                             </b-form-checkbox>
                                             <b-table hover striped small sort-by="ID" id="customer-table"
                                                 :items="searchCustomers" :per-page="perPage"
@@ -411,7 +411,7 @@
                     units: [],
                     categories: [],
                     makers: [],
-                    isHideOption: false,        // trueの時、customer.isHide=falseのもののみindexに表示
+                    isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     perPage: 20,                //ページネーション
                     quotationsCurrentPage: 1,             //ページネーション
                     customersCurrentPage: 1,             //ページネーション
@@ -674,7 +674,7 @@
                     },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
-                        if (this.isHideOption === true) {
+                        if (this.isShowAll === false) {
                             return this.customers.filter(customer => {
                                 return (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord)) &&
                                     customer.isHide === false;
