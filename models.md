@@ -18,6 +18,7 @@
 | --------------- | --------------- | -------    |  -------------------------------- | 
 | id              | id              | integer    |                                   | 
 | customerName    | 得意先名         | text       |                                   | 
+| customerKana    | ふりがな         | text       |  ジャンル分けするためのもの         | 
 | honorificTitle  | 敬称            | text       |                                   | 
 | department      | 部署            | text       |                                   | 
 | postNumber      | 郵便番号        | string(20) |  ハイフンが入ると思ったのでstring | 
