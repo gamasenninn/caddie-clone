@@ -390,6 +390,7 @@
         <script src="static/component/def-pdf.js"></script>
         <script>
             Vue.filter('nf', function (val) {
+                if(isNaN(val)) return null
                 return val.toLocaleString();
             });
 
@@ -670,7 +671,7 @@
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
-                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + b }, 0);
+                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + (isNaN(b)?0:b) }, 0);
                     },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
