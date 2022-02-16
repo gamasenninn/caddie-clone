@@ -67,9 +67,9 @@
                           {  key: 'update', label: '' },
                           {  key: 'applyNumber', label: '見積番号' },
                           {  key: 'applyDate', label: '日付' },
-                          {  key: 'expiry', label: '見積有効期限' },
+                          {  key: 'customerName', label: '顧客名' },
                           {  key: 'title', label: '件名' },
-                          {  key: 'memo', label: 'メモ' },
+                          {  key: 'totalAmount', label: '合計金額' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
@@ -81,8 +81,10 @@
                                 <template v-slot:cell(applyDate)="data">
                                     <p class="text-left pl-2" id="applyDate">{{formatDate(data.item.applyDate)}}</p>
                                 </template>
-                                <template v-slot:cell(expiry)="data">
-                                    <p class="text-left pl-2" id="expiry">{{formatDate(data.item.expiry)}}</p>
+                                <template v-slot:cell(totalAmount)="data">
+                                    <p class="text-left pl-2" id="totalAmount">
+                                        {{amountCalculation(data.item)}}
+                                    </p>
                                 </template>
                             </b-table>
 
@@ -413,7 +415,7 @@
         <script src="static/component/def-pdf.js"></script>
         <script>
             Vue.filter('nf', function (val) {
-                if(isNaN(val)) return null
+                if (isNaN(val)) return null
                 return val.toLocaleString();
             });
 
@@ -632,10 +634,15 @@
                         this.$refs['items-modal'].show()
                     },
                     formatDate(date) {
-                        if (!!date) return moment(date).format("YYYY年MM月DD日");
+                        if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                     formatDateTime(date) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
+                    },
+                    amountCalculation(quotation) {
+                        amount = quotation.quotation_items.map(item => item.count * item.price).reduce((a, b) => a + b);
+                        if (quotation.isTaxExp === true) return Math.floor(amount * 1.1);
+                        return amount;
                     },
                     pdfout: async function () {
                         self = this;
@@ -694,7 +701,7 @@
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
-                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + (isNaN(b)?0:b) }, 0);
+                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
                     },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
