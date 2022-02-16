@@ -384,6 +384,7 @@
 
     <script>
         Vue.filter('nf', function (val) {
+            if(val == 'NaN') return ''
             return val.toLocaleString();
         });
 
