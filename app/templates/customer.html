@@ -96,12 +96,21 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ふりがな"
+                                        label-for="customerKana">
+                                        <b-form-input v-model="customer.customerKana" id="customerKana" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
                                         label-for="department">
                                         <b-form-input v-model="customer.department" id="department" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
+                            </b-row>
+                            <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
                                         label-for="postNumber">
@@ -109,6 +118,9 @@
                                             :formatter="formatter_postNum">
                                         </b-form-input>
                                     </b-form-group>
+                                </b-col>
+                                <b-col sm>
+
                                 </b-col>
                             </b-row>
                             <b-row>

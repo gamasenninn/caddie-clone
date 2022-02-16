@@ -80,6 +80,7 @@ def customer_create():
     data = request.json
     newCustomer = Customer(
         customerName=data.get('customerName'),
+        customerKana=data.get('customerKana'),
         honorificTitle=data.get('honorificTitle'),
         department=data.get('department'),
         postNumber=data.get('postNumber'),
@@ -107,6 +108,7 @@ def customer_update(id):
     customer = Customer.query.filter(Customer.id == id).one()
 
     customer.customerName = data.get('customerName')
+    customer.customerKana = data.get('customerKana')
     customer.honorificTitle = data.get('honorificTitle')
     customer.department = data.get('department')
     customer.postNumber = data.get('postNumber')
