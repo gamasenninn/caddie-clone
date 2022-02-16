@@ -243,6 +243,9 @@ def invoice_create():
     newInvoice = Invoice(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
+        department=data.get('department'),
+        manager=data.get('manager'),
+        otherPartyManager=data.get('otherPartyManager'),
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         deadLine=datetime.strptime(
@@ -269,6 +272,9 @@ def invoice_update(id):
 
     invoice.customerId = data.get('customerId')
     invoice.customerName = data.get('customerName')
+    invoice.department = data.get('department')
+    invoice.manager = data.get('manager')
+    invoice.otherPartyManager = data.get('otherPartyManager')
     invoice.applyNumber = data.get('applyNumber')
     invoice.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
@@ -420,6 +426,9 @@ def quotation_create():
     newQuotation = Quotation(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
+        department=data.get('department'),
+        manager=data.get('manager'),
+        otherPartyManager=data.get('otherPartyManager'),
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         expiry=datetime.strptime(
@@ -446,6 +455,9 @@ def quotation_update(id):
 
     quotation.customerId = data.get('customerId')
     quotation.customerName = data.get('customerName')
+    quotation.department = data.get('department')
+    quotation.manager = data.get('manager')
+    quotation.otherPartyManager = data.get('otherPartyManager')
     quotation.applyNumber = data.get('applyNumber')
     quotation.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
