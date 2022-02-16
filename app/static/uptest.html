@@ -28,7 +28,7 @@
     crossorigin="anonymous"></script>
 
 <!-- Load Vue followed by BootstrapVue -->
-<script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.min.js"></script>
 <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
 
 <!-- Load the following for BootstrapVueIcons support -->
@@ -143,6 +143,49 @@
             }
         };
     </script>
+
+    <h2 class="mt-5">ファイルリスト形式(for)</h2><br />
+    <div v-if="selectImgUrl">
+        <img :src="selectImgUrl" width="200" height="200" />
+    </div>
+    <div>
+        <b-table-simple hover small caption-top responsive>
+            <template v-for="f in dicFiles">
+                <b-tr>
+                    <b-td width="5%">
+                        <input type="checkbox" v-model="f.isSelect" size="sm"> 
+                    </b-td>
+                    <b-td width="10%">
+                        <div @click="selectImgUrl=f.url" >
+                            <b-img :src="f.urlThumb" width="90" fluid ></b-img>
+                        </div>
+                    </b-td>
+                    <b-td class="ml-5">{{f.filename}}</b-td>
+                </b-tr> 
+            </template>        
+        </b-table-simple>
+    </div>
+
+
+    <h2 class="mt-5">ファイルリスト形式(b-table)</h2><br />
+    <div class="file-list">
+
+        <b-table
+            :fields= "[
+                {key:'image' ,label:'image'},
+                {key:'filename' ,label:'file'}
+            ]"
+            :items= 'dicFiles'
+        > 
+            <template v-slot:cell(image)="data">
+                <b-img :src="data.item.thumbPath" width="90"></b-img>
+            </template>
+        </b-table>
+    </div>
+
+
+
+
     <br /><br />
 
 </div>
@@ -161,7 +204,7 @@
             dicFiles: [],
             fileId: '001',
             selectImgUrl: "",
-            selectedImgUrl: ""
+            selectedImgUrl: "",
         },
         methods: {
             getFileList: async function (fid) {

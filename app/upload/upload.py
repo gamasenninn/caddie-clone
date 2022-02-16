@@ -63,7 +63,7 @@ def crop_max_square(pil_img):
     return crop_center(pil_img, min(pil_img.size), min(pil_img.size))
 
 def chext(filename):
-    print("chext",filename,os.path.isfile(filename))
+    #print("chext",filename,os.path.isfile(filename))
     #if os.path.isfile(filename) == False: return
     basename = os.path.basename(filename)
     dirname =  os.path.dirname(filename)
@@ -118,6 +118,8 @@ def make_thumb(filename,save_dir="./thumbs"):
 def save_file(id,dir_path,f):
     os.makedirs(f'{dir_path}/{id}', exist_ok=True)
     file_path = f'{dir_path}/{id}/{f.filename}'
+
+    print("path:",file_path)
     f.save(file_path)
     
     make_thumb(file_path,f"{dir_path}/{id}/thumbs")
@@ -149,22 +151,26 @@ def remove_files2(dict_files):   #ファイルリストそのまま受ける
 
     return {"result":"OK"}
 
-def get_flist(id,dir_path):
-    file_path_list = glob.glob(f'{dir_path}/{id}/*')
+def get_flist(dir_path):
+    file_path_list = glob.glob(f'{dir_path}/*')
     arry = []
     for f in file_path_list:
         if os.path.isfile(f):
 
+            f_0 = os.path.split(f)[0]
+            f_1 = os.path.split(f)[1]
             dict_flist = { 
-                "path": os.path.split(f)[0]+"/"+os.path.split(f)[1],
-                "filename" : os.path.split(f)[1], 
-                "dir" : os.path.split(f)[0],
-                "thumbPath":  chext(os.path.split(f)[0]+"/thumbs/"+os.path.split(f)[1]),
-                "type": os.path.splitext(f)[1].replace('.','').lower(),
+                "path": f_0+"/" + f_1,
+                "filename" : f_1, 
+                "dir" : f_0,
+                "thumbPath":  chext(f_0+"/thumbs/"+f_1),
+                "type": f_1.replace('.','').lower(),
                 "isfile": os.path.isfile(f),
                 "isdir": os.path.isdir(f),
                 "status": os.stat(f),
-                "isSelect":False
+                "isSelect":False,
+                "url": "/get-file/"+f_0.replace('./','')+"/"+f_1,
+                "urlThumb": "/get-file/"+chext(f_0.replace('./','')+"/thumbs/"+f_1)
             }
             #app.logger.debug(dict_flist)
             arry.append(dict_flist)
