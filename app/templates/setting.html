@@ -172,14 +172,6 @@
                         </b-card>
 
                         <div>
-                            <b-row class="mt-5">
-                                <b-button href="/user-page">　ユーザー登録画面へ　</b-button>
-                                <b-button href="/unit-page" class="ml-3">　　単位登録画面へ　　</b-button>
-                            </b-row>
-                            <b-row class="mt-2">
-                                <b-button href="/invoice-dust-page">削除済み請求書ページへ</b-button>
-                                <b-button href="/quotation-dust-page" class="ml-3">削除済み見積書ページへ</b-button>
-                            </b-row>
                             <b-row class="mt-2" v-if="myUser.role==='crescom_support'">
                                 <b-button href="/csv-upload-page">CSVアップロード画面へ</b-button>
                                 <b-button href="/csv-download-page" class="ml-3">CSVダウンロード画面へ</b-button>
@@ -203,10 +195,24 @@
 
             <!-- 更新・取消ボタンのフッター -->
             <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
-                <div class="d-flex justify-content-end">
-                    <b-button variant="info" class="mr-3" @click="bulkUpsert(setting)">適用</b-button>
-                    <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
-                </div>
+                <b-row>
+                    <b-col v-if="windowWidth>750">
+                        <b-button>ユーザー登録</b-button>
+                        <b-button>単位登録</b-button>
+                        <b-button>削除済み請求書</b-button>
+                        <b-button>削除済み見積書</b-button>
+                    </b-col>
+                    <b-col v-else>
+                        <b-button></b-button>
+                        <b-button></b-button>
+                        <b-button></b-button>
+                        <b-button></b-button>
+                    </b-col>
+                    <b-col cols="3" class="text-right">
+                        <b-button variant="info" class="mr-3" @click="bulkUpsert(setting)">適用</b-button>
+                        <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
+                    </b-col>
+                </b-row>
             </b-card>
 
         </div>
@@ -222,6 +228,7 @@
                     myUser: [],                 //ログイン中のユーザー情報
                     fileId: 'stamp',
                     fileId2: 'logo',
+                    windowWidth: 0,             //画面サイズ
                 },
                 methods: {
                     // ---Settings---
@@ -261,11 +268,17 @@
                             appendToast: append,
                         })
                     },
+                    // 画面サイズ
+                    calculateWindowWidth() {
+                        this.windowWidth = window.innerWidth;
+                    },
                 },
                 mounted: function () {
                     this.getSetting();
                     this.getLoginUser();
                     document.querySelector('title').textContent = '各種情報設定';
+                    this.windowWidth = window.innerWidth;   //読み込み時の初期値
+                    window.addEventListener('resize', this.calculateWindowWidth) //画面サイズに変更がある度に実行
                 },
                 router,
                 computed: {
