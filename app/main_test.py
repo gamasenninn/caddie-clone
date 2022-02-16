@@ -262,7 +262,7 @@ up_base_dir = './static/'
 ##up_dir = 'static/upload/'
 @app.route('/test-upload')
 def uptest():
-    return app.send_static_file('./uptest.html')
+    return render_template('./uptest.html')
 
 @app.route("/upload-files/<path:dir_path>", methods=['POST'])
 def upload_file(dir_path):
