@@ -196,21 +196,30 @@
             <!-- 更新・取消ボタンのフッター -->
             <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
                 <b-row>
-                    <b-col v-if="windowWidth>750">
-                        <b-button>ユーザー登録</b-button>
-                        <b-button>単位登録</b-button>
-                        <b-button>削除済み請求書</b-button>
-                        <b-button>削除済み見積書</b-button>
+                    <b-col v-if="windowWidth>690">
+                        <b-button href="/user-page">ユーザー登録</b-button>
+                        <b-button href="/unit-page">単位登録</b-button>
+                        <!-- ↓後で変更 -->
+                        <b-button href="/invoice-dust-page">削除請求</b-button>
+                        <b-button href="/quotation-dust-page">削除見積</b-button>
                     </b-col>
                     <b-col v-else>
-                        <b-button></b-button>
-                        <b-button></b-button>
-                        <b-button></b-button>
-                        <b-button></b-button>
+                        <b-button href="/user-page">
+                            <b-icon icon="person-plus-fill"></b-icon>
+                        </b-button>
+                        <b-button href="/unit-page">
+                            <b-icon icon="hammer"></i>
+                        </b-button>
+                        <!-- ↓後で変更 -->
+                        <b-button href="/invoice-dust-page">
+                            <b-icon icon="file-earmark-x"></b-icon>
+                        </b-button>
+                        <b-button href="/quotation-dust-page">
+                            <b-icon icon="file-earmark-x-fill"></b-icon>
+                        </b-button>
                     </b-col>
-                    <b-col cols="3" class="text-right">
+                    <b-col cols="4" class="text-right">
                         <b-button variant="info" class="mr-3" @click="bulkUpsert(setting)">適用</b-button>
-                        <b-button variant="info" @click="alert('印刷しました。')">印刷</b-button>
                     </b-col>
                 </b-row>
             </b-card>
