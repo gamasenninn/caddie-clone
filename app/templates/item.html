@@ -167,6 +167,25 @@
                                 <b-col sm>
                                 </b-col>
                             </b-row>
+                            <b-row class="mb-5"></b-row>
+                            <b-row>
+                                <b-col sm></b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="登録日時"
+                                        label-for="createdAt">
+                                        <p class="text-left pl-2" id="createdAt">{{formatDate(item.createdAt)}}</p>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm></b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="更新日時"
+                                        label-for="updatedAt">
+                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(item.updatedAt)}}</p>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
                         </b-card>
 
                     </b-col> <!-- 本体 -->
@@ -330,6 +349,9 @@
                         if (result === true) {
                             this.bulkUpsert(this.item);
                         }
+                    },
+                    formatDate(date) {
+                        if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                 },
                 mounted: function () {

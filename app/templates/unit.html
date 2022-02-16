@@ -80,14 +80,21 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col>
-
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位名"
                                         label-for="unitName">
                                         <b-form-input v-model="unit.unitName" id="unitName" size="sm">
                                         </b-form-input>
                                     </b-form-group>
-
-
+                                </b-col>
+                            </b-row>
+                            <b-row class="mb-5"></b-row>
+                            <b-row>
+                                <b-col sm></b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="更新日時"
+                                        label-for="updatedAt">
+                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(unit.updatedAt)}}</p>
+                                    </b-form-group>
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -227,6 +234,9 @@
                         if (result === true) {
                             this.bulkUpsert(this.unit);
                         }
+                    },
+                    formatDate(date) {
+                        if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                 },
                 mounted: function () {
