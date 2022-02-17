@@ -18,6 +18,10 @@
                 max-width: 100px;
             }
 
+            .itemNameArea {
+                height: 1.8em;
+            }
+
             /* スピンボタン無効化 */
             /* Chrome/Safari */
             input[type="number"]::-webkit-outer-spin-button,
@@ -248,10 +252,10 @@
                           {  key: 'delete', label: '削除',class:'text-center' },
                         ]">
                             <template v-slot:cell(itemName)="data">
-                                <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
-                                    @dblclick="showModalItems(); selectInvoiceItem(data.item);"
+                                <textarea v-model="data.item.itemName" class="itemNameArea" size="sm"
+                                    style="width: 100%;" @dblclick="showModalItems(); selectInvoiceItem(data.item);"
                                     v-on:keydown.enter="selectInvoiceItem(data.item);onKeyDownItem();">
-                                </b-form-textarea>
+                                </textarea>
 
                                 <b-modal size="xl" ref="items-modal" title="商品一覧">
                                     <b-row>
@@ -646,6 +650,7 @@
                     onKeyDownItem(record) {
                         console.log(record);
                         Vue.set(self.invoiceItem, 'itemId', null);
+                        $('.itemNameArea').height('3.6em');
                     },
                     // 商品名モーダル表示 モーダルのダブり表示防止
                     showModalItems() {
