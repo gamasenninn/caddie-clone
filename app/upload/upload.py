@@ -42,6 +42,16 @@ icon = {
         "f_y": 50,
         "title": "PDF",
     },
+    "csv":{
+        "isImage": False,
+        "b_r" : 0xFF,
+        "b_g" : 0xC0,
+        "b_b" : 0xCB,
+        "f_sz": 48,
+        "f_x": 15,
+        "f_y": 50,
+        "title": "CSV",
+    },
     "unknown":{
         "isImage": False,
         "b_r" : 0xC0,
@@ -142,35 +152,41 @@ def remove_files(dict_list):
 
     return {"result":"OK"}
 
-def remove_files2(dict_files):   #ファイルリストそのまま受ける
+def remove_files2(dict_files,base_dir):   #ファイルリストそのまま受ける
 
     for f in dict_files:
         if f.get('isSelect'):
-            if f.get('path') : os.remove(f['path']) ;
-            if f.get('thumbPath') : os.remove(f['thumbPath']) ;
+            if f.get('path') : os.remove(f['base_dir']+"/"+f['sub_path']) ;
+            if f.get('thumbPath') : os.remove(f['base_dir']+"/"+f['sub_thumbPath']) ;
 
     return {"result":"OK"}
 
-def get_flist(dir_path):
-    file_path_list = glob.glob(f'{dir_path}/*')
+def get_flist(base_dir,dir_path):
+    print("get_flist:",base_dir,dir_path)
+    file_path_list = glob.glob(f'{base_dir}/{dir_path}/*')
     arry = []
     for f in file_path_list:
+        #f = os.path.normpath(f)
         if os.path.isfile(f):
 
             f_0 = os.path.split(f)[0]
             f_1 = os.path.split(f)[1]
+            f_sub = f_0.replace(f"{base_dir}/",'') 
             dict_flist = { 
-                "path": f_0+"/" + f_1,
+                "path": f_0+"/"+f_1,
                 "filename" : f_1, 
+                "base_dir": base_dir,
+                "sub_path": f_sub+"/"+f_1,
                 "dir" : f_0,
                 "thumbPath":  chext(f_0+"/thumbs/"+f_1),
-                "type": f_1.replace('.','').lower(),
+                "sub_thumbPath":  chext(f_sub+"/thumbs/"+f_1),
+                "type": f_1.split('.')[-1].lower(),
                 "isfile": os.path.isfile(f),
                 "isdir": os.path.isdir(f),
                 "status": os.stat(f),
                 "isSelect":False,
-                "url": "/get-file/"+f_0.replace('./','')+"/"+f_1,
-                "urlThumb": "/get-file/"+chext(f_0.replace('./','')+"/thumbs/"+f_1)
+                "url": "/get-file/"+f_sub+"/"+f_1,
+                "urlThumb": "/get-file/"+chext(f_sub+"/thumbs/"+f_1)
             }
             #app.logger.debug(dict_flist)
             arry.append(dict_flist)
