@@ -80,14 +80,21 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col>
-
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ名"
                                         label-for="categoryName">
                                         <b-form-input v-model="category.categoryName" id="categoryName" size="sm">
                                         </b-form-input>
                                     </b-form-group>
-
-
+                                </b-col>
+                            </b-row>
+                            <b-row class="mb-5"></b-row>
+                            <b-row>
+                                <b-col sm></b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="更新日時"
+                                        label-for="updatedAt">
+                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(category.updatedAt)}}</p>
+                                    </b-form-group>
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -116,7 +123,8 @@
                         <b-button pill variant="info" class="mr-3" @click="modalShow(category,'upsertModal');"
                             id="showUpsertModal">適用
                         </b-button>
-                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i></b-button>
+                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i>
+                        </b-button>
                     </b-col>
                 </b-row>
             </b-card>
@@ -226,6 +234,9 @@
                         if (result === true) {
                             this.bulkUpsert(this.category);
                         }
+                    },
+                    formatDate(date) {
+                        if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                 },
                 mounted: function () {
