@@ -82,14 +82,16 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先名"
                                         label-for="customerName">
-                                        <b-form-input v-model="customer.customerName" id="customerName" size="sm">
+                                        <b-form-input v-model="customer.customerName" id="customerName" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="敬称"
                                         label-for="honorificTitle">
-                                        <b-form-input v-model="customer.honorificTitle" id="honorificTitle" size="sm">
+                                        <b-form-input v-model="customer.honorificTitle" id="honorificTitle" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -98,14 +100,16 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ふりがな"
                                         label-for="customerKana">
-                                        <b-form-input v-model="customer.customerKana" id="customerKana" size="sm">
+                                        <b-form-input v-model="customer.customerKana" id="customerKana" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
                                         label-for="department">
-                                        <b-form-input v-model="customer.department" id="department" size="sm">
+                                        <b-form-input v-model="customer.department" id="department" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -115,7 +119,7 @@
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
                                         label-for="postNumber">
                                         <b-form-input v-model="customer.postNumber" id="postNumber" size="sm"
-                                            :formatter="formatter_postNum">
+                                            autocomplete="off" :formatter="formatter_postNum">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -127,14 +131,16 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所1"
                                         label-for="address">
-                                        <b-form-input v-model="customer.address" id="address" size="sm">
+                                        <b-form-input v-model="customer.address" id="address" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所2"
                                         label-for="address">
-                                        <b-form-input v-model="customer.addressSub" id="address" size="sm">
+                                        <b-form-input v-model="customer.addressSub" id="address" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -143,14 +149,16 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="電話番号"
                                         label-for="telNumber">
-                                        <b-form-input v-model="customer.telNumber" id="telNumber" size="sm">
+                                        <b-form-input v-model="customer.telNumber" id="telNumber" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="FAX番号"
                                         label-for="faxNumber">
-                                        <b-form-input v-model="customer.faxNumber" id="faxNumber" size="sm">
+                                        <b-form-input v-model="customer.faxNumber" id="faxNumber" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -159,14 +167,14 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ホームページURL"
                                         label-for="url">
-                                        <b-form-input v-model="customer.url" id="url" size="sm">
+                                        <b-form-input v-model="customer.url" id="url" size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
                                         label-for="email">
-                                        <b-form-input v-model="customer.email" id="email" size="sm">
+                                        <b-form-input v-model="customer.email" id="email" size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -175,14 +183,16 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
                                         label-for="representative">
-                                        <b-form-input v-model="customer.representative" id="representative" size="sm">
+                                        <b-form-input v-model="customer.representative" id="representative" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
                                         label-for="manager">
-                                        <b-form-input v-model="customer.manager" id="manager" size="sm">
+                                        <b-form-input v-model="customer.manager" id="manager" size="sm"
+                                            autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
