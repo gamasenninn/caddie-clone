@@ -1,11 +1,22 @@
 <% extends "head.html" %>
     <% block content %>
         <style>
-            .sm-mode { display: none; }
-            .pc-mode { display: block; }
+            .sm-mode {
+                display: none;
+            }
+
+            .pc-mode {
+                display: block;
+            }
+
             @media screen and (max-width:690px) {
-                .sm-mode { display: block; }
-                .pc-mode { display: none;  }
+                .sm-mode {
+                    display: block;
+                }
+
+                .pc-mode {
+                    display: none;
+                }
             }
         </style>
 
@@ -209,9 +220,7 @@
                     <b-col class="pc-mode">
                         <b-button href="/user-page">ユーザー登録</b-button>
                         <b-button href="/unit-page">単位登録</b-button>
-                        <!-- ↓後で変更 -->
-                        <b-button href="/invoice-dust-page">削除請求</b-button>
-                        <b-button href="/quotation-dust-page">削除見積</b-button>
+                        <b-button href="/dust-select-page">削除済み参照</b-button>
                     </b-col>
                     <b-col class="sm-mode">
                         <b-button href="/user-page">
@@ -220,12 +229,8 @@
                         <b-button href="/unit-page">
                             <b-icon icon="hammer"></i>
                         </b-button>
-                        <!-- ↓後で変更 -->
-                        <b-button href="/invoice-dust-page">
+                        <b-button href="/dust-select-page">
                             <b-icon icon="file-earmark-x"></b-icon>
-                        </b-button>
-                        <b-button href="/quotation-dust-page">
-                            <b-icon icon="file-earmark-x-fill"></b-icon>
                         </b-button>
                     </b-col>
                     <b-col cols="4" class="text-right">

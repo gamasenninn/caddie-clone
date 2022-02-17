@@ -237,6 +237,12 @@ def csvDownloadPage():
     return redirect('/login')
 
 
+@app.route('/dust-select-page')
+@login_required
+def dustPage():
+    return render_template('dust_select.html')
+
+
 @app.route('/invoice-dust-page')
 @login_required
 def invoiceDustPage():
@@ -262,18 +268,26 @@ up_base_dir = './static/'
 static_dir = './static'
 data_dir = './data'
 up_dir = static_dir
+
+
 def check_base_dir(base):
-    if base == 's': return static_dir
-    elif base == 'd': return data_dir
-    else: return static_dir
+    if base == 's':
+        return static_dir
+    elif base == 'd':
+        return data_dir
+    else:
+        return static_dir
 
 ##up_dir = 'static/upload/'
+
+
 @app.route('/test-upload')
 def uptest():
     return render_template('./uptest.html')
 
+
 @app.route("/upload-files/<base>/<path:dir_path>", methods=['POST'])
-def upload_file(base,dir_path):
+def upload_file(base, dir_path):
     if 'file' not in request.files:
         make_response(jsonify({'result': 'uploadFile is required.'}))
     f = request.files["file"]
@@ -286,14 +300,15 @@ def upload_file(base,dir_path):
 def delete_files(base):
     base_dir = check_base_dir(base)
     dict_data = json.loads(request.data.decode())
-    return jsonify(remove_files2(dict_data,base_dir))
+    return jsonify(remove_files2(dict_data, base_dir))
 
 
 @app.route("/list-files/<base>/<path:dir_path>", methods=['GET'])
-def get_files_list(base,dir_path):
+def get_files_list(base, dir_path):
     ##fid = dir_path.split('/')[-1]
-    #return f" {fid} / {up_base_dir}{dir_path}"
-    return jsonify(get_flist(check_base_dir(base),dir_path))
+    # return f" {fid} / {up_base_dir}{dir_path}"
+    return jsonify(get_flist(check_base_dir(base), dir_path))
+
 
 @app.route("/get-file/<path:path>", methods=['GET'])
 def get_file(path):
@@ -301,9 +316,11 @@ def get_file(path):
     if os.path.isfile(target):
         return send_file(target)
     else:
-        return "File not found",404
+        return "File not found", 404
 
 # ----- csv_upload_test -----
+
+
 @app.route('/csv-test')
 def CsvTest():
     return app.send_static_file('csv_test.html')
@@ -443,15 +460,18 @@ def mw():
 def mw2():
     return render_template('mw2.html')
 
+
 @app.route('/mw-menu')
 @login_required
 def mw_menu():
     return render_template('mw_menu.html')
 
+
 @app.route('/leaflet')
 @login_required
 def leaflet():
     return render_template('leaflet.html')
+
 
 if __name__ == '__main__':
 
