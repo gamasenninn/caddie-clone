@@ -1,5 +1,15 @@
 <% extends "head.html" %>
     <% block content %>
+        <style>
+            .sm-mode { display: none; }
+            .pc-mode { display: block; }
+            @media screen and (max-width:690px) {
+                .sm-mode { display: block; }
+                .pc-mode { display: none;  }
+            }
+        </style>
+
+
         <div id="app" v-cloak>
             <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
                 <b-row>
@@ -196,14 +206,14 @@
             <!-- 更新・取消ボタンのフッター -->
             <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
                 <b-row>
-                    <b-col v-if="windowWidth>690">
+                    <b-col class="pc-mode">
                         <b-button href="/user-page">ユーザー登録</b-button>
                         <b-button href="/unit-page">単位登録</b-button>
                         <!-- ↓後で変更 -->
                         <b-button href="/invoice-dust-page">削除請求</b-button>
                         <b-button href="/quotation-dust-page">削除見積</b-button>
                     </b-col>
-                    <b-col v-else>
+                    <b-col class="sm-mode">
                         <b-button href="/user-page">
                             <b-icon icon="person-plus-fill"></b-icon>
                         </b-button>
@@ -237,7 +247,6 @@
                     myUser: [],                 //ログイン中のユーザー情報
                     fileId: 'stamp',
                     fileId2: 'logo',
-                    windowWidth: 0,             //画面サイズ
                 },
                 methods: {
                     // ---Settings---
@@ -277,17 +286,11 @@
                             appendToast: append,
                         })
                     },
-                    // 画面サイズ
-                    calculateWindowWidth() {
-                        this.windowWidth = window.innerWidth;
-                    },
                 },
                 mounted: function () {
                     this.getSetting();
                     this.getLoginUser();
                     document.querySelector('title').textContent = '各種情報設定';
-                    this.windowWidth = window.innerWidth;   //読み込み時の初期値
-                    window.addEventListener('resize', this.calculateWindowWidth) //画面サイズに変更がある度に実行
                 },
                 router,
                 computed: {
