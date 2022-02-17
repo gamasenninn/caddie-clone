@@ -16,18 +16,31 @@
             <b-button variant="primary" id="memo" block>
                 <i class="fas fa-book-open"></i>　メ　モ
             </b-button>
-            <b-button variant="warning" id="logout" block>
-                <i class="fas fa-book-open"></i>　ログアウト
+            <b-row class="mt-5"></b-row>
+            <b-row class="mt-5"></b-row>
+            <b-row class="mt-5"></b-row>
+            <b-row class="mt-5"></b-row>
+            <b-row class="mt-5"></b-row>
+            <b-row class="mt-5"></b-row>
+            <b-row class="mt-5"></b-row>
+            <b-button variant="warning" id="logout" v-b-tooltip.hover.top="'ログアウト'" block>
+                <b-icon icon="power"></b-icon>
             </b-button>
-            <b-button id="setting" block>
-                <i class="fa-solid fa-gear"></i>　各種項目設定
-            </b-button>
-            <b-button v-if="modeName=='mw'" id="tb-mode" block>
-                <i class="fa-solid fa-gear"></i>　タブレットモード
-            </b-button>
-            <b-button v-else id="mw-mode" block>
-                <i class="fa-solid fa-gear"></i>　マルチウィンドウ
-            </b-button>
+            <b-row class="mt-2">
+                <b-col>
+                    <b-button id="setting" v-b-tooltip.hover.top="'各種情報設定'" block>
+                        <b-icon icon="gear-fill"></b-icon>
+                    </b-button>
+                </b-col>
+                <b-col>
+                    <b-button v-if="modeName=='mw'" id="tb-mode" v-b-tooltip.hover.top="'タブレットモード'" block>
+                        <b-icon icon="front"></b-icon>
+                    </b-button>
+                    <b-button v-else id="mw-mode" v-b-tooltip.hover.topright="'マルチウィンドウモード'" block>
+                        <b-icon icon="front"></b-icon>
+                    </b-button>
+                </b-col>
+            </b-row>
         </div>
 
         <script>
