@@ -99,11 +99,15 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ふりがな"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="フリガナ"
                                         label-for="customerKana">
-                                        <b-form-input v-model="customer.customerKana" id="customerKana" size="sm"
-                                            autocomplete="off">
-                                        </b-form-input>
+                                        <b-form-input id="input-live" v-model="customer.customerKana"
+                                            :state="customerKanaValidate"
+                                            aria-describedby="input-live-help input-live-feedback" trim></b-form-input>
+                                        <b-form-invalid-feedback id="input-live-feedback">
+                                            全角カナまたは英数字で入力してください。
+                                        </b-form-invalid-feedback>
+                                        <b-form-text id="input-live-help">※全角カナ・英数字で入力(例)jマート1</b-form-text>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
@@ -268,8 +272,7 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="info" @click="modalShow(customer,'upsertModal');" id="showUpsertModal">
-                            適用</b-button>
+                        <b-button pill variant="info" @click="apply();">適用</b-button>
                         <b-button pill size="lg" variant="info" @click="pdfOut"><i class="fas fa-print"></i>
                         </b-button>
                         <b-button pill size="lg" variant="danger" @click="modalShow(customer,'deleteModal');">
@@ -289,6 +292,21 @@
                 <select-modal modal-name='deleteModal' modal-message='削除しますか？'
                     @selected="deleteModalProcess($event);" />
             </div>
+
+            <!-- バリデーションエラーモーダル -->
+            <b-modal ref="validationErrorModal" hide-footer>
+                <template #modal-title>
+                    バリデーションエラー
+                </template>
+                <div class="d-block text-center">
+                    <p>フリガナを正しく入力してください。</p>
+                </div>
+                <b-row>
+                    <b-col class="text-center">
+                        <b-button class="mt-3" @click="hideResultModal('validationErrorModal');">閉じる</b-button>
+                    </b-col>
+                </b-row>
+            </b-modal>
 
         </div>
 
@@ -354,6 +372,7 @@
                         self = this;
                         self.customers.push({
                             isInsert: true,
+                            customerKana: "",
                         });
                         self.customer = self.customers.slice(-1)[0];
                         localStorage.setItem('customer', JSON.stringify(self.customer))
@@ -378,10 +397,22 @@
                         if (!item || type !== 'row') return
                         if (!item.id) return "d-none";
                     },
+                    apply: function () {
+                        if (this.customerKanaValidate === true) {
+                            this.modalShow(this.customer, 'upsertModal');
+                        }
+                        else this.modalShowAlert('validationErrorModal');
+                    },
                     modalShow: function (item, modalName) {
                         this.customer = item;
                         console.log(this.customer);
                         this.$bvModal.show(modalName);
+                    },
+                    modalShowAlert: function (modalName) {
+                        this.$refs[modalName].show();
+                    },
+                    hideResultModal: function (modalName) {
+                        this.$refs[modalName].hide();
                     },
                     deleteModalProcess(result) {
                         this.$bvModal.hide('deleteModal');
@@ -440,6 +471,12 @@
                     currentPageRows() {
                         return this.customers.length;
                     },
+                    // バリデーション
+                    customerKanaValidate() {
+                        let regExp = new RegExp(/^[ァ-ンヴー0-9a-zA-Z]*$/);
+                        let result = regExp.test(this.customer.customerKana);
+                        return result
+                    }
                 }
             })
 
