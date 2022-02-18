@@ -32,6 +32,7 @@
 | representative  | 代表者名        | text       |                                   | 
 | customerCategory| お客様区分      | text       |  個人か法人か                      | 
 | isHide          | 表示状態        | boolean    |  得意先情報を隠すかどうか          | 
+| isFavorite      | お気に入り      | boolean    |  よく取引する顧客                  | 
 | memo            | メモ            | text       |                                   |
 | createdAt       | 作成日時        | datetime   |  作成日時                          |
 | updatedAt       | 更新日時        | datetime   |  更新日時                          | 
