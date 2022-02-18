@@ -41,6 +41,7 @@
                     <b-col cols="11">
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先一覧"
                             header-border-variant="light">
+                            <b-form-checkbox class="text-right" v-model="isShowFavorite">お気に入り</b-form-checkbox>
                             <b-form-checkbox class="text-right" v-model="isShowAll">全て表示</b-form-checkbox>
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
                                 :items=customersIndicateIndex :per-page="perPage" :current-page="currentPage" :fields="[
@@ -211,6 +212,10 @@
                                         label-for="isHide">
                                         <b-form-checkbox v-model="customer.isHide"></b-form-checkbox>
                                     </b-form-group>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お気に入り"
+                                        label-for="isFavorite">
+                                        <b-form-checkbox v-model="customer.isFavorite"></b-form-checkbox>
+                                    </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
@@ -297,6 +302,7 @@
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
                     isShowAll: false,            // trueの時、全表示
+                    isShowFavorite: false,
                     perPage: 20,                //ページネーション
                     currentPage: 1,             //ページネーション
                 },
@@ -423,10 +429,12 @@
                         return localStorage.getItem('wMode');
                     },
                     customersIndicateIndex: function () {
-                        if (this.isShowAll === false) {
-                            return this.customers.filter(customer => customer.isHide === false)
-                        }
-                        return this.customers;
+                        let customers = this.customers
+                        if (this.isShowAll === false)
+                            customers = customers.filter(customer => customer.isHide === false);
+                        if (this.isShowFavorite === true)
+                            customers = customers.filter(customer => customer.isFavorite === true);
+                        return customers;
                     },
                     // ページネーション
                     currentPageRows() {

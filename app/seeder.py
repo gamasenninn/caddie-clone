@@ -35,15 +35,15 @@ def seeder():
         Customer(id=1, customerName="○○株式会社", customerKana='かぶしきがいしゃ', honorificTitle='御中', department='部署名', postNumber='000-0000',
                  address='鹿沼市板荷', addressSub='000', telNumber='000-0000-0000', faxNumber='000-0000-0000', url='example.com',
                  email='example@co.jp', manager='田中太郎', representative='田中代表', customerCategory='corporation', isHide=False,
-                 memo='これは○○株式会社のメモです',),
+                 isFavorite=False, memo='これは○○株式会社のメモです',),
         Customer(id=2, customerName="○○有限会社", customerKana='ゆうげんがいしゃ', honorificTitle='御中', department='部署名', postNumber='111-1111',
                  address='鹿沼市板荷', addressSub='111', telNumber='111-1111-1111', faxNumber='111-1111-1111', url='example.com',
                  email='example@co.jp', manager='田中次郎', representative='田中代表', customerCategory='corporation', isHide=False,
-                 memo='これは○○有限会社のメモです',),
+                 isFavorite=False, memo='これは○○有限会社のメモです',),
         Customer(id=3, customerName="○○商事", customerKana='しょうじ', honorificTitle='御中', department='部署名', postNumber='222-2222',
                  address='鹿沼市板荷', addressSub='222', telNumber='222-2222-2222', faxNumber='222-2222-2222', url='example.com',
                  email='example@co.jp', manager='田中三郎', representative='田中代表', customerCategory='corporation', isHide=False,
-                 memo='これは○○商事のメモです',)
+                 isFavorite=False, memo='これは○○商事のメモです',)
     ]
     db.session.add_all(customers)
     db.session.commit()

@@ -141,7 +141,7 @@
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                         label-for="customer" class="customer">
                                         <b-form-input v-model="quotation.customerName" id="customerName" size="sm"
-                                            autocomplete="off" @dblclick="$bvModal.show('customer-modal')"
+                                            @dblclick="$bvModal.show('customer-modal')"
                                             v-on:keydown.enter="onKeyDownCustomer">
                                         </b-form-input>
                                         <!-- 得意先一覧モーダル -->
@@ -153,6 +153,8 @@
                                                     size="sm">
                                                 </b-form-input>
                                             </b-form-group>
+                                            <b-form-checkbox class="text-right" v-model="isShowFavorite">お気に入り
+                                            </b-form-checkbox>
                                             <b-form-checkbox class="text-right" v-model="isShowAll">全て表示
                                             </b-form-checkbox>
                                             <b-table hover striped small sort-by="ID" id="customer-table"
@@ -173,8 +175,7 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
                                         label-for="department">
-                                        <b-form-input v-model="quotation.department" id="department" size="sm"
-                                            autocomplete="off">
+                                        <b-form-input v-model="quotation.department" id="department" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -183,8 +184,7 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
                                         label-for="manager">
-                                        <b-form-input v-model="quotation.manager" id="manager" size="sm"
-                                            autocomplete="off">
+                                        <b-form-input v-model="quotation.manager" id="manager" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -192,7 +192,7 @@
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="先方担当者"
                                         label-for="otherPartyManager">
                                         <b-form-input v-model="quotation.otherPartyManager" id="otherPartyManager"
-                                            size="sm" autocomplete="off">
+                                            size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -201,8 +201,7 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                         label-for="title">
-                                        <b-form-input v-model="quotation.title" id="title" size="sm" autocomplete="off">
-                                        </b-form-input>
+                                        <b-form-input v-model="quotation.title" id="title" size="sm"></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
@@ -310,16 +309,13 @@
 
                             </template>
                             <template v-slot:cell(count)="data">
-                                <b-form-input v-model="data.item.count" type="number" size="sm" autocomplete="off">
-                                </b-form-input>
+                                <b-form-input v-model="data.item.count" type="number" size="sm"></b-form-input>
                             </template>
                             <template v-slot:cell(unit)="data">
-                                <b-form-select v-model="data.item.unit" :options="units" size="sm" autocomplete="off">
-                                </b-form-select>
+                                <b-form-select v-model="data.item.unit" :options="units" size="sm"></b-form-select>
                             </template>
                             <template v-slot:cell(price)="data">
-                                <b-form-input v-model="data.item.price" type="number" size="sm" autocomplete="off">
-                                </b-form-input>
+                                <b-form-input v-model="data.item.price" type="number" size="sm"></b-form-input>
                             </template>
                             <template v-slot:cell(amount)="data">
                                 <p class="text-right">{{data.item.count*data.item.price|nf}}</p>
@@ -460,6 +456,7 @@
                     categories: [],
                     makers: [],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
+                    isShowFavorite: false,
                     perPage: 20,                //ページネーション
                     quotationsCurrentPage: 1,             //ページネーション
                     customersCurrentPage: 1,             //ページネーション
@@ -724,13 +721,12 @@
                     },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
-                        if (this.isShowAll === false) {
-                            return this.customers.filter(customer => {
-                                return (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord)) &&
-                                    customer.isHide === false;
-                            });
-                        }
-                        return this.customers.filter(customer => {
+                        let customers = this.customers;
+                        if (this.isShowAll === false)
+                            customers = customers.filter(customer => customer.isHide === false);
+                        if (this.isShowFavorite === true)
+                            customers = customers.filter(customer => customer.isFavorite === true);
+                        return customers.filter(customer => {
                             return (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord));
                         });
                     },

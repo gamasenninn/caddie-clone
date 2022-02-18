@@ -153,6 +153,8 @@
                                                     size="sm">
                                                 </b-form-input>
                                             </b-form-group>
+                                            <b-form-checkbox class="text-right" v-model="isShowFavorite">お気に入り
+                                            </b-form-checkbox>
                                             <b-form-checkbox class="text-right" v-model="isShowAll">全て表示
                                             </b-form-checkbox>
                                             <b-table hover striped small sort-by="ID" id="customer-table"
@@ -456,6 +458,7 @@
                     categories: [],
                     makers: [],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
+                    isShowFavorite: false,
                     perPage: 20,                //ページネーション
                     invoicesCurrentPage: 1,             //ページネーション
                     customersCurrentPage: 1,             //ページネーション
@@ -717,13 +720,12 @@
                     },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
-                        if (this.isShowAll === false) {
-                            return this.customers.filter(customer => {
-                                return (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord)) &&
-                                    customer.isHide === false;
-                            });
-                        }
-                        return this.customers.filter(customer => {
+                        let customers = this.customers;
+                        if (this.isShowAll === false)
+                            customers = customers.filter(customer => customer.isHide === false);
+                        if (this.isShowFavorite === true)
+                            customers = customers.filter(customer => customer.isFavorite === true);
+                        return customers.filter(customer => {
                             return (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord));
                         });
                     },

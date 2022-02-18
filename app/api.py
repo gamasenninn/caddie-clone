@@ -94,6 +94,7 @@ def customer_create():
         representative=data.get('representative'),
         customerCategory=data.get('customerCategory'),
         isHide=data.get('isHide'),
+        isFavorite=data.get('isFavorite'),
         memo=data.get('memo'),
     )
     db.session.add(newCustomer)
@@ -122,6 +123,7 @@ def customer_update(id):
     customer.representative = data.get('representative')
     customer.customerCategory = data.get('customerCategory')
     customer.isHide = data.get('isHide')
+    customer.isFavorite = data.get('isFavorite')
     customer.memo = data.get('memo')
 
     db.session.commit()
