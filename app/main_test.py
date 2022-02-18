@@ -1,3 +1,4 @@
+from distutils.log import error
 from sqlalchemy import insert, true
 from sqlalchemy.dialects.sqlite import insert
 from api import app
@@ -333,8 +334,9 @@ def CsvUpload():
     file.save('csv/import/'+target + '.csv')
     try:
         upsert_csv()
-    except:
-        return jsonify({"result": "error", "message": "更新に失敗しました。CSVを正しく入力してください。"}), 500
+    except Exception as e:
+        print(e)
+        return jsonify({"result": "error", "message": "更新に失敗しました。CSVを正しく入力してください。", "e_message": str(e)}), 500
     return jsonify({"result": "ok", "message": "更新に成功しました"})
 
 
