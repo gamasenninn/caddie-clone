@@ -42,7 +42,8 @@ class Customer(db.Model):
     customerCategory = db.Column(
         db.String, nullable=False, default='corporation')
     isHide = db.Column(db.Boolean, nullable=False, default=False)
-    isFavorite = db.Column(db.Boolean, nullable=False, default=False)
+    isFavorite = db.Column(db.Boolean, nullable=False,
+                           server_default=db.text('0'))
     memo = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
