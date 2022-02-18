@@ -143,7 +143,12 @@
             }
         };
     </script>
-
+    <b-form-file
+        v-model="upfile"
+        :state="Boolean(file1)"
+        placeholder="Choose a file or drop it here..."
+        drop-placeholder="Drop file here..."
+  ></b-form-file>
     <h2 class="mt-5">ファイルリスト形式(for)</h2><br />
     <div v-if="selectImgUrl">
         <img :src="selectImgUrl" width="200" height="200" />
@@ -205,6 +210,7 @@
             fileId: '001',
             selectImgUrl: "",
             selectedImgUrl: "",
+            upfile:''
         },
         methods: {
             getFileList: async function (fid) {

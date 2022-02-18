@@ -100,6 +100,16 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
+
+                <b-card style="max-width:10rem">
+                    <form action="upload-files/s/upload" class="dropzone" id="my-dropzone">
+                        <input hidden type="text" name="fileId" v-model="fileId">
+            
+                        <input hidden type="file" name="file" id="my-dropzone" multiple>
+                    </form>
+                </b-card>
+    
+    
                 <b-row class="mt-5">
                     <b-col></b-col>
                     <!--- 本体 -->
@@ -206,32 +216,44 @@
                                         <b-form-input v-model="invoice.title" id="title" size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="メモ">
                                         <b-form-textarea v-model="invoice.memo" size="sm" rows="4">
                                         </b-form-textarea>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row class="mb-5"></b-row>
-                            <b-row>
-                                <b-col sm></b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="登録日時"
                                         label-for="createdAt">
                                         <p class="text-left pl-2" id="createdAt">{{formatDate(invoice.createdAt)}}</p>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm></b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="更新日時"
                                         label-for="updatedAt">
                                         <p class="text-left pl-2" id="updatedAt">{{formatDate(invoice.updatedAt)}}</p>
                                     </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-row>
+                                        <b-col md="8">
+                                            <b-table-simple hover small caption-top responsive>
+                                                <template v-for="f in dicFiles">
+                                                    <b-tr>
+                                                        <b-td width="5%">
+                                                            <input type="checkbox" v-model="f.isSelect" size="sm"> 
+                                                        </b-td>
+                                                        <b-td width="20%">
+                                                            <div @click="selectImgUrl=f.url" >
+                                                                <b-img :src="f.urlThumb" width="90" fluid ></b-img>
+                                                            </div>
+                                                        </b-td>
+                                                        <b-td class="ml-5">{{f.filename}}</b-td>
+                                                    </b-tr> 
+                                                </template>        
+                                            </b-table-simple>
+                                    
+                                        </b-col>
+                                        <b-col md="4">
+                                        </b-col>
+                                    </b-row>
+
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -430,9 +452,21 @@
                 <select-modal modal-name='deleteModal' modal-message='削除しますか？'
                     @selected="deleteModalProcess($event);" />
             </div>
-
         </div>
         <script src="static/component/def-pdf.js"></script>
+        <script>
+            Dropzone.options.myDropzone = { // camelized version of the `id`
+                dictDefaultMessage: 'ここにファイルをドロップしてね',
+                init: function () {
+                    this.on("complete", file => {
+                        console.log("complete A file has been added");
+                        this.removeFile(file);
+                        app.getFileList(app.invoice.applyNumber);
+                    });
+                }
+            };
+        </script>   
+
         <script>
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
@@ -463,6 +497,8 @@
                     invoicesCurrentPage: 1,             //ページネーション
                     customersCurrentPage: 1,             //ページネーション
                     itemsCurrentPage: 1,             //ページネーション
+                    fileId: '', //upload用ID
+                    dicFiles: [],
                 },
                 methods: {
                     // ---Invoices---
@@ -522,7 +558,8 @@
                     selectInvoice: function (item) {
                         this.invoice = item;
                         console.log(this.invoice);
-                        localStorage.setItem('invoice', JSON.stringify(item))
+                        localStorage.setItem('invoice', JSON.stringify(item));
+                        this.getFileList(this.invoice.applyNumber)
                     },
                     selectInvoiceItem: function (item) {
                         this.invoiceItem = item;
@@ -693,6 +730,16 @@
                         if (invoice.isTaxExp === true) return Math.floor(amount * 1.1);
                         return amount;
                     },
+                    getFileList: async function (fid) {
+                        self = this;
+                        url = "list-files/s/upload/" + fid;
+                        await axios.get(url)
+                            .then(function (response) {
+                                console.log(response.data);
+                                self.dicFiles = response.data;  
+                            })
+                    },
+
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
@@ -703,6 +750,7 @@
                     this.getCategories();
                     this.getMakers();
                     document.querySelector('title').textContent = '請求書管理';
+                    this.getFileList(this.invoice.applyNumber)
                 },
                 router,
                 computed: {
