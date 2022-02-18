@@ -18,10 +18,6 @@
                 max-width: 100px;
             }
 
-            .itemNameArea {
-                height: 1.8em;
-            }
-
             /* スピンボタン無効化 */
             /* Chrome/Safari */
             input[type="number"]::-webkit-outer-spin-button,
@@ -254,9 +250,9 @@
                           {  key: 'delete', label: '削除',class:'text-center' },
                         ]">
                             <template v-slot:cell(itemName)="data">
-                                <textarea v-model="data.item.itemName" class="itemNameArea" size="sm"
-                                    style="width: 100%;" @dblclick="showModalItems(); selectInvoiceItem(data.item);"
-                                    v-on:keydown.enter="selectInvoiceItem(data.item);onKeyDownItem();">
+                                <textarea v-model="data.item.itemName" class="form-control form-control-sm itemNameArea"
+                                    rows="1" @dblclick="showModalItems(); selectInvoiceItem(data.item);"
+                                    v-on:keydown.enter="selectInvoiceItem(data.item);onKeyDownItem(data.index);">
                                 </textarea>
 
                                 <b-modal size="xl" ref="items-modal" title="商品一覧">
@@ -650,10 +646,10 @@
                         this.$refs['items-modal'].hide()
                     },
                     // 商品名入力→Enter
-                    onKeyDownItem(record) {
-                        console.log(record);
+                    onKeyDownItem(indexNum) {
                         Vue.set(self.invoiceItem, 'itemId', null);
-                        $('.itemNameArea').height('3.6em');
+                        console.log(indexNum);
+                        $('#invoice_items_table').children('tbody').children('tr').eq(indexNum).find('.itemNameArea').attr("rows", "2");
                     },
                     // 商品名モーダル表示 モーダルのダブり表示防止
                     showModalItems() {

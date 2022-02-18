@@ -249,10 +249,10 @@
                           {  key: 'delete', label: '削除',class:'text-center' },
                         ]">
                             <template v-slot:cell(itemName)="data">
-                                <b-form-textarea v-model="data.item.itemName" size="sm" rows="1"
-                                    @dblclick="showModalItems(); selectQuotationItem(data.item);"
-                                    v-on:keydown.enter="selectQuotationItem(data.item);onKeyDownItem();">
-                                </b-form-textarea>
+                                <textarea v-model="data.item.itemName" class="form-control form-control-sm itemNameArea"
+                                    rows="1" @dblclick="showModalItems(); selectQuotationItem(data.item);"
+                                    v-on:keydown.enter="selectQuotationItem(data.item);onKeyDownItem(data.index);">
+                                </textarea>
 
                                 <b-modal size="xl" ref="items-modal" title="商品一覧">
                                     <b-row>
@@ -644,9 +644,10 @@
                         this.$refs['items-modal'].hide()
                     },
                     // 商品名入力→Enter
-                    onKeyDownItem(record) {
-                        console.log(record);
+                    onKeyDownItem(indexNum) {
                         Vue.set(self.quotationItem, 'itemId', null);
+                        console.log(indexNum);
+                        $('#quotation_items_table').children('tbody').children('tr').eq(indexNum).find('.itemNameArea').attr("rows", "2");
                     },
                     // 商品名モーダル表示 モーダルのダブり表示防止
                     showModalItems() {
