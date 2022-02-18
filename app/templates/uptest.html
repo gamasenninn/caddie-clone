@@ -143,12 +143,16 @@
             }
         };
     </script>
-    <b-form-file
-        v-model="upfile"
-        :state="Boolean(file1)"
-        placeholder="Choose a file or drop it here..."
-        drop-placeholder="Drop file here..."
-  ></b-form-file>
+    <b-form @submit="onSubmit">
+        <b-form-file
+            v-model="upfile"
+            :state="Boolean(upfile)"
+            placeholder="Choose a file or drop it here..."
+            drop-placeholder="Drop file here..."
+        ></b-form-file>
+        <input hidden type="text" name="fileId" v-model="fileId">
+        <b-button type="submit" variant="primary">Submit</b-button>
+    </b-form>
     <h2 class="mt-5">ファイルリスト形式(for)</h2><br />
     <div v-if="selectImgUrl">
         <img :src="selectImgUrl" width="200" height="200" />
@@ -242,6 +246,14 @@
                         break;
                     }
                 }
+            },
+            onSubmit: function(event){
+                event.preventDefault();
+                let files = event.target.files;
+                const formData = new FormData();
+                
+                console.log(files);
+                console.log(formData);
             }         
         },
         mounted: function () {
