@@ -1,4 +1,3 @@
-from distutils.log import error
 from sqlalchemy import insert, true
 from sqlalchemy.dialects.sqlite import insert
 from api import app
