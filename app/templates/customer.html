@@ -84,6 +84,21 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先入力"
                             header-border-variant="light">
                             <b-row>
+                                <b-col cols="6"></b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="登録日"
+                                        label-for="createdAt">
+                                        <p class="text-left pl-2" id="createdAt">{{formatDate(customer.createdAt)}}</p>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="更新日"
+                                        label-for="updatedAt">
+                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(customer.updatedAt)}}</p>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先名"
                                         label-for="customerName">
@@ -230,25 +245,6 @@
                                         label-for="memo">
                                         <b-form-textarea v-model="customer.memo" size="sm" rows="4">
                                         </b-form-textarea>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row class="mb-5"></b-row>
-                            <b-row>
-                                <b-col sm></b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="登録日時"
-                                        label-for="createdAt">
-                                        <p class="text-left pl-2" id="createdAt">{{formatDate(customer.createdAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm></b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="更新日時"
-                                        label-for="updatedAt">
-                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(customer.updatedAt)}}</p>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
