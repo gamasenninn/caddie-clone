@@ -29,6 +29,36 @@
             input[type="number"] {
                 -moz-appearance: textfield;
             }
+
+            .box {
+                /* border: 1px solid #333333; */
+                /* width: 200px; */
+                height: 200px;
+                overflow-y: scroll;
+            }
+
+            .image-in-check {
+                width: 15px;
+                height: 15px;
+                color: #ffffff;
+                background-color: #2779bd;
+                display: flex;
+                /*justify-content: center;*/
+                /*align-items: center;*/
+                font-size: 1.5rem;
+                border-radius: 50%;
+                cursor: pointer;
+
+                position: absolute;
+                top:  5;
+                left: 5;
+                z-index: 0;
+            }
+
+            .file-card{
+                display: flex;
+                flex-wrap: wrap;
+            }            
         </style>
 
         <div id="app" v-cloak>
@@ -100,16 +130,6 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
-
-                <b-card style="max-width:10rem">
-                    <form action="upload-files/s/upload" class="dropzone" id="my-dropzone">
-                        <input hidden type="text" name="fileId" v-model="fileId">
-            
-                        <input hidden type="file" name="file" id="my-dropzone" multiple>
-                    </form>
-                </b-card>
-    
-    
                 <b-row class="mt-5">
                     <b-col></b-col>
                     <!--- 本体 -->
@@ -231,26 +251,60 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="アップロード"
+                                        label-for="upform">
+                                        <b-form @change="uploadFile" id="upform">
+                                            <b-form-file
+                                                v-model="form.file"
+                                                browse-text="+"
+                                                placeholder="クリックまたはドラッグ..."
+                                                drop-placeholder="Drop file here..."
+                                            ></b-form-file>
+                                        </b-form>
+                                    </b-form-group>            
                                     <b-row>
-                                        <b-col md="8">
-                                            <b-table-simple hover small caption-top responsive>
-                                                <template v-for="f in dicFiles">
-                                                    <b-tr>
-                                                        <b-td width="5%">
-                                                            <input type="checkbox" v-model="f.isSelect" size="sm"> 
-                                                        </b-td>
-                                                        <b-td width="20%">
-                                                            <div @click="selectImgUrl=f.url" >
-                                                                <b-img :src="f.urlThumb" width="90" fluid ></b-img>
-                                                            </div>
-                                                        </b-td>
-                                                        <b-td class="ml-5">{{f.filename}}</b-td>
-                                                    </b-tr> 
-                                                </template>        
-                                            </b-table-simple>
-                                    
+                                        <b-col md="2">
+                                            <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3">削除</b-button>                                
+                                            <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">card</b-button> 
+                                            <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">list</b-button>                                
                                         </b-col>
-                                        <b-col md="4">
+                                        <b-col >
+                                            <template v-if="uploadListMode=='list'">
+                                                <b-table-simple hover small caption-top responsive class="box">
+                                                    <template v-for="f in dicFiles">
+                                                        <b-tr>
+                                                            <b-td width="5%">
+                                                                <input type="checkbox" v-model="f.isSelect" size="sm"> 
+                                                            </b-td>
+                                                            <b-td width="15%">
+                                                                <div @click="selectImgUrl=f.url" >
+                                                                    <b-img :src="f.urlThumb" width="90" fluid ></b-img>
+                                                                </div>
+                                                            </b-td>
+                                                            <b-td class="ml-5">{{f.filename}}</b-td>
+                                                        </b-tr> 
+                                                    </template>        
+                                                </b-table-simple>    
+                                            </template>
+                                            <template v-if="uploadListMode=='card'">
+                                                <div class="file-card box">
+                                                    <template v-for="f in dicFiles">
+                                                        <b-card border-variant="light">
+                                                            <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                            <input type="checkbox" v-model="f.isSelect" class="image-in-check">     
+                                                        </b-card> 
+                                                        <!--
+                                                        <b-card style="width: 5rem;" 
+                                                            :img-src= "'../'+f.thumbPath"
+                                                            img-top
+                                                        >
+                                                            <input type="checkbox" v-model="f.isSelect" class="image-in-check"> 
+                                                        </b-card>
+                                                    -->
+                                                    </template>        
+                                                </div>
+                                            </template>
+                                    
                                         </b-col>
                                     </b-row>
 
@@ -453,19 +507,8 @@
                     @selected="deleteModalProcess($event);" />
             </div>
         </div>
+
         <script src="static/component/def-pdf.js"></script>
-        <script>
-            Dropzone.options.myDropzone = { // camelized version of the `id`
-                dictDefaultMessage: 'ここにファイルをドロップしてね',
-                init: function () {
-                    this.on("complete", file => {
-                        console.log("complete A file has been added");
-                        this.removeFile(file);
-                        app.getFileList(app.invoice.applyNumber);
-                    });
-                }
-            };
-        </script>   
 
         <script>
             Vue.filter('nf', function (val) {
@@ -499,6 +542,11 @@
                     itemsCurrentPage: 1,             //ページネーション
                     fileId: '', //upload用ID
                     dicFiles: [],
+                    form:{
+                        file: '',
+                        fileId:''
+                    },
+                    uploadListMode:'list' //list,card
                 },
                 methods: {
                     // ---Invoices---
@@ -739,7 +787,32 @@
                                 self.dicFiles = response.data;  
                             })
                     },
-
+                    uploadFile: function(event){
+                        self = this;
+                        event.preventDefault();
+                        let files = event.target.files;
+                        const formData = new FormData();
+                        formData.append('file', self.form.file);
+                        formData.append('fileId', self.invoice.applyNumber);                    
+                        axios.post("upload-files/s/upload", formData)
+                        .then((res) => {
+                            self.getFileList(self.invoice.applyNumber);
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        });
+                    },
+                    deleteFiles: async function (fid) {
+                        self = this;
+                        url = "delete-files/s";
+                        await axios.delete(url, { 
+                            data:self.dicFiles
+                        }
+                        ).then(function (response) {
+                            console.log(response.data);
+                            self.getFileList(fid);
+                        });
+                    },
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));

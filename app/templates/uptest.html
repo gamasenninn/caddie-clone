@@ -78,6 +78,10 @@
         display: flex;
         flex-wrap: wrap;
     }
+
+    .custom-file-label::after {
+        content: '+';
+    }
 </style>
 
 
@@ -143,16 +147,15 @@
             }
         };
     </script>
-    <b-form @submit="onSubmit">
+    <b-form @change="uploadFile">
         <b-form-file
-            v-model="upfile"
-            :state="Boolean(upfile)"
+            v-model="form.file"
+            browse-text="+"
             placeholder="Choose a file or drop it here..."
             drop-placeholder="Drop file here..."
         ></b-form-file>
-        <input hidden type="text" name="fileId" v-model="fileId">
-        <b-button type="submit" variant="primary">Submit</b-button>
     </b-form>
+    <b-button @click="deleteFiles(fileId)">削除</b-button>
     <h2 class="mt-5">ファイルリスト形式(for)</h2><br />
     <div v-if="selectImgUrl">
         <img :src="selectImgUrl" width="200" height="200" />
@@ -214,7 +217,11 @@
             fileId: '001',
             selectImgUrl: "",
             selectedImgUrl: "",
-            upfile:''
+            form:{
+                file: '',
+                fileId:''
+            },
+            url: ''
         },
         methods: {
             getFileList: async function (fid) {
@@ -247,13 +254,30 @@
                     }
                 }
             },
-            onSubmit: function(event){
+            preview: function(){
+
+            },
+            uploadFile: function(event){
+                self = this;
                 event.preventDefault();
                 let files = event.target.files;
                 const formData = new FormData();
-                
+                formData.append('file', this.form.file)
+                formData.append('fileId', this.fileId)
+
+                for (item of formData){
+                    console.log(item);
+                }                
                 console.log(files);
-                console.log(formData);
+                
+                axios.post("upload-files/s/upload", formData)
+                .then((res) => {
+                    console.log(res)
+                    self.getFileList(self.fileId);
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
             }         
         },
         mounted: function () {
