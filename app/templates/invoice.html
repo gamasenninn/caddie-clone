@@ -252,66 +252,69 @@
                                         <b-form-textarea v-model="invoice.memo" size="sm" rows="4">
                                         </b-form-textarea>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="アップロード"
-                                        label-for="upform">
-                                        <b-form @change="uploadFile" id="upform">
-                                            <b-form-file v-model="form.file" browse-text="+"
-                                                placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
-                                            </b-form-file>
-                                        </b-form>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col md="2">
-                                    <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3"><i
-                                            class="fas fa-trash-alt"></i>
-                                    </b-button>
-                                    <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
-                                        card</b-button>
-                                    <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
-                                        list</b-button>
-                                </b-col>
-                                <b-col>
-                                    <template v-if="uploadListMode=='list'">
-                                        <b-table-simple hover small caption-top responsive class="box">
-                                            <template v-for="f in dicFiles">
-                                                <b-tr>
-                                                    <b-td width="5%">
-                                                        <input type="checkbox" v-model="f.isSelect" size="sm">
-                                                    </b-td>
-                                                    <b-td width="15%">
-                                                        <div @click="selectImgUrl=f.url">
-                                                            <b-img :src="f.urlThumb" width="90" fluid></b-img>
-                                                        </div>
-                                                    </b-td>
-                                                    <b-td class="ml-5">{{f.filename}}</b-td>
-                                                </b-tr>
+                                    <b-row>
+                                        <b-col sm>
+                                            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="アップロード"
+                                                label-for="upform">
+                                                <b-form @change="uploadFile" id="upform">
+                                                    <b-form-file v-model="form.file" browse-text="+"
+                                                        placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
+                                                    </b-form-file>
+                                                </b-form>
+                                            </b-form-group>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col md="2">
+                                            <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3"><i
+                                                    class="fas fa-trash-alt"></i>
+                                            </b-button>
+                                            <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
+                                                card</b-button>
+                                            <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
+                                                list</b-button>
+                                        </b-col>
+                                        <b-col>
+                                            <template v-if="uploadListMode=='list'">
+                                                <b-table-simple hover small caption-top responsive class="box">
+                                                    <template v-for="f in dicFiles">
+                                                        <b-tr>
+                                                            <b-td width="5%">
+                                                                <input type="checkbox" v-model="f.isSelect" size="sm">
+                                                            </b-td>
+                                                            <b-td width="15%">
+                                                                <div @click="selectImgUrl=f.url">
+                                                                    <b-img :src="f.urlThumb" width="90" fluid></b-img>
+                                                                </div>
+                                                            </b-td>
+                                                            <b-td class="ml-5">{{f.filename}}</b-td>
+                                                        </b-tr>
+                                                    </template>
+                                                </b-table-simple>
                                             </template>
-                                        </b-table-simple>
-                                    </template>
-                                    <template v-if="uploadListMode=='card'">
-                                        <div class="file-card box">
-                                            <template v-for="f in dicFiles">
-                                                <b-card border-variant="light">
-                                                    <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
-                                                    <input type="checkbox" v-model="f.isSelect" class="image-in-check">
-                                                </b-card>
-                                                <!--
-                                                        <b-card style="width: 5rem;" 
-                                                            :img-src= "'../'+f.thumbPath"
-                                                            img-top
-                                                        >
-                                                            <input type="checkbox" v-model="f.isSelect" class="image-in-check"> 
+                                            <template v-if="uploadListMode=='card'">
+                                                <div class="file-card box">
+                                                    <template v-for="f in dicFiles">
+                                                        <b-card border-variant="light">
+                                                            <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                            <input type="checkbox" v-model="f.isSelect" class="image-in-check">
                                                         </b-card>
-                                                    -->
+                                                        <!--
+                                                                <b-card style="width: 5rem;" 
+                                                                    :img-src= "'../'+f.thumbPath"
+                                                                    img-top
+                                                                >
+                                                                    <input type="checkbox" v-model="f.isSelect" class="image-in-check"> 
+                                                                </b-card>
+                                                            -->
+                                                    </template>
+                                                </div>
                                             </template>
-                                        </div>
-                                    </template>
+                                        </b-col>
+                                    </b-row>
+        
+
+
                                 </b-col>
                             </b-row>
 
