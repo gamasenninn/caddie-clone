@@ -97,7 +97,21 @@
                     <b-col cols=11>
                         <b-card border-variant="white" class="mb-3 text-center" header="商品入力"
                             header-border-variant="light">
-
+                            <b-row>
+                                <b-col cols="6"></b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="登録日"
+                                        label-for="createdAt">
+                                        <p class="text-left pl-2" id="createdAt">{{formatDate(item.createdAt)}}</p>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="更新日"
+                                        label-for="updatedAt">
+                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(item.updatedAt)}}</p>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
@@ -165,25 +179,6 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                </b-col>
-                            </b-row>
-                            <b-row class="mb-5"></b-row>
-                            <b-row>
-                                <b-col sm></b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="登録日時"
-                                        label-for="createdAt">
-                                        <p class="text-left pl-2" id="createdAt">{{formatDate(item.createdAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm></b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="更新日時"
-                                        label-for="updatedAt">
-                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(item.updatedAt)}}</p>
-                                    </b-form-group>
                                 </b-col>
                             </b-row>
                         </b-card>
