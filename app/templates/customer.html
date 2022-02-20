@@ -44,10 +44,10 @@
                             <b-form-checkbox class="text-right" v-model="isShowFavorite">お気に入り</b-form-checkbox>
                             <b-form-checkbox class="text-right" v-model="isShowAll">全て表示</b-form-checkbox>
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
-                                :items=customersIndicateIndex :fields="[
+                                :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
                       {  key: 'update', label: '' },
-                      {  key: 'id', label: 'No.' },
-                      {  key: 'customerName', label: '得意先名' },
+                      {  key: 'id', label: 'No.', sortable: true },
+                      {  key: 'customerName', label: '得意先名', sortable: true },
                       {  key: 'postNumber', label: '郵便番号', tdClass:'td-postNumber' },
                       {  key: 'address', label: '住所' },
                       {  key: 'telNumber', label: '電話番号', tdClass:'td-telNumber' },
@@ -317,6 +317,7 @@
             var app = new Vue({
                 el: '#app',
                 data: {
+                    sortByCustomers: 'customerName',
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
                     isShowAll: false,            // trueの時、全表示
