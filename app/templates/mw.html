@@ -15,7 +15,9 @@
 <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/dock/jspanel.dock.js"></script>
 
 <div id="app">
+  <!--
   <b-button size="lg" id="openMenu" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
+  -->
 
   <b-img src="https://free-materials.com/adm/wp-content/uploads/2020/10/logo_07-1024x1024.png"
   style="width: 400; " center ></b-img>
@@ -49,7 +51,8 @@ if (localStorage.getItem('wMode')===null){
 let _left = 100;
 let _top = 100;
 
-function openMenu(){
+function openMenu(obj){
+  self = obj;
   jsPanel.create({
           headerControls: 'closeOnly sm',
           headerTitle: 'menu',
@@ -58,9 +61,14 @@ function openMenu(){
           position: 'left-top 0 0',
           contentOverflow: 'hidden',
           content: '<div class="mt-2"><iframe src=/mw-menu width=100% height=100%><iframe></div>',
+          onbeforeclose: function(panel){
+            return confirm('ログアウトしますか？');
+          },
+          onclosed: function(panel){
+            window.location.href = '/logout';
+          },
           callback: function(){
             $('iframe').on('load',function(){
-              //  $(this).contents().on('click', function(){
                 $(this).contents().find('#customer').on('click', function(){
                   openWindow('/customer-page','customer','customer')
                 });
@@ -91,10 +99,6 @@ function openMenu(){
                   window.location.href = '/';
                 });
             });
-            document.addEventListener('jspanelclosed', function(){
-                //alert("---------")
-                window.location.href = '/logout';
-            }, false);
           },
   });
 }
@@ -123,6 +127,9 @@ function openWindow(url,title,name){
         offsetY: _top,
         //maxTop: 200
     },
+    onbeforeclose: function(panel){
+      return confirm('ウィンドウを閉じますか？');
+    },
     callback: function(){
       $('iframe').on('load',function(){
         $(this).contents().on('click', function(){
@@ -138,8 +145,6 @@ function openWindow(url,title,name){
   if ( _top > 300 ) _top -= 300   
 
 }
-
-
 
 //      frameDict[name] = frame;
 
@@ -185,10 +190,10 @@ function openPDF(file){
     content: '<iframe src='+ url +' width=100% height=100%><iframe>',
   });
 }
-
+/*
 if(localStorage.getItem('wMode')=='mw'){
-  /*  OSM map for test */
-  panel=jsPanel.create({
+  //  OSM map for test 
+    panel=jsPanel.create({
     headerControls: 'sm',
     headerTitle: "Client Map",
     footerToolbar: '<span>footer</span>',
@@ -205,20 +210,20 @@ if(localStorage.getItem('wMode')=='mw'){
         offsetY: 250,
         //maxTop: 200
     },
-    callback: function(){
-      $('iframe').on('load',function(){
-        $(this).contents().on('click', function(){
-            panel.front();
-        });
-      });
-    },  
+    //callback: function(){
+    //  $('iframe').on('load',function(){
+    //    $(this).contents().on('click', function(){
+    //        panel.front();
+    //    });
+    //  });
+    //},  
     content: `
       <iframe src="/leaflet" width=100% height=100%></iframe>
     `
   });
 
  }
-
+*/
 
 function modeCheck() {
       var ua = navigator.userAgent;
@@ -234,8 +239,6 @@ function modeCheck() {
 function modeName(){
   return localStorage.getItem('wMode');
 }
-
-
 
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
