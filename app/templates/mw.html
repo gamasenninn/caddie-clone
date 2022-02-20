@@ -90,8 +90,12 @@ function openMenu(){
                   localStorage.setItem('wMode','mw')
                   window.location.href = '/';
                 });
-            })
-          }
+            });
+            document.addEventListener('jspanelclosed', function(){
+                //alert("---------")
+                window.location.href = '/logout';
+            }, false);
+          },
   });
 }
 
