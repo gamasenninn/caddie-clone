@@ -217,6 +217,16 @@ def settingPage():
     return redirect('/login')
 
 
+@app.route('/crescom-support-page')
+@login_required
+def crescomSupportPage():
+    checkUser = User.query.filter_by(name=current_user.id).first()
+    if checkUser:
+        if checkUser.role == "crescom_support":
+            return render_template('crescom_support_page.html')
+    return redirect('/login')
+
+
 @app.route('/csv-upload-page')
 @login_required
 def csvUploadPage():

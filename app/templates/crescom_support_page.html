@@ -11,8 +11,6 @@
                             <b-col class="text-right">
                                 <b-button pill href="/setting-page">設定画面へ
                                 </b-button>
-                                <b-button pill href="/crescom-support-page">管理画面へ
-                                </b-button>
                             </b-col>
                             <!-- サイドバー -->
                             <b-col cols="1" class="text-right">
@@ -32,20 +30,17 @@
                 <b-row class="mt-5">
                     <b-col></b-col>
                     <b-col cols=11>
-                        <b-card border-variant="white" class="mb-3 text-center" header="DB初期化"
+                        <b-card border-variant="white" class="mb-3 text-center" header="ページ選択"
                             header-border-variant="light">
-                            <p>DBの初期化を行います。</p>
-                            <p>ご利用には十分気を付けてご利用ください。</p>
-                            <b-button class="mt-5" variant="danger" size="lg" @click="modalShow('dbInitModal')">DB初期化
-                            </b-button>
+                            <p>クレスコムサポート権限専用ページです</p>
+                            <p>参照したいページを選択してください。</p>
+                            <b-button class="mt-5" href="/csv-upload-page">CSVアップロード画面へ</b-button>
+                            <b-button class="mt-5" href="/csv-download-page">CSVダウンロード画面へ</b-button>
+                            <b-button class="mt-5" href="/db-init-page">データ全削除ページへ</b-button>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
                 </b-row>
-
-                <!-- 削除モーダル -->
-                <select-modal-static modal-name='dbInitModal' modal-message='本当によろしいですか？'
-                    @selected="initModalProcess($event);" />
 
             </div>
         </div>
@@ -57,25 +52,9 @@
             var app = new Vue({
                 el: '#app',
                 methods: {
-                    modalShow: function (modalName) {
-                        this.$bvModal.show(modalName);
-                    },
-                    initModalProcess(result) {
-                        this.$bvModal.hide('dbInitModal');
-                        if (result === true) {
-                            this.dbInit();
-                        }
-                    },
-                    dbInit: async function () {
-                        self = this;
-                        await axios.delete("/db-init")
-                            .then(function (response) {
-                                console.log(response);
-                            });
-                    },
                 },
                 mounted: function () {
-                    document.querySelector('title').textContent = 'データベース初期化';
+                    document.querySelector('title').textContent = 'クレスコムサポート権限専用';
                 },
                 router,
                 computed: {
