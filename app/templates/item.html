@@ -341,7 +341,8 @@
                         file: '',
                         fileId: ''
                     },
-                    uploadListMode: 'list' //list,card
+                    uploadListMode: 'list', //list,card
+                    isEdit: false
 
                 },
                 methods: {
@@ -522,6 +523,16 @@
                     currentPageRows() {
                         return this.items.length;
                     },
+                },
+                watch:{
+                    if (this.isEdit===true) return;
+                    item: {
+                        handler: function(val,oldval){
+                            console.log("val change:" ,val)
+
+                        },
+                        deep: true
+                    }
                 }
             })
 
