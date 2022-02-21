@@ -39,7 +39,6 @@
                           {  key: 'manager', label: '担当者' },
                           {  key: 'content', label: '内容' },
                           {  key: 'createdAt', label: '作成日時' },
-                          {  key: 'delete', label: '' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
@@ -51,11 +50,6 @@
                                 <template v-slot:cell(createdAt)="data">
                                     <p class="text-left pl-2" id="createdAt">{{formatDate(data.item.createdAt)}}</p>
                                 </template>
-                                <template v-slot:cell(delete)="data">
-                                    <b-button variant="danger" @click="modalShow(data.item,'deleteModal');">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </b-button>
-                                </template>
                             </b-table>
 
                             <b-pagination v-model="currentPage" :total-rows="currentPageRows" :per-page="perPage"
@@ -65,9 +59,6 @@
                     </b-col>
                     <b-col></b-col>
                 </b-row>
-                <!-- 削除モーダル -->
-                <select-modal modal-name='deleteModal' modal-message='削除しますか？'
-                    @selected="deleteModalProcess($event);" />
             </div>
 
             <!-- 新規作成・詳細(更新)ページ -->
@@ -143,17 +134,28 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="info" class="mr-3" @click="modalShow(memo,'upsertModal');"
-                            id="showUpsertModal">適用
+                        <b-button pill variant="info" @click="modalShow(memo,'upsertModal');" id="showUpsertModal">適用
                         </b-button>
                         <b-button pill size="lg" variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i>
+                        </b-button>
+                        <b-button pill size="lg" variant="danger" @click="modalShow(memo,'deleteModal');">
+                            <i class="fas fa-trash-alt"></i>
                         </b-button>
                     </b-col>
                 </b-row>
             </b-card>
 
             <!-- 保存モーダル -->
-            <select-modal modal-name='upsertModal' modal-message='保存しますか？' @selected="upsertModalProcess($event);" />
+            <div>
+                <select-modal modal-name='upsertModal' modal-message='保存しますか？'
+                    @selected="upsertModalProcess($event);" />
+            </div>
+
+            <!-- 削除モーダル -->
+            <div>
+                <select-modal modal-name='deleteModal' modal-message='削除しますか？'
+                    @selected="deleteModalProcess($event);" />
+            </div>
 
         </div>
 
