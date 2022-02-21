@@ -41,8 +41,10 @@
                     <b-col cols="11">
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先一覧"
                             header-border-variant="light">
-                            <b-form-checkbox class="text-right" v-model="isShowFavorite">お気に入り</b-form-checkbox>
-                            <b-form-checkbox class="text-right" v-model="isShowAll">全て表示</b-form-checkbox>
+                            <b-row align-h="end">
+                                <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り</b-form-checkbox>
+                                <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示</b-form-checkbox>
+                            </b-row>
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
                                 :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
                       {  key: 'update', label: '' },
