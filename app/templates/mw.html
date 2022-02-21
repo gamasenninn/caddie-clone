@@ -127,6 +127,9 @@ function openWindow(url,title,name){
         offsetY: _top,
         //maxTop: 200
     },
+    dragit: {
+        containment: [0, -200, -100,-200]
+    },
     onbeforeclose: function(panel){
       return confirm('ウィンドウを閉じますか？');
     },
@@ -224,6 +227,7 @@ if(localStorage.getItem('wMode')=='mw'){
 
  }
 */
+
 
 function modeCheck() {
       var ua = navigator.userAgent;
