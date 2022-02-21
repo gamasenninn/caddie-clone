@@ -8,6 +8,37 @@
             .td-telNumber {
                 width: 120px;
             }
+
+            .box {
+                /* border: 1px solid #333333; */
+                /* width: 200px; */
+                height: 200px;
+                overflow-y: scroll;
+            }
+
+            .image-in-check {
+                width: 15px;
+                height: 15px;
+                color: #ffffff;
+                background-color: #2779bd;
+                display: flex;
+                /*justify-content: center;*/
+                /*align-items: center;*/
+                font-size: 1.5rem;
+                border-radius: 50%;
+                cursor: pointer;
+
+                position: absolute;
+                top: 5;
+                left: 5;
+                z-index: 0;
+            }
+
+            .file-card {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
         </style>
 
         <div id="app" v-cloak>
@@ -82,13 +113,18 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
-                <b-row class="mt-5">
+                <b-row class="mt-2">
                     <b-col></b-col>
                     <!--- 本体 -->
                     <b-col cols=11>
+                        <div class="text-right">
+                            <span class="mr-2">登録日:{{formatDate(item.createdAt)}}</span>
+                            <span class="mr-2">更新日:{{formatDate(item.updatedAt)}}</span>
+                        </div>        
                         <b-card border-variant="white" class="mb-3 text-center" header="商品入力"
                             header-border-variant="light">
                             <b-row>
+                            <!--
                                 <b-col cols="6"></b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="登録日"
@@ -102,6 +138,7 @@
                                         <p class="text-left pl-2" id="updatedAt">{{formatDate(item.updatedAt)}}</p>
                                     </b-form-group>
                                 </b-col>
+                            -->
                             </b-row>
                             <b-row>
                                 <b-col sm>
@@ -172,7 +209,72 @@
                                 <b-col sm>
                                 </b-col>
                             </b-row>
-                        </b-card>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
+                                        label="アップロード" label-for="upform">
+                                        <b-form @change="uploadFile" id="upform">
+                                            <b-form-file v-model="form.file" browse-text="+"
+                                                placeholder="クリックまたはドラッグ..."
+                                                drop-placeholder="Drop file here...">
+                                            </b-form-file>
+                                        </b-form>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+
+                            <b-row>
+                                <b-col md="2">
+                                    <b-button @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" block><i
+                                            class="fas fa-trash-alt"></i>
+                                    </b-button>
+                                    <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'"
+                                        class="mr-2" block>
+                                        card</b-button>
+                                    <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'"
+                                        class="mr-2" block>
+                                        list</b-button>
+                                </b-col>
+                                <b-col>
+                                    <template v-if="uploadListMode=='list'">
+                                        <b-table-simple hover small caption-top responsive class="box">
+                                            <template v-for="f in dicFiles">
+                                                <b-tr>
+                                                    <b-td width="5%">
+                                                        <input type="checkbox" v-model="f.isSelect" size="sm">
+                                                    </b-td>
+                                                    <b-td width="15%">
+                                                        <div @click="selectImgUrl=f.url">
+                                                            <b-img :src="f.urlThumb" width="90" fluid></b-img>
+                                                        </div>
+                                                    </b-td>
+                                                    <b-td class="ml-5">{{f.filename}}</b-td>
+                                                </b-tr>
+                                            </template>
+                                        </b-table-simple>
+                                    </template>
+                                    <template v-if="uploadListMode=='card'">
+                                        <div class="file-card box">
+                                            <template v-for="f in dicFiles">
+                                                <b-card border-variant="light">
+                                                    <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                    <input type="checkbox" v-model="f.isSelect"
+                                                        class="image-in-check">
+                                                </b-card>
+                                                <!--
+                                                        <b-card style="width: 5rem;" 
+                                                            :img-src= "'../'+f.thumbPath"
+                                                            img-top
+                                                        >
+                                                            <input type="checkbox" v-model="f.isSelect" class="image-in-check"> 
+                                                        </b-card>
+                                                    -->
+                                            </template>
+                                        </div>
+                                    </template>
+                                </b-col>
+                            </b-row>
+                </b-card>
 
                     </b-col> <!-- 本体 -->
                     <b-col></b-col>
@@ -233,6 +335,14 @@
                     makers: [],
                     perPage: 20,                //ページネーション
                     currentPage: 1,             //ページネーション
+                    fileId: '', //upload用ID
+                    dicFiles: [],
+                    form: {
+                        file: '',
+                        fileId: ''
+                    },
+                    uploadListMode: 'list' //list,card
+
                 },
                 methods: {
                     // ---Items---
@@ -290,6 +400,7 @@
                         this.item = item;
                         console.log(this.item);
                         localStorage.setItem('item', JSON.stringify(item))
+                        this.getFileList(item.itemCode);
                     },
                     getItem: async function (item) {
                         self = this;
@@ -301,6 +412,8 @@
                                     self.$set(self.item, key, value);
                                 }
                             });
+                        this.getFileList(item.itemCode);
+
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
@@ -350,9 +463,45 @@
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
+                    getFileList: async function (fid) {
+                        self = this;
+                        url = "list-files/s/upload/" + fid;
+                        await axios.get(url)
+                            .then(function (response) {
+                                console.log(response.data);
+                                self.dicFiles = response.data;
+                            })
+                    },
+                    uploadFile: function (event) {
+                        self = this;
+                        event.preventDefault();
+                        let files = event.target.files;
+                        const formData = new FormData();
+                        formData.append('file', self.form.file);
+                        formData.append('fileId', self.item.itemCode);
+                        axios.post("upload-files/s/upload", formData)
+                            .then((res) => {
+                                self.getFileList(self.item.itemCode);
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            });
+                    },
+                    deleteFiles: async function (fid) {
+                        self = this;
+                        url = "delete-files/s";
+                        await axios.delete(url, {
+                            data: self.dicFiles
+                        }
+                        ).then(function (response) {
+                            console.log(response.data);
+                            self.getFileList(fid);
+                        });
+                    },
                 },
                 mounted: function () {
                     this.item = JSON.parse(localStorage.getItem('item'));
+                    this.getFileList(this.item.itemCode);
                     this.getItems();
                     this.getUnits();
                     this.getCategories();
