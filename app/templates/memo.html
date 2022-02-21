@@ -35,6 +35,7 @@
                             <b-table responsive hover small id="memotable" sort-by="ID" small label="Table Options"
                                 :items=memos :per-page="perPage" :current-page="currentPage" :fields="[
                           {  key: 'update', label: '' },
+                          {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'title', label: '件名' },
                           {  key: 'manager', label: '担当者' },
                           {  key: 'content', label: '内容' },
