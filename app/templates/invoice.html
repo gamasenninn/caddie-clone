@@ -200,10 +200,12 @@
                                                     size="sm">
                                                 </b-form-input>
                                             </b-form-group>
-                                            <b-form-checkbox class="text-right" v-model="isShowFavorite">お気に入り
-                                            </b-form-checkbox>
-                                            <b-form-checkbox class="text-right" v-model="isShowAll">全て表示
-                                            </b-form-checkbox>
+                                            <b-row align-h="end">
+                                                <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り
+                                                </b-form-checkbox>
+                                                <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示
+                                                </b-form-checkbox>
+                                            </b-row>
                                             <b-table hover striped small sort-by="ID" id="customer-table"
                                                 :items="searchCustomers" :per-page="perPage"
                                                 :current-page="customersCurrentPage" @row-clicked="customerSelect"
@@ -256,11 +258,12 @@
                                     </b-form-group>
                                     <b-row>
                                         <b-col sm>
-                                            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="アップロード"
-                                                label-for="upform">
+                                            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
+                                                label="アップロード" label-for="upform">
                                                 <b-form @change="uploadFile" id="upform">
                                                     <b-form-file v-model="form.file" browse-text="+"
-                                                        placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
+                                                        placeholder="クリックまたはドラッグ..."
+                                                        drop-placeholder="Drop file here...">
                                                     </b-form-file>
                                                 </b-form>
                                             </b-form-group>
@@ -271,9 +274,11 @@
                                             <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3"><i
                                                     class="fas fa-trash-alt"></i>
                                             </b-button>
-                                            <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
+                                            <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'"
+                                                class="mr-2">
                                                 card</b-button>
-                                            <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
+                                            <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'"
+                                                class="mr-2">
                                                 list</b-button>
                                         </b-col>
                                         <b-col>
@@ -299,7 +304,8 @@
                                                     <template v-for="f in dicFiles">
                                                         <b-card border-variant="light">
                                                             <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
-                                                            <input type="checkbox" v-model="f.isSelect" class="image-in-check">
+                                                            <input type="checkbox" v-model="f.isSelect"
+                                                                class="image-in-check">
                                                         </b-card>
                                                         <!--
                                                                 <b-card style="width: 5rem;" 
@@ -314,7 +320,7 @@
                                             </template>
                                         </b-col>
                                     </b-row>
-        
+
 
 
                                 </b-col>
@@ -771,16 +777,16 @@
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
-/*
-                                if (self.modeName == 'mw') {
-                                    window.parent.postMessage({
-                                        action: 'pdfOut',
-                                        message: response.data
-                                    }, "*");
-                                } else {
-                                    window.open('/pdf/' + response.data)
-                                }
-*/
+                                /*
+                                                                if (self.modeName == 'mw') {
+                                                                    window.parent.postMessage({
+                                                                        action: 'pdfOut',
+                                                                        message: response.data
+                                                                    }, "*");
+                                                                } else {
+                                                                    window.open('/pdf/' + response.data)
+                                                                }
+                                */
                             });
                     },
                     formatDate(date) {

@@ -171,10 +171,12 @@
                                                     size="sm">
                                                 </b-form-input>
                                             </b-form-group>
-                                            <b-form-checkbox class="text-right" v-model="isShowFavorite">お気に入り
-                                            </b-form-checkbox>
-                                            <b-form-checkbox class="text-right" v-model="isShowAll">全て表示
-                                            </b-form-checkbox>
+                                            <b-row align-h="end">
+                                                <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り
+                                                </b-form-checkbox>
+                                                <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示
+                                                </b-form-checkbox>
+                                            </b-row>
                                             <b-table hover striped small sort-by="ID" id="customer-table"
                                                 :items="searchCustomers" :per-page="perPage"
                                                 :current-page="customersCurrentPage" @row-clicked="customerSelect"
@@ -676,16 +678,16 @@
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
-/*
-                                if (self.modeName == 'mw') {
-                                    window.parent.postMessage({
-                                        action: 'pdfOut',
-                                        message: response.data
-                                    }, "*");
-                                } else {
-                                    window.open('/pdf/' + response.data)
-                                }
-*/
+                                /*
+                                                                if (self.modeName == 'mw') {
+                                                                    window.parent.postMessage({
+                                                                        action: 'pdfOut',
+                                                                        message: response.data
+                                                                    }, "*");
+                                                                } else {
+                                                                    window.open('/pdf/' + response.data)
+                                                                }
+                                */
                             });
                     },
                 },
