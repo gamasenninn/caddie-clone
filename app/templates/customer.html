@@ -74,7 +74,7 @@
                                     </router-link>
                                 </template>
                                 <template v-slot:cell(addressCombine)="data">
-                                    {{data.item.address + data.item.addressSub}}
+                                    {{combineAddress(data.item.address,data.item.addressSub)}}
                                 </template>
                             </b-table>
 
@@ -326,7 +326,7 @@
             var app = new Vue({
                 el: '#app',
                 data: {
-                    sortByCustomers: 'customerName',
+                    sortByCustomers: 'customerKana',
                     searchCustomerWord: '',
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
@@ -454,6 +454,11 @@
                     },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
+                    },
+                    combineAddress(address1, address2) {
+                        if (!address1) address1 = "";
+                        if (!address2) address2 = "";
+                        return String(address1) + String(address2);
                     },
                 },
                 mounted: function () {
