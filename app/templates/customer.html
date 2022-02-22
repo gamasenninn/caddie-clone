@@ -41,9 +41,20 @@
                     <b-col cols="11">
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先一覧"
                             header-border-variant="light">
-                            <b-row align-h="end">
-                                <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り</b-form-checkbox>
-                                <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示</b-form-checkbox>
+                            <b-row>
+                                <b-col>
+                                    <b-form-group sm label-cols="2" label-size="sm" label-align="center" label="検索"
+                                        label-for="searchCustomerWord">
+                                        <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col>
+                                    <b-row align-h="end">
+                                        <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り</b-form-checkbox>
+                                        <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示</b-form-checkbox>
+                                    </b-row>
+                                </b-col>
                             </b-row>
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
                                 :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
@@ -66,13 +77,6 @@
                                     {{combineAddress(data.item.address,data.item.addressSub)}}
                                 </template>
                             </b-table>
-
-                            <template>
-                                <div class="overflow-auto">
-                                    <b-pagination-nav :link-gen="linkGen" :page-gen="pageGen" @change="kanaSelect"
-                                        :number-of-pages="syllabaryList.length"></b-pagination-nav>
-                                </div>
-                            </template>
 
                         </b-card>
                     </b-col>
@@ -323,16 +327,13 @@
                 el: '#app',
                 data: {
                     sortByCustomers: 'customerKana',
+                    searchCustomerWord: '',
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
                     isShowAll: false,            // trueの時、全表示
                     isShowFavorite: false,
                     perPage: 20,                //ページネーション
                     currentPage: 1,             //ページネーション
-                    syllabaryList: ['#　', '#ア', '#イ', '#ウ', '#エ', '#オ', '#カ', '#キ', '#ク', '#ケ', '#コ', '#サ', '#シ', '#ス', '#セ', '#ソ',
-                        '#タ', '#チ', '#ツ', '#テ', '#ト', '#ナ', '#ニ', '#ヌ', '#ネ', '#ノ', '#ハ', '#ヒ', '#フ', '#へ', '#ホ', '#マ', '#ミ', '#ム', '#メ', '#モ',
-                        '#ヤ', '#ユ', '#ヨ', '#ラ', '#リ', '#ル', '#レ', '#ロ', '#ワ', '#ヲ', '#ン',],
-                    syllabarySelect: '',
                 },
                 methods: {
                     // ---Customers---
@@ -459,19 +460,6 @@
                         if (!address2) address2 = "";
                         return String(address1) + String(address2);
                     },
-                    // リンクへの挿入
-                    linkGen(pageNum) {
-                        return this.syllabaryList[pageNum - 1];
-                    },
-                    // ボタンの文字
-                    pageGen(pageNum) {
-                        return this.syllabaryList[pageNum - 1].slice(1);
-                    },
-                    kanaSelect(page) {
-                        let word = this.syllabaryList[page - 1].slice(1);
-                        if (word === "　") word = "";
-                        this.syllabarySelect = word;
-                    },
                 },
                 mounted: function () {
                     this.customer = JSON.parse(localStorage.getItem('customer'));
@@ -493,7 +481,9 @@
                             customers = customers.filter(customer => customer.isHide === false);
                         if (this.isShowFavorite === true)
                             customers = customers.filter(customer => customer.isFavorite === true);
-                        customers = customers.filter(customer => !customer.customerKana.indexOf(this.syllabarySelect));
+                        customers = customers.filter(customer =>
+                        (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord) ||
+                            String(customer.customerKana)?.includes(this.searchCustomerWord)));
                         return customers;
                     },
                     // バリデーション
