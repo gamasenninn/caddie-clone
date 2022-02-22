@@ -1,5 +1,8 @@
 <% extends "head.html" %>
     <% block content %>
+        <!-- or point to a specific vue-select release -->
+        <script src="https://unpkg.com/vue-select@3.0.0"></script>
+        <link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
         <style>
             .td-postNumber {
                 width: 80px;
@@ -141,27 +144,44 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
                                         label-for="category">
-                                        <b-form-input list="list-category" v-model="item.category" size="sm"></b-form-input>
-                                        <datalist id="list-category" autocomplete="off" >
+                                        <b-form-input list="list-category" v-model="item.category" size="sm" autocomplete="off" ></b-form-input>
+                                        <datalist id="list-category" >
                                             <option v-for="category in categories">{{category}}</option>
                                         </datalist>
-<!-- 
+                                        <!-- 
                                         <b-form-select v-model="item.category" :options="categories" size="sm">
                                         </b-form-select>
--->
+                                        -->
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
+                                        <b-form-input list="list-maker" v-model="item.maker" size="sm" autocomplete="off" ></b-form-input>
+                                        <datalist id="list-maker" >
+                                            <option v-for="maker in makers">{{maker}}</option>
+                                        </datalist>
+                                    </b-form-group>
+                                    <!--
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
                                         <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
                                     </b-form-group>
+                                    -->
                                 </b-col>
                             </b-row>
                             <b-row>
                                 <b-col sm>
+                                    <!--
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                         label-for="unit">
-                                        <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
+                                        <b-form-input list="list-unit" v-model="item.unit" size="sm" autocomplete="off" ></b-form-input>
+                                        <datalist id="list-unit" >
+                                            <option v-for="unit in units">{{unit}}</option>
+                                        </datalist>
+                                    </b-form-group>
+                                    -->
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
+                                        label-for="unit">
+                                        <v-select v-model="item.unit" :options="units" size="sm"></v-select>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
@@ -303,6 +323,7 @@
         </div>
 
         <script>
+            Vue.component('v-select', VueSelect.VueSelect);
             const router = new VueRouter({
             })
 
