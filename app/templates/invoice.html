@@ -880,9 +880,9 @@
                             customers = customers.filter(customer => customer.isHide === false);
                         if (this.isShowFavorite === true)
                             customers = customers.filter(customer => customer.isFavorite === true);
-                        return customers.filter(customer => {
-                            return (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord));
-                        });
+                        customers = customers.filter(customer => (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord) ||
+                            String(customer.customerKana)?.includes(this.searchCustomerWord)));
+                        return customers;
                     },
                     // 商品選択モーダルの検索機能
                     searchItems: function () {
