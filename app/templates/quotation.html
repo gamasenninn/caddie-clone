@@ -410,7 +410,9 @@
                         <b-button pill variant="info" @click="modalShow(quotation,'upsertModal');" id="showUpsertModal">
                             適用
                         </b-button>
-                        <b-dropdown split dropup id="dropdown-dropup" size="lg" class="m-2" @click="pdfout" id="pdfout">
+                        <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
+                            @click="modalShow(quotation,'copyModal');"><i class="fa-solid fa-copy"></i></b-button>
+                        <b-dropdown split dropup id="dropdown-dropup" size="lg" @click="pdfout" id="pdfout">
                             <template #button-content>
                                 <i class="fas fa-print"></i>
                             </template>
@@ -428,6 +430,10 @@
             <div>
                 <select-modal modal-name='upsertModal' modal-message='保存しますか？'
                     @selected="upsertModalProcess($event);" />
+            </div>
+            <!-- コピーモーダル -->
+            <div>
+                <select-modal modal-name='copyModal' modal-message='コピーしますか？' @selected="copyModalProcess($event);" />
             </div>
             <!-- 削除モーダル -->
             <div>
@@ -503,6 +509,10 @@
                                 self.getQuotations();
                                 console.log(response);
                             });
+                    },
+                    copyQuotation: function (item) {
+                        delete item.id;
+                        this.insertQuotation(item);
                     },
                     // axios.deleteは使わず、isDeleteをTrueに
                     deleteQuotation: async function (item) {
@@ -628,6 +638,12 @@
                         this.$bvModal.hide('upsertModal');
                         if (result === true) {
                             this.bulkUpsert(this.quotation);
+                        }
+                    },
+                    copyModalProcess(result) {
+                        this.$bvModal.hide('copyModal');
+                        if (result === true) {
+                            this.copyQuotation(this.quotation);
                         }
                     },
                     // 顧客名モーダル選択時
