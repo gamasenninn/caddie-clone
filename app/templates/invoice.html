@@ -61,6 +61,14 @@
                 display: flex;
                 flex-wrap: wrap;
             }
+
+            #dropdown-dropup__BV_button_ {
+                border-radius: 20px;
+            }
+
+            #dropdown-dropup__BV_toggle_ {
+                border-radius: 20px;
+            }
         </style>
 
         <div id="app" v-cloak>
@@ -504,8 +512,13 @@
                     <b-col class="text-right">
                         <b-button pill variant="info" @click="modalShow(invoice,'upsertModal');" id="showUpsertModal">適用
                         </b-button>
-                        <b-button pill size="lg" variant="info" @click="pdfout" id="pdfout"><i class="fas fa-print"></i>
-                        </b-button>
+                        <b-dropdown split dropup id="dropdown-dropup" size="lg" class="m-2" @click="pdfout" id="pdfout">
+                            <template #button-content>
+                                <i class="fas fa-print"></i>
+                            </template>
+                            <b-dropdown-item>納品書</b-dropdown-item>
+                            <b-dropdown-item>領収書</b-dropdown-item>
+                        </b-dropdown>
                         <b-button pill size="lg" variant="danger" @click="modalShow(invoice,'deleteModal');">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
