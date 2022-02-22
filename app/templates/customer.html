@@ -48,8 +48,8 @@
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
                                 :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
                       {  key: 'update', label: '' },
-                      {  key: 'id', label: 'No.', sortable: true },
-                      {  key: 'customerName', label: '得意先名', sortable: true },
+                      {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                      {  key: 'customerName', label: '得意先名' },
                       {  key: 'postNumber', label: '郵便番号', tdClass:'td-postNumber' },
                       {  key: 'addressCombine', label: '住所' },
                       {  key: 'telNumber', label: '電話番号', tdClass:'td-telNumber' },

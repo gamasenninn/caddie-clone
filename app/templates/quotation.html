@@ -68,6 +68,7 @@
                             <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
                                 :items=quotations :per-page="perPage" :current-page="quotationsCurrentPage" :fields="[
                           {  key: 'update', label: '' },
+                          {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyNumber', label: '見積番号' },
                           {  key: 'applyDate', label: '日付' },
                           {  key: 'customerName', label: '顧客名' },
@@ -231,7 +232,7 @@
                         <!--  table list & edit -->
                         <b-table hover caption-top small id="quotation_items_table" primary-key="id" small
                             label="Table Options" :items=quotation.quotation_items :fields="[
-                          {  key: 'id', label: 'ID', class:'text-center' },
+                          {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemId', label: '商品ID' ,sortable: true},
                           {  key: 'itemName', label: '商品名' ,sortable: true},
                           {  key: 'count',   label: '個数', tdClass:'td-count' },
