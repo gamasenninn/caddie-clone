@@ -51,7 +51,7 @@
                       {  key: 'id', label: 'No.', sortable: true },
                       {  key: 'customerName', label: '得意先名', sortable: true },
                       {  key: 'postNumber', label: '郵便番号', tdClass:'td-postNumber' },
-                      {  key: 'address', label: '住所' },
+                      {  key: 'addressCombine', label: '住所' },
                       {  key: 'telNumber', label: '電話番号', tdClass:'td-telNumber' },
                       {  key: 'memo', label: 'メモ' },
                     ]" :tbody-tr-class="rowClass">
@@ -61,6 +61,9 @@
                                                 class="fas fa-edit"></i>
                                         </b-button>
                                     </router-link>
+                                </template>
+                                <template v-slot:cell(addressCombine)="data">
+                                    {{data.item.address + data.item.addressSub}}
                                 </template>
                             </b-table>
 
