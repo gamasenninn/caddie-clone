@@ -141,8 +141,14 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
                                         label-for="category">
+                                        <b-form-input list="list-category" v-model="item.category" size="sm"></b-form-input>
+                                        <datalist id="list-category" autocomplete="off" >
+                                            <option v-for="category in categories">{{category}}</option>
+                                        </datalist>
+<!-- 
                                         <b-form-select v-model="item.category" :options="categories" size="sm">
                                         </b-form-select>
+-->
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
@@ -206,10 +212,10 @@
                                                     class="fas fa-trash-alt"></i>
                                             </b-button>
                                             <b-button pill v-if="uploadListMode=='list'" @click="uploadListMode='card'"
-                                                class="mr-2" block>
+                                                class="mr-2 mb-3" block>
                                                 card</b-button>
                                             <b-button pill v-if="uploadListMode=='card'" @click="uploadListMode='list'"
-                                                class="mr-2" block>
+                                                class="mr-2 mb-3" block>
                                                 list</b-button>
                                         </b-col>
                                         <b-col>
