@@ -8,7 +8,7 @@ Vue.component('sc-menu', {
                 <h4 id="sidebar-no-header-title" style="float: left; width: 75%;">遷移メニュー</h4>
                 <b-button variant="danger" block @click="hide" style="float: right; width: 15%;">✖
                 </b-button>
-                <b-img src="https://free-materials.com/adm/wp-content/uploads/2020/10/logo_07-1024x1024.png"
+                <b-img src="../static/images/logo_a_color.png"
                     style="width: 50%; " center ></b-img>
                 <nav class="mt-3">
                     <b-nav vertical class="mb-4">
