@@ -1,5 +1,8 @@
 <% extends "head.html" %>
     <% block content %>
+        <!-- or point to a specific vue-select release -->
+        <script src="https://unpkg.com/vue-select@3.0.0"></script>
+        <link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
         <style>
             .td-postNumber {
                 width: 80px;
@@ -8,6 +11,37 @@
             .td-telNumber {
                 width: 120px;
             }
+
+            .box {
+                /* border: 1px solid #333333; */
+                /* width: 200px; */
+                height: 200px;
+                overflow-y: scroll;
+            }
+
+            .image-in-check {
+                width: 15px;
+                height: 15px;
+                color: #ffffff;
+                background-color: #2779bd;
+                display: flex;
+                /*justify-content: center;*/
+                /*align-items: center;*/
+                font-size: 1.5rem;
+                border-radius: 50%;
+                cursor: pointer;
+
+                position: absolute;
+                top: 5;
+                left: 5;
+                z-index: 0;
+            }
+
+            .file-card {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
         </style>
 
         <div id="app" v-cloak>
@@ -82,27 +116,16 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
-                <b-row class="mt-5">
+                <b-row class="mt-2">
                     <b-col></b-col>
                     <!--- 本体 -->
                     <b-col cols=11>
+                        <div class="text-right">
+                            <span class="mr-2">登録日:{{formatDate(item.createdAt)}}</span>
+                            <span class="mr-2">更新日:{{formatDate(item.updatedAt)}}</span>
+                        </div>        
                         <b-card border-variant="white" class="mb-3 text-center" header="商品入力"
                             header-border-variant="light">
-                            <b-row>
-                                <b-col cols="6"></b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="登録日"
-                                        label-for="createdAt">
-                                        <p class="text-left pl-2" id="createdAt">{{formatDate(item.createdAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="更新日"
-                                        label-for="updatedAt">
-                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(item.updatedAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
@@ -121,13 +144,22 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
                                         label-for="category">
+                                        <b-form-input list="list-category" v-model="item.category" size="sm" autocomplete="off" ></b-form-input>
+                                        <datalist id="list-category" >
+                                            <option v-for="category in categories">{{category}}</option>
+                                        </datalist>
+                                        <!-- 
                                         <b-form-select v-model="item.category" :options="categories" size="sm">
                                         </b-form-select>
+                                        -->
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
-                                        <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
+                                        <b-form-input list="list-maker" v-model="item.maker" size="sm" autocomplete="off" ></b-form-input>
+                                        <datalist id="list-maker" >
+                                            <option v-for="maker in makers">{{maker}}</option>
+                                        </datalist>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -135,8 +167,21 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                         label-for="unit">
-                                        <b-form-select v-model="item.unit" :options="units" size="sm"></b-form-select>
+                                        <b-form-input list="list-unit" v-model="item.unit" size="sm" autocomplete="off" ></b-form-input>
+                                        <datalist id="list-unit" >
+                                            <option v-for="unit in units">{{unit}}</option>
+                                        </datalist>
                                     </b-form-group>
+                                    <!--
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
+                                        label-for="unit">
+                                        <v-select  taggable push-tags  :options="units" size="sm">
+                                            <template #no-options="{ search, searching, loading }">
+                                                This is the no options slot.
+                                            </template>
+                                        </v-select>
+                                    </b-form-group>
+                                    -->
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="型式"
@@ -166,13 +211,79 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="メモ">
-                                        <b-form-textarea v-model="item.memo" size="sm" rows="4"></b-form-textarea>
+                                        <b-form-textarea v-model="item.memo" size="sm" rows="6"></b-form-textarea>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
+                                    <b-row >
+                                        <b-col cols="2"></b-col>
+                                        <b-col cols="10">
+                                            <b-form @submit="uploadFile" id="upform" inline >
+                                                <b-input-group prepend="upload" block>
+                                                    <b-form-file v-model="form.file" browse-text="+"
+                                                        placeholder="クリックまたはドラッグ..."
+                                                        drop-placeholder="ここにドロップ...">
+                                                    </b-form-file>
+                                                    <b-button pill type="submit" class="ml-3" >確定</b-button>
+                                                </b-input-group>
+                                            </b-form>    
+                                        </b-col>
+    
+                                    </b-row>
+
+
+                                    <b-row>
+                                        <b-col md="2">
+                                            <b-button pill @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" block><i
+                                                    class="fas fa-trash-alt"></i>
+                                            </b-button>
+                                            <b-button pill v-if="uploadListMode=='list'" @click="uploadListMode='card'"
+                                                class="mr-2 mb-3" block>
+                                                card</b-button>
+                                            <b-button pill v-if="uploadListMode=='card'" @click="uploadListMode='list'"
+                                                class="mr-2 mb-3" block>
+                                                list</b-button>
+                                        </b-col>
+                                        <b-col>
+                                            <template v-if="uploadListMode=='list'">
+                                                <b-table-simple hover small caption-top responsive class="box">
+                                                    <template v-for="f in dicFiles">
+                                                        <b-tr>
+                                                            <b-td width="5%">
+                                                                <input type="checkbox" v-model="f.isSelect" size="sm">
+                                                            </b-td>
+                                                            <b-td width="15%">
+                                                                <div @click="selectImgUrl=f.url">
+                                                                    <b-img :src="f.urlThumb" width="90" fluid></b-img>
+                                                                </div>
+                                                            </b-td>
+                                                            <b-td class="ml-5">{{f.filename}}</b-td>
+                                                        </b-tr>
+                                                    </template>
+                                                </b-table-simple>
+                                            </template>
+                                            <template v-if="uploadListMode=='card'">
+                                                <div class="file-card box">
+                                                    <template v-for="f in dicFiles">
+                                                        <b-card border-variant="light">
+                                                            <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                            <input type="checkbox" v-model="f.isSelect"
+                                                                class="image-in-check">
+                                                        </b-card>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </b-col>
+                                    </b-row>
                                 </b-col>
                             </b-row>
-                        </b-card>
+                            <b-row>
+                                <b-col sm>
+                                </b-col>
+                            </b-row>
+
+
+                </b-card>
 
                     </b-col> <!-- 本体 -->
                     <b-col></b-col>
@@ -189,9 +300,7 @@
                 class="fixed-bottom footer">
                 <b-row>
                     <b-col>
-                        <router-link to="?page=index">
-                            <b-button @click="getItems();">＜</b-button>
-                        </router-link>
+                        <b-button @click="checkChange">＜</b-button>
                     </b-col>
                     <b-col class="text-right">
                         <b-button pill variant="info" @click="modalShow(item,'upsertModal');" id="showUpsertModal">適用
@@ -220,6 +329,7 @@
         </div>
 
         <script>
+            Vue.component('v-select', VueSelect.VueSelect);
             const router = new VueRouter({
             })
 
@@ -233,6 +343,15 @@
                     makers: [],
                     perPage: 20,                //ページネーション
                     currentPage: 1,             //ページネーション
+                    fileId: '', //upload用ID
+                    dicFiles: [],
+                    form: {
+                        file: '',
+                        fileId: ''
+                    },
+                    uploadListMode: 'card', //list,card
+                    countChangeItem: 0
+
                 },
                 methods: {
                     // ---Items---
@@ -266,6 +385,7 @@
                         await axios.put("/item/" + item.id, item)
                             .then(function (response) {
                                 self.getItems();
+                                self.countChangeItem = 0;
                                 console.log(response);
                             });
                     },
@@ -290,6 +410,8 @@
                         this.item = item;
                         console.log(this.item);
                         localStorage.setItem('item', JSON.stringify(item))
+                        this.getFileList(item.itemCode);
+                        this.countChangeItem = 0;
                     },
                     getItem: async function (item) {
                         self = this;
@@ -299,8 +421,11 @@
                                 for (const [key, value] of Object.entries(response.data)) {
                                     console.log(key, value);
                                     self.$set(self.item, key, value);
+                                    //this.countChangeItem = 0;
                                 }
                             });
+                        this.getFileList(item.itemCode);
+
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
@@ -350,9 +475,54 @@
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
+                    getFileList: async function (fid) {
+                        self = this;
+                        url = "list-files/s/upload/" + fid;
+                        await axios.get(url)
+                            .then(function (response) {
+                                console.log(response.data);
+                                self.dicFiles = response.data;
+                            })
+                    },
+                    uploadFile: function (event) {
+                        self = this;
+                        event.preventDefault();
+                        //let files = event.target.files;
+                        const formData = new FormData();
+                        formData.append('file', self.form.file);
+                        formData.append('fileId', self.item.itemCode);
+                        axios.post("upload-files/s/upload", formData)
+                            .then((res) => {
+                                self.getFileList(self.item.itemCode);
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            });
+                    },
+                    deleteFiles: async function (fid) {
+                        self = this;
+                        url = "delete-files/s";
+                        await axios.delete(url, {
+                            data: self.dicFiles
+                        }
+                        ).then(function (response) {
+                            console.log(response.data);
+                            self.getFileList(fid);
+                        });
+                    },
+                    //---------変更があったかどうかをチェク。アラート
+                    checkChange: function(){
+                        if (this.countChangeItem > 1 ){
+                            if (!confirm('未更新ですが戻りますか？')) return;
+                        }
+                        this.getItems();
+                        this.countChangeItem = 0;
+                        router.push({path: "?page=index"});
+                    }
                 },
                 mounted: function () {
                     this.item = JSON.parse(localStorage.getItem('item'));
+                    this.getFileList(this.item.itemCode);
                     this.getItems();
                     this.getUnits();
                     this.getCategories();
@@ -373,6 +543,14 @@
                     currentPageRows() {
                         return this.items.length;
                     },
+                },
+                watch:{
+                    item: {
+                        handler: function(val,oldval){
+                            this.countChangeItem += 1;
+                        },
+                        deep: true
+                    }
                 }
             })
 

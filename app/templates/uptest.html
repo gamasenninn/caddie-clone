@@ -147,13 +147,17 @@
             }
         };
     </script>
-    <b-form @change="uploadFile">
+    <b-form @submit="uploadFile" >
         <b-form-file
+            type="file"
             v-model="form.file"
             browse-text="+"
             placeholder="Choose a file or drop it here..."
             drop-placeholder="Drop file here..."
+            style="z-index: 0;"
+            
         ></b-form-file>
+        <b-button type="submit" variant="primary" id="submitBtn">Submit</b-button>
     </b-form>
     <b-button @click="deleteFiles(fileId)">削除</b-button>
     <h2 class="mt-5">ファイルリスト形式(for)</h2><br />
@@ -260,7 +264,8 @@
             uploadFile: function(event){
                 self = this;
                 event.preventDefault();
-                let files = event.target.files;
+                //let files = event.target.files[0];
+                //let files = event.dataTranfer.files[0];
                 const formData = new FormData();
                 formData.append('file', this.form.file)
                 formData.append('fileId', this.fileId)
@@ -268,7 +273,7 @@
                 for (item of formData){
                     console.log(item);
                 }                
-                console.log(files);
+                //console.log(files);
                 
                 axios.post("upload-files/s/upload", formData)
                 .then((res) => {
@@ -278,7 +283,11 @@
                 .catch((err) => {
                     console.log(err)
                 })
-            }         
+            },
+            formUpload: function(){
+                form = document.getElementById('form-upload').submit()
+            }
+
         },
         mounted: function () {
             this.getFileList('001');
