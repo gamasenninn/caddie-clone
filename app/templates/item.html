@@ -181,7 +181,11 @@
                                     -->
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                         label-for="unit">
-                                        <v-select v-model="item.unit" :options="units" size="sm"></v-select>
+                                        <v-select  taggable push-tags  :options="units" size="sm">
+                                            <template #no-options="{ search, searching, loading }">
+                                                This is the no options slot.
+                                            </template>
+                                        </v-select>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
