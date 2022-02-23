@@ -41,7 +41,6 @@
                 display: flex;
                 flex-wrap: wrap;
             }
-
         </style>
 
         <div id="app" v-cloak>
@@ -84,7 +83,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="商品一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
-                                :items=items :per-page="perPage" :current-page="currentPage" :fields="[
+                                :items=items :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'itemName', label: '商品名' },
@@ -104,10 +103,6 @@
                                     </router-link>
                                 </template>
                             </b-table>
-
-                            <b-pagination v-model="currentPage" :total-rows="currentPageRows" :per-page="perPage"
-                                aria-controls="itemtable"></b-pagination>
-
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -123,7 +118,7 @@
                         <div class="text-right">
                             <span class="mr-2">登録日:{{formatDate(item.createdAt)}}</span>
                             <span class="mr-2">更新日:{{formatDate(item.updatedAt)}}</span>
-                        </div>        
+                        </div>
                         <b-card border-variant="white" class="mb-3 text-center" header="商品入力"
                             header-border-variant="light">
                             <b-row>
@@ -144,8 +139,9 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
                                         label-for="category">
-                                        <b-form-input list="list-category" v-model="item.category" size="sm" autocomplete="off" ></b-form-input>
-                                        <datalist id="list-category" >
+                                        <b-form-input list="list-category" v-model="item.category" size="sm"
+                                            autocomplete="off"></b-form-input>
+                                        <datalist id="list-category">
                                             <option v-for="category in categories">{{category}}</option>
                                         </datalist>
                                         <!-- 
@@ -156,8 +152,9 @@
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
-                                        <b-form-input list="list-maker" v-model="item.maker" size="sm" autocomplete="off" ></b-form-input>
-                                        <datalist id="list-maker" >
+                                        <b-form-input list="list-maker" v-model="item.maker" size="sm"
+                                            autocomplete="off"></b-form-input>
+                                        <datalist id="list-maker">
                                             <option v-for="maker in makers">{{maker}}</option>
                                         </datalist>
                                     </b-form-group>
@@ -167,8 +164,9 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                         label-for="unit">
-                                        <b-form-input list="list-unit" v-model="item.unit" size="sm" autocomplete="off" ></b-form-input>
-                                        <datalist id="list-unit" >
+                                        <b-form-input list="list-unit" v-model="item.unit" size="sm" autocomplete="off">
+                                        </b-form-input>
+                                        <datalist id="list-unit">
                                             <option v-for="unit in units">{{unit}}</option>
                                         </datalist>
                                     </b-form-group>
@@ -215,27 +213,26 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-row >
+                                    <b-row>
                                         <b-col cols="2"></b-col>
                                         <b-col cols="10">
-                                            <b-form @submit="uploadFile" id="upform" inline >
+                                            <b-form @submit="uploadFile" id="upform" inline>
                                                 <b-input-group prepend="upload" block>
                                                     <b-form-file v-model="form.file" browse-text="+"
-                                                        placeholder="クリックまたはドラッグ..."
-                                                        drop-placeholder="ここにドロップ...">
+                                                        placeholder="クリックまたはドラッグ..." drop-placeholder="ここにドロップ...">
                                                     </b-form-file>
-                                                    <b-button pill type="submit" class="ml-3" >確定</b-button>
+                                                    <b-button pill type="submit" class="ml-3">確定</b-button>
                                                 </b-input-group>
-                                            </b-form>    
+                                            </b-form>
                                         </b-col>
-    
+
                                     </b-row>
 
 
                                     <b-row>
                                         <b-col md="2">
-                                            <b-button pill @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" block><i
-                                                    class="fas fa-trash-alt"></i>
+                                            <b-button pill @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" block>
+                                                <i class="fas fa-trash-alt"></i>
                                             </b-button>
                                             <b-button pill v-if="uploadListMode=='list'" @click="uploadListMode='card'"
                                                 class="mr-2 mb-3" block>
@@ -283,7 +280,7 @@
                             </b-row>
 
 
-                </b-card>
+                        </b-card>
 
                     </b-col> <!-- 本体 -->
                     <b-col></b-col>
@@ -341,8 +338,6 @@
                     units: [],
                     categories: [],
                     makers: [],
-                    perPage: 20,                //ページネーション
-                    currentPage: 1,             //ページネーション
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -511,13 +506,13 @@
                         });
                     },
                     //---------変更があったかどうかをチェク。アラート
-                    checkChange: function(){
-                        if (this.countChangeItem > 1 ){
+                    checkChange: function () {
+                        if (this.countChangeItem > 1) {
                             if (!confirm('未更新ですが戻りますか？')) return;
                         }
                         this.getItems();
                         this.countChangeItem = 0;
-                        router.push({path: "?page=index"});
+                        router.push({ path: "?page=index" });
                     }
                 },
                 mounted: function () {
@@ -539,14 +534,10 @@
                         //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
                     },
-                    // ページネーション
-                    currentPageRows() {
-                        return this.items.length;
-                    },
                 },
-                watch:{
+                watch: {
                     item: {
-                        handler: function(val,oldval){
+                        handler: function (val, oldval) {
                             this.countChangeItem += 1;
                         },
                         deep: true

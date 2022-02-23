@@ -54,7 +54,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="削除済み請求書一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
-                                :items=invoices :per-page="perPage" :current-page="currentPage" :fields="[
+                                :items=invoices :fields="[
                           {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '請求番号' },
@@ -81,10 +81,6 @@
                                     <p class="text-left pl-2" id="updatedAt">{{formatDateTime(data.item.updatedAt)}}</p>
                                 </template>
                             </b-table>
-
-                            <b-pagination v-model="currentPage" :total-rows="currentPageRows" :per-page="perPage"
-                                aria-controls="invoicetable"></b-pagination>
-
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -283,8 +279,6 @@
                     invoices: [],               //全件invoice
                     invoice: [],                //選択中のinvoice
                     invoiceItem: [],            //選択中のinvoiceItem
-                    perPage: 20,                //ページネーション
-                    currentPage: 1,             //ページネーション
                 },
                 methods: {
                     // ---Invoices---
@@ -346,10 +340,6 @@
                     sum: function () {
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * invoice_item.price)).reduce(function (a, b) { return a + b }, 0);
-                    },
-                    // ページネーション
-                    currentPageRows() {
-                        return this.invoices.length;
                     },
                 },
             })
