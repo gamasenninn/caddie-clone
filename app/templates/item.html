@@ -161,16 +161,10 @@
                                             <option v-for="maker in makers">{{maker}}</option>
                                         </datalist>
                                     </b-form-group>
-                                    <!--
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
-                                        <b-form-select v-model="item.maker" :options="makers" size="sm"></b-form-select>
-                                    </b-form-group>
-                                    -->
                                 </b-col>
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <!--
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                         label-for="unit">
                                         <b-form-input list="list-unit" v-model="item.unit" size="sm" autocomplete="off" ></b-form-input>
@@ -178,7 +172,7 @@
                                             <option v-for="unit in units">{{unit}}</option>
                                         </datalist>
                                     </b-form-group>
-                                    -->
+                                    <!--
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                         label-for="unit">
                                         <v-select  taggable push-tags  :options="units" size="sm">
@@ -187,6 +181,7 @@
                                             </template>
                                         </v-select>
                                     </b-form-group>
+                                    -->
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="型式"
@@ -220,16 +215,23 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form @submit="uploadFile" id="upform" inline>
-                                        <b-form-group label-cols="4" label-cols-lg="4" label-size="sm"
-                                        label="アップロード" label-for="upform" >
-                                            <b-form-file v-model="form.file" browse-text="+"
-                                                placeholder="クリックまたはドラッグ..."
-                                                drop-placeholder="Drop file here...">
-                                            </b-form-file>
-                                        </b-form-group>
-                                        <b-button pill type="submit" class="ml-3">確定</b-button>
-                                    </b-form>
+                                    <b-row >
+                                        <b-col cols="2"></b-col>
+                                        <b-col cols="10">
+                                            <b-form @submit="uploadFile" id="upform" inline >
+                                                <b-input-group prepend="upload" block>
+                                                    <b-form-file v-model="form.file" browse-text="+"
+                                                        placeholder="クリックまたはドラッグ..."
+                                                        drop-placeholder="ここにドロップ...">
+                                                    </b-form-file>
+                                                    <b-button pill type="submit" class="ml-3" >確定</b-button>
+                                                </b-input-group>
+                                            </b-form>    
+                                        </b-col>
+    
+                                    </b-row>
+
+
                                     <b-row>
                                         <b-col md="2">
                                             <b-button pill @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" block><i
@@ -348,7 +350,7 @@
                         fileId: ''
                     },
                     uploadListMode: 'card', //list,card
-                    isEditChange: 0
+                    countChangeItem: 0
 
                 },
                 methods: {
@@ -383,7 +385,7 @@
                         await axios.put("/item/" + item.id, item)
                             .then(function (response) {
                                 self.getItems();
-                                self.isEditChange = 0;
+                                self.countChangeItem = 0;
                                 console.log(response);
                             });
                     },
@@ -409,7 +411,7 @@
                         console.log(this.item);
                         localStorage.setItem('item', JSON.stringify(item))
                         this.getFileList(item.itemCode);
-                        this.isEditChange = 0;
+                        this.countChangeItem = 0;
                     },
                     getItem: async function (item) {
                         self = this;
@@ -419,7 +421,7 @@
                                 for (const [key, value] of Object.entries(response.data)) {
                                     console.log(key, value);
                                     self.$set(self.item, key, value);
-                                    this.isEditChange = 0;
+                                    //this.countChangeItem = 0;
                                 }
                             });
                         this.getFileList(item.itemCode);
@@ -510,11 +512,12 @@
                     },
                     //---------変更があったかどうかをチェク。アラート
                     checkChange: function(){
-                        if (this.isEditChange > 1 ){
+                        if (this.countChangeItem > 1 ){
                             if (!confirm('未更新ですが戻りますか？')) return;
                         }
                         this.getItems();
-                        router.push({path: "?page=index"})
+                        this.countChangeItem = 0;
+                        router.push({path: "?page=index"});
                     }
                 },
                 mounted: function () {
@@ -544,7 +547,7 @@
                 watch:{
                     item: {
                         handler: function(val,oldval){
-                            this.isEditChange += 1;
+                            this.countChangeItem += 1;
                         },
                         deep: true
                     }
