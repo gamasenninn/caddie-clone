@@ -138,6 +138,9 @@ class Invoice(db.Model):
     applyNumber = db.Column(db.Integer, default=edited_invoice_number)
     applyDate = db.Column(db.Date)
     deadLine = db.Column(db.Date)
+    paymentDate = db.Column(db.Date)
+    isPaid = db.Column(db.Boolean, nullable=False,
+                       default=False, server_default=db.text('0'))
     title = db.Column(db.String)
     memo = db.Column(db.String)
     remarks = db.Column(db.String)
