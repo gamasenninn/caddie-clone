@@ -509,11 +509,13 @@
                             <b-button @click="getInvoices();">＜</b-button>
                         </router-link>
                     </b-col>
-                    <b-col class="text-right">
+                    <b-col class="text-right" md="auto" cols="auto">
                         <b-button pill variant="info" @click="modalShow(invoice,'upsertModal');" id="showUpsertModal">適用
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
                             @click="modalShow(invoice,'copyModal');"><i class="fa-solid fa-copy"></i></b-button>
+                        <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
+                            @click="modalShow(invoice,'convertModal');"><i class="fa-solid fa-shuffle"></i></b-button>
                         <b-dropdown split dropup id="dropdown-dropup" size="lg" @click="pdfout" id="pdfout">
                             <template #button-content>
                                 <i class="fas fa-print"></i>
@@ -536,6 +538,11 @@
             <!-- コピーモーダル -->
             <div>
                 <select-modal modal-name='copyModal' modal-message='コピーしますか？' @selected="copyModalProcess($event);" />
+            </div>
+            <!-- 変換モーダル -->
+            <div>
+                <select-modal modal-name='convertModal' modal-message='見積書に変換しますか？'
+                    @selected="convertModalProcess($event);" />
             </div>
             <!-- 削除モーダル -->
             <div>
@@ -620,8 +627,20 @@
                             });
                     },
                     copyInvoice: function (item) {
-                        delete item.id;
-                        this.insertInvoice(item);
+                        let invoiceResource = JSON.stringify(item);
+                        invoiceResource = JSON.parse(invoiceResource);  //参照渡し対策
+                        delete invoiceResource.id;
+                        this.insertInvoice(invoiceResource);
+                    },
+                    convertInvoice: function (item) {
+                        let quotationResource = JSON.stringify(item);
+                        quotationResource = JSON.parse(quotationResource);  //参照渡し対策
+                        quotationResource.expiry = item.deadLine;
+                        quotationResource.quotation_items = item.invoice_items;
+                        delete quotationResource.id;
+                        delete quotationResource.deadLine;
+                        delete quotationResource.invoice_items;
+                        this.insertQuotation(quotationResource);
                     },
                     // axios.deleteは使わず、isDeleteをTrueに
                     deleteInvoice: async function (item) {
@@ -686,6 +705,13 @@
                         this.invoice.invoice_items.push({
                             invoiceId: this.invoice.id
                         })
+                    },
+                    insertQuotation: async function (item) {
+                        self = this;
+                        await axios.post("/quotation", item)
+                            .then(function (response) {
+                                console.log(response);
+                            });
                     },
                     getCustomers: async function () {
                         self = this;
@@ -754,6 +780,12 @@
                         this.$bvModal.hide('copyModal');
                         if (result === true) {
                             this.copyInvoice(this.invoice);
+                        }
+                    },
+                    convertModalProcess(result) {
+                        this.$bvModal.hide('convertModal');
+                        if (result === true) {
+                            this.convertInvoice(this.invoice);
                         }
                     },
                     // 顧客名モーダル選択時
