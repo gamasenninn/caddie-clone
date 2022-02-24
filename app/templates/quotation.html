@@ -73,8 +73,27 @@
                     <b-col cols="11">
                         <b-card border-variant="white" class="mb-3 text-center" header="見積書一覧"
                             header-border-variant="light">
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group sm label-cols="2" label-size="sm" label-align="center" label="検索"
+                                        label-for="searchQuotationWord">
+                                        <b-form-input v-model="searchQuotationWord" id="searchQuotationWord" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="日付"
+                                        label-for="searchApplyDate">
+                                        <b-form-input v-model="searchApplyDate" size="sm" placeholder="半角数字6桁">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row align-h="end">
+                                <p class="mr-3">表示件数 {{ quotationsIndicateCount }}件</p>
+                            </b-row>
                             <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
-                                :items=quotations :fields="[
+                                :items=quotationsIndicateIndex :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyNumber', label: '見積番号' },
@@ -447,10 +466,13 @@
             var app = new Vue({
                 el: '#app',
                 data: {
-                    searchItemWord: '',
-                    searchItemSelectCategory: '',
-                    searchItemSelectMaker: '',
-                    searchCustomerWord: '',
+                    searchQuotationWord: '',        //請求書検索
+                    searchApplyDate: '',            //請求書検索
+                    quotationsIndicateCount: 0,     //請求書検索
+                    searchItemWord: '',             //商品選択モーダル検索
+                    searchItemSelectCategory: '',   //商品選択モーダル検索
+                    searchItemSelectMaker: '',      //商品選択モーダル検索
+                    searchCustomerWord: '',         //得意先選択モーダル検索
                     quotations: [],               //全件quotation
                     quotation: [],                //選択中のquotation
                     quotationItem: [],            //選択中のquotationItem
@@ -764,6 +786,13 @@
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
                     },
+                    quotationsIndicateIndex: function () {
+                        let quotations = this.quotations;
+                        quotations = quotations.filter(quotation => searchFilter(quotation.customerName, this.searchQuotationWord));
+                        quotations = quotations.filter(quotation => searchFilterDate(quotation.applyDate, this.searchApplyDate));
+                        this.quotationsIndicateCount = quotations.length;
+                        return quotations;
+                    },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
                         let customers = this.customers;
@@ -796,6 +825,19 @@
                     return false;
                 }
                 return searchTarget.includes(searchWord);
+            };
+
+            function searchFilterDate(targetDate, searchDate) {
+                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === '')) {
+                    return true;
+                }
+                if (targetDate === null && searchDate !== '') {
+                    return false;
+                }
+                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate)) {
+                    return true;
+                }
+                return false;
             };
 
         </script>

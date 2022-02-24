@@ -103,8 +103,32 @@
                     <b-col cols="11">
                         <b-card border-variant="white" class="mb-3 text-center" header="請求書一覧"
                             header-border-variant="light">
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group sm label-cols="2" label-size="sm" label-align="center" label="検索"
+                                        label-for="searchInvoiceWord">
+                                        <b-form-input v-model="searchInvoiceWord" id="searchInvoiceWord" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="日付"
+                                        label-for="searchApplyDate">
+                                        <b-form-input v-model="searchApplyDate" size="sm" placeholder="半角数字6桁">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-row align-h="end">
+                                        <b-form-checkbox class="mr-3" v-model="isInvoicesShowAll">全て表示</b-form-checkbox>
+                                    </b-row>
+                                </b-col>
+                            </b-row>
+                            <b-row align-h="end">
+                                <p class="mr-3">表示件数 {{ invoicesIndicateCount }}件</p>
+                            </b-row>
                             <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
-                                :items=invoices :fields="[
+                                :items=invoicesIndicateIndex :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyNumber', label: '請求番号' },
@@ -559,10 +583,14 @@
             var app = new Vue({
                 el: '#app',
                 data: {
-                    searchItemWord: '',
-                    searchItemSelectCategory: '',
-                    searchItemSelectMaker: '',
-                    searchCustomerWord: '',
+                    searchInvoiceWord: '',          //請求書検索
+                    searchApplyDate: '',            //請求書検索
+                    isInvoicesShowAll: false,               //請求書検索
+                    invoicesIndicateCount: 0,       //請求書検索
+                    searchItemWord: '',             //商品選択モーダル検索
+                    searchItemSelectCategory: '',   //商品選択モーダル検索
+                    searchItemSelectMaker: '',      //商品選択モーダル検索
+                    searchCustomerWord: '',         //得意先選択モーダル検索
                     invoices: [],               //全件invoice
                     invoice: [],                //選択中のinvoice
                     invoiceItem: [],            //選択中のinvoiceItem
@@ -816,9 +844,9 @@
                     },
                     pdfout: async function (mode) {
                         self = this;
-                        if (mode == 'delivery'){
+                        if (mode == 'delivery') {
                             h.category = '納品書';
-                        }else{
+                        } else {
                             h.category = '請求書';
                         }
                         h.customerName = self.invoice.customerName;
@@ -922,6 +950,15 @@
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * invoice_item.price)).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
                     },
+                    invoicesIndicateIndex: function () {
+                        let invoices = this.invoices;
+                        if (this.isInvoicesShowAll === false)
+                            invoices = invoices.filter(invoice => invoice.isPaid === false);
+                        invoices = invoices.filter(invoice => searchFilter(invoice.customerName, this.searchInvoiceWord));
+                        invoices = invoices.filter(invoice => searchFilterDate(invoice.applyDate, this.searchApplyDate));
+                        this.invoicesIndicateCount = invoices.length;
+                        return invoices;
+                    },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
                         let customers = this.customers;
@@ -954,6 +991,19 @@
                     return false;
                 }
                 return searchTarget.includes(searchWord);
+            };
+
+            function searchFilterDate(targetDate, searchDate) {
+                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === '')) {
+                    return true;
+                }
+                if (targetDate === null && searchDate !== '') {
+                    return false;
+                }
+                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate)) {
+                    return true;
+                }
+                return false;
             };
 
         </script>
