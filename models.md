@@ -71,6 +71,8 @@
 | applyNumber | 請求番号       | integer  |  作成時にインクリメント。他の請求書と被らないようにする。 | 
 | applyDate   | 日付           | datetime |  請求書作成日                                             | 
 | deadLine    | 支払期限       | datetime |                                                           | 
+| paymentDate | 支払日         | datetime |                                                           | 
+| isPaid      | 入金済み       | boolean  |                                                           | 
 | title       | 件名           | text     |                                                           | 
 | memo        | メモ           | text     |  アプリ利用者に見えるもの                                 | 
 | remarks     | 備考           | text     |  印刷時に表示されるもの                                   |
