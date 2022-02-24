@@ -535,30 +535,34 @@
                         });
                     },
                     //---------変更があったかどうかをチェク。アラート ---------
+                    
                     checkChange: function () {
+
                         if (this.countChangeItem > 1) {
                             this.$bvModal.msgBoxConfirm('未更新のデータがあります。',{
-                            okVariant: 'primary',
-                            okTitle: '保存して戻る',
-                            cancelVariant: 'danger',
-                            cancelTitle: '保存しないで戻る',
-                        }).then(value => {
-                            if(value){
-                                //保存して終了
-                                this.bulkUpsert(this.item);
-                                this.getItems();
-                                this.countChangeItem = 0;
-                                router.push({ path: "?page=index" });
-                            }
-                            else{
-                                //保存しないで終了
-                                router.push({ path: "?page=index" });
-                            }
-                        })
+                                okVariant: 'primary',
+                                okTitle: '保存して戻る',
+                                cancelVariant: 'danger',
+                                cancelTitle: '保存しないで戻る',
+                            }).then(value => {
+                                if(value){
+                                    //保存して終了
+                                    this.bulkUpsert(this.item);
+                                    this.getItems();
+                                    this.countChangeItem = 0;
+                                    router.push({ path: "?page=index" });
+                                }
+                                else{
+                                    //保存しないで終了
+                                    router.push({ path: "?page=index" });
+                                }
+                                                                       
+                            })
+                        }else{
+                            router.push({ path: "?page=index" });
+                        }
                     }
-                    else{
-                        router.push({ path: "?page=index" });
-                    }
+
                 },
                 mounted: function () {
                     this.item = JSON.parse(localStorage.getItem('item'));
