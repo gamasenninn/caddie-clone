@@ -605,9 +605,11 @@
                         self = this;
                         await axios.post("/invoice", item)
                             .then(function (response) {
+                                console.log(response);
                                 Vue.set(self.invoice, 'id', response.data.id)
                                 self.invoice.isInsert = false;
                                 self.getInvoice(self.invoice);
+                                localStorage.setItem('invoice', JSON.stringify(self.invoice));
                                 app.title = '新規作成';
                                 app.message = '保存しました。';
                             });
@@ -617,8 +619,10 @@
                         await axios.put("/invoice/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
+                                self.getInvoice(self.invoice);
+                                localStorage.setItem('invoice', JSON.stringify(self.invoice));
                                 app.title = '更新';
-                                app.message = '更新しました。'
+                                app.message = '保存しました。'
                             });
                     },
                     copyInvoice: function (item) {
