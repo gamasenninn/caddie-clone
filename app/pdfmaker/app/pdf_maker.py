@@ -307,9 +307,13 @@ def pdf_maker(d,is_BytesIO=False,file_name=''):
     #-----タイトル表示 ------
     elements = []
 
-    elements.append(cv(defPdf['header']['title']))
-    elements.append(cv(defPdf['header']['title_after']))
+    #elements.append(cv(defPdf['header']['title']))
+    #elements.append(cv(defPdf['header']['title_after']))
     #drawImages(defPdf['header']['drawImages'])
+
+    elements.append(cv(defPdf['header'].get('title')))
+    elements.append(cv(defPdf['header'].get('title_after')))
+
 
     for table_info in defPdf['header']['table_infos']:
         if table_info.get('before') : elements.append(cv(table_info.get('after')))

@@ -512,11 +512,11 @@
                             @click="modalShow(invoice,'copyModal');"><i class="fa-solid fa-copy"></i></b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
                             @click="modalShow(invoice,'convertModal');"><i class="fa-solid fa-shuffle"></i></b-button>
-                        <b-dropdown split dropup id="dropdown-dropup" size="lg" @click="pdfout" id="pdfout">
+                        <b-dropdown split dropup id="dropdown-dropup" size="lg" @click="pdfout('invoice')" id="pdfout">
                             <template #button-content>
                                 <i class="fas fa-print"></i>
                             </template>
-                            <b-dropdown-item>納品書</b-dropdown-item>
+                            <b-dropdown-item @click="pdfout('delivery')">納品書</b-dropdown-item>
                             <b-dropdown-item>領収書</b-dropdown-item>
                         </b-dropdown>
                         <b-button pill size="lg" variant="danger" @click="modalShow(invoice,'deleteModal');">
@@ -814,8 +814,13 @@
                     showModalItems() {
                         this.$refs['items-modal'].show()
                     },
-                    pdfout: async function () {
+                    pdfout: async function (mode) {
                         self = this;
+                        if (mode == 'delivery'){
+                            h.category = '納品書';
+                        }else{
+                            h.category = '請求書';
+                        }
                         h.customerName = self.invoice.customerName;
                         h.applyNumber = self.invoice.applyNumber;
                         if (this.invoice.isTaxExp) {
