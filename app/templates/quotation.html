@@ -392,7 +392,8 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="info" @click="modalShow(quotation,'upsertModal');" id="showUpsertModal">
+                        <b-button pill variant="info" @click="bulkUpsert(quotation);showConfirmModal();"
+                            id="showConfirmModal">
                             適用
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
@@ -413,11 +414,9 @@
                 </b-row>
             </b-card>
 
-            <!-- 保存モーダル -->
-            <div>
-                <select-modal modal-name='upsertModal' modal-message='保存しますか？'
-                    @selected="upsertModalProcess($event);" />
-            </div>
+            <!-- 確認モーダル -->
+            <confirm-modal :title="title" :message="message"></confirm-modal>
+
             <!-- コピーモーダル -->
             <div>
                 <select-modal modal-name='copyModal' modal-message='複製しますか？' @selected="copyModalProcess($event);" />
@@ -462,6 +461,8 @@
                     makers: [],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
+                    title: '',      //モーダルタイトル
+                    message: '',    //モーダルメッセージ
                 },
                 methods: {
                     // ---Quotations---
@@ -485,17 +486,24 @@
                         self = this;
                         await axios.post("/quotation", item)
                             .then(function (response) {
+                                console.log(response);
                                 Vue.set(self.quotation, 'id', response.data.id)
-                                self.getQuotations();
                                 self.quotation.isInsert = false;
+                                self.getQuotation(self.quotation);
+                                localStorage.setItem('quotation', JSON.stringify(self.quotation));
+                                app.title = '新規作成';
+                                app.message = '保存しました。';
                             });
                     },
                     updateQuotation: async function (item) {
                         self = this;
                         await axios.put("/quotation/" + item.id, item)
                             .then(function (response) {
-                                self.getQuotations();
                                 console.log(response);
+                                self.getQuotation(self.quotation);
+                                localStorage.setItem('quotation', JSON.stringify(self.quotation));
+                                app.title = '更新';
+                                app.message = '保存しました。'
                             });
                     },
                     copyQuotation: function (item) {
@@ -635,16 +643,13 @@
                         console.log(this.quotation);
                         this.$bvModal.show(modalName);
                     },
+                    showConfirmModal: function () {
+                        this.$bvModal.show('confirmModal');
+                    },
                     deleteModalProcess(result) {
                         this.$bvModal.hide('deleteModal');
                         if (result === true) {
                             this.deleteQuotation(this.quotation);
-                        }
-                    },
-                    upsertModalProcess(result) {
-                        this.$bvModal.hide('upsertModal');
-                        if (result === true) {
-                            this.bulkUpsert(this.quotation);
                         }
                     },
                     copyModalProcess(result) {
