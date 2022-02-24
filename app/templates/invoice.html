@@ -505,7 +505,8 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="info" @click="modalShow(invoice,'upsertModal');" id="showUpsertModal">適用
+                        <b-button pill variant="info" @click="bulkUpsert(invoice);showConfirmModal();"
+                            id="showUpsertModal">適用
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
                             @click="modalShow(invoice,'copyModal');"><i class="fa-solid fa-copy"></i></b-button>
@@ -525,11 +526,9 @@
                 </b-row>
             </b-card>
 
-            <!-- 保存モーダル -->
-            <div>
-                <select-modal modal-name='upsertModal' modal-message='保存しますか？'
-                    @selected="upsertModalProcess($event);" />
-            </div>
+            <!-- 確認モーダル -->
+            <confirm-modal :title="title" :message="message"></confirm-modal>
+
             <!-- コピーモーダル -->
             <div>
                 <select-modal modal-name='copyModal' modal-message='複製しますか？' @selected="copyModalProcess($event);" />
@@ -580,7 +579,9 @@
                         file: '',
                         fileId: ''
                     },
-                    uploadListMode: 'list' //list,card
+                    uploadListMode: 'list', //list,card
+                    title: '',      //モーダルタイトル
+                    message: '',    //モーダルメッセージ
                 },
                 methods: {
                     // ---Invoices---
@@ -605,16 +606,19 @@
                         await axios.post("/invoice", item)
                             .then(function (response) {
                                 Vue.set(self.invoice, 'id', response.data.id)
-                                self.getInvoices();
                                 self.invoice.isInsert = false;
+                                self.getInvoice(self.invoice);
+                                app.title = '新規作成';
+                                app.message = '保存しました。';
                             });
                     },
                     updateInvoice: async function (item) {
                         self = this;
                         await axios.put("/invoice/" + item.id, item)
                             .then(function (response) {
-                                self.getInvoices();
                                 console.log(response);
+                                app.title = '更新';
+                                app.message = '更新しました。'
                             });
                     },
                     copyInvoice: function (item) {
@@ -755,16 +759,13 @@
                         console.log(this.invoice);
                         this.$bvModal.show(modalName);
                     },
+                    showConfirmModal: function () {
+                        this.$bvModal.show('confirmModal');
+                    },
                     deleteModalProcess(result) {
                         this.$bvModal.hide('deleteModal');
                         if (result === true) {
                             this.deleteInvoice(this.invoice);
-                        }
-                    },
-                    upsertModalProcess(result) {
-                        this.$bvModal.hide('upsertModal');
-                        if (result === true) {
-                            this.bulkUpsert(this.invoice);
                         }
                     },
                     copyModalProcess(result) {
