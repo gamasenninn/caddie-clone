@@ -546,20 +546,17 @@
                                 cancelTitle: '保存しないで戻る',
                             }).then(value => {
                                 if(value){
+                                    console.log("保存して終了");
                                     //保存して終了
                                     this.bulkUpsert(this.item);
-                                    this.getItems();
                                     this.countChangeItem = 0;
-                                    router.push({ path: "?page=index" });
-                                }
-                                else{
-                                    //保存しないで終了
-                                    router.push({ path: "?page=index" });
-                                }
-                                                                       
+                                }                                                                       
+                                this.getItems();
+                                router.push({ path: "?page=index" });                        
                             })
                         }else{
-                            router.push({ path: "?page=index" });
+                            this.getItems();
+                            router.push({ path: "?page=index" });                        
                         }
                     }
 
