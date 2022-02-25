@@ -475,17 +475,14 @@
 
                         <b-row>
                             <b-col sm>
-                                <b-row>
+                                <b-row class="mb-3">
                                     <b-col cols="auto">
                                         <b-form-checkbox class="mr-3" v-model="invoice.isPaid">入金済み</b-form-checkbox>
                                     </b-col>
                                     <b-col>
-                                        <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="入金日"
-                                            label-for="paymentDate">
-                                            <b-form-input v-model="invoice.paymentDate" id="paymentDate" size="sm"
-                                                type="date">
-                                            </b-form-input>
-                                        </b-form-group>
+                                        <b-form-input v-model="invoice.paymentDate" id="paymentDate" size="sm"
+                                            type="date" style="width: 150px;">
+                                        </b-form-input>
                                     </b-col>
                                 </b-row>
                                 <b-form-textarea v-model="invoice.remarks" id="remarks" size="sm" type="text" rows="3"
