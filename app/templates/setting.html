@@ -135,21 +135,21 @@
                             印鑑をアップロードできます。印鑑は見積書・請求書に使用されます。<br>
                             画像サイズは○○×○○以内のものを使用し、PNGまたはJPEG形式のみとなります。
                             <b-row class="mt-5">
-                                <b-col></b-col>
-                                <b-col cols="4">
+                                <b-col cols="1"></b-col>
+                                <b-col sm>
                                     <p>会社ロゴ</p>
                                     <img :src="setting.logoFilePath" width="100%">
                                 </b-col>
-                                <b-col></b-col>
-                                <b-col cols="4">
+                                <b-col cols="1"></b-col>
+                                <b-col sm>
                                     <p>印鑑ロゴ</p>
                                     <img :src="setting.stampFilePath" width="100%">
                                 </b-col>
-                                <b-col></b-col>
+                                <b-col cols="1"></b-col>
                             </b-row>
                             <b-row class="mt-5">
-                                <b-col></b-col>
-                                <b-col cols="4">
+                                <b-col cols="1"></b-col>
+                                <b-col sm>
                                     <p>会社ロゴの印刷時の表示</p>
                                     <div class="isPrintDisplay">
                                         <b-form-checkbox v-model="setting.isDisplayQuotationLogo">見積書</b-form-checkbox>
@@ -157,20 +157,20 @@
                                         <b-form-checkbox v-model="setting.isDisplayDeliveryLogo">納品書</b-form-checkbox>
                                     </div>
                                 </b-col>
-                                <b-col></b-col>
-                                <b-col cols="4">
-                                    <p>印鑑の印刷時の表示</p>
+                                <b-col cols="1"></b-col>
+                                <b-col sm>
+                                    <p>印鑑ロゴの印刷時の表示</p>
                                     <div class="isPrintDisplay">
                                         <b-form-checkbox v-model="setting.isDisplayQuotationStamp">見積書</b-form-checkbox>
                                         <b-form-checkbox v-model="setting.isDisplayInvoiceStamp">請求書</b-form-checkbox>
                                         <b-form-checkbox v-model="setting.isDisplayDeliveryStamp">納品書</b-form-checkbox>
                                     </div>
                                 </b-col>
-                                <b-col></b-col>
+                                <b-col cols="1"></b-col>
                             </b-row>
                             <b-row class="mt-5">
-                                <b-col></b-col>
-                                <b-col cols="4">
+                                <b-col cols="1"></b-col>
+                                <b-col sm>
                                     <p>会社ロゴアップロード</p>
                                     <form action="upload-files/s/asset" class="dropzone" id="logo-dropzone">
                                         <input hidden type="text" name="fileId" v-model="fileId2">
@@ -179,16 +179,16 @@
                                     </form>
                                     </form>
                                 </b-col>
-                                <b-col></b-col>
-                                <b-col cols="4">
-                                    <p>印鑑アップロード</p>
+                                <b-col cols="1"></b-col>
+                                <b-col sm>
+                                    <p>印鑑ロゴアップロード</p>
                                     <form action="upload-files/s/asset" class="dropzone" id="stamp-dropzone">
                                         <input hidden type="text" name="fileId" v-model="fileId">
 
                                         <input hidden type="file" name="file" id="stamp-dropzone" multiple>
                                     </form>
                                 </b-col>
-                                <b-col></b-col>
+                                <b-col cols="1"></b-col>
                             </b-row>
                         </b-card>
 
