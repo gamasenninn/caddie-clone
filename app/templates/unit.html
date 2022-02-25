@@ -59,27 +59,16 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
-                <b-row class="mt-5">
+                <b-row class="mt-2">
                     <b-col></b-col>
                     <!--- 本体 -->
                     <b-col cols=11>
+                        <div class="text-right">
+                            <span class="mr-2">登録日:{{formatDate(unit.createdAt)}}</span>
+                            <span class="mr-2">更新日:{{formatDate(unit.updatedAt)}}</span>
+                        </div>
                         <b-card border-variant="white" class="mb-3 text-center" header="単位入力"
                             header-border-variant="light">
-                            <b-row>
-                                <b-col cols="6"></b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="登録日"
-                                        label-for="createdAt">
-                                        <p class="text-left pl-2" id="createdAt">{{formatDate(unit.createdAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="更新日"
-                                        label-for="updatedAt">
-                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(unit.updatedAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
                             <b-row>
                                 <b-col>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位名"

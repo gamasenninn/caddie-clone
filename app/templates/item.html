@@ -535,28 +535,28 @@
                         });
                     },
                     //---------変更があったかどうかをチェク。アラート ---------
-                    
+
                     checkChange: function () {
 
                         if (this.countChangeItem > 1) {
-                            this.$bvModal.msgBoxConfirm('未更新のデータがあります。',{
+                            this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
                                 okTitle: '保存して戻る',
                                 cancelVariant: 'danger',
                                 cancelTitle: '保存しないで戻る',
                             }).then(value => {
-                                if(value){
+                                if (value) {
                                     console.log("保存して終了");
                                     //保存して終了
                                     this.bulkUpsert(this.item);
                                     this.countChangeItem = 0;
-                                }                                                                       
+                                }
                                 this.getItems();
-                                router.push({ path: "?page=index" });                        
+                                router.push({ path: "?page=index" });
                             })
-                        }else{
+                        } else {
                             this.getItems();
-                            router.push({ path: "?page=index" });                        
+                            router.push({ path: "?page=index" });
                         }
                     }
 
