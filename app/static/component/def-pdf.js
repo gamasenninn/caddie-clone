@@ -1,3 +1,4 @@
+/* -------- 請求書データ　------*/
 h = {
     numberLabel: "請求番号:",
     customerName: "テスト商店",
@@ -166,5 +167,208 @@ function getPdfData() {
                 "textColor": "#000000"
             }
         },
+    }
+}
+/* -------  領収書　----------*/
+hr = {
+    customerName: "テスト商店",
+    category: "領収書",
+    amount: 3456789,
+    forPaymentOf: "PCサポートとして",
+    dueDate: "2021-08-22",
+    myCompanyName: "株式会社 テストコム",
+    myAddress1: "栃木県鹿沼市板荷000-99",
+    myTel1: "000-999-1111",
+    jobTitle: "代表取締役",
+    ceoName: "テスト太郎",
+    applyNumber: "220001",
+
+
+    numberLabel: "請求番号:",
+    applyNumber: "00000001",
+    myCompanyName: "テスト会社",
+    person: "小野",
+    memo: "とりあえずメモ",
+    tax: "税込",
+    myAddress1: "栃木県鹿沼市板荷000-99",
+    myFax1: "000-888-2222",
+    myAddress2: "栃木県鹿沼市千渡000-99",
+    myTel2: "000-999-7777",
+};
+
+
+function getPdfDataRcpt() {
+    return {
+        "defPdf":{
+            "attr":{
+                "name": "def_invoice",
+                "name_jp":"領収書",
+                "page_size": "A5",
+                "page_type": "landscape",
+                "top_mergin": 10,
+                "footter_size": 0
+            },
+            "file":{
+                "outDir": "./static/pdf", 
+                "file_name": "test_n_table.pdf"
+            },
+            "header":{
+                "table_infos":[
+                    {
+                        "table":[
+                            [["P",hr.category,"big_center"],"","","","",""],
+                            [["EP","'入金先'","sm_l"],["P",hr.customerName,"big_left"],"","","",["P","No:"+hr.applyNumber,"sm_l"]],
+                            ["",["PF",hr.amount,"big_price","￥{:,}-"],"","","",""],
+                            ["",["EP","'但'","sm_l"],["P",hr.forPaymentOf,"md_l"],"","",""],
+                            ["",["EP","'入金日'","sm_l"],["P",hr.dueDate,"md_l"],"","",""],
+                            ["","",["P",hr.myCompanyName+'<br/><font size=-3>'+hr.myAddress1+'<br/>'+hr.myTel1+'</font>',"md_l"],"","",""],
+                            ["","","","","",""],
+                            ["","",["P",'<font size=-3>'+hr.jobTitle +'</font>　' +hr.ceoName,"md_c"],"","",""]
+                        ],
+                        "col_widths": ["E","[30*mm, 30*mm, 30*mm,30*mm,30*mm]"],
+                        "row_heights": ["E","(20*mm,20*mm,15*mm,10*mm,10*mm,10*mm,10*mm,10*mm)"],
+                        "table_style":[
+                            ["NOP","('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                            ["E","('VALIGN',(0,0),(-1,-1),'TOP')"],
+                            ["E","('SPAN',(0,0),(5,0))"],
+                            ["E","('SPAN',(1,1),(4,1))"],
+                            ["E","('SPAN',(1,2),(4,2))"],
+                            ["E","('VALIGN',(1,2),(4,2),'TOP')"],
+                            ["E","('BACKGROUND',(1,2),(4,2),'#e0e0e0')"],
+                            ["E","('SPAN',(2,3),(5,3))"],
+                            ["E","('SPAN',(2,4),(5,4))"],
+                            ["E","('SPAN',(2,5),(5,6))"],
+                            ["E","('SPAN',(2,7),(5,7))"]
+                        ],
+                        "after": ["E","Spacer(10*mm,5*mm)"]
+                    }
+                ],
+                "drawImages": [
+                    ["('./static/asset/logo2.jpg', 0,350,50,50,mask='auto')"]
+                ]
+
+            },
+            "footer": {
+                "pos_xy": ["E", "(170*mm,40*mm)"],
+                "table_infos": [
+                    {
+                        "table": [
+                            [["P", "収入<br/>印紙", "sm_c"]]
+                        ],
+                        "col_widths": ["E", "(20*mm)"],
+                        "row_heights": ["E", "(20*mm)"],
+                        "table_style": [
+                            ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                            ["E", "('GRID', (0, 0), (0,0), 0.1, colors.black)"],
+                            ["E", "('VALIGN', (0, 0), (0,0), 'CENTER')"]
+                        ]
+                    }
+                ],
+                "drawImages": [
+                    ["('./static/asset/inkan.png', 490,50,50,50,mask='auto')"]
+                ]
+            }
+        },
+        "data": {
+            "hdata": {
+            }
+        },
+        "style":{
+            "sm_r":{
+                "name": "Normal",
+                "alignment":    2,
+                "fontName":     "IPAexGothic",
+                "fontSize":     10
+            },
+    
+            "sm_l":{
+                "name": "Normal",
+                "alignment":    0,
+                "fontName":     "IPAexGothic",
+                "fontSize":     10
+            },
+            "sm_c":{
+                "name": "Normal",
+                "alignment":    1,
+                "fontName":     "IPAexGothic",
+                "fontSize":     10
+            },
+    
+            "sm_l_b":{
+                "name": "Normal",
+                "alignment":    0,
+                "fontName":     "IPAexGothic",
+                "fontSize":     9
+            },
+            "md_l":{
+                "name": "Normal",
+                "alignment":    0,
+                "fontName":     "IPAexGothic",
+                "fontSize":     15,
+                "strikeWidth":   0.5,
+                "strikeGap" : 2,
+                "strikeOffset" : 1.0,
+                "leading":20
+            },
+            "md_c":{
+                "name": "Normal",
+                "alignment":    1,
+                "fontName":     "IPAexGothic",
+                "fontSize":     15,
+                "strikeWidth":   0.5,
+                "strikeGap" : 2,
+                "strikeOffset" : 1.0,
+                "leading":20
+            },
+            "big_left":{
+                "name": "Normal",
+                "alignment":    0,
+                "fontName":     "IPAexGothic",
+                "fontSize":     20,
+                "underlineWidth":   0.5,
+                "underlineGap":     0,
+                "underlineOffset": -5.0,
+                "strikeWidth":   0.5,
+                "strikeGap" : 0,
+                "strikeOffset" : -3.0,
+                "leading":2
+            },
+            "big_center":{
+                "name": "Normal",
+                "alignment":    1,
+                "fontName":     "IPAexGothic",
+                "fontSize":     20,
+                "underlineWidth":   0.5,
+                "underlineGap":     0,
+                "underlineOffset": -5.0,
+                "strikeWidth":   0.5,
+                "strikeGap" : 0,
+                "strikeOffset" : -3.0,
+                "leading":2
+            },
+            "big_price":{
+                "name": "Normal",
+                "alignment":    1,
+                "fontName":     "IPAexGothic",
+                "fontSize":     20,
+                "underlineWidth":   1,
+                "underlineGap":     1,
+                "underlineOffset": -3.0,
+                "strikeWidth":   0.5,
+                "strikeGap" : 10,
+                "strikeOffset" : 0,
+                "leading":2
+            },
+            "client":{
+                "name": "Normal",
+                "alignment":    0,
+                "fontName":     "IPAexGothic",
+                "fontSize":     18,
+                "underlineWidth":   1,
+                "underlineGap":     1,
+                "underlineOffset": -3.0,
+                "textColor": "#000000"
+            }  
+        }
     }
 }
