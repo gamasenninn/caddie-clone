@@ -482,13 +482,13 @@
                                 <b-table-simple bordered>
                                     <b-form-checkbox v-model="invoice.isTaxExp">外税</b-form-checkbox>
                                     <b-tr>
+                                        <b-td variant="light" class="text-right">内消費税</b-td>
+                                        <b-td class="text-right">{{parseInt(sum*0.1)|nf}}</b-td>
+                                    </b-tr>
+                                    <b-tr>
                                         <b-td variant="light" class="text-right">合計金額</b-td>
                                         <b-td v-if="invoice.isTaxExp" class="text-right">{{sum*1.1|nf}}</b-td>
                                         <b-td v-else class="text-right">{{sum|nf}}</b-td>
-                                    </b-tr>
-                                    <b-tr>
-                                        <b-td variant="light" class="text-right">内消費税</b-td>
-                                        <b-td class="text-right">{{parseInt(sum*0.1)|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
                             </b-col>
