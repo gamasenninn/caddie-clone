@@ -126,27 +126,16 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
-                <b-row class="mt-5">
+                <b-row class="mt-2">
                     <b-col></b-col>
                     <!--- 本体 -->
                     <b-col cols=11>
+                        <div class="text-right">
+                            <span class="mr-2">登録日:{{formatDate(quotation.createdAt)}}</span>
+                            <span class="mr-2">更新日:{{formatDate(quotation.updatedAt)}}</span>
+                        </div>
                         <b-card border-variant="white" class="mb-3 text-center" header="見積書入力"
                             header-border-variant="light">
-                            <b-row>
-                                <b-col cols="6"></b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="登録日"
-                                        label-for="createdAt">
-                                        <p class="text-left pl-2" id="createdAt">{{formatDate(quotation.createdAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="更新日"
-                                        label-for="updatedAt">
-                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(quotation.updatedAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
@@ -365,8 +354,12 @@
                         <div class="mt-5"></div>
 
                         <b-row>
-                            <b-col></b-col>
-                            <b-col>
+                            <b-col sm>
+                                <b-form-textarea v-model="quotation.remarks" class="mt-5" id="remarks" size="sm"
+                                    type="text" rows="3" placeholder="備考欄">
+                                </b-form-textarea>
+                            </b-col>
+                            <b-col sm>
                                 <b-table-simple bordered>
                                     <b-form-checkbox v-model="quotation.isTaxExp">外税</b-form-checkbox>
                                     <b-tr>
@@ -381,13 +374,6 @@
                                 </b-table-simple>
                             </b-col>
                         </b-row>
-
-                        <!-- 備考欄 -->
-                        <b-card border-variant="white" class="mb-3 text-center" header="備考欄"
-                            header-border-variant="light">
-                            <b-form-textarea v-model="quotation.remarks" id="remarks" size="sm" type="text" rows="3">
-                            </b-form-textarea>
-                        </b-card>
 
                     </b-col> <!-- 本体 -->
                     <b-col></b-col>

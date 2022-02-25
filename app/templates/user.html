@@ -62,10 +62,14 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
-                <b-row class="mt-5">
+                <b-row class="mt-2">
                     <b-col></b-col>
                     <!--- 本体 -->
                     <b-col cols=11>
+                        <div class="text-right">
+                            <span class="mr-2">登録日:{{formatDate(user.created_at)}}</span>
+                            <span class="mr-2">更新日:{{formatDate(user.updated_at)}}</span>
+                        </div>
                         <b-card border-variant="white" class="mb-3 text-center" header="ユーザー入力"
                             header-border-variant="light">
 
@@ -237,6 +241,9 @@
                         if (result === true) {
                             this.bulkUpsert(this.user);
                         }
+                    },
+                    formatDate(date) {
+                        if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                 },
                 mounted: function () {

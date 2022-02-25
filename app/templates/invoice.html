@@ -161,27 +161,16 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
-                <b-row class="mt-5">
+                <b-row class="mt-2">
                     <b-col></b-col>
                     <!--- 本体 -->
                     <b-col cols=11>
+                        <div class="text-right">
+                            <span class="mr-2">登録日:{{formatDate(invoice.createdAt)}}</span>
+                            <span class="mr-2">更新日:{{formatDate(invoice.updatedAt)}}</span>
+                        </div>
                         <b-card border-variant="white" class="mb-3 text-center" header="請求書入力"
                             header-border-variant="light">
-                            <b-row>
-                                <b-col cols="6"></b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="登録日"
-                                        label-for="createdAt">
-                                        <p class="text-left pl-2" id="createdAt">{{formatDate(invoice.createdAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="更新日"
-                                        label-for="updatedAt">
-                                        <p class="text-left pl-2" id="updatedAt">{{formatDate(invoice.updatedAt)}}</p>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
@@ -475,17 +464,14 @@
 
                         <b-row>
                             <b-col sm>
-                                <b-row>
+                                <b-row class="mb-3">
                                     <b-col cols="auto">
                                         <b-form-checkbox class="mr-3" v-model="invoice.isPaid">入金済み</b-form-checkbox>
                                     </b-col>
                                     <b-col>
-                                        <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="入金日"
-                                            label-for="paymentDate">
-                                            <b-form-input v-model="invoice.paymentDate" id="paymentDate" size="sm"
-                                                type="date">
-                                            </b-form-input>
-                                        </b-form-group>
+                                        <b-form-input v-model="invoice.paymentDate" id="paymentDate" size="sm"
+                                            type="date" style="width: 150px;">
+                                        </b-form-input>
                                     </b-col>
                                 </b-row>
                                 <b-form-textarea v-model="invoice.remarks" id="remarks" size="sm" type="text" rows="3"
