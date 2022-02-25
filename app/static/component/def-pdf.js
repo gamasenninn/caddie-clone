@@ -182,20 +182,7 @@ hr = {
     jobTitle: "代表取締役",
     ceoName: "テスト太郎",
     applyNumber: "220001",
-
-
-    numberLabel: "請求番号:",
-    applyNumber: "00000001",
-    myCompanyName: "テスト会社",
-    person: "小野",
-    memo: "とりあえずメモ",
-    tax: "税込",
-    myAddress1: "栃木県鹿沼市板荷000-99",
-    myFax1: "000-888-2222",
-    myAddress2: "栃木県鹿沼市千渡000-99",
-    myTel2: "000-999-7777",
 };
-
 
 function getPdfDataRcpt() {
     return {
