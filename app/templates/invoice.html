@@ -13,7 +13,11 @@
             }
 
             .td-count {
-                max-width: 75px;
+                width: 75px;
+            }
+
+            .td-unit {
+                width: 90px;
             }
 
             .td-price {
@@ -348,7 +352,7 @@
                           {  key: 'itemId', label: '商品ID' ,sortable: true},
                           {  key: 'itemName', label: '商品名' ,sortable: true},
                           {  key: 'count',   label: '個数', tdClass:'td-count' },
-                          {  key: 'unit',   label: '単位' },
+                          {  key: 'unit',   label: '単位', tdClass:'td-unit' },
                           {  key: 'price', label: '値段', tdClass:'td-price' },
                           {  key: 'amount', label: '金額' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
@@ -861,7 +865,7 @@
                             sum.total = this.sum;
                             sum.tax = parseInt(sum.total - sum.total / 1.1)
                         };
-                        pdfData ={};    
+                        pdfData = {};
                         pdfData = getPdfData();
                         pdfData.data.bdata = self.invoice.invoice_items;
                         pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
