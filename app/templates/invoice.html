@@ -262,26 +262,25 @@
                                         <b-form-input v-model="invoice.title" id="title" size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="メモ">
                                         <b-form-textarea v-model="invoice.memo" size="sm" rows="2">
                                         </b-form-textarea>
                                     </b-form-group>
-                                    <b-row>
-                                        <b-col sm>
-                                            <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
-                                                label="アップロード" label-for="upform">
-                                                <b-form @change="uploadFile" id="upform">
-                                                    <b-form-file v-model="form.file" browse-text="+"
-                                                        placeholder="クリックまたはドラッグ..."
-                                                        drop-placeholder="Drop file here...">
-                                                    </b-form-file>
-                                                </b-form>
-                                            </b-form-group>
-                                        </b-col>
-                                    </b-row>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
+                                        label="アップロード" label-for="upform">
+                                        <b-form @submit="uploadFile" id="upform">
+                                            <b-input-group block>
+                                                <b-form-file v-model="form.file" browse-text="+"
+                                                    placeholder="クリックまたはドラッグ..."
+                                                    drop-placeholder="Drop file here...">
+                                                </b-form-file>
+                                                <b-button pill type="submit" class="ml-3">確定</b-button>
+                                            </b-input-group>                                        
+                                        </b-form>
+                                    </b-form-group>
                                     <b-row>
                                         <b-col md="2">
                                             <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3"><i
@@ -675,6 +674,7 @@
                         self.invoice = self.invoices.slice(-1)[0];
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         Vue.set(self.invoice, 'isTaxExp', true);
+                        this.clearFileList();
                     },
                     selectInvoice: function (item) {
                         this.invoice = item;
@@ -923,6 +923,9 @@
                                 self.dicFiles = response.data;
                             })
                     },
+                    clearFileList: function(){
+                        this.dicFiles = {};
+                    },                    
                     uploadFile: function (event) {
                         self = this;
                         event.preventDefault();
