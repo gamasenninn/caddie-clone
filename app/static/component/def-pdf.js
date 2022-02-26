@@ -220,8 +220,8 @@ function getPdfDataRcpt() {
                             ["E","('SPAN',(0,0),(5,0))"],
                             ["E","('SPAN',(1,1),(4,1))"],
                             ["E","('SPAN',(1,2),(4,2))"],
-                            ["E","('VALIGN',(1,2),(4,2),'TOP')"],
-                            ["E","('BACKGROUND',(1,2),(4,2),'#e0e0e0')"],
+                            ["E","('VALIGN',(1,2),(4,2),'CENTER')"],
+                            ["E","('BACKGROUND',(1,2),(4,2),colors.aliceblue)"],
                             ["E","('SPAN',(2,3),(5,3))"],
                             ["E","('SPAN',(2,4),(5,4))"],
                             ["E","('SPAN',(2,5),(5,6))"],
@@ -246,13 +246,13 @@ function getPdfDataRcpt() {
                         "row_heights": ["E", "(20*mm)"],
                         "table_style": [
                             ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
-                            ["E", "('GRID', (0, 0), (0,0), 0.1, colors.black)"],
+                            ["E", "('GRID', (0, 0), (0,0), 0.1, colors.black, None, (3,3,3,3))"],
                             ["E", "('VALIGN', (0, 0), (0,0), 'CENTER')"]
                         ]
                     }
                 ],
                 "drawImages": [
-                    ["('./static/asset/inkan.png', 490,50,50,50,mask='auto')"]
+                    ["('./static/asset/inkan.png', 420,100,50,50,mask='auto')"]
                 ]
             }
         },
@@ -318,7 +318,7 @@ function getPdfDataRcpt() {
                 "strikeWidth":   0.5,
                 "strikeGap" : 0,
                 "strikeOffset" : -3.0,
-                "leading":2
+                "leading": 10
             },
             "big_center":{
                 "name": "Normal",
@@ -342,9 +342,9 @@ function getPdfDataRcpt() {
                 "underlineGap":     1,
                 "underlineOffset": -3.0,
                 "strikeWidth":   0.5,
-                "strikeGap" : 10,
+                "strikeGap" : 5,
                 "strikeOffset" : 0,
-                "leading":2
+                "leading": 20
             },
             "client":{
                 "name": "Normal",
