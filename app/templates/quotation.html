@@ -646,6 +646,14 @@
                                 self.makers.unshift('')
                             });
                     },
+                    getSetting: async function () {
+                        self = this;
+                        await axios.get("/setting")
+                            .then(function (response) {
+                                console.log(response);
+                                self.setting = response.data;
+                            });
+                    },                    
                     modalShow: function (item, modalName) {
                         this.quotation = item;
                         console.log(this.quotation);
@@ -717,6 +725,12 @@
                         h.customerName = self.quotation.customerName;
                         h.applyNumber = self.quotation.applyNumber;
                         h.memo = self.quotation.memo;
+                        h.myCompanyName = self.setting.companyName;
+                        h.myAddress1 = self.setting.address;
+                        h.myTel1 = self.setting.telNumber;
+                        h.myFax1 = self.setting.faxNumber;
+                        h.person = self.quotation.manager ? self.quotation.manager : '';
+
                         if (this.quotation.isTaxExp) {
                             sum.amount = this.sum
                             sum.tax = parseInt(this.sum * 0.1);
@@ -755,6 +769,7 @@
                     this.getUnits();
                     this.getCategories();
                     this.getMakers();
+                    this.getSetting();
                     document.querySelector('title').textContent = '見積書管理';
                 },
                 router,
