@@ -131,13 +131,30 @@ function openWindow(url,title,name){
         containment: [0, -200, -100,-200]
     },
     onbeforeclose: function(panel){
+      //count =$('iframe').contents().find('#countChangeItem');
+      //content =$('iframe').contents().innerHTML;
+      //alert(content);
+      //console.log(count);
       return confirm('ウィンドウを閉じますか？');
+      //var doc = document.getElementsByTagName("iframe")[1].contentWindow.document;
+      //alert(doc.body.innerHTML);
+
+
     },
     callback: function(){
       $('iframe').on('load',function(){
         $(this).contents().on('click', function(){
             panel.front();
         });
+        //$(this).contents().on('jspanelbeforeclose', function(){
+        //    //panel.front();
+        //    alert("close!")
+        //});
+        //console.log("load!");
+        //document.addEventListener('jspanelbeforeclose', function(){
+        //  //alert("aaaaaa");
+        //  return  confirm('ウィンドウを閉じますか？');
+        //}, false);
       });
     },  
     content: '<iframe src='+ url +' width=100% height=100%><iframe>',
