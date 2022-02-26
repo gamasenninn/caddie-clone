@@ -238,32 +238,27 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-row>
-                                        <b-col cols="2"></b-col>
-                                        <b-col cols="10">
-                                            <b-form @submit="uploadFile" id="upform" inline>
-                                                <b-input-group prepend="upload" block>
-                                                    <b-form-file v-model="form.file" browse-text="+"
-                                                        placeholder="クリックまたはドラッグ..." drop-placeholder="ここにドロップ...">
-                                                    </b-form-file>
-                                                    <b-button pill type="submit" class="ml-3">確定</b-button>
-                                                </b-input-group>
-                                            </b-form>
-                                        </b-col>
-
-                                    </b-row>
-
-
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="アップロード"
+                                        label-for="upform">
+                                        <b-form @submit="uploadFile" id="upform" inline>
+                                            <b-input-group block>
+                                                <b-form-file v-model="form.file" browse-text="+"
+                                                    placeholder="クリックまたはドロップ..." drop-placeholder="ここにドロップ...">
+                                                </b-form-file>
+                                                <b-button pill type="submit" class="ml-3">確定</b-button>
+                                            </b-input-group>
+                                        </b-form>
+                                    </b-form-group>
                                     <b-row>
                                         <b-col md="2">
-                                            <b-button pill @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" block>
+                                            <b-button pill @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" >
                                                 <i class="fas fa-trash-alt"></i>
                                             </b-button>
                                             <b-button pill v-if="uploadListMode=='list'" @click="uploadListMode='card'"
-                                                class="mr-2 mb-3" block>
+                                                class="mr-2 mb-3" >
                                                 card</b-button>
                                             <b-button pill v-if="uploadListMode=='card'" @click="uploadListMode='list'"
-                                                class="mr-2 mb-3" block>
+                                                class="mr-2 mb-3" >
                                                 list</b-button>
                                         </b-col>
                                         <b-col>
@@ -288,7 +283,7 @@
                                                 <div class="file-card box">
                                                     <template v-for="f in dicFiles">
                                                         <b-card border-variant="light">
-                                                            <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                            <b-img :src="'../'+f.thumbPath" width="80" fluid></b-img>
                                                             <input type="checkbox" v-model="f.isSelect"
                                                                 class="image-in-check">
                                                         </b-card>
@@ -429,6 +424,8 @@
                         });
                         self.item = self.items.slice(-1)[0];
                         localStorage.setItem('item', JSON.stringify(self.item))
+                        this.countChangeItem = 0;
+                        this.clearFileList();
                     },
                     selectItem: function (item) {
                         this.item = item;
@@ -508,6 +505,9 @@
                                 self.dicFiles = response.data;
                             })
                     },
+                    clearFileList: function(){
+                        this.dicFiles = {};
+                    },
                     uploadFile: function (event) {
                         self = this;
                         event.preventDefault();
@@ -536,10 +536,10 @@
                     },
                     //---------変更があったかどうかをチェク。アラート ---------
 
-                    checkChange: function () {
+                    checkChange: async function () {
 
-                        if (this.countChangeItem > 1) {
-                            this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
+                        if (this.countChangeItem) {
+                            await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
                                 okTitle: '保存して戻る',
                                 cancelVariant: 'danger',
@@ -549,13 +549,16 @@
                                     console.log("保存して終了");
                                     //保存して終了
                                     this.bulkUpsert(this.item);
-                                    this.countChangeItem = 0;
                                 }
                                 this.getItems();
+                                this.countChangeItem = 0;
+                                this.clearFileList();
                                 router.push({ path: "?page=index" });
                             })
                         } else {
                             this.getItems();
+                            this.countChangeItem = 0;
+                            this.clearFileList();
                             router.push({ path: "?page=index" });
                         }
                     }
@@ -596,7 +599,9 @@
                 watch: {
                     item: {
                         handler: function (val, oldval) {
-                            this.countChangeItem += 1;
+                            if(this.pageName=='show' || this.pageName=='store'){
+                                this.countChangeItem += 1;
+                            }
                         },
                         deep: true
                     }
