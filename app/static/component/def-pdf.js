@@ -49,12 +49,12 @@ function getPdfData() {
                             ["", ""],
                             ["", ["P", h.myCompanyName, "md_l_b"]],
                             ["", ""],
-                            ["", ["P", '鹿沼店:' + h.myAddress1, "sm_r"]],
+                            ["", ["P", h.myAddress1, "sm_r"]],
                             ["", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
                             ["", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
-                            ["", ["P", '千渡店:' + h.myAddress2, "sm_r"]],
-                            ["", ["P", 'TEL: ' + h.myTel2, "sm_r"]],
-                            ["", ["P", '担当者: ' + h.person, "sm_l"]]
+                            ["", ""],
+                            ["", ""],
+                            ["", ["P", '担当者: ' + h.person, "sm_r"]]
                         ],
                         "col_widths": ["E", "[110*mm, 70*mm]"],
                         "table_style": [
