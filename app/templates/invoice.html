@@ -527,7 +527,7 @@
                                 <i class="fas fa-print"></i>
                             </template>
                             <b-dropdown-item @click="pdfout('delivery')">納品書</b-dropdown-item>
-                            <b-dropdown-item>領収書</b-dropdown-item>
+                            <b-dropdown-item @click="pdfoutRcpt">領収書</b-dropdown-item>
                         </b-dropdown>
                         <b-button pill size="lg" variant="danger" @click="modalShow(invoice,'deleteModal');">
                             <i class="fas fa-trash-alt"></i>
@@ -847,7 +847,7 @@
                             sum.total = this.sum;
                             sum.tax = parseInt(sum.total - sum.total / 1.1)
                         };
-
+                        pdfData ={};    
                         pdfData = getPdfData();
                         pdfData.data.bdata = self.invoice.invoice_items;
                         pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
@@ -864,6 +864,28 @@
                                                                     window.open('/pdf/' + response.data)
                                                                 }
                                 */
+                            });
+                    },
+                    pdfoutRcpt: async function () {
+                        self = this;
+                        hr.customerName = self.invoice.customerName;
+                        hr.applyNumber = self.invoice.applyNumber;
+                        hr.forPaymentOf = self.invoice.memo;
+                        hr.dueDate = self.invoice.paymentDate;
+                        //hr.amount = 123456789;
+                        if (this.invoice.isTaxExp) {
+                            hr.amount = parseInt(this.sum * 1.1);
+                        } else {
+                            hr.amount = this.sum;
+                        };
+
+                        pdfData = {};
+                        pdfData = getPdfDataRcpt();
+                        //pdfData.data.bdata = self.invoice.invoice_items;
+                        //pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
+                        await axios.post("/pdfmaker", pdfData)
+                            .then(function (response) {
+                                printJS('/pdf/' + response.data)
                             });
                     },
                     formatDate(date) {

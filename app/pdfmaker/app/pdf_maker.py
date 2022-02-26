@@ -183,7 +183,7 @@ def footer(canvas, doc):
 
     if not defPdf.get('footer'): return
 
-    for table_info in defPdf['footer']['table_infos']:
+    for table_info in defPdf['footer'].get('table_infos'):
         ft = make_table(table_info)
 
     x,y =cv(defPdf['footer']['pos_xy'])
@@ -195,14 +195,15 @@ def footer(canvas, doc):
 
 
     #canvas.drawImage('./inkan.png', 300,300,50,50,mask='auto')
+    print("_pageNumber:",canvas._pageNumber)
     if canvas._pageNumber == 1:
-        for di in defPdf['header']['drawImages']:
+        for di in defPdf['header'].get('drawImages'):
             cmd = f'canvas.drawImage{di[0]}'
-            #print(cmd)
+            print(cmd)
             eval(cmd)
 
 
-    for di in defPdf['footer']['drawImages']:
+    for di in defPdf['footer'].get('drawImages'):
         cmd = f'canvas.drawImage{di[0]}'
         #print(cmd)
         eval(cmd)
@@ -227,6 +228,7 @@ def page_break(pageno):
 
 def cv(src_l):
     if not src_l: return
+    if not src_l[1]: return
     try:
         if src_l[0] == "P": 
             return Paragraph(src_l[1],PS(**styles[src_l[2]]))
@@ -315,8 +317,8 @@ def pdf_maker(d,is_BytesIO=False,file_name=''):
     elements.append(cv(defPdf['header'].get('title_after')))
 
 
-    for table_info in defPdf['header']['table_infos']:
-        if table_info.get('before') : elements.append(cv(table_info.get('after')))
+    for table_info in defPdf['header'].get('table_infos'):
+        if table_info.get('before') : elements.append(cv(table_info.get('before')))
         ht = make_table(table_info)
         elements.append(ht)
         if table_info.get('after') : elements.append(cv(table_info.get('after')))
@@ -325,7 +327,7 @@ def pdf_maker(d,is_BytesIO=False,file_name=''):
         bt = make_detail(defPdf['body']['detail'],data.get('bdata'))
         elements.append(bt)
 
-        bt = make_table(defPdf['body']['detail_after']['table_info'])
+        bt = make_table(defPdf['body']['detail_after'].get('table_info'))
         elements.append(bt)
 
     #ft = make_table(defPdf['footer']['table_info'])
