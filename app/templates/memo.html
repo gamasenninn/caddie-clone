@@ -36,10 +36,10 @@
                                 :items=memos :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                          {  key: 'createdAt', label: '作成日' },
                           {  key: 'title', label: '件名' },
                           {  key: 'manager', label: '担当者' },
                           {  key: 'content', label: '内容' },
-                          {  key: 'createdAt', label: '作成日時' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
