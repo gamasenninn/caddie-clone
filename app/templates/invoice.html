@@ -871,7 +871,7 @@
                         hr.customerName = self.invoice.customerName;
                         hr.applyNumber = self.invoice.applyNumber;
                         hr.forPaymentOf = self.invoice.memo;
-                        hr.dueDate = self.invoice.applyDate;
+                        hr.dueDate = self.invoice.paymentDate;
                         //hr.amount = 123456789;
                         if (this.invoice.isTaxExp) {
                             hr.amount = parseInt(this.sum * 1.1);

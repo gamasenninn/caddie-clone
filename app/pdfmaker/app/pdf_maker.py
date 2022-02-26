@@ -228,6 +228,7 @@ def page_break(pageno):
 
 def cv(src_l):
     if not src_l: return
+    if not src_l[1]: return
     try:
         if src_l[0] == "P": 
             return Paragraph(src_l[1],PS(**styles[src_l[2]]))
