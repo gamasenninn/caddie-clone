@@ -585,6 +585,7 @@
                     units: [],
                     categories: [],
                     makers: [],
+                    setting: [],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
                     fileId: '', //upload用ID
@@ -772,6 +773,14 @@
                                 self.makers.unshift('')
                             });
                     },
+                    getSetting: async function () {
+                        self = this;
+                        await axios.get("/setting")
+                            .then(function (response) {
+                                console.log(response);
+                                self.setting = response.data;
+                            });
+                    },
                     modalShow: function (item, modalName) {
                         this.invoice = item;
                         console.log(this.invoice);
@@ -837,6 +846,11 @@
                         }
                         h.customerName = self.invoice.customerName;
                         h.applyNumber = self.invoice.applyNumber;
+                        h.myCompanyName = self.setting.companyName;
+                        h.myAddress1 = self.setting.address;
+                        h.myTel1 = self.setting.telNumber;
+                        h.myFax1 = self.setting.faxNumber;
+                        h.person = self.invoice.manager ? self.invoice.manager : '';
                         if (this.invoice.isTaxExp) {
                             sum.amount = this.sum
                             sum.tax = parseInt(this.sum * 0.1);
@@ -872,6 +886,12 @@
                         hr.applyNumber = self.invoice.applyNumber;
                         hr.forPaymentOf = self.invoice.memo;
                         hr.dueDate = self.invoice.paymentDate;
+                        hr.myCompanyName = self.setting.companyName;
+                        hr.myAddress1 = self.setting.address;
+                        hr.myTel1 = self.setting.telNumber;
+                        hr.myFax1 = self.setting.faxNumber;
+                        hr.jobTitle = "-代表取締役社長-";
+                        hr.ceoName = self.setting.representative;
                         //hr.amount = 123456789;
                         if (this.invoice.isTaxExp) {
                             hr.amount = parseInt(this.sum * 1.1);
@@ -881,8 +901,6 @@
 
                         pdfData = {};
                         pdfData = getPdfDataRcpt();
-                        //pdfData.data.bdata = self.invoice.invoice_items;
-                        //pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
@@ -940,6 +958,7 @@
                     this.getUnits();
                     this.getCategories();
                     this.getMakers();
+                    this.getSetting();
                     document.querySelector('title').textContent = '請求書管理';
                     this.getFileList(this.invoice.applyNumber)
                 },

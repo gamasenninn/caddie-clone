@@ -195,7 +195,7 @@ def footer(canvas, doc):
 
 
     #canvas.drawImage('./inkan.png', 300,300,50,50,mask='auto')
-    print("_pageNumber:",canvas._pageNumber)
+    #print("_pageNumber:",canvas._pageNumber)
     if canvas._pageNumber == 1:
         for di in defPdf['header'].get('drawImages'):
             cmd = f'canvas.drawImage{di[0]}'
@@ -228,7 +228,8 @@ def page_break(pageno):
 
 def cv(src_l):
     if not src_l: return
-    if not src_l[1]: return
+    if not src_l[1]: return ''
+    #print ("src_l:" ,src_l[1])
     try:
         if src_l[0] == "P": 
             return Paragraph(src_l[1],PS(**styles[src_l[2]]))
