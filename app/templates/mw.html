@@ -145,7 +145,7 @@ function openWindow(url,title,name){
       if (doc.body.querySelector('#countChanged')){
         count = parseInt(doc.body.querySelector('#countChanged').value);
         //alert(count);
-        if (count > 1){
+        if (count > 0){
           return confirm('未保存のデータがありますが、保存せず終了しますか？');
         }
       }

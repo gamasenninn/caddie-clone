@@ -500,7 +500,7 @@
 
                 </b-row>
                 <!-- iframe用コミュニケーション変数-->
-                <input type="text" v-model="countChanged" id="countChanged">
+                <input type="hidden" v-model="countChanged" id="countChanged">
 
             </div>
 
@@ -644,12 +644,13 @@
                         await axios.put("/invoice/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
-                                self.getInvoice(self.invoice);
-                                localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                                self.countChanged = 0;
-                                app.title = '更新';
-                                app.message = '保存しました。'
                             });
+                        await self.getInvoice(self.invoice);
+                        localStorage.setItem('invoice', JSON.stringify(self.invoice));
+                        self.countChanged = 0;
+                        app.title = '更新';
+                        app.message = '保存しました。'
+
                     },
                     copyInvoice: function (item) {
                         let invoiceResource = JSON.stringify(item);
