@@ -52,25 +52,6 @@ class Customer(db.Model):
     quotations = db.relationship('Quotation', backref='customer')
 
 
-def to_dict(self):
-    return {
-        'id': self.id,
-        'customerName': self.customerName,
-        'honorificTitle': self.honorificTitle,
-        'postNumber': self.postNumber,
-        'address': self.address,
-        'telNumber': self.telNumber,
-        'faxNumber': self.faxNumber,
-        'url': self.url,
-        'email': self.email,
-        'manager': self.manager,
-        'representative': self.representative,
-        'memo': self.memo,
-        'createdAt': self.createdAt,
-        'updatedAt': self.updatedAt,
-    }
-
-
 class Item(db.Model):
 
     __tablename__ = 'items'
@@ -88,21 +69,6 @@ class Item(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'itemName': self.itemName,
-            'unit': self.unit,
-            'price': self.price,
-            'cost': self.cost,
-            'costRate': self.costRate,
-            'memo': self.memo,
-            'createdAt': self.createdAt,
-            'updatedAt': self.updatedAt,
-        }
-    # invoice_items=db.relationship('Invoice_Item',backref='items')
-    # quotation_items=db.relationship('Quotation_Item',backref='items')
 
 
 # 請求番号自動生成
