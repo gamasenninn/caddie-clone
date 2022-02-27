@@ -625,11 +625,11 @@
                                 console.log(response);
                                 Vue.set(self.invoice, 'id', response.data.id)
                                 self.invoice.isInsert = false;
-                                self.getInvoice(self.invoice);
-                                localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                                app.title = '新規作成';
-                                app.message = '保存しました。';
                             });
+                        await self.getInvoice(self.invoice);
+                        localStorage.setItem('invoice', JSON.stringify(self.invoice));
+                        app.title = '新規作成';
+                        app.message = '保存しました。';
                     },
                     updateInvoice: async function (item) {
                         self = this;
