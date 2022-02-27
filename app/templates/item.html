@@ -136,6 +136,7 @@
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
+
                 <b-row class="mt-2">
                     <b-col></b-col>
                     <!--- 本体 -->
@@ -306,6 +307,9 @@
                     <b-col></b-col>
 
                 </b-row>
+                <!-- iframe用コミュニケーション変数-->
+                <input type="hidden" v-model="countChangeItem" id="countChangeItem">
+
             </div>
             <!-- 空行 -->
             <b-row class="mb-5"></b-row>
@@ -342,6 +346,7 @@
                 <select-modal modal-name='deleteModal' modal-message='削除しますか？'
                     @selected="deleteModalProcess($event);" />
             </div>
+
 
         </div>
 
