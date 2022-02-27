@@ -103,23 +103,9 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積番号"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="請求No."
                                         label-for="applyNumber">
                                         <p class="text-left pl-2" id="applyNumber">{{invoice.applyNumber}}</p>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
-                                        label-for="customer" class="customer">
-                                        <p class="text-left pl-2" id="customerName">{{invoice.customerName}}</p>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
-                                        label-for="title">
-                                        <p class="text-left pl-2" id="title">{{invoice.title}}</p>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -139,10 +125,49 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
+                                        label-for="customer" class="customer">
+                                        <p class="text-left pl-2" id="customerName">{{invoice.customerName}}</p>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
+                                        label-for="manager">
+                                        <p class="text-left pl-2" id="manager">{{invoice.manager}}</p>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
+                                        label-for="department">
+                                        <p class="text-left pl-2" id="department">{{invoice.department}}</p>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="先方担当者"
+                                        label-for="otherPartyManager">
+                                        <p class="text-left pl-2" id="otherPartyManager">{{invoice.otherPartyManager}}
+                                        </p>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
+                                        label-for="title">
+                                        <p class="text-left pl-2" id="title">{{invoice.title}}</p>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="memo">
                                         <p class="text-left pl-2" id="memo">{{invoice.memo}}</p>
                                     </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="削除日時"
