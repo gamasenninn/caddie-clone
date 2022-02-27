@@ -50,6 +50,7 @@ if (localStorage.getItem('wMode')===null){
 
 let _left = 100;
 let _top = 100;
+wins={};
 
 function openMenu(obj){
   self = obj;
@@ -108,9 +109,17 @@ function openWindow(url,title,name){
     window.location.href = url;
     return
   } 
+  if (wins[name] ){
+    wins[name].front();
+    return;
+  }
   let panel = jsPanel.create({
     headerControls: 'sm',
     headerTitle: title,
+    data:{
+      title: title,
+      name: name
+    },
     footerToolbar: '<span>footer</span>',
     borderRadius: '.5rem',
     contentOverflow: 'hidden hidden',
@@ -142,20 +151,15 @@ function openWindow(url,title,name){
       }
       return true;
     },
+    onclosed: function(panel){
+      delete wins[panel.options.data.name];
+    },
     callback: function(){
       $('iframe').on('load',function(){
         $(this).contents().on('click', function(){
             panel.front();
         });
-        //$(this).contents().on('jspanelbeforeclose', function(){
-        //    //panel.front();
-        //    alert("close!")
-        //});
-        //console.log("load!");
-        //document.addEventListener('jspanelbeforeclose', function(){
-        //  //alert("aaaaaa");
-        //  return  confirm('ウィンドウを閉じますか？');
-        //}, false);
+        wins[name] = panel;
       });
     },  
     content: '<iframe src='+ url +' width=100% height=100%><iframe>',
@@ -166,8 +170,6 @@ function openWindow(url,title,name){
   if ( _top > 300 ) _top -= 300   
 
 }
-
-//      frameDict[name] = frame;
 
 openMenu();
 
