@@ -273,16 +273,15 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
-                                        label="アップロード" label-for="upform">
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="アップロード"
+                                        label-for="upform">
                                         <b-form @submit="uploadFile" id="upform">
                                             <b-input-group block>
                                                 <b-form-file v-model="form.file" browse-text="+"
-                                                    placeholder="クリックまたはドラッグ..."
-                                                    drop-placeholder="Drop file here...">
+                                                    placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
                                                 </b-form-file>
                                                 <b-button pill type="submit" class="ml-3">確定</b-button>
-                                            </b-input-group>                                        
+                                            </b-input-group>
                                         </b-form>
                                     </b-form-group>
                                     <b-row>
@@ -676,8 +675,9 @@
                             invoice_items: [{}, {}, {}, {}, {}],
                         });
                         self.invoice = self.invoices.slice(-1)[0];
-                        localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         Vue.set(self.invoice, 'isTaxExp', true);
+                        Vue.set(self.invoice, 'isPaid', false);
+                        localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         this.clearFileList();
                     },
                     selectInvoice: function (item) {
@@ -927,9 +927,9 @@
                                 self.dicFiles = response.data;
                             })
                     },
-                    clearFileList: function(){
+                    clearFileList: function () {
                         this.dicFiles = {};
-                    },                    
+                    },
                     uploadFile: function (event) {
                         self = this;
                         event.preventDefault();

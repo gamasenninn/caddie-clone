@@ -254,11 +254,11 @@ def invoice_create():
             data.get('deadLine'), "%Y-%m-%d") if data.get('deadLine') else None,
         paymentDate=datetime.strptime(
             data.get('paymentDate'), "%Y-%m-%d") if data.get('paymentDate') else None,
-        isPaid=data.get('isPaid'),
+        isPaid=data.get('isPaid') if data.get('isPaid') else False,
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
-        isTaxExp=data.get('isTaxExp'),
+        isTaxExp=data.get('isTaxExp') if data.get('isTaxExp') else True,
         invoice_items=newInvoiceItems,
     )
     db.session.add(newInvoice)
@@ -287,11 +287,11 @@ def invoice_update(id):
         data.get('deadLine'), "%Y-%m-%d") if data.get('deadLine') else None
     invoice.paymentDate = datetime.strptime(
         data.get('paymentDate'), "%Y-%m-%d") if data.get('paymentDate') else None
-    invoice.isPaid = data.get('isPaid')
+    invoice.isPaid = data.get('isPaid') if data.get('isPaid') else False
     invoice.title = data.get('title')
     invoice.memo = data.get('memo')
     invoice.remarks = data.get('remarks')
-    invoice.isTaxExp = data.get('isTaxExp')
+    invoice.isTaxExp = data.get('isTaxExp') if data.get('isTaxExp') else True
 
     if data.get('invoice_items'):
         update_list = []
@@ -444,7 +444,7 @@ def quotation_create():
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
-        isTaxExp=data.get('isTaxExp'),
+        isTaxExp=data.get('isTaxExp') if data.get('isTaxExp') else True,
         quotation_items=newQuotationItems,
     )
     db.session.add(newQuotation)
@@ -474,7 +474,7 @@ def quotation_update(id):
     quotation.title = data.get('title')
     quotation.memo = data.get('memo')
     quotation.remarks = data.get('remarks')
-    quotation.isTaxExp = data.get('isTaxExp')
+    quotation.isTaxExp = data.get('isTaxExp') if data.get('isTaxExp') else True
 
     if data.get('quotation_items'):
         update_list = []

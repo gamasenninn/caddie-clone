@@ -551,8 +551,8 @@
                             quotation_items: [{}, {}, {}, {}, {}],
                         });
                         self.quotation = self.quotations.slice(-1)[0];
-                        localStorage.setItem('quotation', JSON.stringify(self.quotation));
                         Vue.set(self.quotation, 'isTaxExp', true);
+                        localStorage.setItem('quotation', JSON.stringify(self.quotation));
                     },
                     selectQuotation: function (item) {
                         this.quotation = item;
