@@ -242,7 +242,18 @@
                                     </b-form-group>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お気に入り"
                                         label-for="isFavorite">
-                                        <b-form-checkbox v-model="customer.isFavorite"></b-form-checkbox>
+                                        <div v-if="customer.isFavorite===true">
+                                            <a href="#" style="text-decoration: none;color:#000000;padding: 0 7px 0 0;"
+                                                @click="changeIsFavorite(customer.isFavorite);">
+                                                <b-icon icon="star-fill"></b-icon>
+                                            </a>
+                                        </div>
+                                        <div v-else>
+                                            <a href="#" style="text-decoration: none;color:#000000;padding: 0 7px 0 0;"
+                                                @click="changeIsFavorite(customer.isFavorite);">
+                                                <b-icon icon="star"></b-icon>
+                                            </a>
+                                        </div>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
@@ -439,6 +450,12 @@
                             return firstValue + '-' + lastValue;
                         }
                         return value;
+                    },
+                    changeIsFavorite(value) {
+                        if (value === true)
+                            this.$set(this.customer, 'isFavorite', false);
+                        else
+                            this.$set(this.customer, 'isFavorite', true);
                     },
                     pdfOut: function () {
                         alert("PDFを表示します");
