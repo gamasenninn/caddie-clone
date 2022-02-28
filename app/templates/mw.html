@@ -110,9 +110,12 @@ function openWindow(url,title,name){
     return
   } 
   if (wins[name] ){
+    if (wins[name] == "loading" ) return;
     wins[name].front();
     return;
   }
+  wins[name] = "loading";
+
   let panel = jsPanel.create({
     headerControls: 'sm',
     headerTitle: title,
