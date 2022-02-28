@@ -480,6 +480,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.quotations = response.data;
+                                self.countChanged = 0;
                             });
                     },
                     bulkUpsert(item) {
