@@ -275,14 +275,9 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-dropdown split dropup id="dropdown-dropup" size="lg" class="m-2" @click="alert('印刷しました。');"
-                            id="pdfout">
-                            <template #button-content>
-                                <i class="fas fa-print"></i>
-                            </template>
-                            <b-dropdown-item>納品書</b-dropdown-item>
-                            <b-dropdown-item>領収書</b-dropdown-item>
-                        </b-dropdown>
+                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')" id="pdfout"><i
+                                class="fas fa-print"></i>
+                        </b-button>
                     </b-col>
                 </b-row>
             </b-card>

@@ -409,13 +409,8 @@
                             @click="modalShow(quotation,'copyModal');"><i class="fa-solid fa-copy"></i></b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
                             @click="modalShow(quotation,'convertModal');"><i class="fa-solid fa-shuffle"></i></b-button>
-                        <b-dropdown split dropup id="dropdown-dropup" size="lg" @click="pdfout" id="pdfout">
-                            <template #button-content>
-                                <i class="fas fa-print"></i>
-                            </template>
-                            <b-dropdown-item>納品書</b-dropdown-item>
-                            <b-dropdown-item>領収書</b-dropdown-item>
-                        </b-dropdown>
+                        <b-button pill size="lg" variant="info" @click="pdfout" id="pdfout"><i class="fas fa-print"></i>
+                        </b-button>
                         <b-button pill size="lg" variant="danger" @click="modalShow(quotation,'deleteModal');">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
