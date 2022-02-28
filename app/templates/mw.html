@@ -113,6 +113,8 @@ function openWindow(url,title,name){
     wins[name].front();
     return;
   }
+  wins[name] = "loading";
+
   let panel = jsPanel.create({
     headerControls: 'sm',
     headerTitle: title,
