@@ -110,6 +110,7 @@ function openWindow(url,title,name){
     return
   } 
   if (wins[name] ){
+    if (wins[name] == "loading" ) return;
     wins[name].front();
     return;
   }
