@@ -681,6 +681,7 @@
                         });
                         self.invoice = self.invoices.slice(-1)[0];
                         Vue.set(self.invoice, 'isTaxExp', true);
+                        localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         this.countChanged = 0;
                         this.clearFileList();
                     },

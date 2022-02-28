@@ -552,6 +552,7 @@
                         });
                         self.quotation = self.quotations.slice(-1)[0];
                         Vue.set(self.quotation, 'isTaxExp', true);
+                        localStorage.setItem('quotation', JSON.stringify(self.quotation));
                         this.countChanged = 0;
                         //localStorage.setItem('quotation', JSON.stringify(self.quotation));
                     },
