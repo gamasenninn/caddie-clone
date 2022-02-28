@@ -1,6 +1,10 @@
 <% extends "head.html" %>
     <% block content %>
         <style>
+            .td-customerName {
+                width: 170px;
+            }
+
             .td-postNumber {
                 width: 80px;
             }
@@ -63,7 +67,7 @@
                                 :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
                       {  key: 'update', label: '' },
                       {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
-                      {  key: 'customerName', label: '得意先名' },
+                      {  key: 'customerName', label: '得意先名', tdClass:'td-customerName' },
                       {  key: 'postNumber', label: '郵便番号', tdClass:'td-postNumber' },
                       {  key: 'addressCombine', label: '住所' },
                       {  key: 'telNumber', label: '電話番号', tdClass:'td-telNumber' },
