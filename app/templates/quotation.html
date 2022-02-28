@@ -383,6 +383,8 @@
                     <b-col></b-col>
 
                 </b-row>
+                <!-- iframe用コミュニケーション変数-->
+                <input type="text" v-model="countChanged" id="countChanged">
 
             </div>
 
@@ -396,9 +398,7 @@
                 class="fixed-bottom footer">
                 <b-row>
                     <b-col>
-                        <router-link to="?page=index">
-                            <b-button @click="getQuotations();">＜</b-button>
-                        </router-link>
+                        <b-button @click="checkChange">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
                         <b-button pill variant="info" @click="bulkUpsert(quotation);showConfirmModal();"
@@ -470,6 +470,7 @@
                     isShowFavorite: false,
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
+                    countChanged: 0
                 },
                 methods: {
                     // ---Quotations---
@@ -496,22 +497,25 @@
                                 console.log(response);
                                 Vue.set(self.quotation, 'id', response.data.id)
                                 self.quotation.isInsert = false;
-                                self.getQuotation(self.quotation);
-                                localStorage.setItem('quotation', JSON.stringify(self.quotation));
-                                app.title = '新規作成';
-                                app.message = '保存しました。';
                             });
-                    },
+                        await self.getQuotation(self.quotation);
+                        localStorage.setItem('quotation', JSON.stringify(self.quotation));
+                        self.countChanged = 0;
+                        app.title = '新規作成';
+                        app.message = '保存しました。';
+                     },
                     updateQuotation: async function (item) {
                         self = this;
                         await axios.put("/quotation/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
-                                self.getQuotation(self.quotation);
-                                localStorage.setItem('quotation', JSON.stringify(self.quotation));
-                                app.title = '更新';
-                                app.message = '保存しました。'
                             });
+                        await self.getQuotation(self.quotation);
+                        localStorage.setItem('quotation', JSON.stringify(self.quotation));
+                        self.countChanged = 0;
+                        app.title = '更新';
+                        app.message = '保存しました。'
+
                     },
                     copyQuotation: function (item) {
                         let quotationResource = JSON.stringify(item);
@@ -547,12 +551,14 @@
                         });
                         self.quotation = self.quotations.slice(-1)[0];
                         Vue.set(self.quotation, 'isTaxExp', true);
-                        localStorage.setItem('quotation', JSON.stringify(self.quotation));
+                        this.countChanged = 0;
+                        //localStorage.setItem('quotation', JSON.stringify(self.quotation));
                     },
                     selectQuotation: function (item) {
                         this.quotation = item;
                         console.log(this.quotation);
-                        localStorage.setItem('quotation', JSON.stringify(item))
+                        localStorage.setItem('quotation', JSON.stringify(item));
+                        this.countChanged = 0;
                     },
                     selectQuotationItem: function (item) {
                         this.quotationItem = item;
@@ -567,6 +573,7 @@
                                     console.log(key, value);
                                     self.$set(self.quotation, key, value);
                                 }
+                                //this.countChanged = 0;
                             });
                     },
                     deleteQuotationItem: async function (item) {
@@ -717,6 +724,27 @@
                         if (quotation.isTaxExp === true) return Math.floor(amount * 1.1);
                         return amount;
                     },
+                    checkChange: async function () {
+
+                        if (this.countChanged) {
+                            await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
+                                okVariant: 'primary',
+                                okTitle: '保存して戻る',
+                                cancelVariant: 'danger',
+                                cancelTitle: '保存しないで戻る',
+                            }).then(value => {
+                                if (value) {
+                                    console.log("保存して終了");
+                                    //保存して終了
+                                    this.bulkUpsert(this.quotation);
+                                }
+                            });
+                        }
+                        this.getQuotations();
+                        this.countChanged = 0;
+                        //this.clearFileList();
+                        router.push({ path: "?page=index" });
+                    },
                     pdfout: async function () {
                         self = this;
                         h.category = "見積書"
@@ -815,6 +843,16 @@
                         });
                     },
                 },
+                watch: {
+                    quotation: {
+                        handler: function (val, oldval) {
+                            if(this.pageName=='show' || this.pageName=='store'){
+                                this.countChanged += 1;
+                            }
+                        },
+                        deep: true
+                    }
+                }
             })
 
             function searchFilter(searchTarget, searchWord) {

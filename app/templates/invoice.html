@@ -609,7 +609,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.invoices = response.data;
-                                self.countChanged = 0;
+                                //self.countChanged = 0;
                             });
                     },
                     bulkUpsert(item) {
@@ -619,7 +619,6 @@
                         else {
                             this.updateInvoice(item);
                         }
-                        this.countChanged = 0;
                     },
                     insertInvoice: async function (item) {
                         self = this;
@@ -628,14 +627,10 @@
                                 console.log(response);
                                 Vue.set(self.invoice, 'id', response.data.id)
                                 self.invoice.isInsert = false;
-                                self.getInvoice(self.invoice);
-                                localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                                self.countChanged = 0;
-                                app.title = '新規作成';
-                                app.message = '保存しました。';
                             });
                         await self.getInvoice(self.invoice);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
+                        self.countChanged = 0;
                         app.title = '新規作成';
                         app.message = '保存しました。';
                     },
