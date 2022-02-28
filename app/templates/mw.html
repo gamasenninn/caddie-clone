@@ -142,10 +142,10 @@ function openWindow(url,title,name){
     onbeforeclose: function(panel){
       var doc = panel.content.querySelector('iframe').contentWindow.document; //iframe内のコンテンツを取得
       //console.log(doc.body.innerHTML)
-      if (doc.body.querySelector('#countChangeItem')){
-        count = parseInt(doc.body.querySelector('#countChangeItem').value);
+      if (doc.body.querySelector('#countChanged')){
+        count = parseInt(doc.body.querySelector('#countChanged').value);
         //alert(count);
-        if (count > 1){
+        if (count > 0){
           return confirm('未保存のデータがありますが、保存せず終了しますか？');
         }
       }

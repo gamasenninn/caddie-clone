@@ -499,6 +499,8 @@
                     <b-col></b-col>
 
                 </b-row>
+                <!-- iframe用コミュニケーション変数-->
+                <input type="hidden" v-model="countChanged" id="countChanged">
 
             </div>
 
@@ -512,9 +514,7 @@
                 class="fixed-bottom footer">
                 <b-row>
                     <b-col>
-                        <router-link to="?page=index">
-                            <b-button @click="getInvoices();">＜</b-button>
-                        </router-link>
+                        <b-button @click="checkChange">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
                         <b-button pill variant="info" @click="bulkUpsert(invoice);showConfirmModal();"
@@ -599,6 +599,7 @@
                     uploadListMode: 'card', //list,card
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
+                    countChanged: 0
                 },
                 methods: {
                     // ---Invoices---
@@ -608,6 +609,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.invoices = response.data;
+                                self.countChanged = 0;
                             });
                     },
                     bulkUpsert(item) {
@@ -617,6 +619,7 @@
                         else {
                             this.updateInvoice(item);
                         }
+                        this.countChanged = 0;
                     },
                     insertInvoice: async function (item) {
                         self = this;
@@ -625,6 +628,11 @@
                                 console.log(response);
                                 Vue.set(self.invoice, 'id', response.data.id)
                                 self.invoice.isInsert = false;
+                                self.getInvoice(self.invoice);
+                                localStorage.setItem('invoice', JSON.stringify(self.invoice));
+                                self.countChanged = 0;
+                                app.title = '新規作成';
+                                app.message = '保存しました。';
                             });
                         await self.getInvoice(self.invoice);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
@@ -636,11 +644,13 @@
                         await axios.put("/invoice/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
-                                self.getInvoice(self.invoice);
-                                localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                                app.title = '更新';
-                                app.message = '保存しました。'
                             });
+                        await self.getInvoice(self.invoice);
+                        localStorage.setItem('invoice', JSON.stringify(self.invoice));
+                        self.countChanged = 0;
+                        app.title = '更新';
+                        app.message = '保存しました。'
+
                     },
                     copyInvoice: function (item) {
                         let invoiceResource = JSON.stringify(item);
@@ -676,15 +686,15 @@
                         });
                         self.invoice = self.invoices.slice(-1)[0];
                         Vue.set(self.invoice, 'isTaxExp', true);
-                        Vue.set(self.invoice, 'isPaid', false);
-                        localStorage.setItem('invoice', JSON.stringify(self.invoice));
+                        this.countChanged = 0;
                         this.clearFileList();
                     },
                     selectInvoice: function (item) {
                         this.invoice = item;
                         console.log(this.invoice);
                         localStorage.setItem('invoice', JSON.stringify(item));
-                        this.getFileList(this.invoice.applyNumber)
+                        this.getFileList(this.invoice.applyNumber);
+                        this.countChanged = 0;
                     },
                     selectInvoiceItem: function (item) {
                         this.invoiceItem = item;
@@ -956,6 +966,28 @@
                             self.getFileList(fid);
                         });
                     },
+                    checkChange: async function () {
+
+                        if (this.countChanged) {
+                            await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
+                                okVariant: 'primary',
+                                okTitle: '保存して戻る',
+                                cancelVariant: 'danger',
+                                cancelTitle: '保存しないで戻る',
+                            }).then(value => {
+                                if (value) {
+                                    console.log("保存して終了");
+                                    //保存して終了
+                                    this.bulkUpsert(this.invoice);
+                                }
+                            });
+                        }
+                        this.getInvoices();
+                        this.countChanged = 0;
+                        this.clearFileList();
+                        router.push({ path: "?page=index" });
+                    }
+
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
@@ -1015,6 +1047,16 @@
                         });
                     },
                 },
+                watch: {
+                    invoice: {
+                        handler: function (val, oldval) {
+                            if(this.pageName=='show' || this.pageName=='store'){
+                                this.countChanged += 1;
+                            }
+                        },
+                        deep: true
+                    }
+                }
             })
 
             function searchFilter(searchTarget, searchWord) {

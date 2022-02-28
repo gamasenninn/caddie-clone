@@ -308,7 +308,7 @@
 
                 </b-row>
                 <!-- iframe用コミュニケーション変数-->
-                <input type="hidden" v-model="countChangeItem" id="countChangeItem">
+                <input type="hidden" v-model="countChanged" id="countChanged">
 
             </div>
             <!-- 空行 -->
@@ -374,7 +374,7 @@
                         fileId: ''
                     },
                     uploadListMode: 'card', //list,card
-                    countChangeItem: 0
+                    countChanged: 0
 
                 },
                 methods: {
@@ -409,7 +409,7 @@
                         await axios.put("/item/" + item.id, item)
                             .then(function (response) {
                                 self.getItems();
-                                self.countChangeItem = 0;
+                                self.countChanged = 0;
                                 console.log(response);
                             });
                     },
@@ -429,7 +429,7 @@
                         });
                         self.item = self.items.slice(-1)[0];
                         localStorage.setItem('item', JSON.stringify(self.item))
-                        this.countChangeItem = 0;
+                        this.countChanged = 0;
                         this.clearFileList();
                     },
                     selectItem: function (item) {
@@ -437,7 +437,7 @@
                         console.log(this.item);
                         localStorage.setItem('item', JSON.stringify(item))
                         this.getFileList(item.itemCode);
-                        this.countChangeItem = 0;
+                        this.countChanged = 0;
                     },
                     getItem: async function (item) {
                         self = this;
@@ -447,7 +447,6 @@
                                 for (const [key, value] of Object.entries(response.data)) {
                                     console.log(key, value);
                                     self.$set(self.item, key, value);
-                                    //this.countChangeItem = 0;
                                 }
                             });
                         this.getFileList(item.itemCode);
@@ -543,7 +542,7 @@
 
                     checkChange: async function () {
 
-                        if (this.countChangeItem) {
+                        if (this.countChanged) {
                             await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
                                 okTitle: '保存して戻る',
@@ -555,17 +554,12 @@
                                     //保存して終了
                                     this.bulkUpsert(this.item);
                                 }
-                                this.getItems();
-                                this.countChangeItem = 0;
-                                this.clearFileList();
-                                router.push({ path: "?page=index" });
-                            })
-                        } else {
-                            this.getItems();
-                            this.countChangeItem = 0;
-                            this.clearFileList();
-                            router.push({ path: "?page=index" });
+                            });
                         }
+                        this.getItems();
+                        this.countChanged = 0;
+                        this.clearFileList();
+                        router.push({ path: "?page=index" });
                     }
 
                 },
@@ -605,7 +599,7 @@
                     item: {
                         handler: function (val, oldval) {
                             if(this.pageName=='show' || this.pageName=='store'){
-                                this.countChangeItem += 1;
+                                this.countChanged += 1;
                             }
                         },
                         deep: true
