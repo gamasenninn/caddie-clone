@@ -270,6 +270,8 @@
                     <b-col></b-col>
 
                 </b-row>
+                <!-- iframe用コミュニケーション変数-->
+                <input type="hidden" v-model="countChanged" id="countChanged">
 
             </div>
 
@@ -283,9 +285,7 @@
                 class="fixed-bottom footer">
                 <b-row>
                     <b-col>
-                        <router-link to="?page=index">
-                            <b-button @click="getCustomers();">＜</b-button>
-                        </router-link>
+                        <b-button @click="checkChange">＜</b-button>
                     </b-col>
                     <b-col class="text-right">
                         <b-button pill variant="info" @click="apply();">適用</b-button>
@@ -331,6 +331,7 @@
                     isShowFavorite: false,
                     title: '',
                     message: '',
+                    countChanged: 0
                 },
                 methods: {
                     // ---Customers---
@@ -340,6 +341,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.customers = response.data;
+                                self.countChanged = 0;
                             });
                     },
                     bulkUpsert(item) {
@@ -357,13 +359,16 @@
                                 Vue.set(self.customer, 'id', response.data.id)
                                 self.getCustomers();
                                 self.customer.isInsert = false;
+                                self.countChanged = 0;
                             });
-                    },
+
+                        },
                     updateCustomer: async function (item) {
                         self = this;
                         await axios.put("/customer/" + item.id, item)
                             .then(function (response) {
                                 self.getCustomers();
+                                self.countChanged = 0;
                                 console.log(response);
                             });
                     },
@@ -384,11 +389,13 @@
                         });
                         self.customer = self.customers.slice(-1)[0];
                         localStorage.setItem('customer', JSON.stringify(self.customer))
+                        self.countChanged = 0;
                     },
                     selectCustomer: function (item) {
                         this.customer = item;
                         console.log(this.customer);
                         localStorage.setItem('customer', JSON.stringify(item))
+                        self.countChanged = 0;
                     },
                     getCustomer: async function (item) {
                         self = this;
@@ -464,6 +471,24 @@
                         if (!address2) address2 = "";
                         return String(address1) + String(address2);
                     },
+                    checkChange: async function () {
+                        isUpdate = false;
+                        if (this.countChanged) {
+                            await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
+                                okVariant: 'primary',
+                                okTitle: '保存して戻る',
+                                cancelVariant: 'danger',
+                                cancelTitle: '保存しないで戻る',
+                                noCloseOnBackdrop: true
+                            }).then(value => {
+                                if (value) isUpdate = true;
+                            });
+                            if (isUpdate) await this.bulkUpsert(this.customer);
+                            this.getCustomers();
+                            this.countChanged = 0;
+                        }
+                        router.push({ path: "?page=index" });
+                    }
                 },
                 mounted: function () {
                     this.customer = JSON.parse(localStorage.getItem('customer'));
@@ -497,7 +522,18 @@
                         let result = regExp.test(this.customer.customerKana);
                         return result
                     }
+                },
+                watch: {
+                    customer: {
+                        handler: function (val, oldval) {
+                            if (this.pageName == 'show' || this.pageName == 'store') {
+                                this.countChanged += 1;
+                            }
+                        },
+                        deep: true
+                    }
                 }
+
             })
 
             function sendMessage() {
