@@ -359,8 +359,8 @@
 
                         <b-row>
                             <b-col sm>
-                                <b-form-textarea v-model="quotation.remarks" class="mt-5" id="remarks" size="sm"
-                                    type="text" rows="3" placeholder="備考欄">
+                                <b-form-textarea v-model="quotation.remarks" id="remarks" size="sm" type="text" rows="5"
+                                    placeholder="備考欄">
                                 </b-form-textarea>
                             </b-col>
                             <b-col sm>
@@ -504,7 +504,7 @@
                         self.countChanged = 0;
                         app.title = '新規作成';
                         app.message = '保存しました。';
-                     },
+                    },
                     updateQuotation: async function (item) {
                         self = this;
                         await axios.put("/quotation/" + item.id, item)
@@ -848,7 +848,7 @@
                 watch: {
                     quotation: {
                         handler: function (val, oldval) {
-                            if(this.pageName=='show' || this.pageName=='store'){
+                            if (this.pageName == 'show' || this.pageName == 'store') {
                                 this.countChanged += 1;
                             }
                         },
