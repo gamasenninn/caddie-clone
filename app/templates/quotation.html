@@ -487,12 +487,12 @@
                                 self.countChanged = 0;
                             });
                     },
-                    bulkUpsert(item) {
+                    bulkUpsert: async function(item) {
                         if (!item.id) {
-                            this.insertQuotation(item);
+                            await this.insertQuotation(item);
                         }
                         else {
-                            this.updateQuotation(item);
+                            await this.updateQuotation(item);
                         }
                     },
                     insertQuotation: async function (item) {
@@ -731,7 +731,7 @@
                         return amount;
                     },
                     checkChange: async function () {
-
+                        isUpdate = false;
                         if (this.countChanged) {
                             await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
@@ -739,16 +739,12 @@
                                 cancelVariant: 'danger',
                                 cancelTitle: '保存しないで戻る',
                             }).then(value => {
-                                if (value) {
-                                    console.log("保存して終了");
-                                    //保存して終了
-                                    this.bulkUpsert(this.quotation);
-                                }
+                                if (value) isUpdate = true;
                             });
+                            if (isUpdate) await this.bulkUpsert(this.quotation);
+                            this.getQuotations();
+                            this.countChanged = 0;
                         }
-                        this.getQuotations();
-                        this.countChanged = 0;
-                        //this.clearFileList();
                         router.push({ path: "?page=index" });
                     },
                     pdfout: async function () {

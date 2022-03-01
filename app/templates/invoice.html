@@ -966,7 +966,7 @@
                         });
                     },
                     checkChange: async function () {
-
+                        isUpdate = false;
                         if (this.countChanged) {
                             await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
@@ -974,19 +974,15 @@
                                 cancelVariant: 'danger',
                                 cancelTitle: '保存しないで戻る',
                             }).then(value => {
-                                if (value) {
-                                    console.log("保存して終了");
-                                    //保存して終了
-                                    this.bulkUpsert(this.invoice);
-                                }
+                                if (value) isUpdate = true;
                             });
+                            if (isUpdate) await this.bulkUpsert(this.invoice);
+                            this.getInvoices();
+                            this.countChanged = 0;
                         }
-                        this.getInvoices();
-                        this.countChanged = 0;
                         this.clearFileList();
                         router.push({ path: "?page=index" });
                     }
-
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
