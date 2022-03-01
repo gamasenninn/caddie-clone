@@ -387,12 +387,12 @@
                                 self.items = response.data;
                             });
                     },
-                    bulkUpsert(item) {
+                    bulkUpsert: async function(item) {
                         if (!item.id) {
-                            this.insertItem(item);
+                            await this.insertItem(item);
                         }
                         else {
-                            this.updateItem(item);
+                            await this.updateItem(item);
                         }
                     },
                     insertItem: async function (item) {
@@ -541,7 +541,7 @@
                     //---------変更があったかどうかをチェク。アラート ---------
 
                     checkChange: async function () {
-
+                        isUpdate = false;
                         if (this.countChanged) {
                             await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
@@ -549,15 +549,12 @@
                                 cancelVariant: 'danger',
                                 cancelTitle: '保存しないで戻る',
                             }).then(value => {
-                                if (value) {
-                                    console.log("保存して終了");
-                                    //保存して終了
-                                    this.bulkUpsert(this.item);
-                                }
+                                if (value) isUpdate = true;
                             });
+                            if (isUpdate) await this.bulkUpsert(this.item);
+                            this.getItems();
+                            this.countChanged = 0;
                         }
-                        this.getItems();
-                        this.countChanged = 0;
                         this.clearFileList();
                         router.push({ path: "?page=index" });
                     }
