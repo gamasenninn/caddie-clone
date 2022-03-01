@@ -179,7 +179,7 @@ hr = {
     myCompanyName: "株式会社 テストコム",
     myAddress1: "栃木県鹿沼市板荷000-99",
     myTel1: "000-999-1111",
-    jobTitle: "代表取締役",
+    //jobTitle: "代表取締役",
     ceoName: "テスト太郎",
     applyNumber: "220001",
 };
@@ -210,7 +210,7 @@ function getPdfDataRcpt() {
                             ["",["EP","'入金日'","sm_l"],["P",hr.dueDate,"md_l"],"","",""],
                             ["","",["P",hr.myCompanyName+'<br/><font size=-3>'+hr.myAddress1+'<br/>'+hr.myTel1+'</font>',"md_l"],"","",""],
                             ["","","","","",""],
-                            ["","",["P",'<font size=-3>'+hr.jobTitle +'</font>　' +hr.ceoName,"md_c"],"","",""]
+                            ["","",["P",hr.ceoName,"md_c"],"","",""]
                         ],
                         "col_widths": ["E","[30*mm, 30*mm, 30*mm,30*mm,30*mm]"],
                         "row_heights": ["E","(20*mm,20*mm,15*mm,10*mm,10*mm,10*mm,10*mm,10*mm)"],
