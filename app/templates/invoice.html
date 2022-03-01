@@ -155,7 +155,7 @@
                                 </template>
                                 <template v-slot:cell(totalAmount)="data">
                                     <p class="text-left pl-2" id="totalAmount">
-                                        {{amountCalculation(data.item)}}
+                                        {{amountCalculation(data.item)|nf}}
                                     </p>
                                 </template>
                             </b-table>
@@ -922,7 +922,7 @@
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                     amountCalculation(invoice) {
-                        amount = invoice.invoice_items.map(item => item.count * item.price).reduce((a, b) => a + b);
+                        let amount = invoice.invoice_items.map(item => item.count * item.price).reduce((a, b) => a + b);
                         if (invoice.isTaxExp === true) return Math.floor(amount * 1.1);
                         return amount;
                     },
