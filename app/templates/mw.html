@@ -68,6 +68,9 @@ function openMenu(obj){
           onclosed: function(panel){
             window.location.href = '/logout';
           },
+          dragit: {
+            containment: [0, -100, -100,-100]
+          },
           callback: function(){
             $('iframe').on('load',function(){
                 $(this).contents().find('#customer').on('click', function(){
@@ -198,6 +201,9 @@ function openPDF(file){
     panelSize: {
         width: () => window.innerWidth * 0.3,
         height: '100vh'
+    },
+    dragit: {
+        containment: [0, -200, -100,-200]
     },
     position: { 
         my: 'right-top',
