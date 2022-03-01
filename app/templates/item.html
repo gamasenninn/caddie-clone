@@ -246,7 +246,8 @@
                                                 <b-form-file v-model="form.file" browse-text="+"
                                                     placeholder="クリックまたはドロップ..." drop-placeholder="ここにドロップ...">
                                                 </b-form-file>
-                                                <b-button pill type="submit" class="ml-3">確定</b-button>
+                                                <b-button v-if="!isUploading" pill type="submit" class="ml-3">確定</b-button>
+                                                <b-spinner v-else variant="primary" label="Spinning"></b-spinner>
                                             </b-input-group>
                                         </b-form>
                                     </b-form-group>
@@ -374,7 +375,8 @@
                         fileId: ''
                     },
                     uploadListMode: 'card', //list,card
-                    countChanged: 0
+                    countChanged: 0,
+                    isUploading: false
 
                 },
                 methods: {
@@ -512,20 +514,22 @@
                     clearFileList: function(){
                         this.dicFiles = {};
                     },
-                    uploadFile: function (event) {
+                    uploadFile: async function (event) {
                         self = this;
                         event.preventDefault();
+                        isUploading = true;
                         //let files = event.target.files;
                         const formData = new FormData();
                         formData.append('file', self.form.file);
                         formData.append('fileId', self.item.itemCode);
-                        axios.post("upload-files/s/upload", formData)
+                        await axios.post("upload-files/s/upload", formData)
                             .then((res) => {
                                 self.getFileList(self.item.itemCode);
                             })
                             .catch((err) => {
                                 console.log(err)
                             });
+                        isUploading = false;                        
                     },
                     deleteFiles: async function (fid) {
                         self = this;
