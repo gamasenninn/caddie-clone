@@ -361,8 +361,7 @@
                                 self.customer.isInsert = false;
                                 self.countChanged = 0;
                             });
-
-                        },
+                    },
                     updateCustomer: async function (item) {
                         self = this;
                         await axios.put("/customer/" + item.id, item)
@@ -417,7 +416,7 @@
                             this.modalShow(this.customer, 'upsertModal');
                         }
                         else {
-                            this.title = 'バリデーションエラー';
+                            this.title = 'エラー';
                             this.message = 'フリガナを正しく入力してください。';
                             this.$bvModal.show('confirmModal');
                         }
