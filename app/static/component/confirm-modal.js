@@ -1,3 +1,4 @@
+//info
 Vue.component('confirm-modal', {
     template: `
     <div>
@@ -6,13 +7,8 @@ Vue.component('confirm-modal', {
                 {{title}}
             </template>
             <div class="d-block text-center">
-                <p>{{message}}</p>
+                <p style="color: #ffffff;background-color: #10afc5;"><span>{{message}}</span></p>
             </div>
-            <b-row>
-                <b-col class="text-center">
-                    <b-button class="mt-3" @click="hide();">閉じる</b-button>
-                </b-col>
-            </b-row>
         </b-modal>
     <div>
     `,
@@ -20,9 +16,24 @@ Vue.component('confirm-modal', {
         title: String,
         message: String,
     },
-    methods: {
-        hide() {
-            this.$bvModal.hide('confirmModal');
-        }
-    }
+})
+
+//danger
+Vue.component('confirm-modal-danger', {
+    template: `
+    <div>
+        <b-modal id="confirmModal" hide-footer>
+            <template #modal-title>
+                {{title}}
+            </template>
+            <div class="d-block text-center">
+                <p style="color: #ffffff;background-color: #ed254e;"><span>{{message}}</span></p>
+            </div>
+        </b-modal>
+    <div>
+    `,
+    props: {
+        title: String,
+        message: String,
+    },
 })
