@@ -897,13 +897,12 @@
                         self = this;
                         hr.customerName = self.invoice.customerName;
                         hr.applyNumber = self.invoice.applyNumber;
-                        hr.forPaymentOf = self.invoice.memo;
+                        hr.forPaymentOf = self.invoice.title;
                         hr.dueDate = self.invoice.paymentDate;
                         hr.myCompanyName = self.setting.companyName;
                         hr.myAddress1 = self.setting.address;
                         hr.myTel1 = self.setting.telNumber;
                         hr.myFax1 = self.setting.faxNumber;
-                        hr.jobTitle = "-代表取締役社長-";
                         hr.ceoName = self.setting.representative;
                         //hr.amount = 123456789;
                         if (this.invoice.isTaxExp) {
