@@ -79,18 +79,22 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group sm label-cols="2" label-size="sm" label-align="center" label="検索"
-                                        label-for="searchQuotationWord">
+                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label-align="left"
+                                        label="検索" label-for="searchQuotationWord">
                                         <b-form-input v-model="searchQuotationWord" id="searchQuotationWord" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
+                                <div class="ml-5"></div>
                                 <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="日付"
-                                        label-for="searchApplyDate">
-                                        <b-form-input v-model="searchApplyDate" size="sm" placeholder="半角数字6桁">
+                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label-align="left"
+                                        label="日付" label-for="searchApplyDate">
+                                        <b-form-input v-model="searchApplyDate" size="sm" placeholder="半角数字6桁か8桁"
+                                            style="width: 50%;">
                                         </b-form-input>
                                     </b-form-group>
+                                </b-col>
+                                <b-col sm>
                                 </b-col>
                             </b-row>
                             <b-row align-h="end">
@@ -875,6 +879,9 @@
                     return false;
                 }
                 if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate)) {
+                    return true;
+                }
+                if (searchDate.length === 8 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7) + targetDate.slice(8, 10)) === String(searchDate)) {
                     return true;
                 }
                 return false;
