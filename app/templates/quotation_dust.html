@@ -1,12 +1,8 @@
 <% extends "head.html" %>
     <% block content %>
         <style>
-            .td-postNumber {
-                width: 80px;
-            }
-
-            .td-telNumber {
-                width: 120px;
+            .td-item-id {
+                width: 90px;
             }
 
             #dropdown-dropup__BV_button_ {
@@ -183,7 +179,7 @@
                         <b-table hover caption-top small id="quotation_items_table" primary-key="id" small
                             label="Table Options" :items=quotation.quotation_items :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
-                          {  key: 'itemId', label: '商品ID' ,sortable: true},
+                          {  key: 'itemId', label: '商品ID', tdClass:'td-item-id' ,sortable: true},
                           {  key: 'itemName', label: '商品名' ,sortable: true},
                           {  key: 'count',   label: '個数' },
                           {  key: 'unit',   label: '単位' },
