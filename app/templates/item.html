@@ -246,8 +246,10 @@
                                                 <b-form-file v-model="form.file" browse-text="+"
                                                     placeholder="クリックまたはドロップ..." drop-placeholder="ここにドロップ...">
                                                 </b-form-file>
-                                                <b-button v-if="!isUploading" pill type="submit" class="ml-3">確定</b-button>
-                                                <b-spinner v-else variant="primary" label="Spinning"></b-spinner>
+                                                <b-button pill type="submit" class="ml-3">
+                                                    <span  v-if="!isUploading">確定</span>
+                                                    <b-spinner v-else label="Spinning" small></b-spinner>
+                                                </b-button>
                                             </b-input-group>
                                         </b-form>
                                     </b-form-group>
@@ -517,7 +519,7 @@
                     uploadFile: async function (event) {
                         self = this;
                         event.preventDefault();
-                        isUploading = true;
+                        this.isUploading = true;
                         //let files = event.target.files;
                         const formData = new FormData();
                         formData.append('file', self.form.file);
@@ -529,7 +531,7 @@
                             .catch((err) => {
                                 console.log(err)
                             });
-                        isUploading = false;                        
+                        this.isUploading = false;                        
                     },
                     deleteFiles: async function (fid) {
                         self = this;
