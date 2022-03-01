@@ -310,19 +310,8 @@
             </div>
 
             <!-- バリデーションエラーモーダル -->
-            <b-modal ref="validationErrorModal" hide-footer>
-                <template #modal-title>
-                    バリデーションエラー
-                </template>
-                <div class="d-block text-center">
-                    <p>フリガナを正しく入力してください。</p>
-                </div>
-                <b-row>
-                    <b-col class="text-center">
-                        <b-button class="mt-3" @click="hideResultModal('validationErrorModal');">閉じる</b-button>
-                    </b-col>
-                </b-row>
-            </b-modal>
+            <confirm-modal-danger :title="title" :message="message">
+                </confirm-modal>
 
         </div>
 
@@ -340,6 +329,8 @@
                     customer: [],                //選択中のcustomer
                     isShowAll: false,            // trueの時、全表示
                     isShowFavorite: false,
+                    title: '',
+                    message: '',
                 },
                 methods: {
                     // ---Customers---
@@ -418,15 +409,16 @@
                         if (this.customerKanaValidate === true) {
                             this.modalShow(this.customer, 'upsertModal');
                         }
-                        else this.modalShowAlert('validationErrorModal');
+                        else {
+                            this.title = 'バリデーションエラー';
+                            this.message = 'フリガナを正しく入力してください。';
+                            this.$bvModal.show('confirmModal');
+                        }
                     },
                     modalShow: function (item, modalName) {
                         this.customer = item;
                         console.log(this.customer);
                         this.$bvModal.show(modalName);
-                    },
-                    modalShowAlert: function (modalName) {
-                        this.$refs[modalName].show();
                     },
                     hideResultModal: function (modalName) {
                         this.$refs[modalName].hide();
