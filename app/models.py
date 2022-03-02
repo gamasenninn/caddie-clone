@@ -66,6 +66,8 @@ class Item(db.Model):
     basePrice = db.Column(db.Integer)
     baseCost = db.Column(db.Integer)
     memo = db.Column(db.String)
+    numberOfAttachments = db.Column(
+        db.Integer, default=0, server_default=db.text('0'))
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
@@ -112,6 +114,8 @@ class Invoice(db.Model):
     remarks = db.Column(db.String)
     isTaxExp = db.Column(db.Boolean, nullable=False, default=True)
     isDelete = db.Column(db.Boolean, nullable=False, default=False)
+    numberOfAttachments = db.Column(
+        db.Integer, default=0, server_default=db.text('0'))
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
@@ -174,6 +178,8 @@ class Quotation(db.Model):
     remarks = db.Column(db.String)
     isTaxExp = db.Column(db.Boolean, nullable=False, default=True)
     isDelete = db.Column(db.Boolean, nullable=False, default=False)
+    numberOfAttachments = db.Column(
+        db.Integer, default=0, server_default=db.text('0'))
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)

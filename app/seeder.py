@@ -56,11 +56,11 @@ def seeder():
     print('----Items----')
     items = [
         Item(id=1, itemName='りんご', itemCode='11111', model='APP001', category='食料品', maker='apple青果店', unit='個', basePrice=100,
-             baseCost=50, memo='これはりんごのメモです'),
+             baseCost=50, memo='これはりんごのメモです', numberOfAttachments=0),
         Item(id=2, itemName='鉛筆', itemCode='22222', model='PEN001', category='事務用品', maker='トンビ鉛筆', unit='本', basePrice=20,
-             baseCost=5, memo='これは鉛筆のメモです'),
+             baseCost=5, memo='これは鉛筆のメモです', numberOfAttachments=0),
         Item(id=3, itemName='ラジオ', itemCode='33333', model='RAD001', category='家電', maker='zony', unit='台', basePrice=1000,
-             baseCost=300, memo='これはラジオのメモです'),
+             baseCost=300, memo='これはラジオのメモです', numberOfAttachments=0),
     ]
     db.session.add_all(items)
     db.session.commit()
@@ -73,11 +73,11 @@ def seeder():
     print('----Invoices-----')
     invoices = [
         Invoice(customerId=1, customerName='○○株式会社', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=2, customerName="○○有限会社", department='部署2', manager='田中次郎', otherPartyManager='先方次郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=3, customerName="○○商事", department='部署3', manager='田中三郎', otherPartyManager='先方三郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, numberOfAttachments=0),
     ]
     db.session.add_all(invoices)
     db.session.commit()
@@ -111,11 +111,11 @@ def seeder():
     print('----Quotations----')
     quotations = [
         Quotation(customerId=1, customerName='○○株式会社', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
-                  title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
+                  title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
         Quotation(customerId=2, customerName="○○有限会社", department='部署2', manager='田中次郎', otherPartyManager='先方次郎', applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
-                  title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
+                  title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
         Quotation(customerId=3, customerName="○○商事", department='部署3', manager='田中三郎', otherPartyManager='先方三郎', applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
-                  title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True),
+                  title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
     ]
     db.session.add_all(quotations)
     db.session.commit()

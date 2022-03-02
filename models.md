@@ -53,6 +53,7 @@
 | basePrice| 単価     | integer   |  請求書にて商品選択時に参照のみ。                                                              | 
 | baseCost | 原価単価  | integer   |  請求書にて商品選択時に参照のみ。                                                             | 
 | memo     | メモ     | text      |                                                                                             | 
+| numberOfAttachments | 添付数 | integer | 添付されたファイル数                                                                   | 
 | createdAt| 作成日時 | datetime  |                                                                                             | 
 | updatedAt| 更新日時 | datetime  |                                                                                             |
 
@@ -78,6 +79,7 @@
 | remarks     | 備考           | text     |  印刷時に表示されるもの                                   |
 | isTaxExp    | 内税・外税     | boolean   |  内税・外税のチェック                                      | 
 | isDelete    | 削除済み       | boolean   |  請求書は削除するのではなく、これにチェックする               | 
+| numberOfAttachments | 添付数 | integer | 添付されたファイル数                                          | 
 | createdAt   | 作成日時       | datetime  |                                                           | 
 | updatedAt   | 更新日時       | datetime  |                                                           | 
 
@@ -118,6 +120,7 @@
 | remarks     | 備考           | text     | 印刷時に表示されるもの                                   | 
 | isTaxExp    | 内税・外税      | boolean  | 内税・外税のチェック                                     | 
 | isDelete    | 削除済み       | boolean  |  見積書は削除するのではなく、これにチェックする              | 
+| numberOfAttachments | 添付数 | integer | 添付されたファイル数                                       | 
 | createdAt   | 作成日時       | datetime |                                                          | 
 | updatedAt   | 更新日時       | datetime |                                                          | 
 

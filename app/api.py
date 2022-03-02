@@ -167,6 +167,7 @@ def item_create():
         basePrice=data.get('basePrice'),
         baseCost=data.get('baseCost'),
         memo=data.get('memo'),
+        numberOfAttachments=data.get('numberOfAttachments'),
     )
     db.session.add(newItem)
     db.session.commit()
@@ -188,6 +189,7 @@ def item_update(id):
     item.basePrice = data.get('basePrice')
     item.baseCost = data.get('baseCost')
     item.memo = data.get('memo')
+    item.numberOfAttachments = data.get('numberOfAttachments')
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
@@ -259,6 +261,7 @@ def invoice_create():
         memo=data.get('memo'),
         remarks=data.get('remarks'),
         isTaxExp=data.get('isTaxExp') if data.get('isTaxExp') else True,
+        numberOfAttachments=data.get('numberOfAttachments'),
         invoice_items=newInvoiceItems,
     )
     db.session.add(newInvoice)
@@ -291,6 +294,7 @@ def invoice_update(id):
     invoice.title = data.get('title')
     invoice.memo = data.get('memo')
     invoice.remarks = data.get('remarks')
+    invoice.numberOfAttachments = data.get('numberOfAttachments')
     invoice.isTaxExp = data.get('isTaxExp') if data.get('isTaxExp') else True
 
     if data.get('invoice_items'):
@@ -445,6 +449,7 @@ def quotation_create():
         memo=data.get('memo'),
         remarks=data.get('remarks'),
         isTaxExp=data.get('isTaxExp') if data.get('isTaxExp') else True,
+        numberOfAttachments=data.get('numberOfAttachments'),
         quotation_items=newQuotationItems,
     )
     db.session.add(newQuotation)
@@ -475,6 +480,7 @@ def quotation_update(id):
     quotation.memo = data.get('memo')
     quotation.remarks = data.get('remarks')
     quotation.isTaxExp = data.get('isTaxExp') if data.get('isTaxExp') else True
+    quotation.numberOfAttachments = data.get('numberOfAttachments')
 
     if data.get('quotation_items'):
         update_list = []
