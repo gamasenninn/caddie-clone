@@ -123,12 +123,6 @@
                                 </b-col>
                                 <div class="ml-5"></div>
                                 <b-col sm>
-                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label-align="left"
-                                        label="日付" label-for="searchApplyDate">
-                                        <b-form-input v-model="searchApplyDate" size="sm" placeholder="半角数字6桁か8桁"
-                                            style="width: 50%;">
-                                        </b-form-input>
-                                    </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-row align-h="end">
@@ -586,7 +580,6 @@
                 el: '#app',
                 data: {
                     searchInvoiceWord: '',          //請求書検索
-                    searchApplyDate: '',            //請求書検索
                     isInvoicesShowAll: false,               //請求書検索
                     invoicesIndicateCount: 0,       //請求書検索
                     searchItemWord: '',             //商品選択モーダル検索
@@ -1031,8 +1024,8 @@
                         let invoices = this.invoices;
                         if (this.isInvoicesShowAll === false)
                             invoices = invoices.filter(invoice => invoice.isPaid === false);
-                        invoices = invoices.filter(invoice => searchFilter(invoice.customerName, this.searchInvoiceWord));
-                        invoices = invoices.filter(invoice => searchFilterDate(invoice.applyDate, this.searchApplyDate));
+                        invoices = invoices.filter(invoice => searchFilter(invoice.customerName, this.searchInvoiceWord) ||
+                            searchFilterDate(invoice.applyDate, this.searchInvoiceWord));
                         this.invoicesIndicateCount = invoices.length;
                         return invoices;
                     },

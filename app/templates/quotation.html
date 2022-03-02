@@ -93,12 +93,6 @@
                                 </b-col>
                                 <div class="ml-5"></div>
                                 <b-col sm>
-                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label-align="left"
-                                        label="日付" label-for="searchApplyDate">
-                                        <b-form-input v-model="searchApplyDate" size="sm" placeholder="半角数字6桁か8桁"
-                                            style="width: 50%;">
-                                        </b-form-input>
-                                    </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                 </b-col>
@@ -409,16 +403,21 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="info" @click="bulkUpsert(quotation);showConfirmModal();" v-b-tooltip.hover.top="'保存'">
+                        <b-button pill variant="info" @click="bulkUpsert(quotation);showConfirmModal();"
+                            v-b-tooltip.hover.top="'保存'">
                             保存
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
-                            @click="modalShow(quotation,'copyModal');" v-b-tooltip.hover.top="'複製'"><i class="fa-solid fa-copy"></i></b-button>
+                            @click="modalShow(quotation,'copyModal');" v-b-tooltip.hover.top="'複製'"><i
+                                class="fa-solid fa-copy"></i></b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
-                            @click="modalShow(quotation,'convertModal');" v-b-tooltip.hover.top="'請求書へ変換'"><i class="fa-solid fa-shuffle"></i></b-button>
-                        <b-button pill size="lg" variant="info" @click="pdfout" id="pdfout" v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
+                            @click="modalShow(quotation,'convertModal');" v-b-tooltip.hover.top="'請求書へ変換'"><i
+                                class="fa-solid fa-shuffle"></i></b-button>
+                        <b-button pill size="lg" variant="info" @click="pdfout" id="pdfout"
+                            v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
                         </b-button>
-                        <b-button pill size="lg" variant="danger" @click="modalShow(quotation,'deleteModal');" v-b-tooltip.hover.top="'削除'">
+                        <b-button pill size="lg" variant="danger" @click="modalShow(quotation,'deleteModal');"
+                            v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
                     </b-col>
@@ -459,7 +458,6 @@
                 el: '#app',
                 data: {
                     searchQuotationWord: '',        //請求書検索
-                    searchApplyDate: '',            //請求書検索
                     quotationsIndicateCount: 0,     //請求書検索
                     searchItemWord: '',             //商品選択モーダル検索
                     searchItemSelectCategory: '',   //商品選択モーダル検索
@@ -822,8 +820,8 @@
                     },
                     quotationsIndicateIndex: function () {
                         let quotations = this.quotations;
-                        quotations = quotations.filter(quotation => searchFilter(quotation.customerName, this.searchQuotationWord));
-                        quotations = quotations.filter(quotation => searchFilterDate(quotation.applyDate, this.searchApplyDate));
+                        quotations = quotations.filter(quotation => searchFilter(quotation.customerName, this.searchQuotationWord) ||
+                            searchFilterDate(quotation.applyDate, this.searchQuotationWord));
                         this.quotationsIndicateCount = quotations.length;
                         return quotations;
                     },
