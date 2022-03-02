@@ -278,7 +278,10 @@
                                                 <b-form-file v-model="form.file" browse-text="+"
                                                     placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
                                                 </b-form-file>
-                                                <b-button pill type="submit" class="ml-3">確定</b-button>
+                                                <b-button pill type="submit" class="ml-3">
+                                                    <span  v-if="!isUploading">確定</span>
+                                                    <b-spinner v-else label="Spinning" small></b-spinner>
+                                                </b-button>
                                             </b-input-group>
                                         </b-form>
                                     </b-form-group>
@@ -598,7 +601,8 @@
                     uploadListMode: 'card', //list,card
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
-                    countChanged: 0
+                    countChanged: 0,
+                    isUploading: false
                 },
                 methods: {
                     // ---Invoices---
@@ -934,20 +938,23 @@
                     clearFileList: function () {
                         this.dicFiles = {};
                     },
-                    uploadFile: function (event) {
+                    uploadFile: async function (event) {
                         self = this;
                         event.preventDefault();
+                        this.isUploading = true;
                         let files = event.target.files;
                         const formData = new FormData();
                         formData.append('file', self.form.file);
                         formData.append('fileId', self.invoice.applyNumber);
-                        axios.post("upload-files/s/upload", formData)
+                        await axios.post("upload-files/s/upload", formData)
                             .then((res) => {
                                 self.getFileList(self.invoice.applyNumber);
                             })
                             .catch((err) => {
                                 console.log(err)
                             });
+                        this.isUploading = false;
+
                     },
                     deleteFiles: async function (fid) {
                         self = this;
