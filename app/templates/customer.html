@@ -1,6 +1,15 @@
 <% extends "head.html" %>
     <% block content %>
         <style>
+            .card-header {
+                background-color: #ccecf1;
+                font-size: 18px;
+            }
+
+            #customertable td {
+                vertical-align: middle;
+            }
+
             .td-customerName {
                 width: 170px;
             }
@@ -11,10 +20,6 @@
 
             .td-telNumber {
                 width: 120px;
-            }
-
-            #customertable td {
-                vertical-align: middle;
             }
         </style>
         <div id="app" v-cloak>
