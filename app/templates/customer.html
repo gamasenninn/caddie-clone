@@ -204,7 +204,7 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ホームページURL"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="サイトURL"
                                         label-for="url">
                                         <b-form-input v-model="customer.url" id="url" size="sm" autocomplete="off">
                                         </b-form-input>
@@ -295,13 +295,15 @@
                 class="fixed-bottom footer">
                 <b-row>
                     <b-col>
-                        <b-button @click="checkChange">＜</b-button>
+                        <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="info" @click="apply();">適用</b-button>
-                        <b-button pill size="lg" variant="info" @click="pdfOut"><i class="fas fa-print"></i>
+                        <b-button pill variant="info" @click="apply();" v-b-tooltip.hover.top="'適用'">適用</b-button>
+                        <b-button pill size="lg" variant="info" @click="pdfOut" v-b-tooltip.hover.top="'印刷'"><i
+                                class="fas fa-print"></i>
                         </b-button>
-                        <b-button pill size="lg" variant="danger" @click="modalShow(customer,'deleteModal');">
+                        <b-button pill size="lg" variant="danger" @click="modalShow(customer,'deleteModal');"
+                            v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
                     </b-col>

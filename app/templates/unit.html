@@ -108,15 +108,18 @@
                 <b-row>
                     <b-col>
                         <router-link to="?page=index">
-                            <b-button @click="getUnits();">＜</b-button>
+                            <b-button @click="getUnits();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="info" @click="modalShow(unit,'upsertModal');" id="showUpsertModal">適用
+                        <b-button pill variant="info" @click="modalShow(unit,'upsertModal');"
+                            v-b-tooltip.hover.top="'適用'">適用
                         </b-button>
-                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i>
+                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')" v-b-tooltip.hover.top="'印刷'">
+                            <i class="fas fa-print"></i>
                         </b-button>
-                        <b-button pill size="lg" variant="danger" @click="modalShow(unit,'deleteModal');">
+                        <b-button pill size="lg" variant="danger" @click="modalShow(unit,'deleteModal');"
+                            v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
                     </b-col>

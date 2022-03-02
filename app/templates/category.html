@@ -110,16 +110,19 @@
                 <b-row>
                     <b-col>
                         <router-link to="?page=index">
-                            <b-button @click="getCategories();">＜</b-button>
+                            <b-button @click="getCategories();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="info" @click="modalShow(category,'upsertModal');" id="showUpsertModal">
+                        <b-button pill variant="info" @click="modalShow(category,'upsertModal');"
+                            v-b-tooltip.hover.top="'適用'">
                             適用
                         </b-button>
-                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i>
+                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')" v-b-tooltip.hover.top="'印刷'">
+                            <i class="fas fa-print"></i>
                         </b-button>
-                        <b-button pill size="lg" variant="danger" @click="modalShow(category,'deleteModal');">
+                        <b-button pill size="lg" variant="danger" @click="modalShow(category,'deleteModal');"
+                            v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
                     </b-col>
