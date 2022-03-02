@@ -1,5 +1,10 @@
 <% extends "head.html" %>
     <% block content %>
+        <style>
+            #memotable td {
+                vertical-align: middle;
+            }
+        </style>
         <div id="app" v-cloak>
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">
@@ -49,7 +54,7 @@
                                     </router-link>
                                 </template>
                                 <template v-slot:cell(createdAt)="data">
-                                    <p class="text-left pl-2" id="createdAt">{{formatDate(data.item.createdAt)}}</p>
+                                    {{formatDate(data.item.createdAt)}}
                                 </template>
                             </b-table>
                         </b-card>

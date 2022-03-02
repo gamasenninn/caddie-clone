@@ -1,5 +1,11 @@
 <% extends "head.html" %>
     <% block content %>
+        <style>
+            #unittable td {
+                vertical-align: middle;
+            }
+        </style>
+
         <div id="app" v-cloak>
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">

@@ -4,6 +4,11 @@
         <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
 
         <style>
+            #quotationtable td,
+            #quotation_items_table td {
+                vertical-align: middle;
+            }
+
             .td-item-id {
                 width: 90px;
             }
@@ -114,12 +119,10 @@
                                     </router-link>
                                 </template>
                                 <template v-slot:cell(applyDate)="data">
-                                    <p class="text-left pl-2" id="applyDate">{{formatDate(data.item.applyDate)}}</p>
+                                    {{formatDate(data.item.applyDate)}}
                                 </template>
                                 <template v-slot:cell(totalAmount)="data">
-                                    <p class="text-left pl-2" id="totalAmount">
-                                        {{amountCalculation(data.item)|nf}}
-                                    </p>
+                                    {{amountCalculation(data.item)|nf}}
                                 </template>
                             </b-table>
                         </b-card>
@@ -317,7 +320,7 @@
                                 <b-form-input v-model="data.item.price" type="number" size="sm"></b-form-input>
                             </template>
                             <template v-slot:cell(amount)="data">
-                                <p class="text-right">{{data.item.count*data.item.price|nf}}</p>
+                                <div class="text-right">{{data.item.count*data.item.price|nf}}</div>
                             </template>
 
                             <template v-slot:cell(detail)="data">

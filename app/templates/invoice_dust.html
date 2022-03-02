@@ -1,6 +1,11 @@
 <% extends "head.html" %>
     <% block content %>
         <style>
+            #invoicetable td,
+            #invoice_items_table td {
+                vertical-align: middle;
+            }
+
             .td-item-id {
                 width: 90px;
             }
@@ -68,13 +73,13 @@
                                     </router-link>
                                 </template>
                                 <template v-slot:cell(applyDate)="data">
-                                    <p class="text-left pl-2" id="applyDate">{{formatDate(data.item.applyDate)}}</p>
+                                    {{formatDate(data.item.applyDate)}}
                                 </template>
                                 <template v-slot:cell(deadLine)="data">
-                                    <p class="text-left pl-2" id="deadLine">{{formatDate(data.item.deadLine)}}</p>
+                                    {{formatDate(data.item.deadLine)}}
                                 </template>
                                 <template v-slot:cell(updatedAt)="data">
-                                    <p class="text-left pl-2" id="updatedAt">{{formatDateTime(data.item.updatedAt)}}</p>
+                                    {{formatDateTime(data.item.updatedAt)}}
                                 </template>
                             </b-table>
                         </b-card>
@@ -188,19 +193,19 @@
                           {  key: 'detail', label: '詳細',class:'text-center' },
                         ]">
                             <template v-slot:cell(itemName)="data">
-                                <p>{{data.item.itemName}}</p>
+                                {{data.item.itemName}}
                             </template>
                             <template v-slot:cell(count)="data">
-                                <p>{{data.item.count}}</p>
+                                {{data.item.count}}
                             </template>
                             <template v-slot:cell(unit)="data">
-                                <p>{{data.item.unit}}</p>
+                                {{data.item.unit}}
                             </template>
                             <template v-slot:cell(price)="data">
-                                <p>{{data.item.price}}</p>
+                                {{data.item.price}}
                             </template>
                             <template v-slot:cell(amount)="data">
-                                <p class="text-right">{{data.item.count*data.item.price|nf}}</p>
+                                {{data.item.count*data.item.price|nf}}
                             </template>
 
                             <template v-slot:cell(detail)="data">

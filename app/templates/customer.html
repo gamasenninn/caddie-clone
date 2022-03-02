@@ -12,6 +12,10 @@
             .td-telNumber {
                 width: 120px;
             }
+
+            #customertable td {
+                vertical-align: middle;
+            }
         </style>
         <div id="app" v-cloak>
             <!-- 一覧表示 -->
@@ -46,14 +50,15 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先一覧"
                             header-border-variant="light">
                             <b-row>
-                                <b-col>
-                                    <b-form-group sm label-cols="2" label-size="sm" label-align="center" label="検索"
-                                        label-for="searchCustomerWord">
+                                <b-col sm>
+                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label-align="left"
+                                        label="検索" label-for="searchCustomerWord">
                                         <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
-                                <b-col>
+                                <b-col sm></b-col>
+                                <b-col sm>
                                     <b-row align-h="end">
                                         <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り</b-form-checkbox>
                                         <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示</b-form-checkbox>
