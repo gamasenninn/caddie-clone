@@ -406,20 +406,19 @@
                 class="fixed-bottom footer">
                 <b-row>
                     <b-col>
-                        <b-button @click="checkChange">＜</b-button>
+                        <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="info" @click="bulkUpsert(quotation);showConfirmModal();"
-                            id="showConfirmModal">
+                        <b-button pill variant="info" @click="bulkUpsert(quotation);showConfirmModal();" v-b-tooltip.hover.top="'保存'">
                             保存
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
-                            @click="modalShow(quotation,'copyModal');"><i class="fa-solid fa-copy"></i></b-button>
+                            @click="modalShow(quotation,'copyModal');" v-b-tooltip.hover.top="'複製'"><i class="fa-solid fa-copy"></i></b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
-                            @click="modalShow(quotation,'convertModal');"><i class="fa-solid fa-shuffle"></i></b-button>
-                        <b-button pill size="lg" variant="info" @click="pdfout" id="pdfout"><i class="fas fa-print"></i>
+                            @click="modalShow(quotation,'convertModal');" v-b-tooltip.hover.top="'請求書へ変換'"><i class="fa-solid fa-shuffle"></i></b-button>
+                        <b-button pill size="lg" variant="info" @click="pdfout" id="pdfout" v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
                         </b-button>
-                        <b-button pill size="lg" variant="danger" @click="modalShow(quotation,'deleteModal');">
+                        <b-button pill size="lg" variant="danger" @click="modalShow(quotation,'deleteModal');" v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
                     </b-col>

@@ -325,14 +325,17 @@
                 class="fixed-bottom footer">
                 <b-row>
                     <b-col>
-                        <b-button @click="checkChange">＜</b-button>
+                        <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="info" @click="modalShow(item,'upsertModal');" id="showUpsertModal">適用
+                        <b-button pill variant="info" @click="modalShow(item,'upsertModal');"
+                            v-b-tooltip.hover.top="'適用'">適用
                         </b-button>
-                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')"><i class="fas fa-print"></i>
+                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')" v-b-tooltip.hover.top="'印刷'">
+                            <i class="fas fa-print"></i>
                         </b-button>
-                        <b-button pill size="lg" variant="danger" @click="modalShow(item,'deleteModal');">
+                        <b-button pill size="lg" variant="danger" @click="modalShow(item,'deleteModal');"
+                            v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
                     </b-col>

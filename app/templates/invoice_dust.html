@@ -285,12 +285,12 @@
                 <b-row>
                     <b-col>
                         <router-link to="?page=index">
-                            <b-button @click="getInvoices();">＜</b-button>
+                            <b-button @click="getInvoices();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
                         <b-dropdown split dropup id="dropdown-dropup" size="lg" class="m-2" @click="alert('印刷しました。');"
-                            id="pdfout">
+                            id="pdfout" v-b-tooltip.hover.top="'印刷'">
                             <template #button-content>
                                 <i class="fas fa-print"></i>
                             </template>

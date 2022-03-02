@@ -287,7 +287,7 @@
                                                     placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
                                                 </b-form-file>
                                                 <b-button pill type="submit" class="ml-3">
-                                                    <span  v-if="!isUploading">確定</span>
+                                                    <span v-if="!isUploading">確定</span>
                                                     <b-spinner v-else label="Spinning" small></b-spinner>
                                                 </b-button>
                                             </b-input-group>
@@ -524,24 +524,28 @@
                 class="fixed-bottom footer">
                 <b-row>
                     <b-col>
-                        <b-button @click="checkChange">＜</b-button>
+                        <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
                         <b-button pill variant="info" @click="bulkUpsert(invoice);showConfirmModal();"
-                            id="showUpsertModal">保存
+                            v-b-tooltip.hover.top="'保存'">保存
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
-                            @click="modalShow(invoice,'copyModal');"><i class="fa-solid fa-copy"></i></b-button>
+                            @click="modalShow(invoice,'copyModal');" v-b-tooltip.hover.top="'複製'"><i
+                                class="fa-solid fa-copy"></i></b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
-                            @click="modalShow(invoice,'convertModal');"><i class="fa-solid fa-shuffle"></i></b-button>
-                        <b-dropdown split dropup id="dropdown-dropup" size="lg" @click="pdfout('invoice')" id="pdfout">
+                            @click="modalShow(invoice,'convertModal');" v-b-tooltip.hover.top="'見積書に変換'"><i
+                                class="fa-solid fa-shuffle"></i></b-button>
+                        <b-dropdown split dropup id="dropdown-dropup" size="lg" @click="pdfout('invoice')" id="pdfout"
+                            v-b-tooltip.hover.top="'印刷'">
                             <template #button-content>
                                 <i class="fas fa-print"></i>
                             </template>
                             <b-dropdown-item @click="pdfout('delivery')">納品書</b-dropdown-item>
                             <b-dropdown-item @click="pdfoutRcpt">領収書</b-dropdown-item>
                         </b-dropdown>
-                        <b-button pill size="lg" variant="danger" @click="modalShow(invoice,'deleteModal');">
+                        <b-button pill size="lg" variant="danger" @click="modalShow(invoice,'deleteModal');"
+                            v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
                         </b-button>
                     </b-col>
