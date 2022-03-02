@@ -74,22 +74,22 @@ function openMenu(obj){
           callback: function(){
             $('iframe').on('load',function(){
                 $(this).contents().find('#customer').on('click', function(){
-                  openWindow('/customer-page','customer','customer')
+                  openWindow('/customer-page','得意先','customer')
                 });
                 $(this).contents().find('#item').on('click', function(){
-                  openWindow('/item-page','item','item')
+                  openWindow('/item-page','商品','item')
                 });
                 $(this).contents().find('#invoice').on('click', function(){
-                  openWindow('/invoice-page','invoice','invoice')
+                  openWindow('/invoice-page','請求書','invoice')
                 });
                 $(this).contents().find('#quotation').on('click', function(){
-                  openWindow('/quotation-page','quotation','quotation')
+                  openWindow('/quotation-page','見積書','quotation')
                 });
                 $(this).contents().find('#memo').on('click', function(){
-                  openWindow('/memo-page','memo','memo')
+                  openWindow('/memo-page','メモ','memo')
                 });
                 $(this).contents().find('#setting').on('click', function(){
-                  openWindow('/setting-page','setting','setting')
+                  openWindow('/setting-page','設定','setting')
                 });
                 $(this).contents().find('#logout').on('click', function(){
                   window.location.href = '/logout';
