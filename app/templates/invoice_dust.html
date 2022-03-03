@@ -59,8 +59,25 @@
                     <b-col cols="11">
                         <b-card border-variant="white" class="mb-3 text-center" header="削除済み請求書一覧"
                             header-border-variant="light">
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label-align="left"
+                                        label="検索" label-for="searchInvoiceWord">
+                                        <b-form-input v-model="searchInvoiceWord" id="searchInvoiceWord" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <div class="ml-5"></div>
+                                <b-col sm>
+                                </b-col>
+                                <b-col sm>
+                                </b-col>
+                            </b-row>
+                            <b-row align-h="end">
+                                <p class="mr-3">表示件数 {{ invoicesIndicateCount }}件</p>
+                            </b-row>
                             <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
-                                :items=invoices :fields="[
+                                :items=invoicesIndicateIndex :fields="[
                           {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'applyNumber', label: '請求番号' },
@@ -314,9 +331,11 @@
             var app = new Vue({
                 el: '#app',
                 data: {
-                    invoices: [],               //全件invoice
-                    invoice: [],                //選択中のinvoice
-                    invoiceItem: [],            //選択中のinvoiceItem
+                    searchInvoiceWord: '',          //請求書検索
+                    invoicesIndicateCount: 0,       //請求書検索
+                    invoices: [],                   //全件invoice
+                    invoice: [],                    //選択中のinvoice
+                    invoiceItem: [],                //選択中のinvoiceItem
                 },
                 methods: {
                     // ---Invoices---
@@ -379,8 +398,40 @@
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * invoice_item.price)).reduce(function (a, b) { return a + b }, 0);
                     },
+                    invoicesIndicateIndex: function () {
+                        let invoices = this.invoices;
+                        invoices = invoices.filter(invoice => searchFilter(invoice.customerName, this.searchInvoiceWord) ||
+                            searchFilterDate(invoice.applyDate, this.searchInvoiceWord));
+                        this.invoicesIndicateCount = invoices.length;
+                        return invoices;
+                    },
                 },
             })
+
+            function searchFilter(searchTarget, searchWord) {
+                if ((searchTarget === null && searchWord === '') || (searchTarget !== null && searchWord === '')) {
+                    return true;
+                }
+                if (searchTarget === null && searchWord !== '') {
+                    return false;
+                }
+                return searchTarget.includes(searchWord);
+            };
+            function searchFilterDate(targetDate, searchDate) {
+                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === '')) {
+                    return true;
+                }
+                if (targetDate === null && searchDate !== '') {
+                    return false;
+                }
+                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate)) {
+                    return true;
+                }
+                if (searchDate.length === 8 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7) + targetDate.slice(8, 10)) === String(searchDate)) {
+                    return true;
+                }
+                return false;
+            };
 
         </script>
         <% endblock %>
