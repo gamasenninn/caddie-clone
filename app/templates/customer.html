@@ -56,11 +56,16 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label-align="left"
-                                        label="検索" label-for="searchCustomerWord">
-                                        <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm">
-                                        </b-form-input>
-                                    </b-form-group>
+                                    <b-row>
+                                        <b-col cols="2">
+                                            <label><i class="fas fa-search"></i></label>
+                                        </b-col>
+                                        <b-col>
+                                            <b-form-input v-model="searchCustomerWord" id="searchCustomerWord"
+                                                size="sm">
+                                            </b-form-input>
+                                        </b-col>
+                                    </b-row>
                                 </b-col>
                                 <b-col sm></b-col>
                                 <b-col sm>

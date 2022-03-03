@@ -85,11 +85,15 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group sm label-cols="2" label-size="sm" label-align="center" label="検索"
-                                        label-for="searchItemWord">
-                                        <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm">
-                                        </b-form-input>
-                                    </b-form-group>
+                                    <b-row>
+                                        <b-col cols="2">
+                                            <label><i class="fas fa-search"></i></label>
+                                        </b-col>
+                                        <b-col>
+                                            <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm">
+                                            </b-form-input>
+                                        </b-col>
+                                    </b-row>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="カテゴリ"
