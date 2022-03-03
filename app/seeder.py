@@ -111,11 +111,11 @@ def seeder():
     print('----Quotations----')
     quotations = [
         Quotation(customerId=1, customerName='○○株式会社', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
-                  title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
+                  isConvert=False, title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
         Quotation(customerId=2, customerName="○○有限会社", department='部署2', manager='田中次郎', otherPartyManager='先方次郎', applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
-                  title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
+                  isConvert=False, title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
         Quotation(customerId=3, customerName="○○商事", department='部署3', manager='田中三郎', otherPartyManager='先方三郎', applyDate=date(2022, 1, 1), expiry=date(2022, 1, 1),
-                  title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
+                  isConvert=False, title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
     ]
     db.session.add_all(quotations)
     db.session.commit()

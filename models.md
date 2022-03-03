@@ -115,6 +115,7 @@
 | applyNumber | 見積番号       | integer  | 作成時にインクリメント。他の見積書と被らないようにする。 | 
 | applyDate   | 日付           | datetime | 見積書作成日                                             | 
 | expiry      | 見積書有効期限  | datetime |                                                          | 
+| isConvert   | 変換済み       | boolean  | 請求書へ変換したタイミングでフラグを立てる                   | 
 | title       | 件名           | text     |                                                          | 
 | memo        | メモ           | text     | アプリ利用者に見えるもの                                 | 
 | remarks     | 備考           | text     | 印刷時に表示されるもの                                   | 

@@ -445,6 +445,7 @@ def quotation_create():
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         expiry=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
+        isConvert=data.get('isConvert') if data.get('isConvert') else False,
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
@@ -476,6 +477,8 @@ def quotation_update(id):
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
     quotation.expiry = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
+    quotation.isConvert = data.get(
+        'isConvert') if data.get('isConvert') else False
     quotation.title = data.get('title')
     quotation.memo = data.get('memo')
     quotation.remarks = data.get('remarks')

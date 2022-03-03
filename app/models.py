@@ -173,6 +173,8 @@ class Quotation(db.Model):
     applyNumber = db.Column(db.Integer, default=edited_quotation_number)
     applyDate = db.Column(db.Date)
     expiry = db.Column(db.Date)
+    isConvert = db.Column(db.Boolean, nullable=False,
+                          default=False, server_default=db.text('0'))
     title = db.Column(db.String)
     memo = db.Column(db.String)
     remarks = db.Column(db.String)
