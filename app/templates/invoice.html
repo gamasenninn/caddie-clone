@@ -115,13 +115,16 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label-align="left"
-                                        label="検索" label-for="searchInvoiceWord">
-                                        <b-form-input v-model="searchInvoiceWord" id="searchInvoiceWord" size="sm">
-                                        </b-form-input>
-                                    </b-form-group>
+                                    <b-row>
+                                        <b-col cols="2">
+                                            <label><i class="fas fa-search"></i></label>
+                                        </b-col>
+                                        <b-col>
+                                            <b-form-input v-model="searchInvoiceWord" id="searchInvoiceWord" size="sm">
+                                            </b-form-input>
+                                        </b-col>
+                                    </b-row>
                                 </b-col>
-                                <div class="ml-5"></div>
                                 <b-col sm>
                                 </b-col>
                                 <b-col sm>
@@ -444,7 +447,7 @@
                                             placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
                                         </b-form-file>
                                     </b-input-group>
-                                </b-form>        
+                                </b-form>
                             </b-col>
                             <b-col>
                                 <template v-if="uploadListMode=='list'">
@@ -469,8 +472,7 @@
                                         <template v-for="f in dicFiles">
                                             <b-card border-variant="light">
                                                 <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
-                                                <input type="checkbox" v-model="f.isSelect"
-                                                    class="image-in-check">
+                                                <input type="checkbox" v-model="f.isSelect" class="image-in-check">
                                             </b-card>
                                             <!--
                                                     <b-card style="width: 5rem;" 
@@ -488,14 +490,13 @@
                                 <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
-                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'"
-                                    class="mr-2">
+                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
                                     card</b-button>
-                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'"
-                                    class="mr-2">
+                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
                                     list</b-button>
                             </b-col>
-                        </b-row>    <!--アップロード機能ここまで-->
+                        </b-row>
+                        <!--アップロード機能ここまで-->
 
 
                     </b-col> <!-- 本体 -->
@@ -504,7 +505,7 @@
                 <!--
                 <sc-upload file-id = "2200001"></sc-upload>
                 -->
-                
+
                 <!-- iframe用コミュニケーション変数-->
                 <input type="hidden" v-model="countChanged" id="countChanged">
 
