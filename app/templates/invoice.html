@@ -417,16 +417,17 @@
                                 </b-form-textarea>
                             </b-col>
                             <b-col sm>
-                                <b-table-simple bordered>
+                                <b-table-simple borderless>
                                     <b-form-checkbox v-model="invoice.isTaxExp">外税</b-form-checkbox>
                                     <b-tr>
-                                        <b-td variant="light" class="text-right">内消費税</b-td>
-                                        <b-td class="text-right">{{parseInt(sum*0.1)|nf}}</b-td>
+                                        <b-td variant="info" class="text-right">内消費税</b-td>
+                                        <b-td variant="primary" class="text-right">{{parseInt(sum*0.1)|nf}}</b-td>
                                     </b-tr>
                                     <b-tr>
-                                        <b-td variant="light" class="text-right">合計金額</b-td>
-                                        <b-td v-if="invoice.isTaxExp" class="text-right">{{sum*1.1|nf}}</b-td>
-                                        <b-td v-else class="text-right">{{sum|nf}}</b-td>
+                                        <b-td variant="info" class="text-right">合計金額</b-td>
+                                        <b-td variant="primary" v-if="invoice.isTaxExp" class="text-right">
+                                            {{sum*1.1|nf}}</b-td>
+                                        <b-td variant="primary" v-else class="text-right">{{sum|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
                             </b-col>
@@ -444,7 +445,7 @@
                                             placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
                                         </b-form-file>
                                     </b-input-group>
-                                </b-form>        
+                                </b-form>
                             </b-col>
                             <b-col>
                                 <template v-if="uploadListMode=='list'">
@@ -469,8 +470,7 @@
                                         <template v-for="f in dicFiles">
                                             <b-card border-variant="light">
                                                 <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
-                                                <input type="checkbox" v-model="f.isSelect"
-                                                    class="image-in-check">
+                                                <input type="checkbox" v-model="f.isSelect" class="image-in-check">
                                             </b-card>
                                             <!--
                                                     <b-card style="width: 5rem;" 
@@ -488,14 +488,13 @@
                                 <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3"><i
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
-                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'"
-                                    class="mr-2">
+                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
                                     card</b-button>
-                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'"
-                                    class="mr-2">
+                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
                                     list</b-button>
                             </b-col>
-                        </b-row>    <!--アップロード機能ここまで-->
+                        </b-row>
+                        <!--アップロード機能ここまで-->
 
 
                     </b-col> <!-- 本体 -->
@@ -504,7 +503,7 @@
                 <!--
                 <sc-upload file-id = "2200001"></sc-upload>
                 -->
-                
+
                 <!-- iframe用コミュニケーション変数-->
                 <input type="hidden" v-model="countChanged" id="countChanged">
 
