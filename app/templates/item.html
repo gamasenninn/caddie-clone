@@ -477,7 +477,8 @@
                         await axios.get('/categories')
                             .then(function (response) {
                                 console.log(response);
-                                self.categories = response.data.map(item => item['categoryName'])
+                                self.categories = response.data.map(item => item['categoryName']);
+                                self.categories.unshift('');
                             });
                     },
                     getMakers: async function () {
@@ -485,7 +486,8 @@
                         await axios.get('/makers')
                             .then(function (response) {
                                 console.log(response);
-                                self.makers = response.data.map(item => item['makerName'])
+                                self.makers = response.data.map(item => item['makerName']);
+                                self.makers.unshift('');
                             });
                     },
                     modalShow: function (item, modalName) {
