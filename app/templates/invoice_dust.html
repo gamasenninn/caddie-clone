@@ -311,7 +311,7 @@
 
             <!-- 更新・取消ボタンのフッター -->
             <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
-                <b-row v-if="pageName=='show' || pageName=='store'">
+                <b-row v-if="pageName=='show'">
                     <b-col>
                         <router-link to="?page=index">
                             <b-button @click="getInvoices();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
