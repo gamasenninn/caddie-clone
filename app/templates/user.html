@@ -1,6 +1,24 @@
 <% extends "head.html" %>
     <% block content %>
         <style>
+            .sm-mode {
+                display: none;
+            }
+
+            .pc-mode {
+                display: block;
+            }
+
+            @media screen and (max-width:690px) {
+                .sm-mode {
+                    display: block;
+                }
+
+                .pc-mode {
+                    display: none;
+                }
+            }
+
             .card-header {
                 background-color: #ccecf1;
                 font-size: 18px;
@@ -24,10 +42,6 @@
                                         <b-button pill variant="success" class="mr-3" @click="UserAddRow();">＋新規作成
                                         </b-button>
                                     </router-link>
-                                </b-col>
-                                <b-col class="text-right">
-                                    <b-button pill href="/setting-page">設定画面へ
-                                    </b-button>
                                 </b-col>
                                 <!-- サイドバー -->
                                 <b-col cols="1" class="text-right">
@@ -63,6 +77,9 @@
                                                 class="fas fa-edit"></i>
                                         </b-button>
                                     </router-link>
+                                </template>
+                                <template v-slot:cell(password)="data">
+                                    {{ hidePassword(data.item.password) }}
                                 </template>
                             </b-table>
                         </b-card>
@@ -131,9 +148,8 @@
             <b-row class="mb-5"></b-row>
 
             <!-- 更新・取消ボタンのフッター -->
-            <b-card v-if="pageName=='show' || pageName=='store'" bg-variant="dark" text-variant="white"
-                class="fixed-bottom footer">
-                <b-row>
+            <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
+                <b-row v-if="pageName=='show' || pageName=='store'">
                     <b-col>
                         <router-link to="?page=index">
                             <b-button @click="getUsers();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
@@ -149,6 +165,28 @@
                         <b-button pill size="lg" variant="danger" @click="modalShow(user,'deleteModal');"
                             v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
+                        </b-button>
+                    </b-col>
+                </b-row>
+                <b-row v-else>
+                    <b-col class="pc-mode">
+                        <b-button href="/setting-page">＜</b-button>
+                        <b-button href="/user-page">ユーザー登録</b-button>
+                        <b-button href="/unit-page">単位登録</b-button>
+                        <b-button href="/dust-select-page">削除済み参照</b-button>
+                    </b-col>
+                    <b-col class="sm-mode">
+                        <b-button href="/setting-page">
+                            <b-icon icon="chevron-left"></b-icon>
+                        </b-button>
+                        <b-button href="/user-page" v-b-tooltip.hover.top="'ユーザー登録'">
+                            <b-icon icon="person-plus-fill"></b-icon>
+                        </b-button>
+                        <b-button href="/unit-page" v-b-tooltip.hover.top="'単位登録'">
+                            <b-icon icon="hammer"></i>
+                        </b-button>
+                        <b-button href="/dust-select-page" v-b-tooltip.hover.top="'削除済み参照'">
+                            <b-icon icon="file-earmark-x"></b-icon>
                         </b-button>
                     </b-col>
                 </b-row>
@@ -258,6 +296,14 @@
                     },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
+                    },
+                    hidePassword(word) {
+                        let password = String(word);
+                        let hideWord = '';
+                        for (let i = 0; i < password.length; i++) {
+                            hideWord = hideWord + '●';
+                        }
+                        return hideWord;
                     },
                 },
                 mounted: function () {

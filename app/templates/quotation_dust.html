@@ -1,6 +1,24 @@
 <% extends "head.html" %>
     <% block content %>
         <style>
+            .sm-mode {
+                display: none;
+            }
+
+            .pc-mode {
+                display: block;
+            }
+
+            @media screen and (max-width:690px) {
+                .sm-mode {
+                    display: block;
+                }
+
+                .pc-mode {
+                    display: none;
+                }
+            }
+
             .card-header {
                 background-color: #ccecf1;
                 font-size: 18px;
@@ -33,12 +51,6 @@
                         <b-col cols="11">
                             <b-row>
                                 <b-col>
-                                </b-col>
-                                <b-col class="text-right">
-                                    <b-button pill href="/setting-page">設定画面へ
-                                    </b-button>
-                                    <b-button pill href="/dust-select-page">選択画面へ
-                                    </b-button>
                                 </b-col>
                                 <!-- サイドバー -->
                                 <b-col cols="1" class="text-right">
@@ -290,8 +302,8 @@
             <b-row class="mb-5"></b-row>
 
             <!-- 更新・取消ボタンのフッター -->
-            <b-card v-if="pageName=='show'" bg-variant="dark" text-variant="white" class="fixed-bottom footer">
-                <b-row>
+            <b-card bg-variant="dark" text-variant="white" class="fixed-bottom footer">
+                <b-row v-if="pageName=='show'">
                     <b-col>
                         <router-link to="?page=index">
                             <b-button @click="getQuotations();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
@@ -300,6 +312,28 @@
                     <b-col class="text-right">
                         <b-button pill size="lg" variant="info" @click="alert('印刷しました。')" id="pdfout"
                             v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
+                        </b-button>
+                    </b-col>
+                </b-row>
+                <b-row v-else>
+                    <b-col class="pc-mode">
+                        <b-button href="/dust-select-page">＜</b-button>
+                        <b-button href="/user-page">ユーザー登録</b-button>
+                        <b-button href="/unit-page">単位登録</b-button>
+                        <b-button href="/dust-select-page">削除済み参照</b-button>
+                    </b-col>
+                    <b-col class="sm-mode">
+                        <b-button href="/dust-select-page">
+                            <b-icon icon="chevron-left"></b-icon>
+                        </b-button>
+                        <b-button href="/user-page" v-b-tooltip.hover.top="'ユーザー登録'">
+                            <b-icon icon="person-plus-fill"></b-icon>
+                        </b-button>
+                        <b-button href="/unit-page" v-b-tooltip.hover.top="'単位登録'">
+                            <b-icon icon="hammer"></i>
+                        </b-button>
+                        <b-button href="/dust-select-page" v-b-tooltip.hover.top="'削除済み参照'">
+                            <b-icon icon="file-earmark-x"></b-icon>
                         </b-button>
                     </b-col>
                 </b-row>
