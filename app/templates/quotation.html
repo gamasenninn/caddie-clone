@@ -94,7 +94,17 @@
                                 <div class="ml-5"></div>
                                 <b-col sm>
                                 </b-col>
-                                <b-col sm>
+                                <b-col class="text-right">
+                                    <b-col sm class="text-left">
+                                        <b-form-group label-cols="4" label-cols-lg="4" label-size="sm"
+                                            label-align="right" label="状況">
+                                            <b-form-select v-model="quotationsShowValue" :options="[
+                                            {value:'notConverted',text:'見積中'},
+                                            {value:'converted',text:'見積書→請求書'},
+                                            ]" size="sm">
+                                            </b-form-select>
+                                        </b-form-group>
+                                    </b-col>
                                 </b-col>
                             </b-row>
                             <b-row align-h="end">
@@ -458,6 +468,7 @@
                 el: '#app',
                 data: {
                     searchQuotationWord: '',        //請求書検索
+                    quotationsShowValue: 'notConverted',    //請求書検索
                     quotationsIndicateCount: 0,     //請求書検索
                     searchItemWord: '',             //商品選択モーダル検索
                     searchItemSelectCategory: '',   //商品選択モーダル検索
@@ -532,12 +543,15 @@
                     convertQuotation: function (item) {
                         let invoiceResource = JSON.stringify(item);
                         invoiceResource = JSON.parse(invoiceResource);  //参照渡し対策
+                        let quotationResource = JSON.parse(localStorage.getItem('quotation'));;
                         invoiceResource.deadLine = item.expiry;
                         invoiceResource.invoice_items = item.quotation_items;
                         delete invoiceResource.id;
                         delete invoiceResource.expiry;
                         delete invoiceResource.quotation_items;
+                        quotationResource.isConvert = true;
                         this.insertInvoice(invoiceResource);
+                        this.updateQuotation(quotationResource);
                     },
                     // axios.deleteは使わず、isDeleteをTrueに
                     deleteQuotation: async function (item) {
@@ -820,6 +834,10 @@
                     },
                     quotationsIndicateIndex: function () {
                         let quotations = this.quotations;
+                        if (this.quotationsShowValue === 'notConverted')
+                            quotations = quotations.filter(quotation => quotation.isConvert === false);
+                        if (this.quotationsShowValue === 'converted')
+                            quotations = quotations.filter(quotation => quotation.isConvert === true);
                         quotations = quotations.filter(quotation => searchFilter(quotation.customerName, this.searchQuotationWord) ||
                             searchFilterDate(quotation.applyDate, this.searchQuotationWord));
                         this.quotationsIndicateCount = quotations.length;
