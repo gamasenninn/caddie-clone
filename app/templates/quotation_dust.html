@@ -445,18 +445,16 @@
                 return searchTarget.includes(searchWord);
             };
             function searchFilterDate(targetDate, searchDate) {
-                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === '')) {
+                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === ''))
                     return true;
-                }
-                if (targetDate === null && searchDate !== '') {
+                if (targetDate === null && searchDate !== '')
                     return false;
-                }
-                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate)) {
+                if (searchDate.length === 4 && String(targetDate.slice(0, 4)) === String(searchDate))
                     return true;
-                }
-                if (searchDate.length === 8 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7) + targetDate.slice(8, 10)) === String(searchDate)) {
+                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate))
                     return true;
-                }
+                if (searchDate.length === 8 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7) + targetDate.slice(8, 10)) === String(searchDate))
+                    return true;
                 return false;
             };
 
