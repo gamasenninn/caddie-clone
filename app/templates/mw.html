@@ -14,14 +14,24 @@
 <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/contextmenu/jspanel.contextmenu.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/dock/jspanel.dock.js"></script>
 
+<style>
+  body{
+    background-color: #f7f7f7;
+  }
+
+  #logo{
+    width: 400; 
+    position: fixed;
+    inset: 0;
+    margin: auto;
+  }
+</style>
+
 <div id="app">
   <!--
   <b-button size="lg" id="openMenu" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
   -->
-
-  <b-img src="../static/images/logo_a_color.png"
-  style="width: 400; " center ></b-img>
-  
+  <b-img id="logo" src="../static/images/logo_a_color.png"></b-img>
 </div>
 
 <script>
