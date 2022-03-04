@@ -104,13 +104,13 @@
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ユーザー名"
-                                        label-for="name">
+                                        label-for="name" label-align="right">
                                         <b-form-input v-model="user.name" id="name" size="sm"></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="パスワード"
-                                        label-for="password">
+                                        label-for="password" label-align="right">
                                         <b-form-input v-model="user.password" id="password" size="sm"></b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -118,13 +118,13 @@
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="グループ"
-                                        label-for="group">
+                                        label-for="group" label-align="right">
                                         <b-form-input v-model="user.group" id="group" size="sm"></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="権限"
-                                        label-for="role">
+                                        label-for="role" label-align="right">
                                         <b-form-select v-model="user.role" size="sm" :options="[
                                         {  value: 'admin', text: 'admin' },
                                         {  value: 'user', text: 'user' },

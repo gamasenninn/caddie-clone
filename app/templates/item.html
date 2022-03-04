@@ -155,13 +155,13 @@
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品名"
-                                        label-for="itemName">
+                                        label-for="itemName" label-align="right">
                                         <b-form-input v-model="item.itemName" id="itemName" size="sm"></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="商品コード"
-                                        label-for="itemCode">
+                                        label-for="itemCode" label-align="right">
                                         <b-form-input v-model="item.itemCode" id="itemCode" size="sm"></b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -169,7 +169,7 @@
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
-                                        label-for="category">
+                                        label-for="category" label-align="right">
                                         <b-form-input list="list-category" v-model="item.category" size="sm"
                                             autocomplete="off"></b-form-input>
                                         <datalist id="list-category">
@@ -182,7 +182,8 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー">
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー"
+                                        label-align="right">
                                         <b-form-input list="list-maker" v-model="item.maker" size="sm"
                                             autocomplete="off"></b-form-input>
                                         <datalist id="list-maker">
@@ -194,7 +195,7 @@
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
-                                        label-for="unit">
+                                        label-for="unit" label-align="right">
                                         <b-form-input list="list-unit" v-model="item.unit" size="sm" autocomplete="off">
                                         </b-form-input>
                                         <datalist id="list-unit">
@@ -214,7 +215,7 @@
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="型式"
-                                        label-for="model">
+                                        label-for="model" label-align="right">
                                         <b-form-input v-model="item.model" id="model" size="sm"></b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -222,7 +223,7 @@
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価"
-                                        label-for="basePrice">
+                                        label-for="basePrice" label-align="right">
                                         <b-form-input v-model="item.basePrice" id="basePrice" size="sm" type="number">
                                         </b-form-input>
                                         </b-form-input>
@@ -230,7 +231,7 @@
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価原価"
-                                        label-for="baseCost">
+                                        label-for="baseCost" label-align="right">
                                         <b-form-input v-model="item.baseCost" id="baseCost" size="sm" type="number">
                                         </b-form-input>
                                     </b-form-group>
@@ -239,13 +240,13 @@
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
-                                        label-for="メモ">
+                                        label-for="メモ" label-align="right">
                                         <b-form-textarea v-model="item.memo" size="sm" rows="6"></b-form-textarea>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="アップロード"
-                                        label-for="upform">
+                                        label-for="upform" label-align="right">
                                         <b-form @submit="uploadFile" id="upform" inline>
                                             <b-input-group block>
                                                 <b-form-file v-model="form.file" browse-text="+"
