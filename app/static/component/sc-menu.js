@@ -5,8 +5,7 @@ Vue.component('sc-menu', {
     <b-sidebar id="sidebar-right" aria-labelledby="sidebar-right-title" no-header right shadow>
         <template #default="{ hide }">
             <div class="p-3">
-                <h4 id="sidebar-no-header-title" style="float: left; width: 75%;">遷移メニュー</h4>
-                <b-button variant="danger" block @click="hide" style="float: right; width: 15%;">✖
+                <b-button variant="danger" @click="hide"><b-icon icon="arrow-right"></b-icon>
                 </b-button>
                 <b-img src="../static/images/logo_a_color.png"
                     style="width: 50%; " center ></b-img>
