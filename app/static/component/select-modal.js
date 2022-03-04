@@ -13,7 +13,7 @@ Vue.component('select-modal', {
                     <b-button ref="focusThis" variant="danger" @click="isResult=true;select();">はい</b-button>
                 </router-link>
                 <b-col></b-col>
-                <b-button variant="info" @click="isResult=false;select();">いいえ</b-button>
+                <b-button variant="primary" @click="isResult=false;select();">いいえ</b-button>
                 <b-col></b-col>
             </b-row>
         </b-modal>
@@ -49,7 +49,7 @@ Vue.component('select-modal-static', {
                 <b-col></b-col>
                 <b-button ref="focusThis" variant="danger" @click="isResult=true;select();">はい</b-button>
                 <b-col></b-col>
-                <b-button variant="info" @click="isResult=false;select();">いいえ</b-button>
+                <b-button variant="primary" @click="isResult=false;select();">いいえ</b-button>
                 <b-col></b-col>
             </b-row>
         </b-modal>

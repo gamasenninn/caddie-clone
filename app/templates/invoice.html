@@ -148,7 +148,7 @@
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
-                                        <b-button variant="info" @click="selectInvoice(data.item);"><i
+                                        <b-button variant="primary" @click="selectInvoice(data.item);"><i
                                                 class="fas fa-edit"></i>
                                         </b-button>
                                     </router-link>
@@ -525,7 +525,7 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="info" @click="bulkUpsert(invoice);showConfirmModal();"
+                        <b-button pill variant="primary" @click="bulkUpsert(invoice);showConfirmModal();"
                             v-b-tooltip.hover.top="'保存'">保存
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"

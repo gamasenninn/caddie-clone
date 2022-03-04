@@ -90,7 +90,7 @@
                     ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
-                                        <b-button variant="info" @click="selectCustomer(data.item);"><i
+                                        <b-button variant="primary" @click="selectCustomer(data.item);"><i
                                                 class="fas fa-edit"></i>
                                         </b-button>
                                     </router-link>
@@ -303,8 +303,8 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="info" @click="apply();" v-b-tooltip.hover.top="'適用'">適用</b-button>
-                        <b-button pill size="lg" variant="info" @click="pdfOut" v-b-tooltip.hover.top="'印刷'"><i
+                        <b-button pill variant="primary" @click="apply();" v-b-tooltip.hover.top="'適用'">適用</b-button>
+                        <b-button pill size="lg" variant="primary" @click="pdfOut" v-b-tooltip.hover.top="'印刷'"><i
                                 class="fas fa-print"></i>
                         </b-button>
                         <b-button pill size="lg" variant="danger" @click="modalShow(customer,'deleteModal');"
