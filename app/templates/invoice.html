@@ -3,6 +3,11 @@
         <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
         <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
 
+        <!-- drag & drop file -->
+        <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+        
+
         <style>
             .card-header {
                 background-color: #ccecf1;
@@ -438,6 +443,7 @@
                         <!-- アップロード機能　-->
                         <b-row>
                             <b-col md="3">
+                                <!--
                                 <b-form @submit="uploadFile" id="upform">
                                     <b-input-group block>
                                         <b-button pill type="submit" class="mr-3">
@@ -449,7 +455,15 @@
                                         </b-form-file>
                                     </b-input-group>
                                 </b-form>
-                            </b-col>
+                                -->
+                                <b-card style="max-width: 20rem">
+                                    <form action="upload-files/s/upload" class="dropzone" id="dropz">
+                                        <input hidden type="text" name="fileId" v-model="invoice.applyNumber">
+                            
+                                        <input hidden type="file" name="file" >
+                                    </form>
+                                </b-card>
+                                                        </b-col>
                             <b-col>
                                 <template v-if="uploadListMode=='list'">
                                     <b-table-simple hover small caption-top responsive class="box">
@@ -573,6 +587,8 @@
         <!--
         <script src="static/component/sc-upload.js"></script>
         -->
+
+
         <script>
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
@@ -613,7 +629,9 @@
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
                     countChanged: 0,
-                    isUploading: false
+                    isUploading: false,
+                    oldPage : 'index'
+                    //dropz: null,
                 },
                 methods: {
                     // ---Invoices---
@@ -705,6 +723,7 @@
                         localStorage.setItem('invoice', JSON.stringify(item));
                         this.getFileList(this.invoice.applyNumber);
                         this.countChanged = 0;
+                        this.oldPage = 'index';
                     },
                     selectInvoiceItem: function (item) {
                         this.invoiceItem = item;
@@ -1011,7 +1030,7 @@
                     this.getMakers();
                     this.getSetting();
                     document.querySelector('title').textContent = '請求書管理';
-                    this.getFileList(this.invoice.applyNumber)
+                    this.getFileList(this.invoice.applyNumber);
                 },
                 router,
                 computed: {
@@ -1059,6 +1078,34 @@
                         });
                     },
                 },
+                updated: function(){
+                    self = this;
+                    console.log('update!!');
+                    if(this.pageName == 'sotre' || this.pageName == 'show'){
+                        if (this.oldPage == 'index'){
+                            console.log('change');
+                            console.log(this.oldPage);
+                            //Dropzone.autoDiscover = false;
+                            if (Dropzone.instances.length > 0) {
+                                Dropzone.instances.forEach((e) => {
+                                    e.off();
+                                    e.destroy();
+                                });
+                            }
+                            dropz = new Dropzone("form#dropz",{
+                                dictDefaultMessage: 'ここにファイルをドロップしてね',
+                                init: function () {
+                                    this.on("complete", file => {
+                                        console.log("complete A file has been added");
+                                        this.removeFile(file);
+                                        self.getFileList(self.invoice.applyNumber);
+                                    });
+                                }                            
+                            });
+                        }
+                    }
+                    this.oldPage = this.pageName;
+                },
                 watch: {
                     invoice: {
                         handler: function (val, oldval) {
@@ -1068,7 +1115,14 @@
                         },
                         deep: true
                     }
-                }
+                },
+                beforeRouteEnter(to, from, next) {
+                    next(vm => {
+                        console.log(to);
+                        //vm.initialize(); // 初期化処理
+                    next();
+                });
+                },
             })
 
             function searchFilter(searchTarget, searchWord) {
