@@ -596,7 +596,20 @@
             });
 
             const router = new VueRouter({
+                routes:[
+                //    {
+                //        path: "/",
+                //        beforeRouterEnter: function(to, from, next) {
+                //            console.log("before:",to,from,next);
+                //            next();
+                //        }
+                //    },
+                    
+                ]
             })
+
+            Dropzone.autoDiscover = false;
+
 
             var app = new Vue({
                 el: '#app',
@@ -630,8 +643,8 @@
                     message: '',    //モーダルメッセージ
                     countChanged: 0,
                     isUploading: false,
-                    oldPage : 'index'
-                    //dropz: null,
+                    routeTo: '',
+                    routeFrom: ''
                 },
                 methods: {
                     // ---Invoices---
@@ -723,7 +736,6 @@
                         localStorage.setItem('invoice', JSON.stringify(item));
                         this.getFileList(this.invoice.applyNumber);
                         this.countChanged = 0;
-                        this.oldPage = 'index';
                     },
                     selectInvoiceItem: function (item) {
                         this.invoiceItem = item;
@@ -998,6 +1010,26 @@
                             self.getFileList(fid);
                         });
                     },
+                    initDropzone: function(){
+                        console.log("init dropzone");
+                        if (Dropzone.instances.length > 0) {
+                            Dropzone.instances.forEach((e) => {
+                                //e.off();
+                                e.destroy();
+                            });
+                        }
+                        Dropzone.options.dropz = false;
+                        var dropz = new Dropzone("form#dropz",{
+                            dictDefaultMessage: 'ここにファイルをドロップしてね',
+                            init: function () {
+                                this.on("complete", file => {
+                                    console.log("complete A file has been added");
+                                    this.removeFile(file);
+                                    self.getFileList(self.invoice.applyNumber);
+                                });
+                            }                            
+                        });
+                    },
                     // ---- end upload functions -----
                     checkChange: async function () {
                         isUpdate = false;
@@ -1018,7 +1050,7 @@
                         }
                         this.clearFileList();
                         router.push({ path: "?page=index" });
-                    }
+                    },
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
@@ -1031,6 +1063,15 @@
                     this.getSetting();
                     document.querySelector('title').textContent = '請求書管理';
                     this.getFileList(this.invoice.applyNumber);
+                    //if(this.$route.query.page == 'show'){
+                    //    this.initDropzone();
+                   // }
+                   if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
+                        this.initDropzone();
+                        this.routeFrom = 'show';
+                        this.routeTo  = 'show';
+                    } 
+
                 },
                 router,
                 computed: {
@@ -1081,30 +1122,15 @@
                 updated: function(){
                     self = this;
                     console.log('update!!');
-                    if(this.pageName == 'sotre' || this.pageName == 'show'){
-                        if (this.oldPage == 'index'){
-                            console.log('change');
-                            console.log(this.oldPage);
-                            //Dropzone.autoDiscover = false;
-                            if (Dropzone.instances.length > 0) {
-                                Dropzone.instances.forEach((e) => {
-                                    e.off();
-                                    e.destroy();
-                                });
-                            }
-                            dropz = new Dropzone("form#dropz",{
-                                dictDefaultMessage: 'ここにファイルをドロップしてね',
-                                init: function () {
-                                    this.on("complete", file => {
-                                        console.log("complete A file has been added");
-                                        this.removeFile(file);
-                                        self.getFileList(self.invoice.applyNumber);
-                                    });
-                                }                            
-                            });
-                        }
-                    }
-                    this.oldPage = this.pageName;
+                    if (this.routeFrom=='index' && (this.routeTo == 'show' || this.routeTo=='store')){
+                        this.initDropzone();
+                        this.routeFrom = 'show';
+                        this.routeTo = 'show';
+                    } 
+                    //else
+                    //else if (this.routeFrom=='' && this.routeTo == '' ){
+                    //    this.initDropzone();
+                    //}
                 },
                 watch: {
                     invoice: {
@@ -1114,14 +1140,12 @@
                             }
                         },
                         deep: true
+                    },
+                    $route(to,from){ // パラメータの変更でドロップゾーンを初期化するため
+                        console.log('route:',from.query,to.query)
+                        this.routeFrom = from.query.page;
+                        this.routeTo = to.query.page;
                     }
-                },
-                beforeRouteEnter(to, from, next) {
-                    next(vm => {
-                        console.log(to);
-                        //vm.initialize(); // 初期化処理
-                    next();
-                });
                 },
             })
 
