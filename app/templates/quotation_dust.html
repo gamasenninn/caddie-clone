@@ -106,7 +106,7 @@
                         ]">
                                 <template v-slot:cell(show)="data">
                                     <router-link to="?page=show">
-                                        <b-button variant="info" @click="selectQuotation(data.item);">
+                                        <b-button variant="primary" @click="selectQuotation(data.item);">
                                             <b-icon icon="journal-text"></b-icon>
                                         </b-button>
                                     </router-link>
@@ -316,7 +316,7 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill size="lg" variant="info" @click="alert('印刷しました。')" id="pdfout"
+                        <b-button pill size="lg" variant="primary" @click="alert('印刷しました。')" id="pdfout"
                             v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
                         </b-button>
                     </b-col>

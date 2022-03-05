@@ -11,7 +11,7 @@ Vue.component('sc-menu', {
                     style="width: 50%; " center ></b-img>
                 <nav class="mt-3">
                     <b-nav vertical class="mb-4">
-                        <b-button variant="info" block href="/"><i class="fas fa-home"></i>　TOP
+                        <b-button variant="primary" block href="/"><i class="fas fa-home"></i>　TOP
                         </b-button>
                     </b-nav>
                     <b-nav vertical>
@@ -26,7 +26,7 @@ Vue.component('sc-menu', {
                                 class="far fa-copy"></i>　見積書</b-button>
                         <b-button variant="primary" block href="/memo-page"><i
                                 class="fas fa-book-open"></i>　メ　モ</b-button>
-                        <b-button variant="warning" block href="/logout">
+                        <b-button block href="/logout">
                                 <b-icon icon="door-open"></b-icon>　ログアウト</b-button>
                     </b-nav>
                 </nav>
