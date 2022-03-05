@@ -1122,7 +1122,7 @@
                 updated: function(){
                     self = this;
                     console.log('update!!');
-                    if (this.routeFrom=='index' && (this.routeTo == 'show' || this.routeTo=='store')){
+                    if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
                         this.initDropzone();
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
