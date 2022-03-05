@@ -272,24 +272,31 @@
                         <div class="mt-5"></div>
 
                         <b-row>
-                            <b-col sm class="ml-3">
+                            <b-col md class="ml-3">
                                 <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="備考欄"
                                     label-for="remarks" class="mt-5">
                                     <p class="text-left pl-2" id="remarks">{{quotation.remarks}}</p>
                                 </b-form-group>
                             </b-col>
-                            <b-col sm>
+                            <b-col md>
                                 <b-table-simple borderless>
-                                    <b-form-checkbox v-model="quotation.isTaxExp">外税</b-form-checkbox>
                                     <b-tr>
-                                        <b-td variant="info" class="text-right">内消費税</b-td>
-                                        <b-td variant="primary" class="text-right">{{parseInt(sum*0.1)|nf}}</b-td>
+                                        <b-td class="text-right">小計</b-td>
+                                        <b-td variant="primary" class="text-center">ここに小計が入る
+                                        </b-td>
+                                        <!-- <b-form-checkbox v-model="quotation.isTaxExp" class="text-right">外税 -->
+                                        <b-form-checkbox v-model="quotation.isTaxExp" class="ml-3">外税
+                                        </b-form-checkbox>
                                     </b-tr>
                                     <b-tr>
-                                        <b-td variant="info" class="text-right">合計金額</b-td>
-                                        <b-td variant="primary" v-if="quotation.isTaxExp" class="text-right">
+                                        <b-td class="text-right">内消費税</b-td>
+                                        <b-td variant="primary" class="text-center">{{parseInt(sum*0.1)|nf}}</b-td>
+                                    </b-tr>
+                                    <b-tr>
+                                        <b-td class="text-right">合計金額</b-td>
+                                        <b-td variant="primary" v-if="quotation.isTaxExp" class="text-center">
                                             {{sum*1.1|nf}}</b-td>
-                                        <b-td variant="primary" v-else class="text-right">{{sum|nf}}</b-td>
+                                        <b-td variant="primary" v-else class="text-center">{{sum|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
                             </b-col>
