@@ -1018,9 +1018,11 @@
                                 e.destroy();
                             });
                         }
-                        Dropzone.options.dropz = false;
+                        Dropzone.autoDiscover = false;
                         var dropz = new Dropzone("form#dropz",{
                             dictDefaultMessage: 'ここにファイルをドロップしてね',
+                            autoDiscover: false,
+                            autoProcessQueue: false,
                             init: function () {
                                 this.on("complete", file => {
                                     console.log("complete A file has been added");
@@ -1066,11 +1068,11 @@
                     //if(this.$route.query.page == 'show'){
                     //    this.initDropzone();
                    // }
-                   if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
-                        this.initDropzone();
-                        this.routeFrom = 'show';
-                        this.routeTo  = 'show';
-                    } 
+                   //if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
+                   //     this.initDropzone();
+                   //     this.routeFrom = 'show';
+                   //     this.routeTo  = 'show';
+                    //} 
 
                 },
                 router,
@@ -1122,11 +1124,18 @@
                 updated: function(){
                     self = this;
                     console.log('update!!');
+                    Dropzone.autoDiscover = false;
                     if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
-                        this.initDropzone();
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
+                        this.initDropzone();
                     } 
+                    if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
+                        this.routeFrom = 'show';
+                        this.routeTo  = 'show';
+                        this.initDropzone();
+                    } 
+
                     //else
                     //else if (this.routeFrom=='' && this.routeTo == '' ){
                     //    this.initDropzone();
