@@ -6,6 +6,16 @@
                 font-size: 18px;
             }
 
+            .searchMemoWord {
+                display: inline-block;
+                font-family: FontAwesome;
+                font-style: normal;
+                font-weight: normal;
+                line-height: 1;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
             #memotable td {
                 vertical-align: middle;
             }
@@ -42,8 +52,27 @@
                     <b-col cols="11">
                         <b-card border-variant="white" class="mb-3 text-center" header="メモ一覧"
                             header-border-variant="light">
+                            <b-row>
+                                <b-col sm>
+                                    <b-row>
+                                        <b-col>
+                                            <b-form-input class="searchMemoWord" v-model="searchMemoWord"
+                                                id="searchMemoWord" size="sm" placeholder="&#xf002; 担当者 ｏｒ 作成日">
+                                            </b-form-input>
+                                        </b-col>
+                                    </b-row>
+                                </b-col>
+                                <div class="ml-5"></div>
+                                <b-col sm>
+                                </b-col>
+                                <b-col sm>
+                                </b-col>
+                            </b-row>
+                            <b-row align-h="end">
+                                <p class="mr-3">表示件数 {{ memosIndicateCount }}件</p>
+                            </b-row>
                             <b-table responsive hover small id="memotable" sort-by="ID" small label="Table Options"
-                                :items=memos :fields="[
+                                :items=memosIndicateIndex :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'createdAt', label: '作成日' },
@@ -166,6 +195,8 @@
             var app = new Vue({
                 el: '#app',
                 data: {
+                    searchMemoWord: '',     //メモ検索
+                    memosIndicateCount: 0,  //メモ検索
                     memos: [],               //全件memo
                     memo: [],                //選択中のmemo
                 },
@@ -277,8 +308,38 @@
                         //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
                     },
+                    memosIndicateIndex: function () {
+                        let memos = this.memos;
+                        memos = memos.filter(memo => searchFilter(memo.manager, this.searchMemoWord) ||
+                            searchFilterDate(memo.createdAt, this.searchMemoWord));
+                        this.memosIndicateCount = memos.length;
+                        return memos;
+                    },
                 }
             })
+
+            function searchFilter(searchTarget, searchWord) {
+                if ((searchTarget === null && searchWord === '') || (searchTarget !== null && searchWord === '')) {
+                    return true;
+                }
+                if (searchTarget === null && searchWord !== '') {
+                    return false;
+                }
+                return searchTarget.includes(searchWord);
+            };
+            function searchFilterDate(targetDate, searchDate) {
+                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === ''))
+                    return true;
+                if (targetDate === null && searchDate !== '')
+                    return false;
+                if (searchDate.length === 4 && String(targetDate.slice(0, 4)) === String(searchDate))
+                    return true;
+                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate))
+                    return true;
+                if (searchDate.length === 8 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7) + targetDate.slice(8, 10)) === String(searchDate))
+                    return true;
+                return false;
+            };
 
         </script>
         <% endblock %>
