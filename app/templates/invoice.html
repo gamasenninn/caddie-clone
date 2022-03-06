@@ -884,7 +884,7 @@
                         } else {
                             h.category = '請求書';
                         }
-                        h.customerName = self.invoice.customerName;
+                        h.customerName = self.invoice.customerName + self.invoice.honorificTitle;
                         h.applyNumber = self.invoice.applyNumber;
                         h.myCompanyName = self.setting.companyName;
                         h.myAddress1 = self.setting.address;
@@ -922,7 +922,7 @@
                     },
                     pdfoutRcpt: async function () {
                         self = this;
-                        hr.customerName = self.invoice.customerName;
+                        hr.customerName = self.invoice.customerName + self.invoice.honorificTitle;
                         hr.applyNumber = self.invoice.applyNumber;
                         hr.forPaymentOf = self.invoice.title;
                         hr.dueDate = self.invoice.paymentDate;
