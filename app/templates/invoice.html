@@ -235,9 +235,10 @@
                                             <b-table hover striped small sort-by="ID" id="customer-table"
                                                 :items="searchCustomers" @row-clicked="customerSelect"
                                                 label="Table Options" :fields="[
-                                  {  key: 'id', label: 'No.' },
-                                  {  key: 'customerName', label: '顧客名' },
-                                ]"></b-table>
+                                                      {  key: 'id', label: 'No.' },
+                                                      {  key: 'customerName', label: '顧客名' },
+                                                ]">
+                                            </b-table>
 
                                         </b-modal>
                                     </b-form-group>
@@ -458,20 +459,21 @@
                         <!-- アップロード機能　-->
                         <b-row>
                             <b-col md="3">
-                                <b-form @submit="uploadFile" id="upform">
-                                    <b-input-group block>
-                                        <b-button pill type="submit" class="mr-3">
-                                            <span v-if="!isUploading">確定</span>
-                                            <b-spinner v-else label="Spinning" small></b-spinner>
-                                        </b-button>
-                                        <b-form-file v-model="form.file" size="lg" browse-text="+"
-                                            placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
-                                        </b-form-file>
-                                    </b-input-group>
-                                </b-form>
+                                <b-card style="max-width: 20rem">
+                                    <form action="upload-files/s/upload" class="dropzone" id="dropz">
+                                        <input hidden type="text" name="fileId" v-model="invoice.applyNumber">
+                            
+                                        <input hidden type="file" name="file" >
+                                    </form>
+                                </b-card>
                             </b-col>
                             <b-col>
+                                <div v-if="!dicFiles.length" class="mt-5">
+                                    ←クリックまたはドロップしてファイルをアップロード。
+                                </div>
+
                                 <template v-if="uploadListMode=='list'">
+                                    
                                     <b-table-simple hover small caption-top responsive class="box">
                                         <template v-for="f in dicFiles">
                                             <b-tr>
@@ -495,14 +497,6 @@
                                                 <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
                                                 <input type="checkbox" v-model="f.isSelect" class="image-in-check">
                                             </b-card>
-                                            <!--
-                                                    <b-card style="width: 5rem;" 
-                                                        :img-src= "'../'+f.thumbPath"
-                                                        img-top
-                                                    >
-                                                        <input type="checkbox" v-model="f.isSelect" class="image-in-check"> 
-                                                    </b-card>
-                                                -->
                                         </template>
                                     </div>
                                 </template>
@@ -518,14 +512,9 @@
                             </b-col>
                         </b-row>
                         <!--アップロード機能ここまで-->
-
-
                     </b-col> <!-- 本体 -->
                     <b-col></b-col>
                 </b-row>
-                <!--
-                <sc-upload file-id = "2200001"></sc-upload>
-                -->
 
                 <!-- iframe用コミュニケーション変数-->
                 <input type="hidden" v-model="countChanged" id="countChanged">
@@ -593,13 +582,18 @@
         <!--
         <script src="static/component/sc-upload.js"></script>
         -->
+
+
         <script>
+
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
                 return val.toLocaleString();
             });
 
             const router = new VueRouter({
+                routes:[
+                ]
             })
 
             var app = new Vue({
@@ -633,7 +627,9 @@
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
                     countChanged: 0,
-                    isUploading: false
+                    //isUploading: false,
+                    routeTo: '',
+                    routeFrom: '',
                 },
                 methods: {
                     // ---Invoices---
@@ -646,12 +642,12 @@
                                 self.countChanged = 0;
                             });
                     },
-                    bulkUpsert(item) {
+                    bulkUpsert: async function(item) {
                         if (!item.id) {
-                            this.insertInvoice(item);
+                            await this.insertInvoice(item);
                         }
                         else {
-                            this.updateInvoice(item);
+                            await this.updateInvoice(item);
                         }
                     },
                     insertInvoice: async function (item) {
@@ -678,8 +674,7 @@
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         self.countChanged = 0;
                         app.title = '更新';
-                        app.message = '保存しました。'
-
+                        app.message = '保存しました。';
                     },
                     copyInvoice: function (item) {
                         let invoiceResource = JSON.stringify(item);
@@ -959,6 +954,9 @@
                         return amount;
                     },
                     //---- upload funcrions --
+                    getFileListDZ(){
+                        this.getFileList(this.invoice.applyNumber);
+                    },
                     getFileList: async function (fid) {
                         self = this;
                         url = "list-files/s/upload/" + fid;
@@ -1000,7 +998,6 @@
                             self.getFileList(fid);
                         });
                     },
-                    // ---- end upload functions -----
                     checkChange: async function () {
                         isUpdate = false;
                         if (this.countChanged) {
@@ -1020,6 +1017,12 @@
                         }
                         this.clearFileList();
                         router.push({ path: "?page=index" });
+                    },
+                },
+                created: function(){
+                    if (this.$route.query.page == 'show' ){
+                        initDropzone();
+                        console.log('created');
                     }
                 },
                 mounted: function () {
@@ -1032,7 +1035,18 @@
                     this.getMakers();
                     this.getSetting();
                     document.querySelector('title').textContent = '請求書管理';
-                    this.getFileList(this.invoice.applyNumber)
+                    this.getFileList(self.invoice.applyNumber);
+                },
+                updated: function(){
+                    self = this;
+                    console.log('update!!');
+                    Dropzone.autoDiscover = false;
+                    if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
+                        this.routeFrom = 'show';
+                        this.routeTo = 'show';
+                        initDropzone();
+                        console.log('index->show');
+                    } 
                 },
                 router,
                 computed: {
@@ -1088,8 +1102,13 @@
                             }
                         },
                         deep: true
+                    },
+                    $route(to,from){ // パラメータの変更でドロップゾーンを初期化するため
+                        console.log('route:',from.query,to.query)
+                        this.routeFrom = from.query.page;
+                        this.routeTo = to.query.page;
                     }
-                }
+                },
             })
 
             function searchFilter(searchTarget, searchWord) {
@@ -1115,6 +1134,32 @@
                     return true;
                 return false;
             };
-
+            // アップロード機能　    
+            Dropzone.autoDiscover = false;
+            var dropz = '';
+            function destroyDrop(){
+                if (Dropzone.instances.length > 0) {
+                    Dropzone.instances.forEach((e) => {
+                            e.destroy();
+                    });
+                }
+            }
+            function initDropzone(){
+                        Dropzone.autoDiscover = false;
+                        console.log("init dropzone");
+                        destroyDrop();
+                        dropz = new Dropzone("#dropz",{
+                            dictDefaultMessage: '＋',
+                            init: function () {
+                                this.on("complete", file => {
+                                    console.log("complete A file has been added");
+                                    this.removeFile(file);
+                                    app.getFileListDZ();
+                                });
+                            }
+                        });
+            }
+            // end アップロード機能　                
+            //Dropzone.autoDiscover = false;
         </script>
         <% endblock %>
