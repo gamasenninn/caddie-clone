@@ -221,11 +221,24 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
-                                        label-for="manager" label-align="right">
-                                        <b-form-input v-model="quotation.manager" id="manager" size="sm">
-                                        </b-form-input>
-                                    </b-form-group>
+                                    <b-row>
+                                        <b-col sm>
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="敬称"
+                                                label-for="honorificTitle" label-align="right">
+                                                <b-form-input v-model="quotation.honorificTitle" id="honorificTitle"
+                                                    size="sm" autocomplete="off">
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-col>
+                                        <b-col sm>
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="担当者"
+                                                label-for="manager" label-align="right">
+                                                <b-form-input v-model="quotation.manager" id="manager" size="sm"
+                                                    autocomplete="off">
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-col>
+                                    </b-row>
                                 </b-col>
                             </b-row>
                             <b-row>
