@@ -855,6 +855,7 @@
                     customerSelect(record) {
                         Vue.set(self.invoice, 'customerId', record.id);
                         Vue.set(self.invoice, 'customerName', record.customerName);
+                        Vue.set(self.invoice, 'honorificTitle', record.honorificTitle);
                         this.$bvModal.hide("customer-modal");
                     },
                     // 顧客名入力→Enter
