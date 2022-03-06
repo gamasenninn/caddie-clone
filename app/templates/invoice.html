@@ -4,9 +4,10 @@
         <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
 
         <!-- drag & drop file -->
-        <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+        <!--
+        <script src="https://unpkg.com/dropzone@6.0.0-beta.2/dist/min/dropzone.min.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
-        
+        -->
 
         <style>
             .card-header {
@@ -938,6 +939,9 @@
                         return amount;
                     },
                     //---- upload funcrions --
+                    getFileListDZ(){
+                        this.getFileList(this.invoice.applyNumber);
+                    },
                     getFileList: async function (fid) {
                         self = this;
                         url = "list-files/s/upload/" + fid;
@@ -1000,6 +1004,12 @@
                         router.push({ path: "?page=index" });
                     },
                 },
+                created: function(){
+                    if (this.$route.query.page == 'show' ){
+                        initDropzone();
+                        console.log('created');
+                    }
+                },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
                     this.getInvoices();
@@ -1010,7 +1020,18 @@
                     this.getMakers();
                     this.getSetting();
                     document.querySelector('title').textContent = '請求書管理';
-                    this.getFileList(this.invoice.applyNumber);
+                    this.getFileList(self.invoice.applyNumber);
+                },
+                updated: function(){
+                    self = this;
+                    console.log('update!!');
+                    Dropzone.autoDiscover = false;
+                    if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
+                        this.routeFrom = 'show';
+                        this.routeTo = 'show';
+                        initDropzone();
+                        console.log('index->show');
+                    } 
                 },
                 router,
                 computed: {
@@ -1058,21 +1079,6 @@
                         });
                     },
                 },
-                updated: function(){
-                    self = this;
-                    console.log('update!!');
-                    Dropzone.autoDiscover = false;
-                    if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
-                        this.routeFrom = 'show';
-                        this.routeTo = 'show';
-                        initDropzone(self.invoice.applyNumber);
-                    } 
-                    if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
-                        this.routeFrom = 'show';
-                        this.routeTo  = 'show';
-                        initDropzone(self.invoice.applyNumber);
-                    } 
-                },
                 watch: {
                     invoice: {
                         handler: function (val, oldval) {
@@ -1115,25 +1121,30 @@
             };
             // アップロード機能　    
             Dropzone.autoDiscover = false;
-            function initDropzone(applyNumber){
-                        console.log("init dropzone");
-                        if (Dropzone.instances.length > 0) {
-                            Dropzone.instances.forEach((e) => {
-                                e.destroy();
-                            });
-                        }
+            var dropz = '';
+            function destroyDrop(){
+                if (Dropzone.instances.length > 0) {
+                    Dropzone.instances.forEach((e) => {
+                            e.destroy();
+                    });
+                }
+            }
+            function initDropzone(){
                         Dropzone.autoDiscover = false;
-                        var dropz = new Dropzone("#dropz",{
+                        console.log("init dropzone");
+                        destroyDrop();
+                        dropz = new Dropzone("#dropz",{
                             dictDefaultMessage: '＋',
                             init: function () {
                                 this.on("complete", file => {
                                     console.log("complete A file has been added");
                                     this.removeFile(file);
-                                    app.getFileList(applyNumber);
+                                    app.getFileListDZ();
                                 });
                             }
                         });
             }
             // end アップロード機能　                
+            //Dropzone.autoDiscover = false;
         </script>
         <% endblock %>
