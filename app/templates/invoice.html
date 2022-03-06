@@ -239,9 +239,10 @@
                                             <b-table hover striped small sort-by="ID" id="customer-table"
                                                 :items="searchCustomers" @row-clicked="customerSelect"
                                                 label="Table Options" :fields="[
-                                  {  key: 'id', label: 'No.' },
-                                  {  key: 'customerName', label: '顧客名' },
-                                ]"></b-table>
+                                                      {  key: 'id', label: 'No.' },
+                                                      {  key: 'customerName', label: '顧客名' },
+                                                ]">
+                                            </b-table>
 
                                         </b-modal>
                                     </b-form-group>
@@ -443,19 +444,6 @@
                         <!-- アップロード機能　-->
                         <b-row>
                             <b-col md="3">
-                                <!--
-                                <b-form @submit="uploadFile" id="upform">
-                                    <b-input-group block>
-                                        <b-button pill type="submit" class="mr-3">
-                                            <span v-if="!isUploading">確定</span>
-                                            <b-spinner v-else label="Spinning" small></b-spinner>
-                                        </b-button>
-                                        <b-form-file v-model="form.file" size="lg" browse-text="+"
-                                            placeholder="クリックまたはドラッグ..." drop-placeholder="Drop file here...">
-                                        </b-form-file>
-                                    </b-input-group>
-                                </b-form>
-                                -->
                                 <b-card style="max-width: 20rem">
                                     <form action="upload-files/s/upload" class="dropzone" id="dropz">
                                         <input hidden type="text" name="fileId" v-model="invoice.applyNumber">
@@ -463,9 +451,14 @@
                                         <input hidden type="file" name="file" >
                                     </form>
                                 </b-card>
-                                                        </b-col>
+                            </b-col>
                             <b-col>
+                                <div v-if="!dicFiles.length" class="mt-5">
+                                    ←ここにファイルをドロップしてください。
+                                </div>
+
                                 <template v-if="uploadListMode=='list'">
+                                    
                                     <b-table-simple hover small caption-top responsive class="box">
                                         <template v-for="f in dicFiles">
                                             <b-tr>
@@ -489,14 +482,6 @@
                                                 <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
                                                 <input type="checkbox" v-model="f.isSelect" class="image-in-check">
                                             </b-card>
-                                            <!--
-                                                    <b-card style="width: 5rem;" 
-                                                        :img-src= "'../'+f.thumbPath"
-                                                        img-top
-                                                    >
-                                                        <input type="checkbox" v-model="f.isSelect" class="image-in-check"> 
-                                                    </b-card>
-                                                -->
                                         </template>
                                     </div>
                                 </template>
@@ -512,14 +497,9 @@
                             </b-col>
                         </b-row>
                         <!--アップロード機能ここまで-->
-
-
                     </b-col> <!-- 本体 -->
                     <b-col></b-col>
                 </b-row>
-                <!--
-                <sc-upload file-id = "2200001"></sc-upload>
-                -->
 
                 <!-- iframe用コミュニケーション変数-->
                 <input type="hidden" v-model="countChanged" id="countChanged">
@@ -590,32 +570,6 @@
 
 
         <script>
-            Dropzone.autoDiscover = false;
-            function initDropzone(applyNumber){
-                        console.log("init dropzone");
-                        if (Dropzone.instances.length > 0) {
-                            Dropzone.instances.forEach((e) => {
-                                //e.off();
-                                e.destroy();
-                            });
-                        }
-                        //this.dropzz.destroy();
-                        Dropzone.autoDiscover = false;
-                        var dropz = new Dropzone("#dropz",{
-                        //Dropzone.options.dropz ={
-                            dictDefaultMessage: 'ここにファイルをドロップしてね',
-                            //autoDiscover: false,
-                            //autoProcessQueue: false,
-                            init: function () {
-                                this.on("complete", file => {
-                                    console.log("complete A file has been added");
-                                    this.removeFile(file);
-                                    app.getFileList(applyNumber);
-                                });
-                            }
-                        //}                            
-                        });
-            }
 
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
@@ -624,14 +578,6 @@
 
             const router = new VueRouter({
                 routes:[
-                //    {
-                //        path: "/",
-                //        beforeRouterEnter: function(to, from, next) {
-                //            console.log("before:",to,from,next);
-                //            next();
-                //        }
-                //    },
-                    
                 ]
             })
 
@@ -666,10 +612,9 @@
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
                     countChanged: 0,
-                    isUploading: false,
+                    //isUploading: false,
                     routeTo: '',
                     routeFrom: '',
-                    dorpzz: null
                 },
                 methods: {
                     // ---Invoices---
@@ -714,8 +659,7 @@
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         self.countChanged = 0;
                         app.title = '更新';
-                        app.message = '保存しました。'
-
+                        app.message = '保存しました。';
                     },
                     copyInvoice: function (item) {
                         let invoiceResource = JSON.stringify(item);
@@ -1035,34 +979,6 @@
                             self.getFileList(fid);
                         });
                     },
-                    /*
-                    initDropzone: function(){
-                        console.log("init dropzone");
-                        if (Dropzone.instances.length > 0) {
-                            Dropzone.instances.forEach((e) => {
-                                //e.off();
-                                e.destroy();
-                            });
-                        }
-                        //this.dropzz.destroy();
-                        Dropzone.autoDiscover = false;
-                        var dropz = new Dropzone("#dropz",{
-                        //Dropzone.options.dropz ={
-                            dictDefaultMessage: 'ここにファイルをドロップしてね',
-                            //autoDiscover: false,
-                            //autoProcessQueue: false,
-                            init: function () {
-                                this.on("complete", file => {
-                                    console.log("complete A file has been added");
-                                    this.removeFile(file);
-                                    self.getFileList(self.invoice.applyNumber);
-                                });
-                            }
-                        //}                            
-                        });
-                    },
-                    */
-                    // ---- end upload functions -----
                     checkChange: async function () {
                         isUpdate = false;
                         if (this.countChanged) {
@@ -1095,15 +1011,6 @@
                     this.getSetting();
                     document.querySelector('title').textContent = '請求書管理';
                     this.getFileList(this.invoice.applyNumber);
-                    //if(this.$route.query.page == 'show'){
-                    //    this.initDropzone();
-                    //}
-                    //if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
-                    //    this.initDropzone();
-                    //    this.routeFrom = 'show';
-                    //    this.routeTo  = 'show';
-                    //} 
-
                 },
                 router,
                 computed: {
@@ -1165,11 +1072,6 @@
                         this.routeTo  = 'show';
                         initDropzone(self.invoice.applyNumber);
                     } 
-
-                    //else
-                    //else if (this.routeFrom=='' && this.routeTo == '' ){
-                    //    this.initDropzone();
-                    //}
                 },
                 watch: {
                     invoice: {
@@ -1211,6 +1113,27 @@
                     return true;
                 return false;
             };
-
+            // アップロード機能　    
+            Dropzone.autoDiscover = false;
+            function initDropzone(applyNumber){
+                        console.log("init dropzone");
+                        if (Dropzone.instances.length > 0) {
+                            Dropzone.instances.forEach((e) => {
+                                e.destroy();
+                            });
+                        }
+                        Dropzone.autoDiscover = false;
+                        var dropz = new Dropzone("#dropz",{
+                            dictDefaultMessage: 'ここにファイルをドロップしてね',
+                            init: function () {
+                                this.on("complete", file => {
+                                    console.log("complete A file has been added");
+                                    this.removeFile(file);
+                                    app.getFileList(applyNumber);
+                                });
+                            }
+                        });
+            }
+            // end アップロード機能　                
         </script>
         <% endblock %>
