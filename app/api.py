@@ -247,6 +247,7 @@ def invoice_create():
     newInvoice = Invoice(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
+        honorificTitle=data.get('honorificTitle'),
         department=data.get('department'),
         manager=data.get('manager'),
         otherPartyManager=data.get('otherPartyManager'),
@@ -280,6 +281,7 @@ def invoice_update(id):
 
     invoice.customerId = data.get('customerId')
     invoice.customerName = data.get('customerName')
+    invoice.honorificTitle = data.get('honorificTitle')
     invoice.department = data.get('department')
     invoice.manager = data.get('manager')
     invoice.otherPartyManager = data.get('otherPartyManager')
@@ -438,6 +440,7 @@ def quotation_create():
     newQuotation = Quotation(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
+        honorificTitle=data.get('honorificTitle'),
         department=data.get('department'),
         manager=data.get('manager'),
         otherPartyManager=data.get('otherPartyManager'),
@@ -469,6 +472,7 @@ def quotation_update(id):
 
     quotation.customerId = data.get('customerId')
     quotation.customerName = data.get('customerName')
+    quotation.honorificTitle = data.get('honorificTitle')
     quotation.department = data.get('department')
     quotation.manager = data.get('manager')
     quotation.otherPartyManager = data.get('otherPartyManager')
