@@ -590,6 +590,33 @@
 
 
         <script>
+            Dropzone.autoDiscover = false;
+            function initDropzone(applyNumber){
+                        console.log("init dropzone");
+                        if (Dropzone.instances.length > 0) {
+                            Dropzone.instances.forEach((e) => {
+                                //e.off();
+                                e.destroy();
+                            });
+                        }
+                        //this.dropzz.destroy();
+                        Dropzone.autoDiscover = false;
+                        var dropz = new Dropzone("#dropz",{
+                        //Dropzone.options.dropz ={
+                            dictDefaultMessage: 'ここにファイルをドロップしてね',
+                            //autoDiscover: false,
+                            //autoProcessQueue: false,
+                            init: function () {
+                                this.on("complete", file => {
+                                    console.log("complete A file has been added");
+                                    this.removeFile(file);
+                                    app.getFileList(applyNumber);
+                                });
+                            }
+                        //}                            
+                        });
+            }
+
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
                 return val.toLocaleString();
@@ -607,9 +634,6 @@
                     
                 ]
             })
-
-            Dropzone.autoDiscover = false;
-
 
             var app = new Vue({
                 el: '#app',
@@ -644,7 +668,8 @@
                     countChanged: 0,
                     isUploading: false,
                     routeTo: '',
-                    routeFrom: ''
+                    routeFrom: '',
+                    dorpzz: null
                 },
                 methods: {
                     // ---Invoices---
@@ -657,12 +682,12 @@
                                 self.countChanged = 0;
                             });
                     },
-                    bulkUpsert(item) {
+                    bulkUpsert: async function(item) {
                         if (!item.id) {
-                            this.insertInvoice(item);
+                            await this.insertInvoice(item);
                         }
                         else {
-                            this.updateInvoice(item);
+                            await this.updateInvoice(item);
                         }
                     },
                     insertInvoice: async function (item) {
@@ -1010,6 +1035,7 @@
                             self.getFileList(fid);
                         });
                     },
+                    /*
                     initDropzone: function(){
                         console.log("init dropzone");
                         if (Dropzone.instances.length > 0) {
@@ -1018,20 +1044,24 @@
                                 e.destroy();
                             });
                         }
+                        //this.dropzz.destroy();
                         Dropzone.autoDiscover = false;
-                        var dropz = new Dropzone("form#dropz",{
+                        var dropz = new Dropzone("#dropz",{
+                        //Dropzone.options.dropz ={
                             dictDefaultMessage: 'ここにファイルをドロップしてね',
-                            autoDiscover: false,
-                            autoProcessQueue: false,
+                            //autoDiscover: false,
+                            //autoProcessQueue: false,
                             init: function () {
                                 this.on("complete", file => {
                                     console.log("complete A file has been added");
                                     this.removeFile(file);
                                     self.getFileList(self.invoice.applyNumber);
                                 });
-                            }                            
+                            }
+                        //}                            
                         });
                     },
+                    */
                     // ---- end upload functions -----
                     checkChange: async function () {
                         isUpdate = false;
@@ -1067,11 +1097,11 @@
                     this.getFileList(this.invoice.applyNumber);
                     //if(this.$route.query.page == 'show'){
                     //    this.initDropzone();
-                   // }
-                   //if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
-                   //     this.initDropzone();
-                   //     this.routeFrom = 'show';
-                   //     this.routeTo  = 'show';
+                    //}
+                    //if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
+                    //    this.initDropzone();
+                    //    this.routeFrom = 'show';
+                    //    this.routeTo  = 'show';
                     //} 
 
                 },
@@ -1128,12 +1158,12 @@
                     if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
-                        this.initDropzone();
+                        initDropzone(self.invoice.applyNumber);
                     } 
                     if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == ''){
                         this.routeFrom = 'show';
                         this.routeTo  = 'show';
-                        this.initDropzone();
+                        initDropzone(self.invoice.applyNumber);
                     } 
 
                     //else
