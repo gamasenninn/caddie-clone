@@ -125,8 +125,7 @@ function getPdfData() {
                     }
                 ],
                 "drawImages": [
-                    ["('./static/asset/inkan.png', 400,50,50,50,mask='auto')"],
-                    ["('./static/asset/inkan.png', 490,50,50,50,mask='auto')"]
+                    ["('./static/asset/inkan.png', 490,590,50,50,mask='auto')"],
                 ]
             }
         },
