@@ -30,6 +30,10 @@
                 max-width: 100px;
             }
 
+            #tdAmount {
+                background-color: #ccecf180;
+            }
+
             /* スピンボタン無効化 */
             /* Chrome/Safari */
             input[type="number"]::-webkit-outer-spin-button,
@@ -49,6 +53,7 @@
             #dropdown-dropup__BV_toggle_ {
                 border-radius: 0 20px 20px 0;
             }
+
             /* --- for upload --- */
             .box {
                 /* border: 1px solid #333333; */
@@ -56,6 +61,7 @@
                 height: 135px;
                 overflow-y: scroll;
             }
+
             .image-in-check {
                 width: 15px;
                 height: 15px;
@@ -73,6 +79,7 @@
                 left: 5;
                 z-index: 0;
             }
+
             .file-card {
                 display: flex;
                 flex-wrap: wrap;
@@ -434,21 +441,23 @@
                                 <b-table-simple borderless>
                                     <b-tr>
                                         <b-td class="text-right">小計</b-td>
-                                        <b-td variant="primary" class="text-center">ここに小計が入る
+                                        <b-td class="text-center" id="tdAmount" style="border-bottom: 2px solid white;">
+                                            ここに小計が入る
                                         </b-td>
                                         <!-- <b-form-checkbox v-model="quotation.isTaxExp" class="text-right">外税 -->
                                         <b-form-checkbox v-model="quotation.isTaxExp" class="ml-3">外税
                                         </b-form-checkbox>
                                     </b-tr>
                                     <b-tr>
-                                        <b-td class="text-right">内消費税</b-td>
-                                        <b-td variant="primary" class="text-center">{{parseInt(sum*0.1)|nf}}</b-td>
+                                        <b-td class="text-right">消費税</b-td>
+                                        <b-td class="text-center" id="tdAmount" style="border-bottom: 2px solid white;">
+                                            {{parseInt(sum*0.1)|nf}}</b-td>
                                     </b-tr>
                                     <b-tr>
-                                        <b-td class="text-right">合計金額</b-td>
-                                        <b-td variant="primary" v-if="quotation.isTaxExp" class="text-center">
+                                        <b-td class="text-right">見積総額</b-td>
+                                        <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount">
                                             {{sum*1.1|nf}}</b-td>
-                                        <b-td variant="primary" v-else class="text-center">{{sum|nf}}</b-td>
+                                        <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
                             </b-col>
@@ -459,8 +468,8 @@
                                 <b-card style="max-width: 20rem">
                                     <form action="upload-files/s/upload/quotes" class="dropzone" id="dropz">
                                         <input hidden type="text" name="fileId" v-model="quotation.applyNumber">
-                            
-                                        <input hidden type="file" name="file" >
+
+                                        <input hidden type="file" name="file">
                                     </form>
                                 </b-card>
                             </b-col>
@@ -470,7 +479,7 @@
                                 </div>
 
                                 <template v-if="uploadListMode=='list'">
-                                    
+
                                     <b-table-simple hover small caption-top responsive class="box">
                                         <template v-for="f in dicFiles">
                                             <b-tr>
@@ -877,7 +886,7 @@
                         return amount;
                     },
                     //---- upload funcrions --
-                    getFileListDZ(){
+                    getFileListDZ() {
                         this.getFileList(this.quotation.applyNumber);
                     },
                     getFileList: async function (fid) {
@@ -976,14 +985,14 @@
                     document.querySelector('title').textContent = '見積書管理';
                     this.getFileList(self.quotation.applyNumber);
                 },
-                updated: function(){
+                updated: function () {
                     self = this;
-                    if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
+                    if ((this.routeFrom == 'index' || this.routeFrom == undefined) && (this.routeTo == 'show' || this.routeTo == 'store')) {
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
                         initDropzone();
                     }
-                    if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
+                    if (this.$route.query.page == 'show' && this.routeFrom == '' && this.routeTo == '') {
                         initDropzone();
                     }
                 },
@@ -1044,7 +1053,7 @@
                         },
                         deep: true
                     },
-                    $route(to,from){ // パラメータの変更でドロップゾーンを初期化するため
+                    $route(to, from) { // パラメータの変更でドロップゾーンを初期化するため
                         this.routeFrom = from.query.page;
                         this.routeTo = to.query.page;
                     }
@@ -1075,31 +1084,31 @@
                 return false;
             };
             Dropzone.autoDiscover = false;
-            function destroyDrop(){
+            function destroyDrop() {
                 if (Dropzone.instances.length > 0) {
                     Dropzone.instances.forEach((e) => {
-                            e.destroy();
+                        e.destroy();
                     });
                 }
             }
-            function initDropzone(){
-                        Dropzone.autoDiscover = false;
-                        console.log("init dropzone");
-                        destroyDrop();
-                        dropz = new Dropzone("#dropz",{
-                            dictDefaultMessage: '＋',
-                            init: function () {
-                                this.on("complete", file => {
-                                    console.log("complete A file has been added");
-                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                                        this.removeFile(file);
-                                        app.getFileListDZ();
-                                    }
-                                });
+            function initDropzone() {
+                Dropzone.autoDiscover = false;
+                console.log("init dropzone");
+                destroyDrop();
+                dropz = new Dropzone("#dropz", {
+                    dictDefaultMessage: '＋',
+                    init: function () {
+                        this.on("complete", file => {
+                            console.log("complete A file has been added");
+                            if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                this.removeFile(file);
+                                app.getFileListDZ();
                             }
                         });
+                    }
+                });
             }
-            // end アップロード機能　
+            // end アップロード機能
         </script>
-        
+
         <% endblock %>

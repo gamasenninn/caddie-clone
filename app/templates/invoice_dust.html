@@ -33,6 +33,10 @@
                 width: 90px;
             }
 
+            #tdAmount {
+                background-color: #ccecf180;
+            }
+
             #dropdown-dropup__BV_button_ {
                 border-radius: 20px 0 0 20px;
             }
@@ -293,21 +297,23 @@
                                 <b-table-simple borderless>
                                     <b-tr>
                                         <b-td class="text-right">小計</b-td>
-                                        <b-td variant="primary" class="text-center">ここに小計が入る
+                                        <b-td class="text-center" id="tdAmount" style="border-bottom: 2px solid white;">
+                                            ここに小計が入る
                                         </b-td>
                                         <!-- <b-form-checkbox v-model="invoice.isTaxExp" class="text-right">外税 -->
                                         <b-form-checkbox v-model="invoice.isTaxExp" class="ml-3">外税
                                         </b-form-checkbox>
                                     </b-tr>
                                     <b-tr>
-                                        <b-td class="text-right">内消費税</b-td>
-                                        <b-td variant="primary" class="text-center">{{parseInt(sum*0.1)|nf}}</b-td>
+                                        <b-td class="text-right">消費税</b-td>
+                                        <b-td class="text-center" id="tdAmount" style="border-bottom: 2px solid white;">
+                                            {{parseInt(sum*0.1)|nf}}</b-td>
                                     </b-tr>
                                     <b-tr>
-                                        <b-td class="text-right">合計金額</b-td>
-                                        <b-td variant="primary" v-if="invoice.isTaxExp" class="text-center">
+                                        <b-td class="text-right">請求総額</b-td>
+                                        <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount">
                                             {{sum*1.1|nf}}</b-td>
-                                        <b-td variant="primary" v-else class="text-center">{{sum|nf}}</b-td>
+                                        <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
                             </b-col>
