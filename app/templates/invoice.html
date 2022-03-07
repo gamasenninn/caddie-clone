@@ -1132,7 +1132,7 @@
                         console.log("init dropzone");
                         destroyDrop();
                         dropz = new Dropzone("form#dropz",{
-                            dictDefaultMessage: '＋',
+                            dictDefaultMessage: '<h2>+</h2>',
                             parallelUploads: 10,
                             init: function () {
                                 this.on("complete", file => {

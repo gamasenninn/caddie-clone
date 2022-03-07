@@ -1087,7 +1087,7 @@
                         console.log("init dropzone");
                         destroyDrop();
                         dropz = new Dropzone("#dropz",{
-                            dictDefaultMessage: '＋',
+                            dictDefaultMessage: '<h2>+</h2>',
                             init: function () {
                                 this.on("complete", file => {
                                     console.log("complete A file has been added");
