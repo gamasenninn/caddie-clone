@@ -79,6 +79,15 @@
             #dropdown-dropup__BV_toggle_ {
                 border-radius: 0 20px 20px 0;
             }
+
+            #item-modal___BV_modal_body_ {
+                padding-top: 0;
+            }
+
+            #item-modal-card {
+                padding: 0.25rem 1.25rem;
+                border-bottom: 1px solid #CED4DA;
+            }
         </style>
 
         <div id="app" v-cloak>
@@ -314,38 +323,46 @@
                                     v-on:keydown.enter="selectInvoiceItem(data.item);onKeyDownItem(data.index);">
                                 </textarea>
 
-                                <b-modal size="xl" ref="items-modal" title="商品一覧">
+                                <b-modal size="xl" ref="items-modal" ok-only ok-title="閉じる" hide-header id="item-modal">
+                                    <b-row>
+                                        <div id="item-modal-card" style="width: 100%;" class="mb-3">商品一覧</div>
+                                    </b-row>
                                     <b-row>
                                         <b-col>
                                         </b-col>
                                         <b-col>
                                             <b-row class="mb-1">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemWord"><i class="fas fa-search"></i></label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
-                                                    <b-form-input v-model="searchItemWord" id="searchItemWord"
-                                                        size="sm">
+                                                    <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"
+                                                        placeholder="🔍">
                                                     </b-form-input>
                                                 </b-col>
                                             </b-row>
                                             <b-row class="mb-1">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemSelectCategory">カテゴリ</label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
                                                     <b-form-select v-model="searchItemSelectCategory"
                                                         :options="categories" size="sm">
+                                                        <template #first>
+                                                            <b-form-select-option value='' disabled>カテゴリー
+                                                            </b-form-select-option>
+                                                        </template>
                                                     </b-form-select>
                                                 </b-col>
                                             </b-row>
                                             <b-row class="mb-2">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemSelectMaker">メーカー</label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
                                                     <b-form-select v-model="searchItemSelectMaker" :options="makers"
                                                         size="sm">
+                                                        <template #first>
+                                                            <b-form-select-option value='' disabled>メーカー
+                                                            </b-form-select-option>
+                                                        </template>
                                                     </b-form-select>
                                                 </b-col>
                                             </b-row>
@@ -462,8 +479,8 @@
                                 <b-card style="max-width: 20rem">
                                     <form action="upload-files/s/upload" class="dropzone" id="dropz">
                                         <input hidden type="text" name="fileId" v-model="invoice.applyNumber">
-                            
-                                        <input hidden type="file" name="file" >
+
+                                        <input hidden type="file" name="file">
                                     </form>
                                 </b-card>
                             </b-col>
@@ -473,7 +490,7 @@
                                 </div>
 
                                 <template v-if="uploadListMode=='list'">
-                                    
+
                                     <b-table-simple hover small caption-top responsive class="box">
                                         <template v-for="f in dicFiles">
                                             <b-tr>
@@ -592,7 +609,7 @@
             });
 
             const router = new VueRouter({
-                routes:[
+                routes: [
                 ]
             })
 
@@ -642,7 +659,7 @@
                                 self.countChanged = 0;
                             });
                     },
-                    bulkUpsert: async function(item) {
+                    bulkUpsert: async function (item) {
                         if (!item.id) {
                             await this.insertInvoice(item);
                         }
@@ -954,7 +971,7 @@
                         return amount;
                     },
                     //---- upload funcrions --
-                    getFileListDZ(){
+                    getFileListDZ() {
                         this.getFileList(this.invoice.applyNumber);
                     },
                     getFileList: async function (fid) {
@@ -1019,8 +1036,8 @@
                         router.push({ path: "?page=index" });
                     },
                 },
-                created: function(){
-                    if (this.$route.query.page == 'show' ){
+                created: function () {
+                    if (this.$route.query.page == 'show') {
                         initDropzone();
                         console.log('created');
                     }
@@ -1037,16 +1054,16 @@
                     document.querySelector('title').textContent = '請求書管理';
                     this.getFileList(self.invoice.applyNumber);
                 },
-                updated: function(){
+                updated: function () {
                     self = this;
                     console.log('update!!');
                     Dropzone.autoDiscover = false;
-                    if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
+                    if ((this.routeFrom == 'index' || this.routeFrom == undefined) && (this.routeTo == 'show' || this.routeTo == 'store')) {
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
                         initDropzone();
                         console.log('index->show');
-                    } 
+                    }
                 },
                 router,
                 computed: {
@@ -1103,8 +1120,8 @@
                         },
                         deep: true
                     },
-                    $route(to,from){ // パラメータの変更でドロップゾーンを初期化するため
-                        console.log('route:',from.query,to.query)
+                    $route(to, from) { // パラメータの変更でドロップゾーンを初期化するため
+                        console.log('route:', from.query, to.query)
                         this.routeFrom = from.query.page;
                         this.routeTo = to.query.page;
                     }
@@ -1137,29 +1154,29 @@
             // アップロード機能　    
             Dropzone.autoDiscover = false;
             var dropz = '';
-            function destroyDrop(){
+            function destroyDrop() {
                 if (Dropzone.instances.length > 0) {
                     Dropzone.instances.forEach((e) => {
-                            e.destroy();
+                        e.destroy();
                     });
                 }
             }
-            function initDropzone(){
-                        Dropzone.autoDiscover = false;
-                        console.log("init dropzone");
-                        destroyDrop();
-                        dropz = new Dropzone("#dropz",{
-                            dictDefaultMessage: '＋',
-                            init: function () {
-                                this.on("complete", file => {
-                                    console.log("complete A file has been added");
-                                    this.removeFile(file);
-                                    app.getFileListDZ();
-                                });
-                            }
+            function initDropzone() {
+                Dropzone.autoDiscover = false;
+                console.log("init dropzone");
+                destroyDrop();
+                dropz = new Dropzone("#dropz", {
+                    dictDefaultMessage: '＋',
+                    init: function () {
+                        this.on("complete", file => {
+                            console.log("complete A file has been added");
+                            this.removeFile(file);
+                            app.getFileListDZ();
                         });
+                    }
+                });
             }
-            // end アップロード機能　                
+            // end アップロード機能
             //Dropzone.autoDiscover = false;
         </script>
         <% endblock %>
