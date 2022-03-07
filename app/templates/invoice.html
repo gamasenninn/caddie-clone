@@ -30,6 +30,10 @@
                 max-width: 100px;
             }
 
+            #tdAmount {
+                background-color: #ccecf180;
+            }
+
             /* スピンボタン無効化 */
             /* Chrome/Safari */
             input[type="number"]::-webkit-outer-spin-button,
@@ -445,21 +449,23 @@
                                 <b-table-simple borderless>
                                     <b-tr>
                                         <b-td class="text-right">小計</b-td>
-                                        <b-td variant="primary" class="text-center">ここに小計が入る
+                                        <b-td class="text-center" id="tdAmount" style="border-bottom: 2px solid white;">
+                                            ここに小計が入る
                                         </b-td>
                                         <!-- <b-form-checkbox v-model="invoice.isTaxExp" class="text-right">外税 -->
                                         <b-form-checkbox v-model="invoice.isTaxExp" class="ml-3">外税
                                         </b-form-checkbox>
                                     </b-tr>
                                     <b-tr>
-                                        <b-td class="text-right">内消費税</b-td>
-                                        <b-td variant="primary" class="text-center">{{parseInt(sum*0.1)|nf}}</b-td>
+                                        <b-td class="text-right">消費税</b-td>
+                                        <b-td class="text-center" id="tdAmount" style="border-bottom: 2px solid white;">
+                                            {{parseInt(sum*0.1)|nf}}</b-td>
                                     </b-tr>
                                     <b-tr>
-                                        <b-td class="text-right">合計金額</b-td>
-                                        <b-td variant="primary" v-if="invoice.isTaxExp" class="text-center">
+                                        <b-td class="text-right">請求総額</b-td>
+                                        <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount">
                                             {{sum*1.1|nf}}</b-td>
-                                        <b-td variant="primary" v-else class="text-center">{{sum|nf}}</b-td>
+                                        <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
                             </b-col>
@@ -1023,7 +1029,7 @@
                 },
                 updated: function () {
                     self = this;
-                    if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
+                    if ((this.routeFrom == 'index' || this.routeFrom == undefined) && (this.routeTo == 'show' || this.routeTo == 'store')) {
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
                         initDropzone();
@@ -1089,7 +1095,7 @@
                         },
                         deep: true
                     },
-                    $route(to,from){ // パラメータの変更でドロップゾーンを初期化するため
+                    $route(to, from) { // パラメータの変更でドロップゾーンを初期化するため
                         this.routeFrom = from.query.page;
                         this.routeTo = to.query.page;
                     }
@@ -1121,31 +1127,31 @@
             };
             // アップロード機能　    
             Dropzone.autoDiscover = false;
-            function destroyDrop(){
+            function destroyDrop() {
                 if (Dropzone.instances.length > 0) {
                     Dropzone.instances.forEach((e) => {
                         e.destroy();
                     });
                 }
             }
-            function initDropzone(){
-                        Dropzone.autoDiscover = false;
-                        console.log("init dropzone");
-                        destroyDrop();
-                        dropz = new Dropzone("form#dropz",{
-                            dictDefaultMessage: '＋',
-                            parallelUploads: 10,
-                            init: function () {
-                                this.on("complete", file => {
-                                    console.log("complete A file has been added");
-                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                                        this.removeFile(file);
-                                        app.getFileListDZ();
-                                    }
-                                });
+            function initDropzone() {
+                Dropzone.autoDiscover = false;
+                console.log("init dropzone");
+                destroyDrop();
+                dropz = new Dropzone("form#dropz", {
+                    dictDefaultMessage: '＋',
+                    parallelUploads: 10,
+                    init: function () {
+                        this.on("complete", file => {
+                            console.log("complete A file has been added");
+                            if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                this.removeFile(file);
+                                app.getFileListDZ();
                             }
                         });
-                }
-            // end アップロード機能　                
+                    }
+                });
+            }
+            // end アップロード機能
         </script>
         <% endblock %>
