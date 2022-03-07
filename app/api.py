@@ -310,12 +310,15 @@ def invoice_update(id):
                 del(item['updatedAt'])
 
             if item.get('id'):
-                if item.get('isDelete') == True:
+                if item.get('isDelete'):
                     delete_in_list.append(item['id'])
                 else:
                     update_list.append(item)
             else:
-                insert_list.append(item)
+                if item.get('isDelete'):
+                    pass
+                else:
+                    insert_list.append(item)
 
         db.session.bulk_update_mappings(Invoice_Item, update_list)
         db.session.bulk_insert_mappings(Invoice_Item, insert_list)
