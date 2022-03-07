@@ -310,7 +310,10 @@ def invoice_update(id):
                 del(item['updatedAt'])
 
             if item.get('id'):
-                update_list.append(item)
+                if item.get('isDelete') == True:
+                    delete_in_list.append(item['id'])
+                else:
+                    update_list.append(item)
             else:
                 insert_list.append(item)
 

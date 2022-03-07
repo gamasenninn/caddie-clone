@@ -308,7 +308,7 @@
                           {  key: 'price', label: '値段', tdClass:'td-price' },
                           {  key: 'amount', label: '金額' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
-                          {  key: 'delete', label: '削除',class:'text-center' },
+                          {  key: 'isDelete', label: '削除',class:'text-center' },
                         ]">
                             <template v-slot:cell(itemName)="data">
                                 <textarea v-model="data.item.itemName" class="form-control form-control-sm itemNameArea"
@@ -409,10 +409,8 @@
                                 </b-row>
                             </template>
 
-                            <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" class="fas fa-trash-alt"
-                                    @click="deleteInvoiceItem(data.item)">
-                                </b-button>
+                            <template v-slot:cell(isDelete)="data">
+                                <b-form-checkbox  v-model="data.item.isDelete" ></b-form-checkbox>
                             </template>
 
                         </b-table>
@@ -725,6 +723,7 @@
                     },
                     selectInvoice: function (item) {
                         this.invoice = item;
+                        this.invoice.invoice_items = this.invoice.invoice_items.map(invoiceItem => ({ ...invoiceItem, isDelete: false }));
                         console.log(this.invoice);
                         localStorage.setItem('invoice', JSON.stringify(item));
                         this.getFileList(this.invoice.applyNumber);
@@ -1009,6 +1008,11 @@
                         this.clearFileList();
                         router.push({ path: "?page=index" });
                     },
+                    toggleItemDelete: function(item){
+                        console.log("toggle!",item)
+                        this.invoiceItem['isDelete'] = item.isDelete;
+                        //item.isDelete = !item.isDelete;
+                    }
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
@@ -1030,6 +1034,8 @@
                         initDropzone();
                     }
                     if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
+                        this.routeFrom = 'show';
+                        this.routeTo = 'show';
                         initDropzone();
                     }
                 },
