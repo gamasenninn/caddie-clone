@@ -719,7 +719,7 @@
                         self = this;
                         self.invoices.push({
                             isInsert: true,
-                            invoice_items: [{}, {}, {}, {}, {},{isDelete:false}],
+                            invoice_items: [{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false}],
                         });
                         self.invoice = self.invoices.slice(-1)[0];
                         Vue.set(self.invoice, 'isTaxExp', true);
