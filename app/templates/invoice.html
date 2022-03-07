@@ -719,7 +719,7 @@
                         self = this;
                         self.invoices.push({
                             isInsert: true,
-                            invoice_items: [{}, {}, {}, {}, {}],
+                            invoice_items: [{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false}],
                         });
                         self.invoice = self.invoices.slice(-1)[0];
                         Vue.set(self.invoice, 'isTaxExp', true);
@@ -750,20 +750,20 @@
                                 }
                             });
                     },
-                    deleteInvoiceItem: async function (item) {
-                        self = this;
-                        if (item.id) {
-                            await axios.delete("/invoice_item/" + item.id)
-                                .then(function (response) {
-                                    console.log(response);
-                                    self.getInvoice(self.invoice);
-                                });
-                        }
-                        else {
-                            let indexNum = this.invoice.invoice_items.indexOf(item);
-                            this.invoice.invoice_items.splice(indexNum, 1);
-                        }
-                    },
+//                    deleteInvoiceItem: async function (item) {
+//                        self = this;
+//                        if (item.id) {
+//                            await axios.delete("/invoice_item/" + item.id)
+//                                .then(function (response) {
+//                                    console.log(response);
+//                                    self.getInvoice(self.invoice);
+//                                });
+//                        }
+//                        else {
+//                            let indexNum = this.invoice.invoice_items.indexOf(item);
+//                            this.invoice.invoice_items.splice(indexNum, 1);
+//                        }
+//                    },
                     addRowInvoiceItem: function () {
                         if (this.invoice.length === 0) {
                             alert('請求書を選択してください');

@@ -228,19 +228,33 @@ def invoice_show(id):
 @app.route('/invoice', methods=['POST'])
 def invoice_create():
     data = request.json
-
+    newInvoiceItems = []
     if data.get('invoice_items'):
-        newInvoiceItems = [
-            Invoice_Item(
-                invoiceId=item.get('invoiceId'),
-                itemId=item.get('itemId'),
-                price=item.get('price'),
-                count=item.get('count'),
-                unit=item.get('unit'),
-                itemName=item.get('itemName'),
+        for item in data.get('invoice_items'):
+            if item.get('isDelete'):
+                if item['isDelete']: continue
+            newInvoiceItems.append(
+                Invoice_Item(
+                    invoiceId=item.get('invoiceId'),
+                    itemId=item.get('itemId'),
+                    price=item.get('price'),
+                    count=item.get('count'),
+                    unit=item.get('unit'),
+                    itemName=item.get('itemName'),
+                )
             )
-            for item in data.get('invoice_items')
-        ]
+
+        #newInvoiceItems = [
+        #    Invoice_Item(
+        #        invoiceId=item.get('invoiceId'),
+        #        itemId=item.get('itemId'),
+        #        price=item.get('price'),
+        #        count=item.get('count'),
+        #        unit=item.get('unit'),
+        #        itemName=item.get('itemName'),
+        #    )
+        #    for item in data.get('invoice_items')
+        #]
     else:
         newInvoiceItems = []
 
