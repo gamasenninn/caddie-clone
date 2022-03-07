@@ -1133,19 +1133,21 @@
                     });
                 }
             }
-            function initDropzone() {
-                Dropzone.autoDiscover = false;
-                console.log("init dropzone");
-                destroyDrop();
-                dropz = new Dropzone("form#dropz", {
-                    dictDefaultMessage: '＋',
-                    parallelUploads: 10,
-                    init: function () {
-                        this.on("complete", file => {
-                            console.log("complete A file has been added");
-                            if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                                this.removeFile(file);
-                                app.getFileListDZ();
+            function initDropzone(){
+                        Dropzone.autoDiscover = false;
+                        console.log("init dropzone");
+                        destroyDrop();
+                        dropz = new Dropzone("form#dropz",{
+                            dictDefaultMessage: '<h2>+</h2>',
+                            parallelUploads: 2,
+                            init: function () {
+                                this.on("complete", file => {
+                                    console.log("complete A file has been added");
+                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                        this.removeFile(file);
+                                        app.getFileListDZ();
+                                    }
+                                });
                             }
                         });
                     }
