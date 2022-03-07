@@ -49,6 +49,15 @@
             #dropdown-dropup__BV_toggle_ {
                 border-radius: 0 20px 20px 0;
             }
+
+            #item-modal___BV_modal_body_ {
+                padding-top: 0;
+            }
+
+            #item-modal-card {
+                padding: 0.25rem 1.25rem;
+                border-bottom: 1px solid #CED4DA;
+            }
         </style>
 
         <div id="app" v-cloak>
@@ -288,7 +297,10 @@
                                     v-on:keydown.enter="selectQuotationItem(data.item);onKeyDownItem(data.index);">
                                 </textarea>
 
-                                <b-modal size="xl" ref="items-modal" title="商品一覧">
+                                <b-modal size="xl" ref="items-modal" ok-only ok-title="閉じる" hide-header id="item-modal">
+                                    <b-row>
+                                        <div id="item-modal-card" style="width: 100%;" class="mb-3">商品一覧</div>
+                                    </b-row>
                                     <b-row>
                                         <b-col>
                                         </b-col>
