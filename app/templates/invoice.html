@@ -460,7 +460,7 @@
                         <b-row>
                             <b-col md="3">
                                 <b-card style="max-width: 20rem">
-                                    <form action="upload-files/s/upload" class="dropzone" id="dropz">
+                                    <form action="upload-files/s/upload/invoices" class="dropzone" id="dropz">
                                         <input hidden type="text" name="fileId" v-model="invoice.applyNumber">
                             
                                         <input hidden type="file" name="file" >
@@ -617,6 +617,7 @@
                     setting: [],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
+                    countChanged: 0,
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -626,8 +627,6 @@
                     uploadListMode: 'card', //list,card
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
-                    countChanged: 0,
-                    //isUploading: false,
                     routeTo: '',
                     routeFrom: '',
                 },
@@ -959,7 +958,7 @@
                     },
                     getFileList: async function (fid) {
                         self = this;
-                        url = "list-files/s/upload/" + fid;
+                        url = "list-files/s/upload/invoices/" + fid;
                         await axios.get(url)
                             .then(function (response) {
                                 console.log(response.data);
@@ -968,24 +967,6 @@
                     },
                     clearFileList: function () {
                         this.dicFiles = {};
-                    },
-                    uploadFile: async function (event) {
-                        self = this;
-                        event.preventDefault();
-                        this.isUploading = true;
-                        let files = event.target.files;
-                        const formData = new FormData();
-                        formData.append('file', self.form.file);
-                        formData.append('fileId', self.invoice.applyNumber);
-                        await axios.post("upload-files/s/upload", formData)
-                            .then((res) => {
-                                self.getFileList(self.invoice.applyNumber);
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                            });
-                        this.isUploading = false;
-
                     },
                     deleteFiles: async function (fid) {
                         self = this;
@@ -997,7 +978,7 @@
                             console.log(response.data);
                             self.getFileList(fid);
                         });
-                    },
+                    }, //-- end upload functions
                     checkChange: async function () {
                         isUpdate = false;
                         if (this.countChanged) {
@@ -1019,12 +1000,6 @@
                         router.push({ path: "?page=index" });
                     },
                 },
-                created: function(){
-                    if (this.$route.query.page == 'show' ){
-                        initDropzone();
-                        console.log('created');
-                    }
-                },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
                     this.getInvoices();
@@ -1039,14 +1014,14 @@
                 },
                 updated: function(){
                     self = this;
-                    console.log('update!!');
-                    Dropzone.autoDiscover = false;
                     if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
                         initDropzone();
-                        console.log('index->show');
-                    } 
+                    }
+                    if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
+                        initDropzone();
+                    }
                 },
                 router,
                 computed: {
@@ -1104,7 +1079,6 @@
                         deep: true
                     },
                     $route(to,from){ // パラメータの変更でドロップゾーンを初期化するため
-                        console.log('route:',from.query,to.query)
                         this.routeFrom = from.query.page;
                         this.routeTo = to.query.page;
                     }
@@ -1136,7 +1110,6 @@
             };
             // アップロード機能　    
             Dropzone.autoDiscover = false;
-            var dropz = '';
             function destroyDrop(){
                 if (Dropzone.instances.length > 0) {
                     Dropzone.instances.forEach((e) => {
@@ -1148,18 +1121,20 @@
                         Dropzone.autoDiscover = false;
                         console.log("init dropzone");
                         destroyDrop();
-                        dropz = new Dropzone("#dropz",{
+                        dropz = new Dropzone("form#dropz",{
                             dictDefaultMessage: '＋',
+                            parallelUploads: 10,
                             init: function () {
                                 this.on("complete", file => {
                                     console.log("complete A file has been added");
-                                    this.removeFile(file);
-                                    app.getFileListDZ();
+                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                        this.removeFile(file);
+                                        app.getFileListDZ();
+                                    }
                                 });
                             }
                         });
             }
             // end アップロード機能　                
-            //Dropzone.autoDiscover = false;
         </script>
         <% endblock %>
