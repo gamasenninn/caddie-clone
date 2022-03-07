@@ -49,6 +49,34 @@
             #dropdown-dropup__BV_toggle_ {
                 border-radius: 0 20px 20px 0;
             }
+            /* --- for upload --- */
+            .box {
+                /* border: 1px solid #333333; */
+                /* width: 200px; */
+                height: 135px;
+                overflow-y: scroll;
+            }
+            .image-in-check {
+                width: 15px;
+                height: 15px;
+                color: #ffffff;
+                background-color: #2779bd;
+                display: flex;
+                /*justify-content: center;*/
+                /*align-items: center;*/
+                font-size: 1.5rem;
+                border-radius: 50%;
+                cursor: pointer;
+
+                position: absolute;
+                top: 5;
+                left: 5;
+                z-index: 0;
+            }
+            .file-card {
+                display: flex;
+                flex-wrap: wrap;
+            }
 
             #item-modal___BV_modal_body_ {
                 padding-top: 0;
@@ -433,7 +461,62 @@
                                 </b-table-simple>
                             </b-col>
                         </b-row>
+                        <!-- アップロード機能　-->
+                        <b-row>
+                            <b-col md="3">
+                                <b-card style="max-width: 20rem">
+                                    <form action="upload-files/s/upload/quotes" class="dropzone" id="dropz">
+                                        <input hidden type="text" name="fileId" v-model="quotation.applyNumber">
+                            
+                                        <input hidden type="file" name="file" >
+                                    </form>
+                                </b-card>
+                            </b-col>
+                            <b-col>
+                                <div v-if="!dicFiles.length" class="mt-5">
+                                    ←クリックまたはドロップしてファイルをアップロード。
+                                </div>
 
+                                <template v-if="uploadListMode=='list'">
+                                    
+                                    <b-table-simple hover small caption-top responsive class="box">
+                                        <template v-for="f in dicFiles">
+                                            <b-tr>
+                                                <b-td width="5%">
+                                                    <input type="checkbox" v-model="f.isSelect" size="sm">
+                                                </b-td>
+                                                <b-td width="15%">
+                                                    <div @click="selectImgUrl=f.url">
+                                                        <b-img :src="f.urlThumb" width="90" fluid></b-img>
+                                                    </div>
+                                                </b-td>
+                                                <b-td class="ml-5">{{f.filename}}</b-td>
+                                            </b-tr>
+                                        </template>
+                                    </b-table-simple>
+                                </template>
+                                <template v-if="uploadListMode=='card'">
+                                    <div class="file-card ">
+                                        <template v-for="f in dicFiles">
+                                            <b-card border-variant="light">
+                                                <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                <input type="checkbox" v-model="f.isSelect" class="image-in-check">
+                                            </b-card>
+                                        </template>
+                                    </div>
+                                </template>
+                            </b-col>
+                            <b-col md="1">
+                                <b-button @click="deleteFiles(quotation.applyNumber)" class="mr-2 mb-3"><i
+                                        class="fas fa-trash-alt"></i>
+                                </b-button>
+                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
+                                    card</b-button>
+                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
+                                    list</b-button>
+                            </b-col>
+                        </b-row>
+                        <!--アップロード機能ここまで-->
                     </b-col> <!-- 本体 -->
                     <b-col></b-col>
 
@@ -529,7 +612,19 @@
                     isShowFavorite: false,
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
-                    countChanged: 0
+                    countChanged: 0,
+                    fileId: '', //upload用ID
+                    dicFiles: [],
+                    form: {
+                        file: '',
+                        fileId: ''
+                    },
+                    uploadListMode: 'card', //list,card
+                    title: '',      //モーダルタイトル
+                    message: '',    //モーダルメッセージ
+                    routeTo: '',
+                    routeFrom: '',
+
                 },
                 methods: {
                     // ---Quotations---
@@ -616,12 +711,12 @@
                         Vue.set(self.quotation, 'isTaxExp', true);
                         localStorage.setItem('quotation', JSON.stringify(self.quotation));
                         this.countChanged = 0;
-                        //localStorage.setItem('quotation', JSON.stringify(self.quotation));
                     },
                     selectQuotation: function (item) {
                         this.quotation = item;
                         console.log(this.quotation);
                         localStorage.setItem('quotation', JSON.stringify(item));
+                        this.getFileList(this.quotation.applyNumber);
                         this.countChanged = 0;
                     },
                     selectQuotationItem: function (item) {
@@ -789,6 +884,33 @@
                         if (quotation.isTaxExp === true) return Math.floor(amount * 1.1);
                         return amount;
                     },
+                    //---- upload funcrions --
+                    getFileListDZ(){
+                        this.getFileList(this.quotation.applyNumber);
+                    },
+                    getFileList: async function (fid) {
+                        self = this;
+                        url = "list-files/s/upload/quotes/" + fid;
+                        await axios.get(url)
+                            .then(function (response) {
+                                console.log(response.data);
+                                self.dicFiles = response.data;
+                            })
+                    },
+                    clearFileList: function () {
+                        this.dicFiles = {};
+                    },
+                    deleteFiles: async function (fid) {
+                        self = this;
+                        url = "delete-files/s";
+                        await axios.delete(url, {
+                            data: self.dicFiles
+                        }
+                        ).then(function (response) {
+                            console.log(response.data);
+                            self.getFileList(fid);
+                        });
+                    }, //-- end upload functions                    
                     checkChange: async function () {
                         isUpdate = false;
                         if (this.countChanged) {
@@ -860,6 +982,18 @@
                     this.getMakers();
                     this.getSetting();
                     document.querySelector('title').textContent = '見積書管理';
+                    this.getFileList(self.quotation.applyNumber);
+                },
+                updated: function(){
+                    self = this;
+                    if ((this.routeFrom=='index' || this.routeFrom==undefined)  && (this.routeTo == 'show' || this.routeTo=='store')){
+                        this.routeFrom = 'show';
+                        this.routeTo = 'show';
+                        initDropzone();
+                    }
+                    if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
+                        initDropzone();
+                    }
                 },
                 router,
                 computed: {
@@ -917,6 +1051,10 @@
                             }
                         },
                         deep: true
+                    },
+                    $route(to,from){ // パラメータの変更でドロップゾーンを初期化するため
+                        this.routeFrom = from.query.page;
+                        this.routeTo = to.query.page;
                     }
                 }
             })
@@ -944,6 +1082,32 @@
                     return true;
                 return false;
             };
-
+            Dropzone.autoDiscover = false;
+            function destroyDrop(){
+                if (Dropzone.instances.length > 0) {
+                    Dropzone.instances.forEach((e) => {
+                            e.destroy();
+                    });
+                }
+            }
+            function initDropzone(){
+                        Dropzone.autoDiscover = false;
+                        console.log("init dropzone");
+                        destroyDrop();
+                        dropz = new Dropzone("#dropz",{
+                            dictDefaultMessage: '＋',
+                            init: function () {
+                                this.on("complete", file => {
+                                    console.log("complete A file has been added");
+                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                        this.removeFile(file);
+                                        app.getFileListDZ();
+                                    }
+                                });
+                            }
+                        });
+            }
+            // end アップロード機能　
         </script>
+        
         <% endblock %>
