@@ -332,32 +332,37 @@
                                         </b-col>
                                         <b-col>
                                             <b-row class="mb-1">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemWord"><i class="fas fa-search"></i></label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
-                                                    <b-form-input v-model="searchItemWord" id="searchItemWord"
-                                                        size="sm">
+                                                    <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"
+                                                        placeholder="🔍">
                                                     </b-form-input>
                                                 </b-col>
                                             </b-row>
                                             <b-row class="mb-1">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemSelectCategory">カテゴリ</label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
                                                     <b-form-select v-model="searchItemSelectCategory"
                                                         :options="categories" size="sm">
+                                                        <template #first>
+                                                            <b-form-select-option value='' disabled>カテゴリー
+                                                            </b-form-select-option>
+                                                        </template>
                                                     </b-form-select>
                                                 </b-col>
                                             </b-row>
                                             <b-row class="mb-2">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemSelectMaker">メーカー</label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
                                                     <b-form-select v-model="searchItemSelectMaker" :options="makers"
                                                         size="sm">
+                                                        <template #first>
+                                                            <b-form-select-option value='' disabled>メーカー
+                                                            </b-form-select-option>
+                                                        </template>
                                                     </b-form-select>
                                                 </b-col>
                                             </b-row>
