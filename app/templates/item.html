@@ -85,15 +85,9 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-row>
-                                        <b-col cols="2" class="text-left mt-1">
-                                            検索
-                                        </b-col>
-                                        <b-col>
-                                            <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm">
-                                            </b-form-input>
-                                        </b-col>
-                                    </b-row>
+                                    <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"
+                                        placeholder="🔍商品名or商品コードor型式">
+                                    </b-form-input>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="カテゴリ"
