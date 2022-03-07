@@ -1008,11 +1008,6 @@
                         this.clearFileList();
                         router.push({ path: "?page=index" });
                     },
-                    toggleItemDelete: function(item){
-                        console.log("toggle!",item)
-                        this.invoiceItem['isDelete'] = item.isDelete;
-                        //item.isDelete = !item.isDelete;
-                    }
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
