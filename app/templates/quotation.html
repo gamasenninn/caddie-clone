@@ -78,6 +78,14 @@
                 flex-wrap: wrap;
             }
 
+            #item-modal___BV_modal_body_ {
+                padding-top: 0;
+            }
+
+            #item-modal-card {
+                padding: 0.25rem 1.25rem;
+                border-bottom: 1px solid #CED4DA;
+            }
         </style>
 
         <div id="app" v-cloak>
@@ -317,38 +325,46 @@
                                     v-on:keydown.enter="selectQuotationItem(data.item);onKeyDownItem(data.index);">
                                 </textarea>
 
-                                <b-modal size="xl" ref="items-modal" title="商品一覧">
+                                <b-modal size="xl" ref="items-modal" ok-only ok-title="閉じる" hide-header id="item-modal">
+                                    <b-row>
+                                        <div id="item-modal-card" style="width: 100%;" class="mb-3">商品一覧</div>
+                                    </b-row>
                                     <b-row>
                                         <b-col>
                                         </b-col>
                                         <b-col>
                                             <b-row class="mb-1">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemWord"><i class="fas fa-search"></i></label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
-                                                    <b-form-input v-model="searchItemWord" id="searchItemWord"
-                                                        size="sm">
+                                                    <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"
+                                                        placeholder="🔍">
                                                     </b-form-input>
                                                 </b-col>
                                             </b-row>
                                             <b-row class="mb-1">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemSelectCategory">カテゴリ</label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
                                                     <b-form-select v-model="searchItemSelectCategory"
                                                         :options="categories" size="sm">
+                                                        <template #first>
+                                                            <b-form-select-option value='' disabled>カテゴリー
+                                                            </b-form-select-option>
+                                                        </template>
                                                     </b-form-select>
                                                 </b-col>
                                             </b-row>
                                             <b-row class="mb-2">
-                                                <b-col cols="4" class="text-center">
-                                                    <label for="searchItemSelectMaker">メーカー</label>
+                                                <b-col cols="4">
                                                 </b-col>
                                                 <b-col cols="8">
                                                     <b-form-select v-model="searchItemSelectMaker" :options="makers"
                                                         size="sm">
+                                                        <template #first>
+                                                            <b-form-select-option value='' disabled>メーカー
+                                                            </b-form-select-option>
+                                                        </template>
                                                     </b-form-select>
                                                 </b-col>
                                             </b-row>
