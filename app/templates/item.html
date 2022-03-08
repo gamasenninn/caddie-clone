@@ -584,12 +584,14 @@
                 },
                 mounted: function () {
                     this.item = JSON.parse(localStorage.getItem('item'));
-                    this.getFileList(this.item.itemCode);
                     this.getItems();
                     this.getUnits();
                     this.getCategories();
                     this.getMakers();
                     document.querySelector('title').textContent = '商品管理';
+                    if(this.pageName=='show' || this.pageName=='store'){
+                        this.getFileList(this.item.itemCode);
+                    }
                 },
                 router,
                 computed: {
