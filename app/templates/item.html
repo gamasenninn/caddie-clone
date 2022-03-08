@@ -102,6 +102,11 @@
                                         <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
                                     </b-form-group>
                                 </b-col>
+                                <b-col sm>
+                                    <b-row align-h="end">
+                                        <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示</b-form-checkbox>
+                                    </b-row>
+                                </b-col>
                             </b-row>
                             <b-row align-h="end">
                                 <p class="mr-3">表示件数 {{itemsIndicateCount}}件</p>
@@ -392,8 +397,8 @@
                     },
                     uploadListMode: 'card', //list,card
                     countChanged: 0,
-                    isUploading: false
-
+                    isUploading: false,
+                    isShowAll: false,
                 },
                 methods: {
                     // ---Items---
@@ -606,6 +611,8 @@
                     },
                     itemsIndicateIndex: function () {
                         let items = this.items
+                        if (this.isShowAll === false)
+                            items = items.filter(item => item.isHide === false);
                         items = items.filter(item =>
                             (searchFilter(item.itemName, this.searchItemWord) ||
                                 searchFilter(item.itemCode, this.searchItemWord) ||
