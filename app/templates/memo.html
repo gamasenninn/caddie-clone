@@ -80,6 +80,9 @@
                                 <template v-slot:cell(createdAt)="data">
                                     {{formatDate(data.item.createdAt)}}
                                 </template>
+                                <template v-slot:cell(content)="data">
+                                    {{formatContent(data.item.content)}}
+                                </template>
                             </b-table>
                         </b-card>
                     </b-col>
@@ -282,6 +285,12 @@
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
+                    formatContent(data) {
+                        if (data && data.length > 20) {
+                            return data.substr(0, 20) + '...';
+                        }
+                        return data;
+                    }
                 },
                 mounted: function () {
                     this.memo = JSON.parse(localStorage.getItem('memo'));
