@@ -56,6 +56,9 @@
                                 <b-col sm>
                                 </b-col>
                                 <b-col sm>
+                                    <b-row align-h="end">
+                                        <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り</b-form-checkbox>
+                                    </b-row>
                                 </b-col>
                             </b-row>
                             <b-row align-h="end">
@@ -117,13 +120,29 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お気に入り"
+                                        label-for="isFavorite" label-align="right">
+                                        <div v-if="memo.isFavorite===true">
+                                            <a href="#" style="text-decoration: none;color:#fed11d;padding: 0 7px 0 0;"
+                                                @click="changeIsFavorite(memo.isFavorite);">
+                                                <b-icon icon="star-fill"></b-icon>
+                                            </a>
+                                        </div>
+                                        <div v-else>
+                                            <a href="#" style="text-decoration: none;color:#000000;padding: 0 7px 0 0;"
+                                                @click="changeIsFavorite(memo.isFavorite);">
+                                                <b-icon icon="star"></b-icon>
+                                            </a>
+                                        </div>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="内容"
                                         label-for="content" label-align="right">
                                         <b-form-textarea v-model="memo.content" size="sm" rows="10" max-rows="20">
                                         </b-form-textarea>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm></b-col>
                             </b-row>
                         </b-card>
 
@@ -189,6 +208,7 @@
                     memosIndicateCount: 0,  //メモ検索
                     memos: [],               //全件memo
                     memo: [],                //選択中のmemo
+                    isShowFavorite: false,
                 },
                 methods: {
                     // ---Memos---
@@ -279,6 +299,12 @@
                             this.bulkUpsert(this.memo);
                         }
                     },
+                    changeIsFavorite(value) {
+                        if (value === true)
+                            this.$set(this.memo, 'isFavorite', false);
+                        else
+                            this.$set(this.memo, 'isFavorite', true);
+                    },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
@@ -300,6 +326,8 @@
                     },
                     memosIndicateIndex: function () {
                         let memos = this.memos;
+                        if (this.isShowFavorite === true)
+                            memos = memos.filter(memo => memo.isFavorite === true);
                         memos = memos.filter(memo => searchFilter(memo.manager, this.searchMemoWord) ||
                             searchFilterDate(memo.createdAt, this.searchMemoWord));
                         this.memosIndicateCount = memos.length;
