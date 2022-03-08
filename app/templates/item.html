@@ -116,12 +116,16 @@
                           {  key: 'maker', label: 'メーカー' },
                           {  key: 'basePrice', label: '単価' },
                           {  key: 'baseCost', label: '原価単価' },
+                          {  key: 'numberOfAttachments', label: '添付' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(basePrice)="data">
                                     {{ data.item.basePrice|nf }}
                                 </template>
                                 <template v-slot:cell(baseCost)="data">
                                     {{ data.item.baseCost|nf }}
+                                </template>
+                                <template v-slot:cell(numberOfAttachments)="data">
+                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">{{data.item.numberOfAttachments}}</b-badge>
                                 </template>
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
@@ -452,7 +456,7 @@
                         this.item = item;
                         console.log(this.item);
                         localStorage.setItem('item', JSON.stringify(item))
-                        this.getFileList(item.itemCode);
+                        this.getFileListDZ();
                         this.countChanged = 0;
                     },
                     getItem: async function (item) {
@@ -518,17 +522,20 @@
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
-                    getFileListDZ() {
-                        this.getFileList(this.item.itemCode);
+                    async getFileListDZ() {
+                        this.item.numberOfAttachments = await this.getFileList(this.item.itemCode);
                     },
                     getFileList: async function (fid) {
                         self = this;
                         url = "list-files/s/upload/items/" + fid;
+                        flen = 0;
                         await axios.get(url)
                             .then(function (response) {
                                 console.log(response.data);
                                 self.dicFiles = response.data;
+                                flen = self.dicFiles.length;
                             })
+                        return flen;
                     },
                     clearFileList: function () {
                         this.dicFiles = {};
@@ -558,7 +565,7 @@
                         }
                         ).then(function (response) {
                             console.log(response.data);
-                            self.getFileList(fid);
+                            self.getFileListDZ();
                         });
                     },
                     //---------変更があったかどうかをチェク。アラート ---------
@@ -592,7 +599,7 @@
                     this.getMakers();
                     document.querySelector('title').textContent = '商品管理';
                     if (this.pageName == 'show' || this.pageName == 'store') {
-                        this.getFileList(this.item.itemCode);
+                        this.getFileListDZ();
                     }
                 },
                 updated: function () {
