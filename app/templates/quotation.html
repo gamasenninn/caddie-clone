@@ -881,6 +881,7 @@
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                     amountCalculation(quotation) {
+                        if(!quotation.quotation_items.length) return 0;
                         let amount = quotation.quotation_items.map(item => item.count * item.price).reduce((a, b) => a + b);
                         if (quotation.isTaxExp === true) return Math.floor(amount * 1.1);
                         return amount;
@@ -1108,8 +1109,6 @@
                                 });
                             }
                         });
-                    }
-                });
             }
             // end アップロード機能
         </script>
