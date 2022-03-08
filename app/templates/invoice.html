@@ -1026,7 +1026,9 @@
                     this.getMakers();
                     this.getSetting();
                     document.querySelector('title').textContent = '請求書管理';
-                    this.getFileList(self.invoice.applyNumber);
+                    if(this.pageName == 'show'){
+                        this.getFileList(self.invoice.applyNumber);
+                    }
                 },
                 updated: function () {
                     self = this;
@@ -1035,7 +1037,7 @@
                         this.routeTo = 'show';
                         initDropzone();
                     }
-                    if (this.$route.query.page == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
+                    if (this.pageName == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
                         initDropzone();
