@@ -102,6 +102,11 @@
                                         <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
                                     </b-form-group>
                                 </b-col>
+                                <b-col sm>
+                                    <b-row align-h="end">
+                                        <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示</b-form-checkbox>
+                                    </b-row>
+                                </b-col>
                             </b-row>
                             <b-row align-h="end">
                                 <p class="mr-3">表示件数 {{itemsIndicateCount}}件</p>
@@ -230,6 +235,10 @@
                                         label-for="baseCost" label-align="right">
                                         <b-form-input v-model="item.baseCost" id="baseCost" size="sm" type="number">
                                         </b-form-input>
+                                    </b-form-group>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="非表示"
+                                        label-for="isHide" label-align="right">
+                                        <b-form-checkbox v-model="item.isHide"></b-form-checkbox>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
@@ -389,6 +398,7 @@
                         fileId: ''
                     },
                     uploadListMode: 'card', //list,card
+                    isShowAll: false,
                     routeTo: '',
                     routeFrom: '',
 
@@ -602,7 +612,7 @@
                         this.routeTo = 'show';
                         initDropzone();
                     }
-                    if (this.pageName == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
+                    if (this.pageName == 'show' && this.routeFrom == '' && this.routeTo == '') {
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
                         initDropzone();
@@ -620,6 +630,8 @@
                     },
                     itemsIndicateIndex: function () {
                         let items = this.items
+                        if (this.isShowAll === false)
+                            items = items.filter(item => item.isHide === false);
                         items = items.filter(item =>
                             (searchFilter(item.itemName, this.searchItemWord) ||
                                 searchFilter(item.itemCode, this.searchItemWord) ||
@@ -665,23 +677,23 @@
                     });
                 }
             }
-            function initDropzone(){
-                        Dropzone.autoDiscover = false;
-                        console.log("init dropzone");
-                        destroyDrop();
-                        dropz = new Dropzone("form#dropz",{
-                            dictDefaultMessage: '<h2>+</h2>',
-                            parallelUploads: 2,
-                            init: function () {
-                                this.on("complete", file => {
-                                    console.log("complete A file has been added");
-                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                                        this.removeFile(file);
-                                        app.getFileListDZ();
-                                    }
-                                });
+            function initDropzone() {
+                Dropzone.autoDiscover = false;
+                console.log("init dropzone");
+                destroyDrop();
+                dropz = new Dropzone("form#dropz", {
+                    dictDefaultMessage: '<h2>+</h2>',
+                    parallelUploads: 2,
+                    init: function () {
+                        this.on("complete", file => {
+                            console.log("complete A file has been added");
+                            if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                this.removeFile(file);
+                                app.getFileListDZ();
                             }
                         });
+                    }
+                });
             }
             // end アップロード機能
 

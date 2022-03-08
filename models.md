@@ -52,6 +52,7 @@
 | unit     | 単位     | text      |  単位はユーザーが追加できるように単位テーブルを作成し、単位追加ページを作成した方が良いかも         | 
 | basePrice| 単価     | integer   |  請求書にて商品選択時に参照のみ。                                                              | 
 | baseCost | 原価単価  | integer   |  請求書にて商品選択時に参照のみ。                                                             | 
+| isHide   | 表示状態  | boolean    |  商品を一覧から隠すかどうか                                                                  | 
 | memo     | メモ     | text      |                                                                                             | 
 | numberOfAttachments | 添付数 | integer | 添付されたファイル数                                                                   | 
 | createdAt| 作成日時 | datetime  |                                                                                             | 
