@@ -65,6 +65,8 @@ class Item(db.Model):
     unit = db.Column(db.String)
     basePrice = db.Column(db.Integer)
     baseCost = db.Column(db.Integer)
+    isHide = db.Column(db.Boolean, nullable=False,
+                       default=False, server_default=db.text('0'))
     memo = db.Column(db.String)
     numberOfAttachments = db.Column(
         db.Integer, default=0, server_default=db.text('0'))

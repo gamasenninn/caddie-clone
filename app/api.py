@@ -166,6 +166,7 @@ def item_create():
         unit=data.get('unit'),
         basePrice=data.get('basePrice'),
         baseCost=data.get('baseCost'),
+        isHide=data.get('isHide'),
         memo=data.get('memo'),
         numberOfAttachments=data.get('numberOfAttachments'),
     )
@@ -188,6 +189,7 @@ def item_update(id):
     item.unit = data.get('unit')
     item.basePrice = data.get('basePrice')
     item.baseCost = data.get('baseCost')
+    item.isHide = data.get('isHide')
     item.memo = data.get('memo')
     item.numberOfAttachments = data.get('numberOfAttachments')
 

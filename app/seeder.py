@@ -56,11 +56,11 @@ def seeder():
     print('----Items----')
     items = [
         Item(id=1, itemName='りんご', itemCode='11111', model='APP001', category='食料品', maker='apple青果店', unit='個', basePrice=100,
-             baseCost=50, memo='これはりんごのメモです', numberOfAttachments=0),
+             baseCost=50, isHide=False, memo='これはりんごのメモです', numberOfAttachments=0),
         Item(id=2, itemName='鉛筆', itemCode='22222', model='PEN001', category='事務用品', maker='トンビ鉛筆', unit='本', basePrice=20,
-             baseCost=5, memo='これは鉛筆のメモです', numberOfAttachments=0),
+             baseCost=5, isHide=False, memo='これは鉛筆のメモです', numberOfAttachments=0),
         Item(id=3, itemName='ラジオ', itemCode='33333', model='RAD001', category='家電', maker='zony', unit='台', basePrice=1000,
-             baseCost=300, memo='これはラジオのメモです', numberOfAttachments=0),
+             baseCost=300, isHide=False, memo='これはラジオのメモです', numberOfAttachments=0),
     ]
     db.session.add_all(items)
     db.session.commit()
