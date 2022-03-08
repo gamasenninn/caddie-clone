@@ -176,7 +176,8 @@
                                     {{amountCalculation(data.item)|nf}}
                                 </template>
                                 <template v-slot:cell(numberOfAttachments)="data">
-                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">{{data.item.numberOfAttachments}}</b-badge>
+                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">
+                                        {{data.item.numberOfAttachments}}</b-badge>
                                 </template>
                             </b-table>
                         </b-card>
@@ -419,7 +420,7 @@
                             </template>
 
                             <template v-slot:cell(isDelete)="data">
-                                <b-form-checkbox  v-model="data.item.isDelete" ></b-form-checkbox>
+                                <b-form-checkbox v-model="data.item.isDelete"></b-form-checkbox>
                             </template>
 
                         </b-table>
@@ -542,9 +543,7 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="primary" @click="bulkUpsert(quotation);showConfirmModal();"
-                            v-b-tooltip.hover.top="'保存'">
-                            保存
+                        <b-button pill variant="primary" @click="bulkUpsert(quotation);showConfirmModal();">保存
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
                             @click="modalShow(quotation,'copyModal');" v-b-tooltip.hover.top="'複製'"><i
@@ -708,7 +707,7 @@
                         self = this;
                         self.quotations.push({
                             isInsert: true,
-                            quotation_items: [{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false}],
+                            quotation_items: [{ isDelete: false }, { isDelete: false }, { isDelete: false }, { isDelete: false }, { isDelete: false }],
                         });
                         self.quotation = self.quotations.slice(-1)[0];
                         Vue.set(self.quotation, 'isTaxExp', true);
@@ -885,7 +884,7 @@
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                     amountCalculation(quotation) {
-                        if(!quotation.quotation_items.length) return 0;
+                        if (!quotation.quotation_items.length) return 0;
                         let amount = quotation.quotation_items.map(item => item.count * item.price).reduce((a, b) => a + b);
                         if (quotation.isTaxExp === true) return Math.floor(amount * 1.1);
                         return amount;
@@ -991,7 +990,7 @@
                     this.getMakers();
                     this.getSetting();
                     document.querySelector('title').textContent = '見積書管理';
-                    if(this.pageName == 'show'){
+                    if (this.pageName == 'show') {
                         this.getFileListDZ();
                     }
                 },
@@ -1101,23 +1100,23 @@
                     });
                 }
             }
-            function initDropzone(){
-                        Dropzone.autoDiscover = false;
-                        console.log("init dropzone");
-                        destroyDrop();
-                        dropz = new Dropzone("#dropz",{
-                            dictDefaultMessage: '<h2>+</h2>',
-                            parallelUploads: 2,
-                            init: function () {
-                                this.on("complete", file => {
-                                    console.log("complete A file has been added");
-                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                                        this.removeFile(file);
-                                        app.getFileListDZ();
-                                    }
-                                });
+            function initDropzone() {
+                Dropzone.autoDiscover = false;
+                console.log("init dropzone");
+                destroyDrop();
+                dropz = new Dropzone("#dropz", {
+                    dictDefaultMessage: '<h2>+</h2>',
+                    parallelUploads: 2,
+                    init: function () {
+                        this.on("complete", file => {
+                            console.log("complete A file has been added");
+                            if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                this.removeFile(file);
+                                app.getFileListDZ();
                             }
                         });
+                    }
+                });
             }
             // end アップロード機能
         </script>
