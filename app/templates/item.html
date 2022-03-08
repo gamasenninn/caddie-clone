@@ -226,81 +226,23 @@
                                         </b-form-input>
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単価原価"
                                         label-for="baseCost" label-align="right">
                                         <b-form-input v-model="item.baseCost" id="baseCost" size="sm" type="number">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
-                            </b-row>
-                            <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="メモ" label-align="right">
-                                        <b-form-textarea v-model="item.memo" size="sm" rows="6"></b-form-textarea>
+                                        <b-form-textarea v-model="item.memo" size="sm" rows="3"></b-form-textarea>
                                     </b-form-group>
                                 </b-col>
+                            </b-row>
+                            <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="アップロード"
-                                        label-for="upform" label-align="right">
-                                        <b-form @submit="uploadFile" id="upform" inline>
-                                            <b-input-group block>
-                                                <b-form-file v-model="form.file" browse-text="+"
-                                                    placeholder="クリックまたはドロップ..." drop-placeholder="ここにドロップ...">
-                                                </b-form-file>
-                                                <b-button pill type="submit" class="ml-3">
-                                                    <span v-if="!isUploading">確定</span>
-                                                    <b-spinner v-else label="Spinning" small></b-spinner>
-                                                </b-button>
-                                            </b-input-group>
-                                        </b-form>
-                                    </b-form-group>
-                                    <b-row>
-                                        <b-col md="2">
-                                            <b-button pill @click="deleteFiles(item.itemCode)" class="mr-2 mb-3">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </b-button>
-                                            <b-button pill v-if="uploadListMode=='list'" @click="uploadListMode='card'"
-                                                class="mr-2 mb-3">
-                                                card</b-button>
-                                            <b-button pill v-if="uploadListMode=='card'" @click="uploadListMode='list'"
-                                                class="mr-2 mb-3">
-                                                list</b-button>
-                                        </b-col>
-                                        <b-col>
-                                            <template v-if="uploadListMode=='list'">
-                                                <b-table-simple hover small caption-top responsive class="box">
-                                                    <template v-for="f in dicFiles">
-                                                        <b-tr>
-                                                            <b-td width="5%">
-                                                                <input type="checkbox" v-model="f.isSelect" size="sm">
-                                                            </b-td>
-                                                            <b-td width="15%">
-                                                                <div @click="selectImgUrl=f.url">
-                                                                    <b-img :src="f.urlThumb" width="90" fluid></b-img>
-                                                                </div>
-                                                            </b-td>
-                                                            <b-td class="ml-5">{{f.filename}}</b-td>
-                                                        </b-tr>
-                                                    </template>
-                                                </b-table-simple>
-                                            </template>
-                                            <template v-if="uploadListMode=='card'">
-                                                <div class="file-card box">
-                                                    <template v-for="f in dicFiles">
-                                                        <b-card border-variant="light">
-                                                            <b-img :src="'../'+f.thumbPath" width="80" fluid></b-img>
-                                                            <input type="checkbox" v-model="f.isSelect"
-                                                                class="image-in-check">
-                                                        </b-card>
-                                                    </template>
-                                                </div>
-                                            </template>
-                                        </b-col>
-                                    </b-row>
                                 </b-col>
+                                <b-col sm></b-col>
                             </b-row>
                             <b-row>
                                 <b-col sm>
@@ -309,6 +251,61 @@
 
 
                         </b-card>
+                        <b-row>
+                            <b-col md="3">
+                                <b-card style="max-width: 20rem">
+                                    <form action="upload-files/s/upload/items" class="dropzone" id="dropz">
+                                        <input hidden type="text" name="fileId" v-model="item.itemCode">
+
+                                        <input hidden type="file" name="file">
+                                    </form>
+                                </b-card>
+                            </b-col>
+                            <b-col>
+                                <div v-if="!dicFiles.length" class="mt-5">
+                                    ←クリックまたはドロップしてファイルをアップロード。
+                                </div>
+
+                                <template v-if="uploadListMode=='list'">
+
+                                    <b-table-simple hover small caption-top responsive class="box">
+                                        <template v-for="f in dicFiles">
+                                            <b-tr>
+                                                <b-td width="5%">
+                                                    <input type="checkbox" v-model="f.isSelect" size="sm">
+                                                </b-td>
+                                                <b-td width="15%">
+                                                    <div @click="selectImgUrl=f.url">
+                                                        <b-img :src="f.urlThumb" width="90" fluid></b-img>
+                                                    </div>
+                                                </b-td>
+                                                <b-td class="ml-5">{{f.filename}}</b-td>
+                                            </b-tr>
+                                        </template>
+                                    </b-table-simple>
+                                </template>
+                                <template v-if="uploadListMode=='card'">
+                                    <div class="file-card ">
+                                        <template v-for="f in dicFiles">
+                                            <b-card border-variant="light">
+                                                <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                <input type="checkbox" v-model="f.isSelect" class="image-in-check">
+                                            </b-card>
+                                        </template>
+                                    </div>
+                                </template>
+                            </b-col>
+                            <b-col md="1">
+                                <b-button @click="deleteFiles(item.itemCode)" class="mr-2 mb-3"><i
+                                        class="fas fa-trash-alt"></i>
+                                </b-button>
+                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
+                                    card</b-button>
+                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
+                                    list</b-button>
+                            </b-col>
+                        </b-row>
+                        <!--アップロード機能ここまで-->
 
                     </b-col> <!-- 本体 -->
                     <b-col></b-col>
@@ -384,6 +381,7 @@
                     units: [],
                     categories: [],
                     makers: [],
+                    countChanged: 0,
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -391,8 +389,8 @@
                         fileId: ''
                     },
                     uploadListMode: 'card', //list,card
-                    countChanged: 0,
-                    isUploading: false
+                    routeTo: '',
+                    routeFrom: '',
 
                 },
                 methods: {
@@ -520,9 +518,12 @@
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
+                    getFileListDZ() {
+                        this.getFileList(this.item.itemCode);
+                    },
                     getFileList: async function (fid) {
                         self = this;
-                        url = "list-files/s/upload/" + fid;
+                        url = "list-files/s/upload/items/" + fid;
                         await axios.get(url)
                             .then(function (response) {
                                 console.log(response.data);
@@ -532,23 +533,23 @@
                     clearFileList: function () {
                         this.dicFiles = {};
                     },
-                    uploadFile: async function (event) {
-                        self = this;
-                        event.preventDefault();
-                        this.isUploading = true;
-                        //let files = event.target.files;
-                        const formData = new FormData();
-                        formData.append('file', self.form.file);
-                        formData.append('fileId', self.item.itemCode);
-                        await axios.post("upload-files/s/upload", formData)
-                            .then((res) => {
-                                self.getFileList(self.item.itemCode);
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                            });
-                        this.isUploading = false;
-                    },
+                    //uploadFile: async function (event) {
+                    //    self = this;
+                    //    event.preventDefault();
+                    //    this.isUploading = true;
+                    //    //let files = event.target.files;
+                    //    const formData = new FormData();
+                    //    formData.append('file', self.form.file);
+                    //    formData.append('fileId', self.item.itemCode);
+                    //    await axios.post("upload-files/s/upload", formData)
+                    //        .then((res) => {
+                    //            self.getFileList(self.item.itemCode);
+                    //        })
+                    //        .catch((err) => {
+                    //            console.log(err)
+                    //        });
+                    //    this.isUploading = false;
+                    //},
                     deleteFiles: async function (fid) {
                         self = this;
                         url = "delete-files/s";
@@ -594,6 +595,19 @@
                         this.getFileList(this.item.itemCode);
                     }
                 },
+                updated: function () {
+                    self = this;
+                    if ((this.routeFrom == 'index' || this.routeFrom == undefined) && (this.routeTo == 'show' || this.routeTo == 'store')) {
+                        this.routeFrom = 'show';
+                        this.routeTo = 'show';
+                        initDropzone();
+                    }
+                    if (this.pageName == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
+                        this.routeFrom = 'show';
+                        this.routeTo = 'show';
+                        initDropzone();
+                    }
+                },
                 router,
                 computed: {
                     pageName() {
@@ -625,6 +639,10 @@
                             }
                         },
                         deep: true
+                    },
+                    $route(to, from) { // パラメータの変更でドロップゾーンを初期化するため
+                        this.routeFrom = from.query.page;
+                        this.routeTo = to.query.page;
                     }
                 }
             })
@@ -638,6 +656,34 @@
                 }
                 return searchTarget.includes(searchWord);
             };
+            // アップロード機能　    
+            Dropzone.autoDiscover = false;
+            function destroyDrop() {
+                if (Dropzone.instances.length > 0) {
+                    Dropzone.instances.forEach((e) => {
+                        e.destroy();
+                    });
+                }
+            }
+            function initDropzone(){
+                        Dropzone.autoDiscover = false;
+                        console.log("init dropzone");
+                        destroyDrop();
+                        dropz = new Dropzone("form#dropz",{
+                            dictDefaultMessage: '<h2>+</h2>',
+                            parallelUploads: 2,
+                            init: function () {
+                                this.on("complete", file => {
+                                    console.log("complete A file has been added");
+                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                        this.removeFile(file);
+                                        app.getFileListDZ();
+                                    }
+                                });
+                            }
+                        });
+            }
+            // end アップロード機能
 
         </script>
 
