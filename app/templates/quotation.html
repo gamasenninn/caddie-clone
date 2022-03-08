@@ -160,6 +160,7 @@
                           {  key: 'customerName', label: '顧客名' },
                           {  key: 'title', label: '件名' },
                           {  key: 'totalAmount', label: '合計金額' },
+                          {  key: 'numberOfAttachments', label: '添付' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
@@ -173,6 +174,9 @@
                                 </template>
                                 <template v-slot:cell(totalAmount)="data">
                                     {{amountCalculation(data.item)|nf}}
+                                </template>
+                                <template v-slot:cell(numberOfAttachments)="data">
+                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">{{data.item.numberOfAttachments}}</b-badge>
                                 </template>
                             </b-table>
                         </b-card>
@@ -716,7 +720,8 @@
                         this.quotation.quotation_items = this.quotation.quotation_items.map(quotationItem => ({ ...quotationItem, isDelete: false }));
                         console.log(this.quotation);
                         localStorage.setItem('quotation', JSON.stringify(item));
-                        this.getFileList(this.quotation.applyNumber);
+                        //this.getFileList(this.quotation.applyNumber);
+                        this.getFileListDZ();
                         this.countChanged = 0;
                     },
                     selectQuotationItem: function (item) {
@@ -886,17 +891,20 @@
                         return amount;
                     },
                     //---- upload funcrions --
-                    getFileListDZ() {
-                        this.getFileList(this.quotation.applyNumber);
+                    async getFileListDZ() {
+                        this.quotation.numberOfAttachments = await this.getFileList(this.quotation.applyNumber);
                     },
                     getFileList: async function (fid) {
                         self = this;
                         url = "list-files/s/upload/quotes/" + fid;
+                        flen = 0;
                         await axios.get(url)
                             .then(function (response) {
                                 console.log(response.data);
                                 self.dicFiles = response.data;
+                                flen = self.dicFiles.length;
                             })
+                        return flen;
                     },
                     clearFileList: function () {
                         this.dicFiles = {};
@@ -909,7 +917,7 @@
                         }
                         ).then(function (response) {
                             console.log(response.data);
-                            self.getFileList(fid);
+                            self.getFileListDZ();
                         });
                     }, //-- end upload functions                    
                     checkChange: async function () {
@@ -984,7 +992,7 @@
                     this.getSetting();
                     document.querySelector('title').textContent = '見積書管理';
                     if(this.pageName == 'show'){
-                        this.getFileList(self.quotation.applyNumber);
+                        this.getFileListDZ();
                     }
                 },
                 updated: function () {
