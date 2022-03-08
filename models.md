@@ -153,6 +153,7 @@
 | id        | id       | integer  |      | 
 | title     | 件名     | text     |      | 
 | manager   | 担当者   | text     |      | 
+| isFavorite| お気に入り| boolean  | お気に入りメモ | 
 | content   | 内容     | text     |      | 
 | createdAt | 作成日時 | datetime |      | 
 | updatedAt | 更新日時 | datetime |      | 

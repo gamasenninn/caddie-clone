@@ -232,7 +232,8 @@ def invoice_create():
     if data.get('invoice_items'):
         for item in data.get('invoice_items'):
             if item.get('isDelete'):
-                if item['isDelete']: continue
+                if item['isDelete']:
+                    continue
             newInvoiceItems.append(
                 Invoice_Item(
                     invoiceId=item.get('invoiceId'),
@@ -244,7 +245,7 @@ def invoice_create():
                 )
             )
 
-        #newInvoiceItems = [
+        # newInvoiceItems = [
         #    Invoice_Item(
         #        invoiceId=item.get('invoiceId'),
         #        itemId=item.get('itemId'),
@@ -254,7 +255,7 @@ def invoice_create():
         #        itemName=item.get('itemName'),
         #    )
         #    for item in data.get('invoice_items')
-        #]
+        # ]
 
     newInvoice = Invoice(
         customerId=data.get('customerId'),
@@ -443,7 +444,8 @@ def quotation_create():
     if data.get('quotation_items'):
         for item in data.get('quotation_items'):
             if item.get('isDelete'):
-                if item['isDelete']: continue
+                if item['isDelete']:
+                    continue
 
             newQuotationItems.append(
                 Quotation_Item(
@@ -455,7 +457,6 @@ def quotation_create():
                     itemName=item.get('itemName'),
                 )
             )
-
 
     newQuotation = Quotation(
         customerId=data.get('customerId'),
@@ -637,6 +638,7 @@ def memo_create():
     newMemo = Memo(
         title=data.get('title'),
         manager=data.get('manager'),
+        isFavorite=data.get('isFavorite'),
         content=data.get('content'),
     )
     db.session.add(newMemo)
@@ -652,6 +654,7 @@ def memo_update(id):
 
     memo.title = data.get('title')
     memo.manager = data.get('manager')
+    memo.isFavorite = data.get('isFavorite')
     memo.content = data.get('content')
 
     db.session.commit()
