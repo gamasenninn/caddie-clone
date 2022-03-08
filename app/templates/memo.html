@@ -286,9 +286,7 @@
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                     formatContent(data) {
-                        if (data && data.length > 20) {
-                            return data.substr(0, 20) + '...';
-                        }
+                        if (data && data.length > 20) return data.substr(0, 20) + '...';
                         return data;
                     }
                 },
