@@ -316,7 +316,7 @@
                           {  key: 'price', label: '値段', tdClass:'td-price' },
                           {  key: 'amount', label: '金額' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
-                          {  key: 'delete', label: '削除',class:'text-center' },
+                          {  key: 'isDelete', label: '削除',class:'text-center' },
                         ]">
                             <template v-slot:cell(itemName)="data">
                                 <textarea v-model="data.item.itemName" class="form-control form-control-sm itemNameArea"
@@ -414,10 +414,8 @@
                                 </b-row>
                             </template>
 
-                            <template v-slot:cell(delete)="data">
-                                <b-button variant="danger" class="fas fa-trash-alt"
-                                    @click="deleteQuotationItem(data.item)">
-                                </b-button>
+                            <template v-slot:cell(isDelete)="data">
+                                <b-form-checkbox  v-model="data.item.isDelete" ></b-form-checkbox>
                             </template>
 
                         </b-table>
@@ -706,7 +704,7 @@
                         self = this;
                         self.quotations.push({
                             isInsert: true,
-                            quotation_items: [{}, {}, {}, {}, {}],
+                            quotation_items: [{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false}],
                         });
                         self.quotation = self.quotations.slice(-1)[0];
                         Vue.set(self.quotation, 'isTaxExp', true);
@@ -715,6 +713,7 @@
                     },
                     selectQuotation: function (item) {
                         this.quotation = item;
+                        this.quotation.quotation_items = this.quotation.quotation_items.map(quotationItem => ({ ...quotationItem, isDelete: false }));
                         console.log(this.quotation);
                         localStorage.setItem('quotation', JSON.stringify(item));
                         this.getFileList(this.quotation.applyNumber);
@@ -736,20 +735,20 @@
                                 //this.countChanged = 0;
                             });
                     },
-                    deleteQuotationItem: async function (item) {
-                        self = this;
-                        if (item.id) {
-                            await axios.delete("/quotation_item/" + item.id)
-                                .then(function (response) {
-                                    console.log(response);
-                                    self.getQuotation(self.quotation);
-                                });
-                        }
-                        else {
-                            let indexNum = this.quotation.quotation_items.indexOf(item);
-                            this.quotation.quotation_items.splice(indexNum, 1);
-                        }
-                    },
+                    //deleteQuotationItem: async function (item) {
+                    //    self = this;
+                    //    if (item.id) {
+                    //        await axios.delete("/quotation_item/" + item.id)
+                    //            .then(function (response) {
+                    //                console.log(response);
+                    //                self.getQuotation(self.quotation);
+                    //            });
+                    //    }
+                    //    else {
+                    //        let indexNum = this.quotation.quotation_items.indexOf(item);
+                    //        this.quotation.quotation_items.splice(indexNum, 1);
+                    //    }
+                    //},
                     addRowQuotationItem: function () {
                         if (this.quotation.length === 0) {
                             alert('見積書を選択してください');
@@ -984,7 +983,9 @@
                     this.getMakers();
                     this.getSetting();
                     document.querySelector('title').textContent = '見積書管理';
-                    this.getFileList(self.quotation.applyNumber);
+                    if(this.pageName == 'show'){
+                        this.getFileList(self.quotation.applyNumber);
+                    }
                 },
                 updated: function () {
                     self = this;
@@ -993,7 +994,7 @@
                         this.routeTo = 'show';
                         initDropzone();
                     }
-                    if (this.$route.query.page == 'show' && this.routeFrom == '' && this.routeTo == '') {
+                    if (this.pageName == 'show' && this.routeFrom == '' && this.routeTo == '') {
                         initDropzone();
                     }
                 },

@@ -255,8 +255,6 @@ def invoice_create():
         #    )
         #    for item in data.get('invoice_items')
         #]
-    else:
-        newInvoiceItems = []
 
     newInvoice = Invoice(
         customerId=data.get('customerId'),
@@ -441,21 +439,23 @@ def quotation_show(id):
 @app.route('/quotation', methods=['POST'])
 def quotation_create():
     data = request.json
-
+    newQuotationItems = []
     if data.get('quotation_items'):
-        newQuotationItems = [
-            Quotation_Item(
-                quotationId=item.get('quotationId'),
-                itemId=item.get('itemId'),
-                price=item.get('price'),
-                count=item.get('count'),
-                unit=item.get('unit'),
-                itemName=item.get('itemName'),
+        for item in data.get('quotation_items'):
+            if item.get('isDelete'):
+                if item['isDelete']: continue
+
+            newQuotationItems.append(
+                Quotation_Item(
+                    quotationId=item.get('quotationId'),
+                    itemId=item.get('itemId'),
+                    price=item.get('price'),
+                    count=item.get('count'),
+                    unit=item.get('unit'),
+                    itemName=item.get('itemName'),
+                )
             )
-            for item in data.get('quotation_items')
-        ]
-    else:
-        newQuotationItems = []
+
 
     newQuotation = Quotation(
         customerId=data.get('customerId'),
@@ -520,9 +520,16 @@ def quotation_update(id):
                 del(item['updatedAt'])
 
             if item.get('id'):
-                update_list.append(item)
+                if item.get('isDelete'):
+                    delete_in_list.append(item['id'])
+                else:
+                    update_list.append(item)
             else:
-                insert_list.append(item)
+                if item.get('isDelete'):
+                    pass
+                else:
+                    insert_list.append(item)
+
         db.session.bulk_update_mappings(Quotation_Item, update_list)
         db.session.bulk_insert_mappings(Quotation_Item, insert_list)
         db.session.query(Quotation_Item).filter(Quotation_Item.id.in_(
