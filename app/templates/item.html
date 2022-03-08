@@ -363,7 +363,8 @@
 
         <script>
             Vue.filter('nf', function (val) {
-                if (isNaN(val)) return null
+                if (isNaN(val)) return null;
+                if (val === null) return;
                 return val.toLocaleString();
             });
 
@@ -589,7 +590,7 @@
                     this.getCategories();
                     this.getMakers();
                     document.querySelector('title').textContent = '商品管理';
-                    if(this.pageName=='show' || this.pageName=='store'){
+                    if (this.pageName == 'show' || this.pageName == 'store') {
                         this.getFileList(this.item.itemCode);
                     }
                 },
