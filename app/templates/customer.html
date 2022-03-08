@@ -91,6 +91,9 @@
                                 <template v-slot:cell(addressCombine)="data">
                                     {{combineAddress(data.item.address,data.item.addressSub)}}
                                 </template>
+                                <template v-slot:cell(memo)="data">
+                                    {{formatMemo(data.item.memo)}}
+                                </template>
                             </b-table>
 
                         </b-card>
@@ -479,6 +482,10 @@
                         if (!address1) address1 = "";
                         if (!address2) address2 = "";
                         return String(address1) + String(address2);
+                    },
+                    formatMemo(data) {
+                        if (data && data.length > 20) return data.substr(0, 20) + '...';
+                        return data;
                     },
                     checkChange: async function () {
                         isUpdate = false;
