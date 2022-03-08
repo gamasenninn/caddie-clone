@@ -130,7 +130,8 @@
                                     {{ data.item.baseCost|nf }}
                                 </template>
                                 <template v-slot:cell(numberOfAttachments)="data">
-                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">{{data.item.numberOfAttachments}}</b-badge>
+                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">
+                                        {{data.item.numberOfAttachments}}</b-badge>
                                 </template>
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
@@ -341,8 +342,7 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="primary" @click="modalShow(item,'upsertModal');"
-                            v-b-tooltip.hover.top="'適用'">適用
+                        <b-button pill variant="primary" @click="modalShow(item,'upsertModal');">保存
                         </b-button>
                         <b-button pill size="lg" variant="primary" @click="alert('印刷しました。')"
                             v-b-tooltip.hover.top="'印刷'">

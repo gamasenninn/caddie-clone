@@ -168,7 +168,8 @@
                                     {{amountCalculation(data.item)|nf}}
                                 </template>
                                 <template v-slot:cell(numberOfAttachments)="data">
-                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">{{data.item.numberOfAttachments}}</b-badge>
+                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">
+                                        {{data.item.numberOfAttachments}}</b-badge>
                                 </template>
 
                             </b-table>
@@ -419,7 +420,7 @@
                             </template>
 
                             <template v-slot:cell(isDelete)="data">
-                                <b-form-checkbox  v-model="data.item.isDelete" ></b-form-checkbox>
+                                <b-form-checkbox v-model="data.item.isDelete"></b-form-checkbox>
                             </template>
 
                         </b-table>
@@ -553,8 +554,7 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="primary" @click="bulkUpsert(invoice);showConfirmModal();"
-                            v-b-tooltip.hover.top="'保存'">保存
+                        <b-button pill variant="primary" @click="bulkUpsert(invoice);showConfirmModal();">保存
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
                             @click="modalShow(invoice,'copyModal');" v-b-tooltip.hover.top="'複製'"><i
@@ -724,7 +724,7 @@
                         self = this;
                         self.invoices.push({
                             isInsert: true,
-                            invoice_items: [{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false},{isDelete:false}],
+                            invoice_items: [{ isDelete: false }, { isDelete: false }, { isDelete: false }, { isDelete: false }, { isDelete: false }],
                         });
                         self.invoice = self.invoices.slice(-1)[0];
                         Vue.set(self.invoice, 'isTaxExp', true);
@@ -756,20 +756,20 @@
                                 }
                             });
                     },
-//                    deleteInvoiceItem: async function (item) {
-//                        self = this;
-//                        if (item.id) {
-//                            await axios.delete("/invoice_item/" + item.id)
-//                                .then(function (response) {
-//                                    console.log(response);
-//                                    self.getInvoice(self.invoice);
-//                                });
-//                        }
-//                        else {
-//                            let indexNum = this.invoice.invoice_items.indexOf(item);
-//                            this.invoice.invoice_items.splice(indexNum, 1);
-//                        }
-//                    },
+                    //                    deleteInvoiceItem: async function (item) {
+                    //                        self = this;
+                    //                        if (item.id) {
+                    //                            await axios.delete("/invoice_item/" + item.id)
+                    //                                .then(function (response) {
+                    //                                    console.log(response);
+                    //                                    self.getInvoice(self.invoice);
+                    //                                });
+                    //                        }
+                    //                        else {
+                    //                            let indexNum = this.invoice.invoice_items.indexOf(item);
+                    //                            this.invoice.invoice_items.splice(indexNum, 1);
+                    //                        }
+                    //                    },
                     addRowInvoiceItem: function () {
                         if (this.invoice.length === 0) {
                             alert('請求書を選択してください');
@@ -969,14 +969,14 @@
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                     amountCalculation(invoice) {
-                        if(!invoice.invoice_items.length) return 0;
+                        if (!invoice.invoice_items.length) return 0;
                         let amount = invoice.invoice_items.map(item => item.count * item.price).reduce((a, b) => a + b);
                         if (invoice.isTaxExp === true) return Math.floor(amount * 1.1);
                         return amount;
                     },
                     //---- upload funcrions --
                     async getFileListDZ() {
-                        this.invoice.numberOfAttachments =  await this.getFileList(this.invoice.applyNumber);
+                        this.invoice.numberOfAttachments = await this.getFileList(this.invoice.applyNumber);
                     },
                     getFileList: async function (fid) {
                         self = this;
@@ -1037,7 +1037,7 @@
                     this.getMakers();
                     this.getSetting();
                     document.querySelector('title').textContent = '請求書管理';
-                    if(this.pageName == 'show'){
+                    if (this.pageName == 'show') {
                         //this.getFileList(self.invoice.applyNumber);
                         this.getFileListDZ();
 
@@ -1050,7 +1050,7 @@
                         this.routeTo = 'show';
                         initDropzone();
                     }
-                    if (this.pageName == 'show' && this.routeFrom=='' && this.routeTo == '' ){ 
+                    if (this.pageName == 'show' && this.routeFrom == '' && this.routeTo == '') {
                         this.routeFrom = 'show';
                         this.routeTo = 'show';
                         initDropzone();
@@ -1150,23 +1150,23 @@
                     });
                 }
             }
-            function initDropzone(){
-                        Dropzone.autoDiscover = false;
-                        console.log("init dropzone");
-                        destroyDrop();
-                        dropz = new Dropzone("form#dropz",{
-                            dictDefaultMessage: '<h2>+</h2>',
-                            parallelUploads: 2,
-                            init: function () {
-                                this.on("complete", file => {
-                                    console.log("complete A file has been added");
-                                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                                        this.removeFile(file);
-                                        app.getFileListDZ();
-                                    }
-                                });
+            function initDropzone() {
+                Dropzone.autoDiscover = false;
+                console.log("init dropzone");
+                destroyDrop();
+                dropz = new Dropzone("form#dropz", {
+                    dictDefaultMessage: '<h2>+</h2>',
+                    parallelUploads: 2,
+                    init: function () {
+                        this.on("complete", file => {
+                            console.log("complete A file has been added");
+                            if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                                this.removeFile(file);
+                                app.getFileListDZ();
                             }
                         });
+                    }
+                });
             }
             // end アップロード機能
         </script>
