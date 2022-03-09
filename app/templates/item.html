@@ -3,6 +3,11 @@
         <!-- or point to a specific vue-select release -->
         <script src="https://unpkg.com/vue-select@3.0.0"></script>
         <link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
+        <!-- viewerとして使用-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.min.js" integrity="sha512-2B9/byNV1KKRm5nQ2RLViPFD6U4dUjDGwuW1GU+ImJh8YinPU9Zlq1GzdTMO+G2ROrB5o1qasJBy1ttYz0wCug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.css" integrity="sha512-k6op6U+6fzScsVhxntLBg+Ob/Gv64fjNfjuAcNtbngRoi1LKf+aicRaEs3zeTrRuoIkOjGwLf9FR5BR7B3NItw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        
+
         <style>
             .card-header {
                 background-color: #ccecf1;
@@ -42,6 +47,27 @@
                 display: flex;
                 flex-wrap: wrap;
             }
+            /* tingle で使用するCSS */
+            .tingle-modal {
+                background: rgba(0, 0, 0, .5);
+            }
+            .tingle-modal-box__content {
+                padding: 0;
+            }
+            .iframe-wrapper {
+                position: relative;
+                padding-bottom: 150%;
+                height: 0;
+                overflow: hidden;
+            }
+            .iframe-wrapper iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
         </style>
 
         <div id="app" v-cloak>
@@ -292,9 +318,7 @@
                                                     <input type="checkbox" v-model="f.isSelect" size="sm">
                                                 </b-td>
                                                 <b-td width="15%">
-                                                    <div @click="selectImgUrl=f.url">
-                                                        <b-img :src="f.urlThumb" width="90" fluid></b-img>
-                                                    </div>
+                                                    <b-img :src="f.urlThumb" @click="openViewer(f)" width="90" fluid></b-img>
                                                 </b-td>
                                                 <b-td class="ml-5">{{f.filename}}</b-td>
                                             </b-tr>
@@ -305,7 +329,7 @@
                                     <div class="file-card ">
                                         <template v-for="f in dicFiles">
                                             <b-card border-variant="light">
-                                                <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                <b-img :src="'../'+f.thumbPath" @click="openViewer(f)" width="90" fluid></b-img>
                                                 <input type="checkbox" v-model="f.isSelect" class="image-in-check">
                                             </b-card>
                                         </template>
@@ -601,8 +625,20 @@
                         }
                         this.clearFileList();
                         router.push({ path: "?page=index" });
+                    },
+                    openViewer: function(f){
+                        //this.modal.setFooterContent(f.filename);
+                        content = ''
+                        if(f.type == 'pdf'){    
+                            content = "<div class='iframe-wrapper' ><iframe src="+f.url+" frameborder='0'></iframe></div>"
+                        }else if(f.type == 'csv'){    
+                            content = "このファイルはViwerでは開けません";
+                        }else{
+                            content = "<img src="+f.url+" width='100%'>"
+                        }                  
+                        this.modal.setContent(content);
+                        this.modal.open();
                     }
-
                 },
                 mounted: function () {
                     this.item = JSON.parse(localStorage.getItem('item'));
@@ -614,6 +650,13 @@
                     if (this.pageName == 'show' || this.pageName == 'store') {
                         this.getFileListDZ();
                     }
+                    this.modal = new tingle.modal({
+                        footer: false,
+                        stickyFooter: false,
+                        closeMethods: ['overlay', 'button', 'escape'],
+                        closeLabel: "Close",
+                    });
+
                 },
                 updated: function () {
                     self = this;

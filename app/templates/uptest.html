@@ -52,6 +52,10 @@
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.min.js" integrity="sha512-2B9/byNV1KKRm5nQ2RLViPFD6U4dUjDGwuW1GU+ImJh8YinPU9Zlq1GzdTMO+G2ROrB5o1qasJBy1ttYz0wCug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.css" integrity="sha512-k6op6U+6fzScsVhxntLBg+Ob/Gv64fjNfjuAcNtbngRoi1LKf+aicRaEs3zeTrRuoIkOjGwLf9FR5BR7B3NItw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <style>
     .image-box {
         position: relative;
@@ -82,6 +86,29 @@
     .custom-file-label::after {
         content: '+';
     }
+
+    .tingle-modal {
+        background: rgba(0, 0, 0, .5);
+    }
+    .tingle-modal-box__content {
+        padding: 0;
+    }
+    .iframe-wrapper {
+        position: relative;
+        padding-bottom: 150%;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .iframe-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+
 </style>
 
 
@@ -194,12 +221,12 @@
             :items= 'dicFiles'
         > 
             <template v-slot:cell(image)="data">
-                <b-img :src="data.item.thumbPath" width="90"></b-img>
+                <b-img :src="data.item.thumbPath" width="90" @click="openViwer(data.item)"></b-img>
             </template>
         </b-table>
     </div>
 
-
+    <b-button @click="modal.open()">modal open </b-button>
 
 
     <br /><br />
@@ -225,7 +252,8 @@
                 file: '',
                 fileId:''
             },
-            url: ''
+            url: '',
+            //modal: null
         },
         methods: {
             getFileList: async function (fid) {
@@ -286,13 +314,108 @@
             },
             formUpload: function(){
                 form = document.getElementById('form-upload').submit()
+            },
+            openViwer: function(f){
+                this.modal.setFooterContent(f.filename);
+                content = ''
+                if(f.type == 'pdf'){    
+                    content = "<div class='iframe-wrapper' ><iframe src="+f.url+" frameborder='0'></iframe></div>"
+                }else if(f.type == 'csv'){    
+                    content = "<h3>このファイルはViwerでは開けません</h3>";
+                }else{
+                    content = "<img src="+f.url+" width='100%'>"
+                }
+            
+                this.modal.setContent(content);
+                this.modal.open();
             }
 
         },
         mounted: function () {
             this.getFileList('001');
+                // instanciate new modal
+            this.modal = new tingle.modal({
+                footer: true,
+                stickyFooter: false,
+                closeMethods: ['overlay', 'button', 'escape'],
+                closeLabel: "Close",
+                //cssClass: ['custom-class-1', 'custom-class-2'],
+                onOpen: function() {
+                        //console.log('modal open');
+                        //this.setContent('<h1>here\'s some content</h1>');
+                    },
+                onClose: function() {
+                    //console.log('modal closed');
+                },
+                beforeClose: function() {
+                    // here's goes some logic
+                    // e.g. save content before closing the modal
+                    return true; // close the modal
+                    return false; // nothing happens
+                },
+            });
+            //this.modal = modal;
+            // set content
+            //modal.setContent('<h1>here\'s some content</h1>');
+
+            // add a button
+            //modal.addFooterBtn('Button label', 'tingle-btn tingle-btn--primary', function() {
+                // here goes some logic
+            //    modal.close();
+            //});
+
+            // add another button
+            //modal.addFooterBtn('Dangerous action !', 'tingle-btn tingle-btn--danger', function() {
+                // here goes some logic
+            //    modal.close();
+            //});            
+
         }
     });
+
+/*
+    // instanciate new modal
+    var modal = new tingle.modal({
+        footer: true,
+        stickyFooter: false,
+        closeMethods: ['overlay', 'button', 'escape'],
+        closeLabel: "Close",
+        cssClass: ['custom-class-1', 'custom-class-2'],
+        onOpen: function() {
+            console.log('modal open');
+        },
+        onClose: function() {
+            console.log('modal closed');
+        },
+        beforeClose: function() {
+            // here's goes some logic
+            // e.g. save content before closing the modal
+            return true; // close the modal
+            return false; // nothing happens
+        }
+    });
+
+    // set content
+    modal.setContent('<h1>here\'s some content</h1>');
+
+    // add a button
+    modal.addFooterBtn('Button label', 'tingle-btn tingle-btn--primary', function() {
+        // here goes some logic
+        modal.close();
+    });
+
+    // add another button
+    modal.addFooterBtn('Dangerous action !', 'tingle-btn tingle-btn--danger', function() {
+        // here goes some logic
+        modal.close();
+    });
+
+    // open modal
+    //modal.open();
+
+    // close modal
+    //modal.close();
+*/
 </script>
 
 </html>
