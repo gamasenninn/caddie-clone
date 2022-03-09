@@ -192,26 +192,17 @@
                     <b-col></b-col>
                     <!--- 本体 -->
                     <b-col cols=11>
-                        <div class="text-right">
-                            <span class="mr-2">登録日:{{formatDate(quotation.createdAt)}}</span>
-                            <span class="mr-2">更新日:{{formatDate(quotation.updatedAt)}}</span>
-                        </div>
+                        <b-row>
+                            <b-col>
+                                <span class="mr-2">見積No:{{quotation.applyNumber}}</span>
+                            </b-col>
+                            <b-col class="text-right">
+                                <span class="mr-2">登録日:{{formatDate(quotation.createdAt)}}</span>
+                                <span class="mr-2">更新日:{{formatDate(quotation.updatedAt)}}</span>
+                            </b-col>
+                        </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="見積書入力"
                             header-border-variant="light">
-                            <b-row>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
-                                        label-for="customerId" label-align="right">
-                                        <p class="text-left pl-2" id="customerId">{{quotation.customerId}}</p>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積No."
-                                        label-for="applyNumber" label-align="right">
-                                        <p class="text-left pl-2" id="applyNumber">{{quotation.applyNumber}}</p>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
