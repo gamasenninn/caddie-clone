@@ -87,12 +87,22 @@
                                         label-for="createdAt">
                                         <b-form-select v-model="searchItemSelectCategory" :options="categories"
                                             size="sm">
+                                            <template #first>
+                                                <b-form-select-option value='' disabled>カテゴリー
+                                                </b-form-select-option>
+                                            </template>
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="メーカー"
                                         label-for="createdAt">
                                         <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
+                                            <template #first>
+                                                <b-form-select-option value='' disabled>メーカー
+                                                </b-form-select-option>
+                                            </template>
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
