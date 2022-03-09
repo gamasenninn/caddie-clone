@@ -63,7 +63,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="ユーザー一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="usertable" sort-by="ID" small label="Table Options"
-                                :items=users :fields="[
+                                :items=underAdministrator :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', label: 'No.' },
                           {  key: 'name', label: 'ユーザー名' },
@@ -329,6 +329,11 @@
                         //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
                     },
+                    underAdministrator() {
+                        let users = this.users;
+                        users = users.filter(user => user.role !== 'crescom_support');
+                        return users;
+                    }
                 }
             })
 
