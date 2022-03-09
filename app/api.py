@@ -469,8 +469,9 @@ def quotation_create():
         otherPartyManager=data.get('otherPartyManager'),
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
-        expiry=datetime.strptime(
-            data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
+        expiry=data.get('expiry'),
+        dayOfDelivery=data.get('dayOfDelivery'),
+        termOfSale=data.get('termOfSale'),
         isConvert=data.get('isConvert') if data.get('isConvert') else False,
         title=data.get('title'),
         memo=data.get('memo'),
@@ -502,8 +503,9 @@ def quotation_update(id):
     quotation.applyNumber = data.get('applyNumber')
     quotation.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
-    quotation.expiry = datetime.strptime(
-        data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
+    quotation.expiry = data.get('expiry')
+    quotation.dayOfDelivery = data.get('dayOfDelivery')
+    quotation.termOfSale = data.get('termOfSale')
     quotation.isConvert = data.get(
         'isConvert') if data.get('isConvert') else False
     quotation.title = data.get('title')
