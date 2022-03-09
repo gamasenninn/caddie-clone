@@ -269,9 +269,11 @@
                                         <b-col sm>
                                             <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="有効期限"
                                                 label-for="expiry" label-align="right">
-                                                <b-form-select v-model="quotation.expiry"
-                                                    :options="['','2週間以内','1ヶ月以内','2ヶ月以内',]" size="sm">
-                                                </b-form-select>
+                                                <b-form-input list="list-expiry" v-model="quotation.expiry" size="sm"
+                                                    autocomplete="off"></b-form-input>
+                                                <datalist id="list-expiry">
+                                                    <option v-for="expiry in expiryOptions">{{expiry}}</option>
+                                                </datalist>
                                             </b-form-group>
                                         </b-col>
                                         <b-col sm>
@@ -299,18 +301,25 @@
                                         <b-col sm>
                                             <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="納品期日"
                                                 label-for="dayOfDelivery" label-align="right">
-                                                <b-form-select v-model="quotation.dayOfDelivery"
-                                                    :options="['','発注後1週間以内','発注後2週間以内','発注後1ヶ月以内','応相談',]" size="sm">
-                                                </b-form-select>
+                                                <b-form-input list="list-dayOfDelivery"
+                                                    v-model="quotation.dayOfDelivery" size="sm" autocomplete="off">
+                                                </b-form-input>
+                                                <datalist id="list-dayOfDelivery">
+                                                    <option v-for="dayOfDelivery in dayOfDeliveryOptions">
+                                                        {{dayOfDelivery}}</option>
+                                                </datalist>
                                             </b-form-group>
                                         </b-col>
                                         <b-col sm>
                                             <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="取引条件"
                                                 label-for="termOfSale" label-align="right">
-                                                <b-form-select v-model="quotation.termOfSale"
-                                                    :options="['','御社決済条件にて','代金引換','納品後2週間以内に決済','納品後翌月末までに決済','応相談',]"
-                                                    size="sm">
-                                                </b-form-select>
+                                                <b-form-input list="list-termOfSale" v-model="quotation.termOfSale"
+                                                    size="sm" autocomplete="off">
+                                                </b-form-input>
+                                                <datalist id="list-termOfSale">
+                                                    <option v-for="termOfSale in termOfSaleOptions">
+                                                        {{termOfSale}}</option>
+                                                </datalist>
                                             </b-form-group>
                                         </b-col>
                                     </b-row>
@@ -633,10 +642,11 @@
                     units: [],
                     categories: [],
                     makers: [],
+                    expiryOptions: ['2週間以内', '1ヶ月以内', '2ヶ月以内',],
+                    dayOfDeliveryOptions: ['発注後1週間以内', '発注後2週間以内', '発注後1ヶ月以内', '応相談',],
+                    termOfSaleOptions: ['御社決済条件にて', '代金引換', '納品後2週間以内に決済', '納品後翌月末までに決済', '応相談',],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
-                    title: '',      //モーダルタイトル
-                    message: '',    //モーダルメッセージ
                     countChanged: 0,
                     fileId: '', //upload用ID
                     dicFiles: [],
