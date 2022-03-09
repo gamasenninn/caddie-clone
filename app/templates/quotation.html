@@ -205,23 +205,6 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
-                                        label-for="applyDate" label-align="right">
-                                        <b-form-input v-model="quotation.applyDate" id="applyDate" size="sm"
-                                            type="date">
-                                        </b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
-                                        label-for="expiry" label-align="right">
-                                        <b-form-input v-model="quotation.expiry" id="expiry" size="sm" type="date">
-                                        </b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                         label-for="customer" class="customer" label-align="right">
                                         <b-form-input v-model="quotation.customerName" id="customerName" size="sm"
@@ -263,10 +246,10 @@
                                             </b-form-group>
                                         </b-col>
                                         <b-col sm>
-                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="担当者"
-                                                label-for="manager" label-align="right">
-                                                <b-form-input v-model="quotation.manager" id="manager" size="sm"
-                                                    autocomplete="off">
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="日付"
+                                                label-for="applyDate" label-align="right">
+                                                <b-form-input v-model="quotation.applyDate" id="applyDate" size="sm"
+                                                    type="date">
                                                 </b-form-input>
                                             </b-form-group>
                                         </b-col>
@@ -280,12 +263,61 @@
                                         <b-form-input v-model="quotation.department" id="department" size="sm">
                                         </b-form-input>
                                     </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-row>
+                                        <b-col sm>
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="有効期限"
+                                                label-for="expiry" label-align="right">
+                                                <b-form-select v-model="quotation.expiry"
+                                                    :options="['','2週間以内','1ヶ月以内','2ヶ月以内',]" size="sm">
+                                                </b-form-select>
+                                            </b-form-group>
+                                        </b-col>
+                                        <b-col sm>
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="担当者"
+                                                label-for="manager" label-align="right">
+                                                <b-form-input v-model="quotation.manager" id="manager" size="sm"
+                                                    autocomplete="off">
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-col>
+                                    </b-row>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="先方担当者"
                                         label-for="otherPartyManager" label-align="right">
                                         <b-form-input v-model="quotation.otherPartyManager" id="otherPartyManager"
                                             size="sm">
                                         </b-form-input>
                                     </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-row>
+                                        <b-col sm>
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="納品期日"
+                                                label-for="dayOfDelivery" label-align="right">
+                                                <b-form-select v-model="quotation.dayOfDelivery"
+                                                    :options="['','発注後1週間以内','発注後2週間以内','発注後1ヶ月以内','応相談',]" size="sm">
+                                                </b-form-select>
+                                            </b-form-group>
+                                        </b-col>
+                                        <b-col sm>
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="取引条件"
+                                                label-for="termOfSale" label-align="right">
+                                                <b-form-select v-model="quotation.termOfSale"
+                                                    :options="['','御社決済条件にて','代金引換','納品後2週間以内に決済','納品後翌月末までに決済','応相談',]"
+                                                    size="sm">
+                                                </b-form-select>
+                                            </b-form-group>
+                                        </b-col>
+                                    </b-row>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
                                         label-for="title" label-align="right">
                                         <b-form-input v-model="quotation.title" id="title" size="sm"></b-form-input>
