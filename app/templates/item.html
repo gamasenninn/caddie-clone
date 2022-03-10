@@ -150,7 +150,7 @@
                           {  key: 'maker', label: 'メーカー' },
                           {  key: 'basePrice', label: '単価', thClass: 'text-center', tdClass: 'text-right' },
                           {  key: 'baseCost', label: '原価単価', thClass: 'text-center', tdClass: 'text-right' },
-                          {  key: 'numberOfAttachments', label: '添付' },
+                          {  key: 'numberOfAttachments', label: '' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(basePrice)="data">
                                     {{ data.item.basePrice|nf }}
