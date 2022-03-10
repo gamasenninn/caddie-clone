@@ -1,7 +1,7 @@
 Vue.component('sc-menu', {
     template: `  
     <div>
-    <b-button size="lg" v-b-toggle.sidebar-right><i class="fas fa-bars"></i></b-button>
+    <b-button v-if="!buttonHide" size="lg" v-b-toggle.sidebar-right><i class="fas fa-bars"></i></b-button>
     <b-sidebar id="sidebar-right" aria-labelledby="sidebar-right-title" no-header right shadow>
         <template #default="{ hide }">
             <div class="p-3">
@@ -35,5 +35,10 @@ Vue.component('sc-menu', {
     </b-sidebar>
     </div>
     `,
-    props: []
+    props: {
+        buttonHide: {
+            type:Boolean,
+            default: true
+        }
+    },
 });

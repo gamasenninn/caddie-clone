@@ -31,7 +31,8 @@
   <!--
   <b-button size="lg" id="openMenu" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
   -->
-  <b-img id="logo" src="../static/images/logo_a_color2.png"></b-img>
+  <b-img id="logo" src="../static/images/logo_a_color.png"></b-img>
+  <sc-menu buttonHide></sc-menu>
 </div>
 
 <script>
@@ -46,6 +47,7 @@
           },
         },
         mounted: function(){
+          //this.isMode = modeName();
             //localStorage.setItem('wMode',this.modeCheck());
         }
       });
@@ -62,8 +64,13 @@ let _left = 100;
 let _top = 100;
 wins={};
 
-function openMenu(obj){
+function openMenu(obj){ 
   self = obj;
+
+  if (modeName()=='tb'){
+    alert("tablet mode");
+  }
+
   jsPanel.create({
           headerControls: 'closeOnly sm',
           headerTitle: 'menu',
