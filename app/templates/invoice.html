@@ -156,7 +156,7 @@
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
-                                        <b-button variant="primary" @click="selectInvoice(data.item);"><i
+                                        <b-button variant="primary" @click="selectInvoice(data.item);checkRow();"><i
                                                 class="fas fa-edit"></i>
                                         </b-button>
                                     </router-link>
@@ -1015,6 +1015,16 @@
                         this.clearFileList();
                         router.push({ path: "?page=index" });
                     },
+                    checkRow() {
+                        setTimeout(() => {
+                            this.invoice.invoice_items.forEach(function (element, index) {
+                                if (element.itemName.indexOf('\n') != -1) {
+                                    console.log(index);
+                                    $('#invoice_items_table').children('tbody').children('tr').eq(index).find('.itemNameArea').attr("rows", "2");
+                                }
+                            });
+                        }, 1);
+                    }
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
@@ -1030,12 +1040,6 @@
                         //this.getFileList(self.invoice.applyNumber);
                         this.getFileListDZ();
                     }
-                    // let itemInput = $('#invoice_items_table').children('tbody').children('tr').eq(indexNum).find('.itemNameArea').attr("rows", "2");
-                    this.invoice.invoice_items.forEach(element => {
-                        if (element.itemName.indexOf('\n') != -1) {
-                            console.log(element.itemName.indexOf('\n'));
-                        }
-                    });
                 },
                 updated: function () {
                     self = this;
