@@ -1,8 +1,8 @@
 Vue.component('sc-menu', {
     template: `  
     <div>
-    <b-button v-if="!buttonHide" size="lg" v-b-toggle.sidebar-right><i class="fas fa-bars"></i></b-button>
-    <b-sidebar id="sidebar-right" aria-labelledby="sidebar-right-title" no-header right shadow>
+    <b-button  size="lg" v-b-toggle.sidebar-right><i class="fas fa-bars"></i></b-button>
+    <b-sidebar id="sidebar-right" aria-labelledby="sidebar-right-title" no-header right shadow :visible="visible">
         <template #default="{ hide }">
             <div class="p-3">
                 <b-button variant="danger" @click="hide"><b-icon icon="arrow-right"></b-icon>
@@ -26,6 +26,9 @@ Vue.component('sc-menu', {
                                 class="far fa-copy"></i>　見積書</b-button>
                         <b-button variant="primary" block href="/memo-page"><i
                                 class="fas fa-book-open"></i>　メ　モ</b-button>
+                        <b-button block @click="goMW" >
+                                <b-icon icon="door-open"></b-icon>　マルチウィンドゥ</b-button>
+
                         <b-button block href="/logout">
                                 <b-icon icon="door-open"></b-icon>　ログアウト</b-button>
                     </b-nav>
@@ -36,9 +39,15 @@ Vue.component('sc-menu', {
     </div>
     `,
     props: {
-        buttonHide: {
+        visible:{
             type:Boolean,
-            default: true
+            default: false
         }
     },
+    methods:{
+        goMW: function(){
+            localStorage.setItem('wMode','mw');
+            window.location.href = '/';
+        }
+    }
 });
