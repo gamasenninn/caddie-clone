@@ -163,6 +163,7 @@ def item_create():
         model=data.get('model'),
         category=data.get('category'),
         maker=data.get('maker'),
+        supplier=data.get('supplier'),
         unit=data.get('unit'),
         basePrice=data.get('basePrice'),
         baseCost=data.get('baseCost'),
@@ -186,6 +187,7 @@ def item_update(id):
     item.model = data.get('model')
     item.category = data.get('category')
     item.maker = data.get('maker')
+    item.supplier = data.get('supplier')
     item.unit = data.get('unit')
     item.basePrice = data.get('basePrice')
     item.baseCost = data.get('baseCost')
