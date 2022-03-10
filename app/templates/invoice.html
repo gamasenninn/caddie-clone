@@ -3,6 +3,10 @@
         <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
         <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
 
+        <!-- viewerとして使用-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.min.js" integrity="sha512-2B9/byNV1KKRm5nQ2RLViPFD6U4dUjDGwuW1GU+ImJh8YinPU9Zlq1GzdTMO+G2ROrB5o1qasJBy1ttYz0wCug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tingle/0.16.0/tingle.css" integrity="sha512-k6op6U+6fzScsVhxntLBg+Ob/Gv64fjNfjuAcNtbngRoi1LKf+aicRaEs3zeTrRuoIkOjGwLf9FR5BR7B3NItw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
         <style>
             .card-header {
                 background-color: #ccecf1;
@@ -503,7 +507,7 @@
                                     <div class="file-card ">
                                         <template v-for="f in dicFiles">
                                             <b-card border-variant="light">
-                                                <b-img :src="'../'+f.thumbPath" width="90" fluid></b-img>
+                                                <b-img :src="'../'+f.thumbPath" @click="openViewer(f)" width="90" fluid></b-img>
                                                 <input type="checkbox" v-model="f.isSelect" class="image-in-check">
                                             </b-card>
                                         </template>
@@ -1015,6 +1019,19 @@
                         this.clearFileList();
                         router.push({ path: "?page=index" });
                     },
+                    openViewer: function(f){
+                        //this.modal.setFooterContent(f.filename);
+                        content = ''
+                        if(f.type == 'pdf'){    
+                            content = "<div class='iframe-wrapper' ><iframe src="+f.url+" frameborder='0'></iframe></div>"
+                        }else if(f.type == 'csv'){    
+                            content = "このファイルはViwerでは開けません";
+                        }else{
+                            content = "<img src="+f.url+" width='100%'>"
+                        }                  
+                        this.modal.setContent(content);
+                        this.modal.open();
+                    }                    
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
@@ -1031,6 +1048,12 @@
                         this.getFileListDZ();
 
                     }
+                    this.modal = new tingle.modal({
+                        footer: false,
+                        stickyFooter: false,
+                        closeMethods: ['overlay', 'button', 'escape'],
+                        closeLabel: "Close",
+                    });                    
                 },
                 updated: function () {
                     self = this;
