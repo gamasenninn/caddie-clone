@@ -67,7 +67,6 @@
                 width: 100%;
                 height: 100%;
             }
-
         </style>
 
         <div id="app" v-cloak>
@@ -296,13 +295,11 @@
                         </b-card>
                         <b-row>
                             <b-col md="3">
-                                <b-card style="max-width: 20rem">
-                                    <form action="upload-files/s/upload/items" class="dropzone" id="dropz">
-                                        <input hidden type="text" name="fileId" v-model="item.itemCode">
+                                <form action="upload-files/s/upload/items" class="dropzone" id="dropz">
+                                    <input hidden type="text" name="fileId" v-model="item.itemCode">
 
-                                        <input hidden type="file" name="file">
-                                    </form>
-                                </b-card>
+                                    <input hidden type="file" name="file">
+                                </form>
                             </b-col>
                             <b-col>
                                 <div v-if="!dicFiles.length" class="mt-5">
@@ -735,7 +732,7 @@
                 console.log("init dropzone");
                 destroyDrop();
                 dropz = new Dropzone("form#dropz", {
-                    dictDefaultMessage: '<h2>+</h2>',
+                    dictDefaultMessage: '+',
                     parallelUploads: 2,
                     init: function () {
                         this.on("complete", file => {

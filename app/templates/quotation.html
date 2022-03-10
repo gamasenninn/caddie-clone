@@ -500,13 +500,11 @@
                         <!-- アップロード機能　-->
                         <b-row>
                             <b-col md="3">
-                                <b-card style="max-width: 20rem">
-                                    <form action="upload-files/s/upload/quotes" class="dropzone" id="dropz">
-                                        <input hidden type="text" name="fileId" v-model="quotation.applyNumber">
+                                <form action="upload-files/s/upload/quotes" class="dropzone" id="dropz">
+                                    <input hidden type="text" name="fileId" v-model="quotation.applyNumber">
 
-                                        <input hidden type="file" name="file">
-                                    </form>
-                                </b-card>
+                                    <input hidden type="file" name="file">
+                                </form>
                             </b-col>
                             <b-col>
                                 <div v-if="!dicFiles.length" class="mt-5">
@@ -1138,7 +1136,7 @@
                 console.log("init dropzone");
                 destroyDrop();
                 dropz = new Dropzone("#dropz", {
-                    dictDefaultMessage: '<h2>+</h2>',
+                    dictDefaultMessage: '+',
                     parallelUploads: 2,
                     init: function () {
                         this.on("complete", file => {
