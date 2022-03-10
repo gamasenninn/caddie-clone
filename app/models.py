@@ -62,6 +62,7 @@ class Item(db.Model):
     model = db.Column(db.String)
     category = db.Column(db.String)
     maker = db.Column(db.String)
+    supplier = db.Column(db.String)
     unit = db.Column(db.String)
     basePrice = db.Column(db.Integer)
     baseCost = db.Column(db.Integer)
