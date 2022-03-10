@@ -55,11 +55,13 @@
           },
         },
         mounted: function(){
-          if (localStorage.getItem('wMode')=='tb') {
-              this.menuVisible=true;
-          }
+          //if (localStorage.getItem('wMode')=='tb') {
+          //}
           if (localStorage.getItem('wMode')=='mw') {
               this.menuVisible=false;
+          }
+          else{
+            this.menuVisible=true;
           }
         }
       });

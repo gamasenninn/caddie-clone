@@ -27,7 +27,7 @@ Vue.component('sc-menu', {
                         <b-button variant="primary" block href="/memo-page"><i
                                 class="fas fa-book-open"></i>　メ　モ</b-button>
                         <b-button block @click="goMW" >
-                                <b-icon icon="door-open"></b-icon>　マルチウィンドゥ</b-button>
+                                </b-icon><b-icon icon="front"></b-icon>　マルチウィンドゥ</b-button>
 
                         <b-button block href="/logout">
                                 <b-icon icon="door-open"></b-icon>　ログアウト</b-button>
