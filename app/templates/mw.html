@@ -31,7 +31,14 @@
   <!--
   <b-button size="lg" id="openMenu" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
   -->
-  <b-img id="logo" src="../static/images/logo_a_color2.png"></b-img>
+  <b-img id="logo" src="../static/images/logo_a_color.png"></b-img>
+  <b-row>
+    <b-col class="text-right">
+      <div v-if="menuVisible">
+        <sc-menu  :visible="menuVisible" class="mt-3 mr-3"></sc-menu>
+      </div>
+    </b-col>
+  </b-row>
 </div>
 
 <script>
@@ -39,6 +46,8 @@
         el: '#app',
         data: {
           item:[],
+          menuVisible: false,
+
         },
         methods:{
           openMenu: function(){
@@ -46,7 +55,14 @@
           },
         },
         mounted: function(){
-            //localStorage.setItem('wMode',this.modeCheck());
+          //if (localStorage.getItem('wMode')=='tb') {
+          //}
+          if (localStorage.getItem('wMode')=='mw') {
+              this.menuVisible=false;
+          }
+          else{
+            this.menuVisible=true;
+          }
         }
       });
 
@@ -62,8 +78,13 @@ let _left = 100;
 let _top = 100;
 wins={};
 
-function openMenu(obj){
+function openMenu(obj){ 
   self = obj;
+
+  if (modeName()=='tb'){
+    return
+  }
+
   jsPanel.create({
           headerControls: 'closeOnly sm',
           headerTitle: 'menu',
