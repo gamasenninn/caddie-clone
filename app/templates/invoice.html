@@ -1029,8 +1029,13 @@
                     if (this.pageName == 'show') {
                         //this.getFileList(self.invoice.applyNumber);
                         this.getFileListDZ();
-
                     }
+                    // let itemInput = $('#invoice_items_table').children('tbody').children('tr').eq(indexNum).find('.itemNameArea').attr("rows", "2");
+                    this.invoice.invoice_items.forEach(element => {
+                        if (element.itemName.indexOf('\n') != -1) {
+                            console.log(element.itemName.indexOf('\n'));
+                        }
+                    });
                 },
                 updated: function () {
                     self = this;
