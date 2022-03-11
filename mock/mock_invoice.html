@@ -21,7 +21,7 @@
   crossorigin="anonymous"></script>
 
 <!-- Load Vue followed by BootstrapVue -->
-<script src="https://unpkg.com/vue@latest/dist/vue.min.js"></script>
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.min.js"></script>
 <script src="https://unpkg.com/bootstrap-vue@2.21.1/dist/bootstrap-vue.min.js"></script>
 
 <!-- Load the following for BootstrapVueIcons support -->
@@ -86,6 +86,15 @@
   .footer {
     opacity: 0.8;
   }
+/*
+  textarea{
+    height: 30px !important;
+    line-height: auto !important;
+    padding: 0px !important;
+    max-height: 200px !important;
+  }
+*/
+
 </style>
 
 <div id="app" v-cloak>
@@ -200,7 +209,7 @@
                   {  key: 'kingaku', label: '金額' }
                 ]">
         <template v-slot:cell(hinmei)="data">
-          <b-form-textarea v-model="data.item.hinmei" size="sm" rows=1 @change="checkHinmei(data.item.hinmei)">
+          <b-form-textarea v-model="data.item.hinmei" size="sm"  rows=2 @change="checkHinmei(data.item.hinmei)" :style="heightItemName(data.item.hinmei)">
           </b-form-textarea>
         </template>
         <template v-slot:cell(suryo)="data">
@@ -338,7 +347,7 @@
 
       },
       items: [
-        { id: 1, hinmei: 'ラジオ', suryo: 1, tanka: 1000 },
+        { id: 1, hinmei: 'ラジオ\n真空管仕様', suryo: 1, tanka: 1000 },
         { id: 2, hinmei: '電池', suryo: 3, tanka: 100 },
         { id: 3, hinmei: 'イヤホン', suryo: 2, tanka: 200 },
         { id: 4, hinmei: '鉛筆', suryo: 12, tanka: 20 },
@@ -364,18 +373,6 @@
       ],
       isPrint: false,
     },
-    methods: {
-      checkHinmei: function (val) {
-        //if ( typeof(this.items) == 'undefined' ){ return 0 }　//初期立ち上がりでのエラー抑制
-        if ((val.match(new RegExp("\n", "g")) || []).length < 2) {
-          return true;
-        } else {
-          alert("品名の入力は2行までです！");
-          return false;
-        }
-      },
-
-    },
     computed: {
       // 逐次、数量＊単価の合計をする
       sum: function () {
@@ -389,6 +386,20 @@
         app.header.kokyaku = record.kokyaku;
         this.$bvModal.hide("customer-modal")
       },
+      checkHinmei: function (val) {
+        //if ( typeof(this.items) == 'undefined' ){ return 0 }　//初期立ち上がりでのエラー抑制
+        if ((val.match(new RegExp("\n", "g")) || []).length < 2) {
+          return true;
+        } else {
+          alert("品名の入力は2行までです！");
+          return false;
+        }
+      },
+      heightItemName: function(data){
+        row = data.indexOf('\n') != -1 ? 2 :  1
+        return "height: "+ 30*row +"px"
+      }
+
     }
   })
 
