@@ -543,8 +543,6 @@
                             customers = customers.filter(customer => customer.isHide === false);
                         if (this.isShowFavorite === true)
                             customers = customers.filter(customer => customer.isFavorite === true);
-                        // customers = customers.filter(customer =>
-                        //     (customer.customerName?.includes(this.searchCustomerWord) || String(customer.customerKana)?.includes(this.searchCustomerWord)));
                         this.customersIndicateCount = customers.length;
                         return customers;
                     },
