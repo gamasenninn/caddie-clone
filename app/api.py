@@ -3,6 +3,7 @@ from models import *
 from flask import jsonify, request
 import json
 from datetime import date
+from sqlalchemy import or_
 
 
 # -----ユーザー(Users)-----
@@ -73,6 +74,16 @@ def customer_show(id):
         return jsonify(CustomerSchema().dump(customer))
     else:
         return jsonify([])
+
+
+@app.route('/customers/search/<searchWord>', methods=['GET'])
+def customer_search(searchWord):
+    print(searchWord)
+    customers = Customer.query.filter(or_(
+        Customer.customerName.like('%'+searchWord+'%'),
+        Customer.customerKana.like('%'+searchWord+'%'),
+    )).all()
+    return jsonify(CustomerSchema(many=True).dump(customers))
 
 
 @app.route('/customer', methods=['POST'])

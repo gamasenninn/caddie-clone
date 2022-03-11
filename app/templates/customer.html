@@ -56,9 +56,14 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm"
-                                        placeholder="🔍　顧客名 or 顧客カナ">
-                                    </b-form-input>
+                                    <b-input-group>
+                                        <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm"
+                                            placeholder="🔍顧客名or顧客カナ">
+                                        </b-form-input>
+                                        <b-input-group-append>
+                                            <b-button variant="primary" size="sm" @click="searchCustomer">検索</b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
                                 </b-col>
                                 <b-col sm></b-col>
                                 <b-col sm>
@@ -358,6 +363,14 @@
                                 self.countChanged = 0;
                             });
                     },
+                    getCustomersSearch: async function (item) {
+                        self = this;
+                        await axios.get("/customers/search/" + item)
+                            .then(function (response) {
+                                console.log(response);
+                                self.customers = response.data;
+                            });
+                    },
                     bulkUpsert(item) {
                         if (!item.id) {
                             this.insertCustomer(item);
@@ -420,6 +433,9 @@
                                     self.$set(self.customer, key, value);
                                 }
                             });
+                    },
+                    searchCustomer: function () {
+                        this.getCustomersSearch(this.searchCustomerWord);
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
@@ -527,8 +543,8 @@
                             customers = customers.filter(customer => customer.isHide === false);
                         if (this.isShowFavorite === true)
                             customers = customers.filter(customer => customer.isFavorite === true);
-                        customers = customers.filter(customer =>
-                            (customer.customerName?.includes(this.searchCustomerWord) || String(customer.customerKana)?.includes(this.searchCustomerWord)));
+                        // customers = customers.filter(customer =>
+                        //     (customer.customerName?.includes(this.searchCustomerWord) || String(customer.customerKana)?.includes(this.searchCustomerWord)));
                         this.customersIndicateCount = customers.length;
                         return customers;
                     },
