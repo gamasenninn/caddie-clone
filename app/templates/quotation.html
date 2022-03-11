@@ -558,9 +558,11 @@
                                         class="fas fa-trash-alt"></i>
                                 </b-button>
                                 <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
-                                    card</b-button>
+                                    <b-icon icon="app"></b-icon>
+                                </b-button>
                                 <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
-                                    list</b-button>
+                                    <b-icon icon="list-task"></b-icon>
+                                </b-button>
                             </b-col>
                         </b-row>
                         <!--アップロード機能ここまで-->
