@@ -274,11 +274,11 @@ def invoice_create():
             data.get('deadLine'), "%Y-%m-%d") if data.get('deadLine') else None,
         paymentDate=datetime.strptime(
             data.get('paymentDate'), "%Y-%m-%d") if data.get('paymentDate') else None,
-        isPaid=data.get('isPaid') if data.get('isPaid') else False,
+        isPaid=data.get('isPaid'),
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
-        isTaxExp=data.get('isTaxExp') if data.get('isTaxExp') else True,
+        isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
         invoice_items=newInvoiceItems,
     )
@@ -309,12 +309,12 @@ def invoice_update(id):
         data.get('deadLine'), "%Y-%m-%d") if data.get('deadLine') else None
     invoice.paymentDate = datetime.strptime(
         data.get('paymentDate'), "%Y-%m-%d") if data.get('paymentDate') else None
-    invoice.isPaid = data.get('isPaid') if data.get('isPaid') else False
+    invoice.isPaid = data.get('isPaid')
     invoice.title = data.get('title')
     invoice.memo = data.get('memo')
     invoice.remarks = data.get('remarks')
     invoice.numberOfAttachments = data.get('numberOfAttachments')
-    invoice.isTaxExp = data.get('isTaxExp') if data.get('isTaxExp') else True
+    invoice.isTaxExp = data.get('isTaxExp')
 
     if data.get('invoice_items'):
         update_list = []
@@ -478,7 +478,7 @@ def quotation_create():
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
-        isTaxExp=data.get('isTaxExp') if data.get('isTaxExp') else True,
+        isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
         quotation_items=newQuotationItems,
     )
@@ -513,7 +513,7 @@ def quotation_update(id):
     quotation.title = data.get('title')
     quotation.memo = data.get('memo')
     quotation.remarks = data.get('remarks')
-    quotation.isTaxExp = data.get('isTaxExp') if data.get('isTaxExp') else True
+    quotation.isTaxExp = data.get('isTaxExp')
     quotation.numberOfAttachments = data.get('numberOfAttachments')
 
     if data.get('quotation_items'):
