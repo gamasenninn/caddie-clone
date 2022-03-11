@@ -354,10 +354,15 @@
                 },
                 methods: {
                     // ---Customers---
-                    getCustomers: async function (key='',offset=0) {
+                    getCustomers: async function (searchWord='',offset=0) {
                         self = this;
-                        url = (key=='') ? "/v1/customers" : "/v1/customers?search="+key; 
-                        await axios.get(url)
+                        url = "/v1/customers"
+                        await axios.get(url,{
+                                params:{
+                                    search: searchWord,
+                                    offset: offset
+                                }
+                            })
                             .then(function (response) {
                                 console.log(response);
                                 self.customers = response.data;
