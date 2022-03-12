@@ -526,8 +526,8 @@
                                 </template>
                             </b-col>
                             <b-col md="1">
-                                <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3"><i
-                                        class="fas fa-trash-alt"></i>
+                                <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3" variant="danger">
+                                    <i class="fas fa-trash-alt"></i>
                                 </b-button>
                                 <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
                                     <b-icon icon="app"></b-icon>
