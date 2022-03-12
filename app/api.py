@@ -3,7 +3,9 @@ from models import *
 from flask import jsonify, request
 import json
 from datetime import date
+from sqlalchemy import or_
 
+_LIMIT_NUM = 100
 
 # -----ユーザー(Users)-----
 @app.route('/users', methods=['GET'])
@@ -59,12 +61,36 @@ def user_destroy(id):
 
 
 # -----得意先(Customers)-----
+@app.route('/v1/customers', methods=['GET'])
 @app.route('/customers', methods=['GET'])
-def customer_index():
-    customers = Customer.query.all()
+def customer_index_v1():
+    #パラメータを準備
+    req = request.args
+    searchWord = req.get('search')
+    limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
+    offset = int(req.get('offset')) if req.get('offset') else 0
+    #各種フィルタリング処理
+    if searchWord:
+        customers = Customer.query.filter(or_(
+            Customer.customerName.like('%'+searchWord+'%'),
+            Customer.customerKana.like('%'+searchWord+'%'),
+        ))
+    else:
+        customers = Customer.query
+    if offset:
+        customers = customers.offset(offset)
+    if limit:
+        customers = customers.limit(limit)
+
     return jsonify(CustomerSchema(many=True).dump(customers))
 
+#@app.route('/customers', methods=['GET'])
+#def customer_index():
+#    customers = Customer.query.all()
+#    return jsonify(CustomerSchema(many=True).dump(customers))
 
+
+@app.route('/v1/customer/<id>', methods=['GET'])
 @app.route('/customer/<id>', methods=['GET'])
 def customer_show(id):
     customerCount = Customer.query.filter(Customer.id == id).count()
@@ -75,6 +101,17 @@ def customer_show(id):
         return jsonify([])
 
 
+#@app.route('/customers/search/<searchWord>', methods=['GET'])
+#def customer_search(searchWord):
+#    print(searchWord)
+#    customers = Customer.query.filter(or_(
+#        Customer.customerName.like('%'+searchWord+'%'),
+#        Customer.customerKana.like('%'+searchWord+'%'),
+#    )).all()
+#    return jsonify(CustomerSchema(many=True).dump(customers))
+
+
+@app.route('/v1/customer', methods=['POST'])
 @app.route('/customer', methods=['POST'])
 def customer_create():
     data = request.json
@@ -103,6 +140,7 @@ def customer_create():
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
+@app.route('/v1/customer/<id>', methods=['PUT'])
 @app.route('/customer/<id>', methods=['PUT'])
 def customer_update(id):
     data = request.json
@@ -130,6 +168,7 @@ def customer_update(id):
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
+@app.route('/v1/customer/<id>', methods=['DELETE'])
 @app.route('/customer/<id>', methods=['DELETE'])
 def customer_destroy(id):
     customer = Customer.query.filter(Customer.id == id).delete()

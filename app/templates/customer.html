@@ -56,9 +56,14 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm"
-                                        placeholder="🔍　顧客名 or 顧客カナ">
-                                    </b-form-input>
+                                    <b-input-group>
+                                        <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm"
+                                            placeholder="🔍顧客名or顧客カナ">
+                                        </b-form-input>
+                                        <b-input-group-append>
+                                            <b-button variant="primary" size="sm" @click="searchCustomer">検索</b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
                                 </b-col>
                                 <b-col sm></b-col>
                                 <b-col sm>
@@ -349,15 +354,29 @@
                 },
                 methods: {
                     // ---Customers---
-                    getCustomers: async function () {
+                    getCustomers: async function (searchWord='',offset=0) {
                         self = this;
-                        await axios.get("/customers")
+                        url = "/v1/customers"
+                        await axios.get(url,{
+                                params:{
+                                    search: searchWord,
+                                    offset: offset
+                                }
+                            })
                             .then(function (response) {
                                 console.log(response);
                                 self.customers = response.data;
                                 self.countChanged = 0;
                             });
                     },
+//                    getCustomersSearch: async function (item) {
+//                        self = this;/f
+//                        await axios.get("/customers/search/" + item)
+//                            .then(function (response) {
+//                                console.log(response);
+//                                self.customers = response.data;
+//                            });
+//                    },
                     bulkUpsert(item) {
                         if (!item.id) {
                             this.insertCustomer(item);
@@ -368,7 +387,7 @@
                     },
                     insertCustomer: async function (item) {
                         self = this;
-                        await axios.post("/customer", item)
+                        await axios.post("/v1/customer", item)
                             .then(function (response) {
                                 Vue.set(self.customer, 'id', response.data.id)
                                 self.getCustomers();
@@ -378,7 +397,7 @@
                     },
                     updateCustomer: async function (item) {
                         self = this;
-                        await axios.put("/customer/" + item.id, item)
+                        await axios.put("/v1/customer/" + item.id, item)
                             .then(function (response) {
                                 self.getCustomers();
                                 self.countChanged = 0;
@@ -387,7 +406,7 @@
                     },
                     deleteCustomer: async function (item) {
                         self = this;
-                        await axios.delete("/customer/" + item.id)
+                        await axios.delete("/v1/customer/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 self.customer = '';
@@ -412,7 +431,7 @@
                     },
                     getCustomer: async function (item) {
                         self = this;
-                        await axios.get("/customer/" + item.id)
+                        await axios.get("/v1/customer/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 for (const [key, value] of Object.entries(response.data)) {
@@ -420,6 +439,9 @@
                                     self.$set(self.customer, key, value);
                                 }
                             });
+                    },
+                    searchCustomer: function () {
+                        this.getCustomers(this.searchCustomerWord);
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
@@ -527,8 +549,6 @@
                             customers = customers.filter(customer => customer.isHide === false);
                         if (this.isShowFavorite === true)
                             customers = customers.filter(customer => customer.isFavorite === true);
-                        customers = customers.filter(customer =>
-                            (customer.customerName?.includes(this.searchCustomerWord) || String(customer.customerKana)?.includes(this.searchCustomerWord)));
                         this.customersIndicateCount = customers.length;
                         return customers;
                     },
