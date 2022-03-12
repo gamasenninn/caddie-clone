@@ -2,6 +2,7 @@
 h = {
     numberLabel: "請求番号:",
     customerName: "テスト商店",
+    honorificTitle: "御中",
     applyNumber: "00000001",
     myCompanyName: "テスト会社",
     category: "請求書",
@@ -45,7 +46,7 @@ function getPdfData() {
                 "table_infos": [
                     {
                         "table": [
-                            [["P", h.customerName, "client"], ["P", h.numberLabel + h.applyNumber, "sm_r"]],
+                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"], ["P", h.numberLabel + h.applyNumber, "sm_r"]],
                             ["", ""],
                             ["", ["P", h.myCompanyName, "md_l_b"]],
                             ["", ""],
@@ -65,7 +66,7 @@ function getPdfData() {
                     }
                 ],
                 "drawImages": [
-                    ["('./static/asset/logo2.jpg', 495,675,50,50,mask='auto')"]
+                    ["('./static/asset/logo2.jpg', 380,725,50,50,mask='auto')"]
                 ]
             },
             "body": {
