@@ -107,8 +107,9 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"
-                                        label-for="title" label-align="right">
+                                    <b-form-group label-cols="3" label-cols-sm="2" label-cols-lg="1" content-cols
+                                        content-cols-sm content-cols-lg label-size="sm" label="件名" label-for="title"
+                                        label-align="right">
                                         <b-form-input v-model="memo.title" id="title" size="sm">
                                         </b-form-input>
                                     </b-form-group>
@@ -116,8 +117,9 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
-                                        label-for="manager" label-align="right">
+                                    <b-form-group label-cols="3" label-cols-sm="2" label-cols-lg="1" content-cols
+                                        content-cols-sm content-cols-lg label-size="sm" label="担当者" label-for="manager"
+                                        label-align="right">
                                         <b-form-input v-model="memo.manager" id="manager" size="sm">
                                         </b-form-input>
                                     </b-form-group>
@@ -125,7 +127,8 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お気に入り"
+                                    <b-form-group label-cols="3" label-cols-sm="2" label-cols-lg="1" content-cols
+                                        content-cols-sm content-cols-lg label-size="sm" label="お気に入り"
                                         label-for="isFavorite" label-align="right">
                                         <div v-if="memo.isFavorite===true">
                                             <a href="#" style="text-decoration: none;color:#fed11d;padding: 0 7px 0 0;"
@@ -144,8 +147,9 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="内容"
-                                        label-for="content" label-align="right">
+                                    <b-form-group label-cols="3" label-cols-sm="2" label-cols-lg="1" content-cols
+                                        content-cols-sm content-cols-lg label-size="sm" label="内容" label-for="content"
+                                        label-align="right">
                                         <b-form-textarea v-model="memo.content" size="sm" rows="10" max-rows="20">
                                         </b-form-textarea>
                                     </b-form-group>
