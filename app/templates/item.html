@@ -111,37 +111,38 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="商品一覧"
                             header-border-variant="light">
                             <b-row>
-                                <b-col sm>
-                                    <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"
-                                        placeholder="🔍　商品名 or 商品コード or 型式">
-                                    </b-form-input>
+                                <b-col md>
+                                    <b-row>
+                                        <b-col>
+                                            <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"
+                                                placeholder="🔍　商品名 or 商品コード or 型式">
+                                            </b-form-input>
+                                        </b-col>
+                                        <b-col></b-col>
+                                    </b-row>
                                 </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="カテゴリ"
-                                        label-for="createdAt">
-                                        <b-form-select v-model="searchItemSelectCategory" :options="categories"
-                                            size="sm">
-                                            <template #first>
-                                                <b-form-select-option value='' disabled>カテゴリー
-                                                </b-form-select-option>
-                                            </template>
-                                        </b-form-select>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="6" label-cols-lg="6" label-size="sm" label="メーカー"
-                                        label-for="createdAt">
-                                        <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
-                                            <template #first>
-                                                <b-form-select-option value='' disabled>メーカー
-                                                </b-form-select-option>
-                                            </template>
-                                        </b-form-select>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-row align-h="end">
-                                        <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示</b-form-checkbox>
+                                <b-col md>
+                                    <b-row>
+                                        <b-col md>
+                                            <b-form-select v-model="searchItemSelectCategory" :options="categories"
+                                                size="sm">
+                                                <template #first>
+                                                    <b-form-select-option value='' disabled>カテゴリー
+                                                    </b-form-select-option>
+                                                </template>
+                                            </b-form-select>
+                                        </b-col>
+                                        <b-col md>
+                                            <b-form-select v-model="searchItemSelectMaker" :options="makers" size="sm">
+                                                <template #first>
+                                                    <b-form-select-option value='' disabled>メーカー
+                                                    </b-form-select-option>
+                                                </template>
+                                            </b-form-select>
+                                        </b-col>
+                                        <b-col cols="auto">
+                                            <b-form-checkbox v-model="isShowAll">全て表示</b-form-checkbox>
+                                        </b-col>
                                     </b-row>
                                 </b-col>
                             </b-row>
