@@ -907,6 +907,7 @@
                         h.customerName = nvl(self.invoice.customerName,'') ;
                         h.honorificTitle = nvl(self.invoice.honorificTitle,'');
                         h.applyNumber = self.invoice.applyNumber;
+                        h.applyDate = nvl(self.invoice.applyDate,' / / ');
                         h.myCompanyName = self.setting.companyName;
                         h.myAddress1 = self.setting.address;
                         h.myTel1 = self.setting.telNumber;

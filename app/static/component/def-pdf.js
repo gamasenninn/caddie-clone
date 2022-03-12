@@ -6,7 +6,7 @@ h = {
     applyNumber: "00000001",
     myCompanyName: "テスト会社",
     category: "請求書",
-    dueDate: "2021-08-22",
+    applyDate: "2021-08-22",
     person: "小野",
     memo: "とりあえずメモ",
     tax: "税込",
@@ -46,21 +46,25 @@ function getPdfData() {
                 "table_infos": [
                     {
                         "table": [
-                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"], ["P", h.numberLabel + h.applyNumber, "sm_r"]],
-                            ["", ""],
-                            ["", ["P", h.myCompanyName, "md_l_b"]],
-                            ["", ""],
-                            ["", ["P", h.myAddress1, "sm_r"]],
-                            ["", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
-                            ["", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
-                            ["", ""],
-                            ["", ""],
-                            ["", ["P", '担当者: ' + h.person, "sm_r"]]
+                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","", ["P", h.numberLabel + h.applyNumber, "sm_r"]],
+                            ["","","","", ["P", "日付: &nbsp;" + h.applyDate , "sm_r"]],
+                            ["","","","", ["P", h.myCompanyName, "md_l_b"]],
+                            ["","","","", ""],
+                            ["","","","", ["P", h.myAddress1, "sm_r"]],
+                            ["","","","", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
+                            ["","","","", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
+                            ["","","","", ""],
+                            ["","","","", ""],
+                            ["","","","", ["P", '担当者: ' + h.person, "sm_r"]]
                         ],
-                        "col_widths": ["E", "[110*mm, 70*mm]"],
+                        "col_widths": ["E", "[5*mm,35*mm,60*mm,10*mm,70*mm]"],
                         "table_style": [
                             ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
-                            ["E", "('SPAN',(0,7),(0,8))"]
+                            ["E", "('SPAN',(0,0),(3,0))"],
+                            ["E", "('GRID',(1,7),(1,8),0.15,colors.black)"],
+                            ["E", "('SPAN',(1,7),(1,8))"],
+                            ["E", "('GRID',(2,7),(2,8),0.15,colors.black)"],
+                            ["E", "('SPAN',(2,7),(2,8))"]
                         ],
                         "after": ["E", "Spacer(10*mm,5*mm)"]
                     }
