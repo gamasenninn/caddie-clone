@@ -26,8 +26,10 @@ Vue.component('sc-menu', {
                                 class="far fa-copy"></i>　見積書</b-button>
                         <b-button variant="primary" block href="/memo-page"><i
                                 class="fas fa-book-open"></i>　メ　モ</b-button>
+                        <b-button block href="/setting-page" >
+                                </b-icon><b-icon icon="gear-fill"></b-icon>　各種設定</b-button>
                         <b-button block @click="goMW" >
-                                </b-icon><b-icon icon="front"></b-icon>　マルチウィンドゥ</b-button>
+                                </b-icon><b-icon icon="front"></b-icon>　マルチウィンドウ</b-button>
 
                         <b-button block href="/logout">
                                 <b-icon icon="door-open"></b-icon>　ログアウト</b-button>
