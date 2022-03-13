@@ -80,11 +80,11 @@
                                 :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
                       {  key: 'update', label: '' },
                       {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
-                      {  key: 'customerName', label: '得意先名', tdClass:'td-customerName' },
-                      {  key: 'postNumber', label: '郵便番号', tdClass:'td-postNumber' },
-                      {  key: 'addressCombine', label: '住所' },
-                      {  key: 'telNumber', label: '電話番号', tdClass:'td-telNumber' },
-                      {  key: 'memo', label: 'メモ' },
+                      {  key: 'customerName', label: '得意先名', tdClass:'td-customerName', thClass: 'text-center', },
+                      {  key: 'postNumber', label: '郵便番号', tdClass:'td-postNumber', thClass: 'text-center', },
+                      {  key: 'addressCombine', label: '住所', thClass: 'text-center', },
+                      {  key: 'telNumber', label: '電話番号', tdClass:'td-telNumber', thClass: 'text-center', },
+                      {  key: 'memo', label: 'メモ', thClass: 'text-center', },
                     ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
@@ -354,29 +354,29 @@
                 },
                 methods: {
                     // ---Customers---
-                    getCustomers: async function (searchWord='',offset=0) {
+                    getCustomers: async function (searchWord = '', offset = 0) {
                         self = this;
                         url = "/v1/customers"
-                        await axios.get(url,{
-                                params:{
-                                    search: searchWord,
-                                    offset: offset
-                                }
-                            })
+                        await axios.get(url, {
+                            params: {
+                                search: searchWord,
+                                offset: offset
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
                                 self.customers = response.data;
                                 self.countChanged = 0;
                             });
                     },
-//                    getCustomersSearch: async function (item) {
-//                        self = this;/f
-//                        await axios.get("/customers/search/" + item)
-//                            .then(function (response) {
-//                                console.log(response);
-//                                self.customers = response.data;
-//                            });
-//                    },
+                    //                    getCustomersSearch: async function (item) {
+                    //                        self = this;/f
+                    //                        await axios.get("/customers/search/" + item)
+                    //                            .then(function (response) {
+                    //                                console.log(response);
+                    //                                self.customers = response.data;
+                    //                            });
+                    //                    },
                     bulkUpsert(item) {
                         if (!item.id) {
                             this.insertCustomer(item);

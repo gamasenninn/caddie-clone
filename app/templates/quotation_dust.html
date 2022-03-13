@@ -92,13 +92,13 @@
                             <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
                                 :items=quotationsIndicateIndex :fields="[
                           {  key: 'show', label: '' },
-                          {  key: 'id', label: 'No.' },
-                          {  key: 'applyNumber', label: '見積番号' },
-                          {  key: 'applyDate', label: '日付' },
-                          {  key: 'expiry', label: '見積有効期限' },
-                          {  key: 'title', label: '件名' },
-                          {  key: 'memo', label: 'メモ' },
-                          {  key: 'updatedAt', label: '削除日時' },
+                          {  key: 'id', label: 'No.', thClass: 'text-center', },
+                          {  key: 'applyNumber', label: '見積番号', thClass: 'text-center', },
+                          {  key: 'applyDate', label: '日付', thClass: 'text-center', },
+                          {  key: 'expiry', label: '見積有効期限', thClass: 'text-center', },
+                          {  key: 'title', label: '件名', thClass: 'text-center', },
+                          {  key: 'memo', label: 'メモ', thClass: 'text-center', },
+                          {  key: 'updatedAt', label: '削除日時', thClass: 'text-center', },
                         ]">
                                 <template v-slot:cell(show)="data">
                                     <router-link to="?page=show">
