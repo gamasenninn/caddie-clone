@@ -232,6 +232,7 @@ def cv(src_l):
     #print ("src_l:" ,src_l[1])
     try:
         if src_l[0] == "P": 
+            val = src_l[1] if src_l[1] else ''
             return Paragraph(src_l[1],PS(**styles[src_l[2]]))
         elif  src_l[0] == "PF":
             val = src_l[3].format(src_l[1])
