@@ -6,9 +6,13 @@ h = {
     applyNumber: "00000001",
     myCompanyName: "テスト会社",
     category: "請求書",
+    headerTotalLabel: "請求金額",
     applyDate: "2021-08-22",
-    person: "小野",
     memo: "とりあえずメモ",
+    title: "",
+    title2: "",
+
+    person: "小野",
     tax: "税込",
     myCompanyName: "株式会社 テストコム",
     myAddress1: "栃木県鹿沼市板荷000-99",
@@ -46,24 +50,27 @@ function getPdfData() {
                 "table_infos": [
                     {
                         "table": [
-                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","", ["P", h.numberLabel + h.applyNumber, "sm_r"]],
-                            ["","","","", ["P", "日付: &nbsp;" + h.applyDate , "sm_r"]],
-                            ["","","","", ["P", h.myCompanyName, "md_l_b"]],
-                            ["","","","", ""],
-                            ["","","","", ["P", h.myAddress1, "sm_r"]],
-                            ["","","","", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
-                            ["","","","", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
-                            ["","","","", ""],
-                            ["","","","", ""],
-                            ["","","","", ["P", '担当者: ' + h.person, "sm_r"]]
+                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","", "",["P", h.numberLabel + h.applyNumber, "sm_r"]],
+                            ["","","","","", ["P", "日付: &nbsp;" + h.applyDate , "sm_r"]],
+                            ["","","","","", ["P", h.myCompanyName, "md_l_b"]],
+                            ["","","","","",""],
+                            ["","","","","", ["P", h.myAddress1, "sm_r"]],
+                            ["",["P",h.title,"sm_l"],"","","", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
+                            ["","","","","", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
+                            ["",["P", h.headerTotalLabel, "sm_c"],["PF",sum.total,"h_total","￥{:,}-"],["P","内消費税","taxsm_c"],"", ""],
+                            ["","","",["PF",sum.tax,"taxsm_c","{:,}"],"", ""],
+                            ["","","","","", ["P", '担当者: ' + h.person, "sm_r"]]
                         ],
-                        "col_widths": ["E", "[5*mm,35*mm,60*mm,10*mm,70*mm]"],
+                        "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
                         "table_style": [
                             ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                            ["E", "('VALIGN',(0,0),(-1,-1),'MIDDLE')"],
                             ["E", "('SPAN',(0,0),(3,0))"],
                             ["E", "('GRID',(1,7),(1,8),0.15,colors.black)"],
+                            ["E", "('SPAN',(1,5),(2,6))"],
                             ["E", "('SPAN',(1,7),(1,8))"],
-                            ["E", "('GRID',(2,7),(2,8),0.15,colors.black)"],
+                            ["E", "('BACKGROUND',(1,7),(1,8),colors.lightblue)"],
+                            ["E", "('BOX',(2,7),(3,8),0.15,colors.black)"],
                             ["E", "('SPAN',(2,7),(2,8))"]
                         ],
                         "after": ["E", "Spacer(10*mm,5*mm)"]
@@ -87,6 +94,7 @@ function getPdfData() {
                     ],
                     "styles": [
                         ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                        ["E", "('VALIGN', (0, 0), (-1, -1), 'MIDDLE')"],
                         ["E", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
                         ["E", "('ALIGN', (0, 0), (-1, 0), 'CENTER')"],
                         ["E", "('BACKGROUND', (0, 0), (6, 0), colors.lightgrey)"]
@@ -96,36 +104,34 @@ function getPdfData() {
                 "detail_after": {
                     "table_info": {
                         "table": [
-                            ["", ["PF", sum.amountLabel, "sm_l", "{:}"], ["PF", sum.amount, "sm_r", "{:,}"]],
-                            ["", ["PF", sum.taxLabel, "sm_l", "{:}"], ["PF", sum.tax, "sm_r", "{:,}"]],
-                            ["", ["PF", sum.totalLabel, "sm_l", "{:}"], ["PF", sum.total, "sm_r", "{:,}"]]
+                            ["", "",["PF", sum.amountLabel, "sm_l", "{:}"], ["PF", sum.amount, "sm_r", "{:,}"]],
+                            ["", "",["PF", sum.taxLabel, "sm_l", "{:}"], ["PF", sum.tax, "sm_r", "{:,}"]],
+                            ["", "",["PF", sum.totalLabel, "sm_l", "{:}"], ["PF", sum.total, "sm_r", "{:,}"]]
                         ],
-                        "col_widths": ["E", "(65*mm, 75*mm, 50*mm)"],
+                        "col_widths": ["E", "(65*mm, 30*mm, 45*mm, 50*mm)"],
                         "table_style": [
                             ["E", "('LINEBEFORE', (0, 0), (0, -1), 0.15, colors.black)"],
                             ["E", "('LINEABOVE', (0, 0), (-1, -1), 0.15, colors.black)"],
                             ["E", "('LINEBELOW', (0, 0), (-1, -1), 0.15, colors.black)"],
-                            ["E", "('GRID',(2,0),(-1,-1),0.15,colors.black)"]
+                            ["E", "('GRID',(3,0),(-1,-1),0.15,colors.black)"]
                         ]
                     }
                 }
             },
             "footer": {
-                "pos_xy": ["E", "(15*mm,10*mm)"],
+                "pos_xy": ["E", "(10*mm,5*mm)"],
                 "table_infos": [
                     {
                         "table": [
-                            ["摘要", "", "", ""],
-                            [["P", h.memo, "sm_l"], "", "", ""]
+                            ["備考",["P", h.memo, "sm_l"],  "", ""],
+                            ["","", "", ""],
                         ],
-                        "col_widths": ["E", "(110*mm,10*mm,30*mm,30*mm)"],
-                        "row_heights": ["E", "(8*mm,30*mm)"],
+                        "col_widths": ["E", "(15*mm,150*mm,5*mm,5*mm)"],
+                        "row_heights": ["E", "(40*mm,5*mm)"],
                         "table_style": [
+                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
                             ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
-                            ["E", "('GRID', (0, 0), (0,1), 0.25, colors.black)"],
-                            ["E", "('GRID', (2, 0), (3,2), 0.25, colors.black)"],
-                            ["E", "('VALIGN',(0,1),(0,-1),'TOP')"],
-                            ["E", "('ALIGN',(0,0),(0,-1),'CENTER')"]
+                            ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
                         ]
                     }
                 ],
@@ -147,6 +153,9 @@ function getPdfData() {
             "sm_l": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 11 },
             "sm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 11 },
             "md_l_b": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 15 },
+            "taxsm_l": { "name": "Normal", "alignment": 2, "fontName": "IPAexGothic", "fontSize": 9 },
+            "taxsm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 9 },
+            "h_total": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 15 },
             "big_center": {
                 "name": "Normal",
                 "alignment": 1,

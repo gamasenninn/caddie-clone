@@ -603,10 +603,12 @@
                 },
                 pdfout: async function () {
                     self = this;
+                    h.title2 ="------!!-------";
                     h.category = "見積書"
                     h.numberLabel = "見積番号:"
                     h.customerName = self.quotation.customerName;
                     h.applyNumber = self.quotation.applyNumber;
+                    //h.title = self.quotation.title;
                     h.memo = self.quotation.memo;
                     if (this.quotation.isTaxExp) {
                         sum.amount = this.sum
@@ -618,7 +620,7 @@
                         sum.total = this.sum;
                         sum.tax = parseInt(sum.total - sum.total / 1.1)
                     };
-
+                    pdfData = {};
                     pdfData = getPdfData();
                     pdfData.data.bdata = self.quotation.quotation_items;
                     pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));

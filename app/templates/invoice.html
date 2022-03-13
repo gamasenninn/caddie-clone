@@ -913,6 +913,7 @@
                         h.myTel1 = self.setting.telNumber;
                         h.myFax1 = self.setting.faxNumber;
                         h.person = self.invoice.manager ? self.invoice.manager : '';
+                        h.title = self.invoice.title;
                         if (this.invoice.isTaxExp) {
                             sum.amount = this.sum
                             sum.tax = parseInt(this.sum * 0.1);
@@ -925,8 +926,12 @@
                         };
                         pdfData = {};
                         pdfData = getPdfData();
-                        pdfData.data.bdata = self.invoice.invoice_items;
-                        pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
+                        if( self.invoice.invoice_items.length > 0 ){
+                            pdfData.data.bdata = self.invoice.invoice_items;
+                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count,itemName: i.itemName.replace(/\n/g,'<br />') }));
+                        }else{
+                            pdfData.data.bdata =  [{}];
+                        }
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
