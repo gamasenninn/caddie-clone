@@ -195,6 +195,22 @@
 | createdAt    | 作成日時   | datetime |      | 
 | updatedAt    | 更新日時   | datetime |      |
 
+<br>
+
+## History
+
+| 項目名    | 和名       | タイプ   | 備考                             | 
+| --------- | ---------- | -------- | -------------------------------- | 
+| id        | id         | integer  |                                  | 
+| userName  | ユーザー名 | string   | user.name                        | 
+| modelName | モデル名   | string   | どのモデルに参照・変更を加えたか | 
+| modelId   | モデルID   | integer  | どのIDに参照・変更を加えたか     | 
+| action    | 行動       | string   | GET,POST,PUT,DELETE,LOGIN,LOGOUT | 
+| createdAt | 作成日時   | datetime |                                  | 
+| updatedAt | 更新日時   | datetime |                                  | 
+
+<br>
+
 ## Setting
 
 | 項目名                   | 和名             | タイプ       | 備考                     | 

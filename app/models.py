@@ -261,6 +261,18 @@ class Maker(db.Model):
                           default=datetime.now, onupdate=datetime.now)
 
 
+class History(db.Model):
+    __tablename__ = 'history'
+    id = db.Column(db.Integer, primary_key=True)
+    userName = db.Column(db.String)
+    modelName = db.Column(db.String)
+    modelId = db.Column(db.Integer)
+    action = db.Column(db.String)
+    createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updatedAt = db.Column(db.DateTime, nullable=False,
+                          default=datetime.now, onupdate=datetime.now)
+
+
 class Setting(db.Model):
 
     __tablename__ = 'settings'
@@ -351,6 +363,11 @@ class CategorySchema(ma.SQLAlchemyAutoSchema):
 class MakerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Maker
+
+
+class HistorySchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = History
 
 
 class SettingSchema(ma.SQLAlchemyAutoSchema):
