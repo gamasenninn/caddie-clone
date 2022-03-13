@@ -1,4 +1,5 @@
 /* -------- 請求書データ　------*/
+
 h = {
     numberLabel: "請求番号:",
     customerName: "テスト商店",
@@ -9,7 +10,7 @@ h = {
     headerTotalLabel: "請求金額",
     applyDate: "2021-08-22",
     memo: "とりあえずメモ",
-    title: "",
+    title: "-----/////-----",
     title2: "",
 
     person: "小野",
@@ -21,6 +22,7 @@ h = {
     myAddress2: "栃木県鹿沼市千渡000-99",
     myTel2: "000-999-7777",
 };
+
 sum = {
     amountLabel: "小計",
     amount: 0,
@@ -77,7 +79,7 @@ function getPdfData() {
                     }
                 ],
                 "drawImages": [
-                    ["('./static/asset/logo2.jpg', 380,725,50,50,mask='auto')"]
+                    ["('./static/asset/logo2.jpg', 410,720,50,50,mask='auto')"]
                 ]
             },
             "body": {
