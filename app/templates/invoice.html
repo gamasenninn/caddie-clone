@@ -904,13 +904,16 @@
                         } else {
                             h.category = '請求書';
                         }
-                        h.customerName = self.invoice.customerName + self.invoice.honorificTitle;
+                        h.customerName = nvl(self.invoice.customerName,'') ;
+                        h.honorificTitle = nvl(self.invoice.honorificTitle,'');
                         h.applyNumber = self.invoice.applyNumber;
+                        h.applyDate = nvl(self.invoice.applyDate,' / / ');
                         h.myCompanyName = self.setting.companyName;
                         h.myAddress1 = self.setting.address;
                         h.myTel1 = self.setting.telNumber;
                         h.myFax1 = self.setting.faxNumber;
                         h.person = self.invoice.manager ? self.invoice.manager : '';
+                        h.title = self.invoice.title;
                         if (this.invoice.isTaxExp) {
                             sum.amount = this.sum
                             sum.tax = parseInt(this.sum * 0.1);
@@ -923,8 +926,12 @@
                         };
                         pdfData = {};
                         pdfData = getPdfData();
-                        pdfData.data.bdata = self.invoice.invoice_items;
-                        pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
+                        if( self.invoice.invoice_items.length > 0 ){
+                            pdfData.data.bdata = self.invoice.invoice_items;
+                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count,itemName: i.itemName.replace(/\n/g,'<br />') }));
+                        }else{
+                            pdfData.data.bdata =  [{}];
+                        }
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
@@ -1194,5 +1201,11 @@
                 });
             }
             // end アップロード機能
+
+            
+            function nvl(src_val, rep){
+                return (src_val == null)? rep:src_val;
+            }
+
         </script>
         <% endblock %>

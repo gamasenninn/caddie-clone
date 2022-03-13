@@ -48,10 +48,11 @@
     <script src="https://unpkg.com/vue-router@3.5.2/dist/vue-router.js"></script>
 
     <!-- soho caddie component-->
+    <!--
     <script src="static/component/sc-menu.js"></script>
     <script src="static/component/select-modal.js"></script>
     <script src="static/component/def-pdf.js"></script>
-
+    -->
 </head>
 
 <body>
@@ -381,6 +382,7 @@
 
     </div>
 
+
     <script>
         Vue.filter('nf', function (val) {
             return val.toLocaleString();
@@ -603,10 +605,13 @@
                 },
                 pdfout: async function () {
                     self = this;
-                    h.category = "見積書"
+                    var h = {};
+                    h.category = "見積書-------"
                     h.numberLabel = "見積番号:"
                     h.customerName = self.quotation.customerName;
+                    h.honorificTitle = self.quotation.honorificTitle,
                     h.applyNumber = self.quotation.applyNumber;
+                    h.title = self.quotation.title;
                     h.memo = self.quotation.memo;
                     if (this.quotation.isTaxExp) {
                         sum.amount = this.sum
@@ -618,7 +623,7 @@
                         sum.total = this.sum;
                         sum.tax = parseInt(sum.total - sum.total / 1.1)
                     };
-
+                    pdfData = {};
                     pdfData = getPdfData();
                     pdfData.data.bdata = self.quotation.quotation_items;
                     pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
@@ -677,7 +682,11 @@
             return searchTarget.includes(searchWord);
         };
 
+
+
     </script>
+
+<script src="static/component/def-pdf.js"></script>
 
 </body>
 
