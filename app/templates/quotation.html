@@ -166,7 +166,7 @@
                           {  key: 'applyDate', label: '日付' },
                           {  key: 'customerName', label: '顧客名' },
                           {  key: 'title', label: '件名' },
-                          {  key: 'totalAmount', label: '合計金額', thClass: 'text-center', tdClass: 'text-right' },
+                          {  key: 'totalAmount', label: '見積金額', thClass: 'text-center', tdClass: 'text-right' },
                           {  key: 'numberOfAttachments', label: '' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
@@ -581,6 +581,18 @@
             <b-row class="mb-5"></b-row>
             <b-row class="mb-5"></b-row>
 
+            <!-- 表示中見積書の合計金額 -->
+            <b-card v-if="pageName=='index'" class="fixed-bottom footer">
+                <b-row>
+                    <b-col cols="8"></b-col>
+                    <b-col sm class="text-right">
+                        <b-form-group label-cols="4" label-size="sm" label="合計：" label-for="quotationsIndicateAmount">
+                            {{quotationsIndicateAmount|nf}}
+                        </b-form-group>
+                    </b-col>
+                    <b-col cols="1"></b-col>
+                </b-row>
+            </b-card>
             <!-- 更新・取消ボタンのフッター -->
             <b-card v-if="pageName=='show' || pageName=='store'" text-variant="white" class="fixed-bottom footer"
                 style="background: rgba(52,58,64,0.9);">
@@ -644,6 +656,7 @@
                     searchQuotationWord: '',        //請求書検索
                     quotationsShowValue: 'notConverted',    //請求書検索
                     quotationsIndicateCount: 0,     //請求書検索
+                    quotationsIndicateAmount: 0,      //一覧表示中見積書の合計金額
                     searchItemWord: '',             //商品選択モーダル検索
                     searchItemSelectCategory: '',   //商品選択モーダル検索
                     searchItemSelectMaker: '',      //商品選択モーダル検索
@@ -1090,13 +1103,21 @@
                     },
                     quotationsIndicateIndex: function () {
                         let quotations = this.quotations;
+                        let amount = 0;
                         if (this.quotationsShowValue === 'notConverted')
                             quotations = quotations.filter(quotation => quotation.isConvert === false);
                         if (this.quotationsShowValue === 'converted')
                             quotations = quotations.filter(quotation => quotation.isConvert === true);
                         quotations = quotations.filter(quotation => searchFilter(quotation.customerName, this.searchQuotationWord) ||
                             searchFilterDate(quotation.applyDate, this.searchQuotationWord));
+                        let quotationAmounts = quotations.map(
+                            quotation => quotation.quotation_items.map(
+                                item => parseInt(item.count * item.price * (quotation.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
+                        quotationAmounts.forEach(value => {
+                            amount += value;
+                        });
                         this.quotationsIndicateCount = quotations.length;
+                        this.quotationsIndicateAmount = amount;
                         return quotations;
                     },
                     // 得意先選択モーダルの検索機能

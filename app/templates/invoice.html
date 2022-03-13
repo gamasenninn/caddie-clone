@@ -159,7 +159,7 @@
                           {  key: 'applyDate', label: '日付' },
                           {  key: 'customerName', label: '顧客名' },
                           {  key: 'title', label: '件名' },
-                          {  key: 'totalAmount', label: '合計金額', thClass: 'text-center', tdClass: 'text-right' },
+                          {  key: 'totalAmount', label: '請求金額', thClass: 'text-center', tdClass: 'text-right' },
                           {  key: 'numberOfAttachments', label: '' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
@@ -552,6 +552,18 @@
             <b-row class="mb-5"></b-row>
             <b-row class="mb-5"></b-row>
 
+            <!-- 表示中請求書の合計金額 -->
+            <b-card v-if="pageName=='index'" class="fixed-bottom footer">
+                <b-row>
+                    <b-col cols="8"></b-col>
+                    <b-col sm class="text-right">
+                        <b-form-group label-cols="4" label-size="sm" label="合計：" label-for="invoicesIndicateAmount">
+                            {{invoicesIndicateAmount|nf}}
+                        </b-form-group>
+                    </b-col>
+                    <b-col cols="1"></b-col>
+                </b-row>
+            </b-card>
             <!-- 更新・取消ボタンのフッター -->
             <b-card v-if="pageName=='show' || pageName=='store'" text-variant="white" class="fixed-bottom footer"
                 style="background: rgba(52,58,64,0.9);">
@@ -627,6 +639,7 @@
                     searchInvoiceWord: '',          //請求書検索
                     isInvoicesShowAll: false,               //請求書検索
                     invoicesIndicateCount: 0,       //請求書検索
+                    invoicesIndicateAmount: 0,      //一覧表示中請求書の合計金額
                     searchItemWord: '',             //商品選択モーダル検索
                     searchItemSelectCategory: '',   //商品選択モーダル検索
                     searchItemSelectMaker: '',      //商品選択モーダル検索
@@ -904,10 +917,10 @@
                         } else {
                             h.category = '請求書';
                         }
-                        h.customerName = nvl(self.invoice.customerName,'') ;
-                        h.honorificTitle = nvl(self.invoice.honorificTitle,'');
+                        h.customerName = nvl(self.invoice.customerName, '');
+                        h.honorificTitle = nvl(self.invoice.honorificTitle, '');
                         h.applyNumber = self.invoice.applyNumber;
-                        h.applyDate = nvl(self.invoice.applyDate,' / / ');
+                        h.applyDate = nvl(self.invoice.applyDate, ' / / ');
                         h.myCompanyName = self.setting.companyName;
                         h.myAddress1 = self.setting.address;
                         h.myTel1 = self.setting.telNumber;
@@ -926,11 +939,11 @@
                         };
                         pdfData = {};
                         pdfData = getPdfData();
-                        if( self.invoice.invoice_items.length > 0 ){
+                        if (self.invoice.invoice_items.length > 0) {
                             pdfData.data.bdata = self.invoice.invoice_items;
-                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count,itemName: i.itemName.replace(/\n/g,'<br />') }));
-                        }else{
-                            pdfData.data.bdata =  [{}];
+                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count, itemName: i.itemName.replace(/\n/g, '<br />') }));
+                        } else {
+                            pdfData.data.bdata = [{}];
                         }
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
@@ -1105,11 +1118,19 @@
                     },
                     invoicesIndicateIndex: function () {
                         let invoices = this.invoices;
+                        let amount = 0;
                         if (this.isInvoicesShowAll === false)
                             invoices = invoices.filter(invoice => invoice.isPaid === false);
                         invoices = invoices.filter(invoice => searchFilter(invoice.customerName, this.searchInvoiceWord) ||
                             searchFilterDate(invoice.applyDate, this.searchInvoiceWord));
+                        let invoiceAmounts = invoices.map(
+                            invoice => invoice.invoice_items.map(
+                                item => parseInt(item.count * item.price * (invoice.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
+                        invoiceAmounts.forEach(value => {
+                            amount += value;
+                        });
                         this.invoicesIndicateCount = invoices.length;
+                        this.invoicesIndicateAmount = amount;
                         return invoices;
                     },
                     // 得意先選択モーダルの検索機能
@@ -1202,9 +1223,8 @@
             }
             // end アップロード機能
 
-            
-            function nvl(src_val, rep){
-                return (src_val == null)? rep:src_val;
+            function nvl(src_val, rep) {
+                return (src_val == null) ? rep : src_val;
             }
 
         </script>
