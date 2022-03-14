@@ -499,18 +499,50 @@ def invoice_item_destroy(id):
 
 
 # 見積書(Quotations)
+@app.route('/v1/quotations', methods=['GET'])
 @app.route('/quotations', methods=['GET'])
-def quotation_index():
-    quotations = Quotation.query.filter(Quotation.isDelete == False).all()
+def quotation_index_v1():
+    # パラメータを準備
+    req = request.args
+    searchWord = req.get('search')
+    limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
+    offset = int(req.get('offset')) if req.get('offset') else 0
+    # 各種フィルタリング処理
+    if searchWord:
+        if len(searchWord) == 4:
+            quotations = Quotation.query.filter(or_(
+                extract('year', Quotation.applyDate) == searchWord, Quotation.customerName.like('%'+searchWord+'%')))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            quotations = Quotation.query.filter(or_(Quotation.customerName.like('%'+searchWord+'%'), and_(
+                extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month)))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            quotations = Quotation.query.filter(or_(Quotation.customerName.like('%'+searchWord+'%'), and_(
+                extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month, extract('day', Quotation.applyDate) == day)))
+        else:
+            quotations = Quotation.query.filter(
+                Quotation.customerName.like('%'+searchWord+'%'))
+    else:
+        quotations = Quotation.query
+    if offset:
+        quotations = quotations.offset(offset)
+    if limit:
+        quotations = quotations.limit(limit)
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
+@app.route('/v1/dust-quotations', methods=['GET'])
 @app.route('/dust-quotations', methods=['GET'])
 def dust_quotation_index():
     dust_quotations = Quotation.query.filter(Quotation.isDelete == True).all()
     return jsonify(QuotationSchema(many=True).dump(dust_quotations))
 
 
+@app.route('/v1/quotation/<id>', methods=['GET'])
 @app.route('/quotation/<id>', methods=['GET'])
 def quotation_show(id):
     quotationCount = Quotation.query.filter(Quotation.id == id).count()
@@ -521,6 +553,7 @@ def quotation_show(id):
         return jsonify([])
 
 
+@app.route('/v1/quotation', methods=['POST'])
 @app.route('/quotation', methods=['POST'])
 def quotation_create():
     data = request.json
@@ -568,6 +601,7 @@ def quotation_create():
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
+@app.route('/v1/quotation/<id>', methods=['PUT'])
 @app.route('/quotation/<id>', methods=['PUT'])
 def quotation_update(id):
     data = request.json
@@ -626,6 +660,7 @@ def quotation_update(id):
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
+@app.route('/v1/quotation_delete/<id>', methods=['PUT'])
 @app.route('/quotation_delete/<id>', methods=['PUT'])
 def quotation_destroy(id):
     quotation = Quotation.query.filter(Quotation.id == id).one()
@@ -702,12 +737,43 @@ def quotation_item_destroy(id):
 
 
 # メモ(Memos)
+@app.route('/v1/memos', methods=['GET'])
 @app.route('/memos', methods=['GET'])
-def memo_index():
-    memos = Memo.query.all()
+def memo_index_v1():
+   # パラメータを準備
+    req = request.args
+    searchWord = req.get('search')
+    limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
+    offset = int(req.get('offset')) if req.get('offset') else 0
+    # 各種フィルタリング処理
+    if searchWord:
+        if len(searchWord) == 4:
+            memos = Memo.query.filter(or_(
+                extract('year', Memo.createdAt) == searchWord, Memo.manager.like('%'+searchWord+'%')))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            memos = Memo.query.filter(or_(Memo.manager.like('%'+searchWord+'%'), and_(
+                extract('year', Memo.createdAt) == year, extract('month', Memo.createdAt) == month)))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            memos = Memo.query.filter(or_(Memo.manager.like('%'+searchWord+'%'), and_(
+                extract('year', Memo.createdAt) == year, extract('month', Memo.createdAt) == month, extract('day', Memo.createdAt) == day)))
+        else:
+            memos = Memo.query.filter(
+                Memo.manager.like('%'+searchWord+'%'))
+    else:
+        memos = Memo.query
+    if offset:
+        memos = memos.offset(offset)
+    if limit:
+        memos = memos.limit(limit)
     return jsonify(MemoSchema(many=True).dump(memos))
 
 
+@app.route('/v1/memo/<id>', methods=['GET'])
 @app.route('/memo/<id>', methods=['GET'])
 def memo_show(id):
     memoCount = Memo.query.filter(Memo.id == id).count()
@@ -718,6 +784,7 @@ def memo_show(id):
         return jsonify([])
 
 
+@app.route('/v1/memo', methods=['POST'])
 @app.route('/memo', methods=['POST'])
 def memo_create():
     data = request.json
@@ -733,6 +800,7 @@ def memo_create():
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
+@app.route('/v1/memo/<id>', methods=['PUT'])
 @app.route('/memo/<id>', methods=['PUT'])
 def memo_update(id):
     data = request.json
@@ -747,6 +815,7 @@ def memo_update(id):
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
+@app.route('/v1/memo/<id>', methods=['DELETE'])
 @app.route('/memo/<id>', methods=['DELETE'])
 def memo_destroy(id):
     memo = Memo.query.filter(Memo.id == id).delete()

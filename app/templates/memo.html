@@ -46,9 +46,15 @@
                                 <b-col sm>
                                     <b-row>
                                         <b-col>
-                                            <b-form-input class="searchMemoWord" v-model="searchMemoWord"
-                                                id="searchMemoWord" size="sm" placeholder="🔍　作成日 or 担当者">
-                                            </b-form-input>
+                                            <b-input-group>
+                                                <b-form-input v-model="searchMemoWord" id="searchMemoWord" size="sm"
+                                                    placeholder="🔍　作成日 or 担当者">
+                                                </b-form-input>
+                                                <b-input-group-append>
+                                                    <b-button variant="primary" size="sm" @click="searchMemo">検索
+                                                    </b-button>
+                                                </b-input-group-append>
+                                            </b-input-group>
                                         </b-col>
                                     </b-row>
                                 </b-col>
@@ -222,9 +228,15 @@
                 },
                 methods: {
                     // ---Memos---
-                    getMemos: async function () {
+                    getMemos: async function (searchWord = '', offset = 0) {
                         self = this;
-                        await axios.get("/memos")
+                        url = '/v1/memos'
+                        await axios.get(url, {
+                            params: {
+                                search: searchWord,
+                                offset: offset,
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
                                 self.memos = response.data;
@@ -240,7 +252,7 @@
                     },
                     insertMemo: async function (item) {
                         self = this;
-                        await axios.post("/memo", item)
+                        await axios.post("/v1/memo", item)
                             .then(function (response) {
                                 Vue.set(self.memo, 'id', response.data.id)
                                 self.getMemos();
@@ -249,7 +261,7 @@
                     },
                     updateMemo: async function (item) {
                         self = this;
-                        await axios.put("/memo/" + item.id, item)
+                        await axios.put("/v1/memo/" + item.id, item)
                             .then(function (response) {
                                 self.getMemos();
                                 console.log(response);
@@ -257,7 +269,7 @@
                     },
                     deleteMemo: async function (item) {
                         self = this;
-                        await axios.delete("/memo/" + item.id)
+                        await axios.delete("/v1/memo/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 self.memo = '';
@@ -279,7 +291,7 @@
                     },
                     getMemo: async function (item) {
                         self = this;
-                        await axios.get("/memo/" + item.id)
+                        await axios.get("/v1/memo/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 for (const [key, value] of Object.entries(response.data)) {
@@ -287,6 +299,9 @@
                                     self.$set(self.memo, key, value);
                                 }
                             });
+                    },
+                    searchMemo: function () {
+                        this.getMemos(this.searchMemoWord);
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
@@ -342,8 +357,6 @@
                         let memos = this.memos;
                         if (this.isShowFavorite === true)
                             memos = memos.filter(memo => memo.isFavorite === true);
-                        memos = memos.filter(memo => searchFilter(memo.manager, this.searchMemoWord) ||
-                            searchFilterDate(memo.createdAt, this.searchMemoWord));
                         this.memosIndicateCount = memos.length;
                         return memos;
                     },
@@ -358,19 +371,6 @@
                     return false;
                 }
                 return searchTarget.includes(searchWord);
-            };
-            function searchFilterDate(targetDate, searchDate) {
-                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === ''))
-                    return true;
-                if (targetDate === null && searchDate !== '')
-                    return false;
-                if (searchDate.length === 4 && String(targetDate.slice(0, 4)) === String(searchDate))
-                    return true;
-                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate))
-                    return true;
-                if (searchDate.length === 8 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7) + targetDate.slice(8, 10)) === String(searchDate))
-                    return true;
-                return false;
             };
 
         </script>
