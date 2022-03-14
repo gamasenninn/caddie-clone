@@ -21,6 +21,9 @@ h = {
     myFax1: "000-888-2222",
     myAddress2: "栃木県鹿沼市千渡000-99",
     myTel2: "000-999-7777",
+
+    logoPath : './static/asset/logo2.jpg', 
+    stampPath : './static/asset/inkan.png'
 };
 
 sum = {
@@ -79,7 +82,7 @@ function getPdfData() {
                     }
                 ],
                 "drawImages": [
-                    ["('./static/asset/logo2.jpg', 410,720,50,50,mask='auto')"]
+                    ["('"+ h.logoPath +"', 410,720,50,50,mask='auto')"]
                 ]
             },
             "body": {
@@ -138,7 +141,7 @@ function getPdfData() {
                     }
                 ],
                 "drawImages": [
-                    ["('./static/asset/inkan.png', 490,590,50,50,mask='auto')"],
+                    ["('"+h.stampPath+"', 490,590,50,50,mask='auto')"],
                 ]
             }
         },

@@ -1016,6 +1016,8 @@
                             sum.total = this.sum;
                             sum.tax = parseInt(sum.total - sum.total / 1.1)
                         };
+                        h.logoPath = self.setting.logoFilePath;
+                        h.stampPath = self.setting.stampFilePath;
 
                         pdfData = getPdfData();
                         pdfData.data.bdata = self.quotation.quotation_items;
