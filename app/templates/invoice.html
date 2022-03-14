@@ -941,7 +941,13 @@
                         pdfData = getPdfData();
                         if (self.invoice.invoice_items.length > 0) {
                             pdfData.data.bdata = self.invoice.invoice_items;
-                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count, itemName: i.itemName.replace(/\n/g, '<br />') }));
+                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({
+                                 ...i, 
+                                price: parseInt(i.price), 
+                                count: parseInt(i.count), 
+                                calcPrice: i.price*i.count,
+                                itemName: ( i.itemName ? i.itemName.replace(/\n/g, '<br />'): '' ) 
+                            }));
                         } else {
                             pdfData.data.bdata = [{}];
                         }
