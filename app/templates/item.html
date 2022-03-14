@@ -114,9 +114,15 @@
                                 <b-col md>
                                     <b-row>
                                         <b-col>
-                                            <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"
-                                                placeholder="🔍　商品名 or 商品コード or 型式">
-                                            </b-form-input>
+                                            <b-input-group>
+                                                <b-form-input v-model="searchItemWord" id="searchItemWord" size="sm"
+                                                    placeholder="🔍　商品名 or 商品コード or 型式">
+                                                </b-form-input>
+                                                <b-input-group-append>
+                                                    <b-button variant="primary" size="sm" @click="searchItem">検索
+                                                    </b-button>
+                                                </b-input-group-append>
+                                            </b-input-group>
                                         </b-col>
                                         <b-col></b-col>
                                     </b-row>
@@ -452,9 +458,15 @@
                 },
                 methods: {
                     // ---Items---
-                    getItems: async function () {
+                    getItems: async function (searchWord = '', offset = 0) {
                         self = this;
-                        await axios.get("/items")
+                        url = '/v1/items'
+                        await axios.get(url, {
+                            params: {
+                                search: searchWord,
+                                offset: offset,
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
                                 self.items = response.data;
@@ -470,7 +482,7 @@
                     },
                     insertItem: async function (item) {
                         self = this;
-                        await axios.post("/item", item)
+                        await axios.post("/v1/item", item)
                             .then(function (response) {
                                 Vue.set(self.item, 'id', response.data.id)
                                 self.getItems();
@@ -479,7 +491,7 @@
                     },
                     updateItem: async function (item) {
                         self = this;
-                        await axios.put("/item/" + item.id, item)
+                        await axios.put("/v1/item/" + item.id, item)
                             .then(function (response) {
                                 self.getItems();
                                 self.countChanged = 0;
@@ -488,7 +500,7 @@
                     },
                     deleteItem: async function (item) {
                         self = this;
-                        await axios.delete("/item/" + item.id)
+                        await axios.delete("/v1/item/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 self.item = '';
@@ -514,7 +526,7 @@
                     },
                     getItem: async function (item) {
                         self = this;
-                        await axios.get("/item/" + item.id)
+                        await axios.get("/v1/item/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 for (const [key, value] of Object.entries(response.data)) {
@@ -524,6 +536,9 @@
                             });
                         this.getFileList(item.itemCode);
 
+                    },
+                    searchItem: function () {
+                        this.getItems(this.searchItemWord);
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
@@ -702,9 +717,6 @@
                         if (this.isShowAll === false)
                             items = items.filter(item => item.isHide === false);
                         items = items.filter(item =>
-                            (searchFilter(item.itemName, this.searchItemWord) ||
-                                searchFilter(item.itemCode, this.searchItemWord) ||
-                                searchFilter(item.model, this.searchItemWord)) &&
                             searchFilter(item.category, this.searchItemSelectCategory) &&
                             searchFilter(item.maker, this.searchItemSelectMaker)
                         )

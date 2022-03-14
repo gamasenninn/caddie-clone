@@ -136,9 +136,15 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-input v-model="searchQuotationWord" id="searchQuotationWord" size="sm"
-                                        placeholder="🔍　日付 or 顧客名">
-                                    </b-form-input>
+                                    <b-input-group>
+                                        <b-form-input v-model="searchQuotationWord" id="searchQuotationWord" size="sm"
+                                            placeholder="🔍　日付 or 顧客名">
+                                        </b-form-input>
+                                        <b-input-group-append>
+                                            <b-button variant="primary" size="sm" @click="searchQuotation">検索
+                                            </b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
                                 </b-col>
                                 <b-col sm>
                                 </b-col>
@@ -690,9 +696,15 @@
                 },
                 methods: {
                     // ---Quotations---
-                    getQuotations: async function () {
+                    getQuotations: async function (searchWord = '', offset = 0) {
                         self = this;
-                        await axios.get("/quotations")
+                        url = '/v1/quotations'
+                        await axios.get(url, {
+                            params: {
+                                search: searchWord,
+                                offset: offset,
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
                                 self.quotations = response.data;
@@ -709,7 +721,7 @@
                     },
                     insertQuotation: async function (item) {
                         self = this;
-                        await axios.post("/quotation", item)
+                        await axios.post("/v1/quotation", item)
                             .then(function (response) {
                                 console.log(response);
                                 Vue.set(self.quotation, 'id', response.data.id)
@@ -723,7 +735,7 @@
                     },
                     updateQuotation: async function (item) {
                         self = this;
-                        await axios.put("/quotation/" + item.id, item)
+                        await axios.put("/v1/quotation/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
                             });
@@ -756,7 +768,7 @@
                     // axios.deleteは使わず、isDeleteをTrueに
                     deleteQuotation: async function (item) {
                         self = this;
-                        await axios.put("/quotation_delete/" + item.id)
+                        await axios.put("/v1/quotation_delete/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 self.quotation = '';
@@ -789,7 +801,7 @@
                     },
                     getQuotation: async function (item) {
                         self = this;
-                        await axios.get("/quotation/" + item.id)
+                        await axios.get("/v1/quotation/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 for (const [key, value] of Object.entries(response.data)) {
@@ -844,6 +856,9 @@
                                 console.log(response);
                                 self.items = response.data;
                             });
+                    },
+                    searchQuotation: function () {
+                        this.getQuotations(this.searchQuotationWord);
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
@@ -1120,8 +1135,6 @@
                             quotations = quotations.filter(quotation => quotation.isConvert === false);
                         if (this.quotationsShowValue === 'converted')
                             quotations = quotations.filter(quotation => quotation.isConvert === true);
-                        quotations = quotations.filter(quotation => searchFilter(quotation.customerName, this.searchQuotationWord) ||
-                            searchFilterDate(quotation.applyDate, this.searchQuotationWord));
                         let quotationAmounts = quotations.map(
                             quotation => quotation.quotation_items.map(
                                 item => parseInt(item.count * item.price * (quotation.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
@@ -1180,19 +1193,6 @@
                 return searchTarget.includes(searchWord);
             };
 
-            function searchFilterDate(targetDate, searchDate) {
-                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === ''))
-                    return true;
-                if (targetDate === null && searchDate !== '')
-                    return false;
-                if (searchDate.length === 4 && String(targetDate.slice(0, 4)) === String(searchDate))
-                    return true;
-                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate))
-                    return true;
-                if (searchDate.length === 8 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7) + targetDate.slice(8, 10)) === String(searchDate))
-                    return true;
-                return false;
-            };
             Dropzone.autoDiscover = false;
             function destroyDrop() {
                 if (Dropzone.instances.length > 0) {
