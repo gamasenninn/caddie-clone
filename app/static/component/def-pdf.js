@@ -200,7 +200,6 @@ hr = {
     //jobTitle: "代表取締役",
     ceoName: "テスト太郎",
     applyNumber: "220001",
-
     logoPath : './static/asset/logo2.jpg', 
     stampPath : './static/asset/inkan.png'
 
