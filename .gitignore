@@ -5,3 +5,5 @@ __pycache__
 app/static/upload/
 app/pdfmaker/app/static/pdf/
 app/upload/static/upload/
+app/static/asset/logo/
+app/static/asset/stamp
