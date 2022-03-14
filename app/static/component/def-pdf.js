@@ -209,7 +209,7 @@ function getPdfDataRcpt() {
     return {
         "defPdf":{
             "attr":{
-                "name": "def_invoice",
+                "name": "def_recept",
                 "name_jp":"領収書",
                 "page_size": "A5",
                 "page_type": "landscape",
@@ -378,5 +378,116 @@ function getPdfDataRcpt() {
                 "textColor": "#000000"
             }  
         }
+    }
+}
+
+function getPdfDataRcpt2() {
+    return {
+        "defPdf": {
+            "attr":{
+                "name": "def_recept",
+                "name_jp":"領収書",
+                "page_size": "A5",
+                "page_type": "landscape",
+                "top_mergin": 10,
+                "footter_size": 0
+            },
+            "file": {
+                "outDir": "./static/pdf",
+                "file_name": "test.pdf"
+            },
+            "header": {
+                "title": ["P", h.category, "big_center"],
+                "title_after": ["E", "Spacer(0,15*mm)"],
+                "table_infos": [
+                    {
+                        "table": [
+                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","", "",["P", h.numberLabel + h.applyNumber, "sm_r"]],
+                            ["","","","","", ["P", "日付: &nbsp;" + h.applyDate , "sm_r"]],
+                            ["","","","","", ["P", h.myCompanyName, "md_l_b"]],
+                            ["","","","","",""],
+                            ["","","","","", ["P", h.myAddress1, "sm_r"]],
+                            ["",["P",h.title,"sm_l"],"","","", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
+                            ["","","","","", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
+                            ["",["P", h.headerTotalLabel, "sm_c"],["PF",sum.total,"h_total","￥{:,}-"],["P","内消費税","taxsm_c"],"", ""],
+                            ["","","",["PF",sum.tax,"taxsm_c","{:,}"],"", ""],
+                            ["","","","","", ["P", '担当者: ' + h.person, "sm_r"]]
+                        ],
+                        "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
+                        "table_style": [
+                            ["E", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                            ["E", "('VALIGN',(0,0),(-1,-1),'MIDDLE')"],
+                            ["E", "('SPAN',(0,0),(3,0))"],
+                            ["E", "('GRID',(1,7),(1,8),0.15,colors.black)"],
+                            ["E", "('SPAN',(1,5),(2,6))"],
+                            ["E", "('SPAN',(1,7),(1,8))"],
+                            ["E", "('BACKGROUND',(1,7),(1,8),colors.lightblue)"],
+                            ["E", "('BOX',(2,7),(3,8),0.15,colors.black)"],
+                            ["E", "('SPAN',(2,7),(2,8))"]
+                        ],
+                        "after": ["E", "Spacer(10*mm,5*mm)"]
+                    }
+                ],
+                "drawImages": [
+                    ["('"+ h.logoPath + "', 0,350,50,50,mask='auto')"]
+                ]
+            },
+            "footer": {
+                "pos_xy": ["E", "(170*mm,40*mm)"],
+                "table_infos": [
+                    {
+                        "table": [
+                            [["P", "収入<br/>印紙", "sm_c"]]
+                        ],
+                        "col_widths": ["E", "(20*mm)"],
+                        "row_heights": ["E", "(20*mm)"],
+                        "table_style": [
+                            ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                            ["E", "('GRID', (0, 0), (0,0), 0.1, colors.black, None, (3,3,3,3))"],
+                            ["E", "('VALIGN', (0, 0), (0,0), 'CENTER')"]
+                        ]
+                    }
+                ],
+                "drawImages": [
+                    ["('" + h.stampPath+ "', 420,100,50,50,mask='auto')"]
+                ]
+            }
+        },
+        "data": {
+            "hdata": {
+            }
+        },
+        "style": {
+            "sm_r": { "name": "Normal", "alignment": 2, "fontName": "IPAexGothic", "fontSize": 11 },
+            "sm_l": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 11 },
+            "sm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 11 },
+            "md_l_b": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 15 },
+            "taxsm_l": { "name": "Normal", "alignment": 2, "fontName": "IPAexGothic", "fontSize": 9 },
+            "taxsm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 9 },
+            "h_total": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 15 },
+            "big_center": {
+                "name": "Normal",
+                "alignment": 1,
+                "fontName": "IPAexGothic",
+                "fontSize": 20,
+                "underlineWidth": 0.5,
+                "underlineGap": 0,
+                "underlineOffset": -5.0,
+                "strikeWidth": 0.5,
+                "strikeGap": 0,
+                "strikeOffset": -3.0,
+                "leading": 2
+            },
+            "client": {
+                "name": "Normal",
+                "alignment": 0,
+                "fontName": "IPAexGothic",
+                "fontSize": 18,
+                "underlineWidth": 1,
+                "underlineGap": 1,
+                "underlineOffset": -3.0,
+                "textColor": "#000000"
+            }
+        },
     }
 }

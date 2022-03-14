@@ -1002,7 +1002,8 @@
                         };
 
                         pdfData = {};
-                        pdfData = getPdfDataRcpt();
+                        //pdfData = getPdfDataRcpt();
+                        pdfData = getPdfDataRcpt2();
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
