@@ -136,9 +136,15 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-input v-model="searchInvoiceWord" id="searchInvoiceWord" size="sm"
-                                        placeholder="🔍　日付 or 顧客名">
-                                    </b-form-input>
+                                    <b-input-group>
+                                        <b-form-input v-model="searchInvoiceWord" id="searchInvoiceWord" size="sm"
+                                            placeholder="🔍　日付 or 顧客名">
+                                        </b-form-input>
+                                        <b-input-group-append>
+                                            <b-button variant="primary" size="sm" @click="searchInvoice">検索
+                                            </b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
                                 </b-col>
                                 <b-col sm>
                                 </b-col>
@@ -670,9 +676,15 @@
                 },
                 methods: {
                     // ---Invoices---
-                    getInvoices: async function () {
+                    getInvoices: async function (searchWord = '', offset = 0) {
                         self = this;
-                        await axios.get("/invoices")
+                        url = '/v1/invoices'
+                        await axios.get(url, {
+                            params: {
+                                search: searchWord,
+                                offset: offset,
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
                                 self.invoices = response.data;
@@ -689,7 +701,7 @@
                     },
                     insertInvoice: async function (item) {
                         self = this;
-                        await axios.post("/invoice", item)
+                        await axios.post("/v1/invoice", item)
                             .then(function (response) {
                                 console.log(response);
                                 Vue.set(self.invoice, 'id', response.data.id)
@@ -703,7 +715,7 @@
                     },
                     updateInvoice: async function (item) {
                         self = this;
-                        await axios.put("/invoice/" + item.id, item)
+                        await axios.put("/v1/invoice/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
                             });
@@ -732,7 +744,7 @@
                     // axios.deleteは使わず、isDeleteをTrueに
                     deleteInvoice: async function (item) {
                         self = this;
-                        await axios.put("/invoice_delete/" + item.id)
+                        await axios.put("/v1/invoice_delete/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 self.invoice = '';
@@ -766,7 +778,7 @@
                     },
                     getInvoice: async function (item) {
                         self = this;
-                        await axios.get("/invoice/" + item.id)
+                        await axios.get("/v1/invoice/" + item.id)
                             .then(function (response) {
                                 console.log(response);
                                 for (const [key, value] of Object.entries(response.data)) {
@@ -820,6 +832,9 @@
                                 console.log(response);
                                 self.items = response.data;
                             });
+                    },
+                    searchInvoice: function () {
+                        this.getInvoices(this.searchInvoiceWord);
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
@@ -1121,8 +1136,6 @@
                         let amount = 0;
                         if (this.isInvoicesShowAll === false)
                             invoices = invoices.filter(invoice => invoice.isPaid === false);
-                        invoices = invoices.filter(invoice => searchFilter(invoice.customerName, this.searchInvoiceWord) ||
-                            searchFilterDate(invoice.applyDate, this.searchInvoiceWord));
                         let invoiceAmounts = invoices.map(
                             invoice => invoice.invoice_items.map(
                                 item => parseInt(item.count * item.price * (invoice.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
@@ -1181,19 +1194,6 @@
                 return searchTarget.includes(searchWord);
             };
 
-            function searchFilterDate(targetDate, searchDate) {
-                if ((targetDate === null && searchDate === '') || (targetDate !== null && searchDate === ''))
-                    return true;
-                if (targetDate === null && searchDate !== '')
-                    return false;
-                if (searchDate.length === 4 && String(targetDate.slice(0, 4)) === String(searchDate))
-                    return true;
-                if (searchDate.length === 6 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7)) === String(searchDate))
-                    return true;
-                if (searchDate.length === 8 && String(targetDate.slice(0, 4) + targetDate.slice(5, 7) + targetDate.slice(8, 10)) === String(searchDate))
-                    return true;
-                return false;
-            };
             // アップロード機能　    
             Dropzone.autoDiscover = false;
             function destroyDrop() {
