@@ -324,7 +324,7 @@
                 dictDefaultMessage: '+',
                 init: function () {
                     this.on("complete", file => {
-                        console.log("complete A file has been added:", app.fileId, file);
+                        console.log("complete A file has been added:", app.fileId2, file);
                         this.removeFile(file);
                         app.setting.stampFilePath = "./static/asset/stamp/" + file.upload.filename
                     });
