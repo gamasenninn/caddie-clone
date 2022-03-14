@@ -190,13 +190,19 @@ function getPdfData() {
 /* -------  領収書　----------*/
 hr = {
     customerName: "テスト商店",
+    honorificTitle: "御中",
     category: "領収書",
+    headerTotalLabel: "請求金額",
+    applyDate: "2021-08-22",
     amount: 3456789,
     forPaymentOf: "PCサポートとして",
     dueDate: "2021-08-22",
     myCompanyName: "株式会社 テストコム",
     myAddress1: "栃木県鹿沼市板荷000-99",
     myTel1: "000-999-1111",
+    title: "下記の通り領収致しました",
+    person: "小野",
+
     //jobTitle: "代表取締役",
     ceoName: "テスト太郎",
     applyNumber: "220001",
@@ -204,6 +210,15 @@ hr = {
     stampPath : './static/asset/inkan.png'
 
 };
+sumr = {
+    amountLabel: "小計",
+    amount: 11111,
+    taxLabel: "うち消費税",
+    tax: 1111,
+    totalLabel: "合計金額",
+    total: 99999
+};
+
 
 function getPdfDataRcpt() {
     return {
@@ -387,8 +402,8 @@ function getPdfDataRcpt2() {
             "attr":{
                 "name": "def_recept",
                 "name_jp":"領収書",
-                "page_size": "A5",
-                "page_type": "landscape",
+                "page_size": "A4",
+                "page_type": "portrait",
                 "top_mergin": 10,
                 "footter_size": 0
             },
@@ -397,25 +412,30 @@ function getPdfDataRcpt2() {
                 "file_name": "test.pdf"
             },
             "header": {
-                "title": ["P", h.category, "big_center"],
+                "title": ["P", hr.category, "big_center"],
                 "title_after": ["E", "Spacer(0,15*mm)"],
                 "table_infos": [
                     {
                         "table": [
-                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","", "",["P", h.numberLabel + h.applyNumber, "sm_r"]],
-                            ["","","","","", ["P", "日付: &nbsp;" + h.applyDate , "sm_r"]],
-                            ["","","","","", ["P", h.myCompanyName, "md_l_b"]],
+                            [["P", hr.customerName + '&nbsp;&nbsp;' + hr.honorificTitle, "client"],"","","", "",["P", h.numberLabel + h.applyNumber, "sm_r"]],
+                            ["","","","","", ["P", "日付: &nbsp;" + hr.applyDate , "sm_r"]],
+                            ["","","","","", ["P", hr.myCompanyName, "md_l_b"]],
                             ["","","","","",""],
-                            ["","","","","", ["P", h.myAddress1, "sm_r"]],
-                            ["",["P",h.title,"sm_l"],"","","", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
-                            ["","","","","", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
-                            ["",["P", h.headerTotalLabel, "sm_c"],["PF",sum.total,"h_total","￥{:,}-"],["P","内消費税","taxsm_c"],"", ""],
-                            ["","","",["PF",sum.tax,"taxsm_c","{:,}"],"", ""],
-                            ["","","","","", ["P", '担当者: ' + h.person, "sm_r"]]
+                            ["","","","","", ["P", hr.myAddress1, "sm_r"]],
+                            ["",["P",hr.title,"sm_l"],"","","", ["P", 'TEL: ' + hr.myTel1, "sm_r"]],
+                            ["","","","","", ["P", 'FAX: ' + hr.myFax1, "sm_r"]],
+                            ["",["P", hr.headerTotalLabel, "sm_c"],["PF",sumr.total,"h_total","￥{:,}-"],"","", ""],
+                            ["","","","","", ""],
+                            ["","","","","", ["P", '担当者: ' + hr.person, "sm_r"]],
+                            ["",["P","内消費税","sm_l"],["PF",sumr.tax,"taxsm_r","{:,}"],"","", ""],
+                            ["",["P","現金","sm_l"],"","","", ""],
+                            ["",["P","小切手","sm_l"],"","","", ["P","※電子領収書につき印紙不要","sm_l"]],
+                            ["",["P","お振込","sm_l"],"","","", ""],
+                            ["",["P","その他","sm_l"],"","","", ""]
                         ],
                         "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
                         "table_style": [
-                            ["E", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
                             ["E", "('VALIGN',(0,0),(-1,-1),'MIDDLE')"],
                             ["E", "('SPAN',(0,0),(3,0))"],
                             ["E", "('GRID',(1,7),(1,8),0.15,colors.black)"],
@@ -423,33 +443,42 @@ function getPdfDataRcpt2() {
                             ["E", "('SPAN',(1,7),(1,8))"],
                             ["E", "('BACKGROUND',(1,7),(1,8),colors.lightblue)"],
                             ["E", "('BOX',(2,7),(3,8),0.15,colors.black)"],
-                            ["E", "('SPAN',(2,7),(2,8))"]
+                            ["E", "('SPAN',(2,7),(3,8))"],
+                            ["E", "('LINEBELOW', (1, 10), (2, 10), 0.15, colors.black)"],
+                            ["E", "('LINEBELOW', (1, 11), (2, 11), 0.15, colors.black)"],
+                            ["E", "('LINEBELOW', (1, 12), (2, 12), 0.15, colors.black)"],
+                            ["E", "('LINEBELOW', (1, 13), (2, 13), 0.15, colors.black)"],
+                            ["E", "('LINEBELOW', (1, 14), (2, 14), 0.15, colors.black)"],
+
                         ],
                         "after": ["E", "Spacer(10*mm,5*mm)"]
                     }
                 ],
                 "drawImages": [
-                    ["('"+ h.logoPath + "', 0,350,50,50,mask='auto')"]
+                    ["('"+ h.logoPath + "', 10,350+860/2,50,50,mask='auto')"]
                 ]
             },
             "footer": {
-                "pos_xy": ["E", "(170*mm,40*mm)"],
+                
+                "pos_xy": ["E", "(170*mm,40*mm+860/2)"],
                 "table_infos": [
                     {
                         "table": [
-                            [["P", "収入<br/>印紙", "sm_c"]]
+                            //[["P", "収入<br/>印紙", "sm_c"]]
+                            ["", ""]
                         ],
                         "col_widths": ["E", "(20*mm)"],
                         "row_heights": ["E", "(20*mm)"],
                         "table_style": [
-                            ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
-                            ["E", "('GRID', (0, 0), (0,0), 0.1, colors.black, None, (3,3,3,3))"],
-                            ["E", "('VALIGN', (0, 0), (0,0), 'CENTER')"]
+                            //["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                            //["E", "('GRID', (0, 0), (0,0), 0.1, colors.black, None, (3,3,3,3))"],
+                            //["E", "('VALIGN', (0, 0), (0,0), 'CENTER')"]
                         ]
                     }
                 ],
+                
                 "drawImages": [
-                    ["('" + h.stampPath+ "', 420,100,50,50,mask='auto')"]
+                    ["('" + h.stampPath+ "', 420,120+860/2,50,50,mask='auto')"]
                 ]
             }
         },
@@ -464,6 +493,7 @@ function getPdfDataRcpt2() {
             "md_l_b": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 15 },
             "taxsm_l": { "name": "Normal", "alignment": 2, "fontName": "IPAexGothic", "fontSize": 9 },
             "taxsm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 9 },
+            "taxsm_r": { "name": "Normal", "alignment": 2, "fontName": "IPAexGothic", "fontSize": 9 },
             "h_total": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 15 },
             "big_center": {
                 "name": "Normal",
