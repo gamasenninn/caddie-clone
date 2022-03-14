@@ -200,6 +200,10 @@ hr = {
     //jobTitle: "代表取締役",
     ceoName: "テスト太郎",
     applyNumber: "220001",
+
+    logoPath : './static/asset/logo2.jpg', 
+    stampPath : './static/asset/inkan.png'
+
 };
 
 function getPdfDataRcpt() {
@@ -249,7 +253,7 @@ function getPdfDataRcpt() {
                     }
                 ],
                 "drawImages": [
-                    ["('./static/asset/logo2.jpg', 0,350,50,50,mask='auto')"]
+                    ["('"+ h.logoPath + "', 0,350,50,50,mask='auto')"]
                 ]
 
             },
@@ -270,7 +274,7 @@ function getPdfDataRcpt() {
                     }
                 ],
                 "drawImages": [
-                    ["('./static/asset/inkan.png', 420,100,50,50,mask='auto')"]
+                    ["('" + h.stampPath+ "', 420,100,50,50,mask='auto')"]
                 ]
             }
         },
