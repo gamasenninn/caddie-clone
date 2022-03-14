@@ -1018,8 +1018,18 @@
                         };
 
                         pdfData = getPdfData();
-                        pdfData.data.bdata = self.quotation.quotation_items;
-                        pdfData.data.bdata = pdfData.data.bdata.map(i => ({ ...i, calcPrice: i.price * i.count }));
+                        if (self.quotation.quotation_items.length > 0) {
+                            pdfData.data.bdata = self.quotation.quotation_items;
+                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({
+                                    ...i, 
+                                    price: parseInt(i.price), 
+                                    count: parseInt(i.count),  
+                                    calcPrice: i.price * i.count,
+                                    itemName: ( i.itemName ? i.itemName.replace(/\n/g, '<br />'): '' ) 
+                                }));
+                        }else{
+                            pdfData.data.bdata = [{}];
+                        }
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)

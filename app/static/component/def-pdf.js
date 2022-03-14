@@ -87,9 +87,9 @@ function getPdfData() {
                     "row_max": 15,
                     "label_style": "sm_c",
                     "fields": [
-                        { "key": "num", "label": "No.", "width": 20, "p_style": "sm_r", "eval": "_ROWNUM+1" },
-                        { "key": "itemName", "label": "商品名", "width": 90, "p_style": "sm_l" },
-                        { "key": "count", "label": "数量", "width": 15, "p_style": "sm_r", "format": "{:,}" },
+                        { "key": "num", "label": "No.", "width": 10, "p_style": "sm_r", "eval": "_ROWNUM+1" },
+                        { "key": "itemName", "label": "商品名", "width": 95, "p_style": "sm_l" },
+                        { "key": "count", "label": "数量", "width": 20, "p_style": "sm_r", "format": "{:,}" },
                         { "key": "unit", "label": "単位", "width": 15, "p_style": "sm_r" },
                         { "key": "price", "label": "単価", "width": 25, "p_style": "sm_r", "format": "{:,}" },
                         { "key": "calcPrice", "label": "金額", "width": 25, "p_style": "sm_r", "format": "{:,}" }
