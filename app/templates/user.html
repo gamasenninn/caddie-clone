@@ -65,11 +65,11 @@
                             <b-table responsive hover small id="usertable" sort-by="ID" small label="Table Options"
                                 :items=underAdministrator :fields="[
                           {  key: 'update', label: '' },
-                          {  key: 'id', label: 'No.' },
-                          {  key: 'name', label: 'ユーザー名' },
-                          {  key: 'password', label: 'パスワード' },
-                          {  key: 'group', label: 'グループ' },
-                          {  key: 'role', label: '権限' },
+                          {  key: 'id', label: 'No.', thClass: 'text-center', },
+                          {  key: 'name', label: 'ユーザー名', thClass: 'text-center', },
+                          {  key: 'password', label: 'パスワード', thClass: 'text-center', },
+                          {  key: 'group', label: 'グループ', thClass: 'text-center', },
+                          {  key: 'role', label: '権限', thClass: 'text-center', },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">

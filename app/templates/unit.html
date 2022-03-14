@@ -65,8 +65,8 @@
                             <b-table responsive hover small id="unittable" sort-by="ID" small label="Table Options"
                                 :items=units :fields="[
                           {  key: 'update', label: '' },
-                          {  key: 'id', label: 'No.' },
-                          {  key: 'unitName', label: '単位名' },
+                          {  key: 'id', label: 'No.', thClass: 'text-center', },
+                          {  key: 'unitName', label: '単位名', thClass: 'text-center', },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
