@@ -182,7 +182,7 @@
 
                                         <input hidden type="file" name="file" id="logo-dropzone" multiple>
                                     </form>
-                                    </form>
+                                    <span>ここにロゴ用ファイルをドロップしてください。</span>
                                 </b-col>
                                 <b-col cols="1"></b-col>
                                 <b-col sm>
@@ -192,6 +192,7 @@
 
                                         <input hidden type="file" name="file" id="stamp-dropzone" multiple>
                                     </form>
+                                    <span>ここに印鑑用ファイルをドロップしてください。</span>
                                 </b-col>
                                 <b-col cols="1"></b-col>
                             </b-row>
@@ -320,7 +321,7 @@
             })
 
             Dropzone.options.stampDropzone = {
-                dictDefaultMessage: 'ここに印鑑用ファイルをドロップしてください',
+                dictDefaultMessage: '+',
                 init: function () {
                     this.on("complete", file => {
                         console.log("complete A file has been added:", app.fileId, file);
@@ -330,7 +331,7 @@
                 }
             };
             Dropzone.options.logoDropzone = {
-                dictDefaultMessage: 'ここにロゴ用ファイルをドロップしてください',
+                dictDefaultMessage: '+',
                 init: function () {
                     this.on("complete", file => {
                         console.log("complete A file has been added:", app.fileId, file);
