@@ -204,6 +204,20 @@ def seeder():
     for maker in makers:
         print(maker.makerName)
 
+    # -----History-----
+    print('----History----')
+    history = [
+        History(id=1, userName='tanaka_taro', modelName='Customer',modelId=1,action='GET',),
+        History(id=2, userName='suzuki_jiro', modelName='Item',modelId=2,action='POST',),
+        History(id=3, userName='satou_saburo', modelName='Invoice',modelId=3,action='DELETE',),
+    ]
+    db.session.add_all(history)
+    db.session.commit()
+
+    histories = History.query.all()
+    for history in histories:
+        print(history.userName)
+
     # -----Setting-----
     print('----Setting----')
     setting = [
