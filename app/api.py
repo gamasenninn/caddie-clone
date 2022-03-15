@@ -146,9 +146,12 @@ def customer_update(id):
     customer.email = data.get('email')
     customer.manager = data.get('manager')
     customer.representative = data.get('representative')
-    customer.customerCategory = data.get('customerCategory')
-    customer.isHide = data.get('isHide')
-    customer.isFavorite = data.get('isFavorite')
+    customer.customerCategory = data.get('customerCategory')if data.get(
+        'customerCategory') else 'corporation'  # ページリロード後、更新時のエラー防止
+    customer.isHide = data.get('isHide')if data.get(
+        'isHide') else False  # ページリロード後、更新時のエラー防止
+    customer.isFavorite = data.get('isFavorite')if data.get(
+        'isFavorite') else False  # ページリロード後、更新時のエラー防止
     customer.memo = data.get('memo')
 
     db.session.commit()
@@ -236,7 +239,8 @@ def item_update(id):
     item.unit = data.get('unit')
     item.basePrice = data.get('basePrice')
     item.baseCost = data.get('baseCost')
-    item.isHide = data.get('isHide')
+    item.isHide = data.get('isHide')if data.get(
+        'isHide') else False  # ページリロード後、更新時のエラー防止
     item.memo = data.get('memo')
     item.numberOfAttachments = data.get('numberOfAttachments')
 
@@ -808,7 +812,8 @@ def memo_update(id):
 
     memo.title = data.get('title')
     memo.manager = data.get('manager')
-    memo.isFavorite = data.get('isFavorite')
+    memo.isFavorite = data.get('isFavorite') if data.get(
+        'isFavorite') else False  # ページリロード後、更新時のエラー防止
     memo.content = data.get('content')
 
     db.session.commit()

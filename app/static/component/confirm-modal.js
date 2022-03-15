@@ -22,7 +22,7 @@ Vue.component('confirm-modal', {
 Vue.component('confirm-modal-danger', {
     template: `
     <div>
-        <b-modal id="confirmModal" hide-footer>
+        <b-modal id="confirmModalDanger" hide-footer>
             <template #modal-title>
                 {{title}}
             </template>

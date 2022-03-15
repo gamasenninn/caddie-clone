@@ -185,7 +185,7 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="primary" @click="modalShow(memo,'upsertModal');">保存
+                        <b-button pill variant="primary" @click="bulkUpsert(memo);showConfirmModal();">保存
                         </b-button>
                         <b-button pill size="lg" variant="primary" @click="alert('印刷しました。')"
                             v-b-tooltip.hover.top="'印刷'">
@@ -199,11 +199,8 @@
                 </b-row>
             </b-card>
 
-            <!-- 保存モーダル -->
-            <div>
-                <select-modal modal-name='upsertModal' modal-message='保存しますか？'
-                    @selected="upsertModalProcess($event);" />
-            </div>
+            <!-- 確認モーダル -->
+            <confirm-modal :title="title" :message="message"></confirm-modal>
 
             <!-- 削除モーダル -->
             <div>
@@ -225,6 +222,8 @@
                     memos: [],               //全件memo
                     memo: [],                //選択中のmemo
                     isShowFavorite: false,
+                    title: '',              //モーダルタイトル
+                    message: '',            //モーダルメッセージ
                 },
                 methods: {
                     // ---Memos---
@@ -255,16 +254,22 @@
                         await axios.post("/v1/memo", item)
                             .then(function (response) {
                                 Vue.set(self.memo, 'id', response.data.id)
-                                self.getMemos();
                                 self.memo.isInsert = false;
+                                self.getMemo(self.memo);
+                                localStorage.setItem('memo', JSON.stringify(self.memo));
+                                app.title = '新規作成';
+                                app.message = '保存しました。';
                             });
                     },
                     updateMemo: async function (item) {
                         self = this;
                         await axios.put("/v1/memo/" + item.id, item)
                             .then(function (response) {
-                                self.getMemos();
                                 console.log(response);
+                                self.getMemo(self.memo);
+                                localStorage.setItem('memo', JSON.stringify(self.memo));
+                                app.title = '更新';
+                                app.message = '保存しました。';
                             });
                     },
                     deleteMemo: async function (item) {
@@ -312,16 +317,13 @@
                         console.log(this.memo);
                         this.$bvModal.show(modalName);
                     },
+                    showConfirmModal: function () {
+                        this.$bvModal.show('confirmModal');
+                    },
                     deleteModalProcess(result) {
                         this.$bvModal.hide('deleteModal');
                         if (result === true) {
                             this.deleteMemo(this.memo);
-                        }
-                    },
-                    upsertModalProcess(result) {
-                        this.$bvModal.hide('upsertModal');
-                        if (result === true) {
-                            this.bulkUpsert(this.memo);
                         }
                     },
                     changeIsFavorite(value) {
@@ -362,16 +364,6 @@
                     },
                 }
             })
-
-            function searchFilter(searchTarget, searchWord) {
-                if ((searchTarget === null && searchWord === '') || (searchTarget !== null && searchWord === '')) {
-                    return true;
-                }
-                if (searchTarget === null && searchWord !== '') {
-                    return false;
-                }
-                return searchTarget.includes(searchWord);
-            };
 
         </script>
         <% endblock %>
