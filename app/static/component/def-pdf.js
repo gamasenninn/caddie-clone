@@ -34,7 +34,42 @@ sum = {
     totalLabel: "合計金額",
     total: 0
 };
-function getPdfData() {
+
+function nvl(src_val, rep) {
+    return (src_val == null) ? rep : src_val;
+}
+
+function getPdfDataInvoice(mode,invoice,setting,sumInvoice) {
+    if (mode == 'delivery') {
+        h.category = '納品書';
+    } else {
+        h.category = '請求書';
+    }
+    h.customerName = nvl(invoice.customerName, '');
+    h.honorificTitle = nvl(invoice.honorificTitle, '');
+    h.applyNumber = invoice.applyNumber;
+    h.applyDate = nvl(invoice.applyDate, ' / / ');
+    h.myCompanyName = setting.companyName;
+    h.myAddress1 = setting.address;
+    h.myTel1 = setting.telNumber;
+    h.myFax1 = setting.faxNumber;
+    h.person = invoice.manager ? invoice.manager : '';
+    h.title = invoice.title;
+    if (invoice.isTaxExp) {
+        sum.amount = sumInvoice;
+        sum.tax = parseInt(sumInvoice * 0.1);
+        sum.total = parseInt(sumInvoice * 1.1);
+    } else {
+        sum.amountLabel = "小計(税込み)";
+        sum.amount = sumInvoice;
+        sum.total = sumInvoice;
+        sum.tax = parseInt(sum.total - sum.total / 1.1)
+    };
+    h.logoPath = setting.logoFilePath;
+    h.stampPath = setting.stampFilePath;
+    return getPdfData();
+}
+function getPdfData(){
     return {
         "defPdf": {
             "attr": {
@@ -42,7 +77,7 @@ function getPdfData() {
                 "name_jp": "請求書",
                 "page_size": "A4",
                 "page_type": "portrait",
-                "top_mergin": 15,
+                "top_mergin": 0,
                 "footter_size": 50
             },
             "file": {
@@ -50,33 +85,50 @@ function getPdfData() {
                 "file_name": "test.pdf"
             },
             "header": {
-                "title": ["P", h.category, "big_center"],
-                "title_after": ["E", "Spacer(0,15*mm)"],
+                //"title": ["P", h.category, "big_center"],
+                //"title_after": ["E", "Spacer(0,15*mm)"],
                 "table_infos": [
                     {
-                        "table": [
-                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","", "",["P", h.numberLabel + h.applyNumber, "sm_r"]],
-                            ["","","","","", ["P", "日付: &nbsp;" + h.applyDate , "sm_r"]],
-                            ["","","","","", ["P", h.myCompanyName, "md_l_b"]],
+                        "table":[
                             ["","","","","",""],
-                            ["","","","","", ["P", h.myAddress1, "sm_r"]],
-                            ["",["P",h.title,"sm_l"],"","","", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
-                            ["","","","","", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
+                            ["","",["P","P321-1111<br/>NewYork kanuma 12-1<br/>ggggggg 1-7777<br/>ffffff","sm_l"],"","","",["P", h.myCompanyName, "md_l_b"]],
+                            ["","","","","","",""],
+                            ["","","","","","",["P", h.myAddress1, "sm_r"]],
+                            ["","",["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","",["P", 'TEL: ' + h.myTel1, "sm_r"]],
+                            ["","","","","","",["P", 'FAX: ' + h.myFax1, "sm_r"]],
+                            ["","","","","","",""],
+                        ],
+                        "col_widths": ["E", "[5*mm,5*mm,88*mm,3*mm,9*mm,10*mm,70*mm]"],
+                        "row_heights":  ["E", "(5*mm,7*mm,7*mm,7*mm,7*mm,7*mm,10*mm)"],
+                        //"row_heights": ["E", "(10*mm,10*mm,10*mm,10*mm,10*mm,10*mm)"],
+                        "table_style": [
+                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                            ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
+                            ["E", "('BOX',(1,0),(2,5),0.15,colors.black)"],
+                        ],
+                    },
+                    {
+                        "table": [
+                            [["P",h.category,"big_center"],"","","", "",""],
+                            ["","","","","", ["P", h.numberLabel + h.applyNumber, "sm_r"]],
+                            ["",["P",h.title,"sm_l"],"","","", ["P", "日付: &nbsp;" + h.applyDate , "sm_r"]],
+                            ["","","","","", ["P", '担当者: ' + h.person, "sm_r"]],
+                            ["","","","","",""],
                             ["",["P", h.headerTotalLabel, "sm_c"],["PF",sum.total,"h_total","￥{:,}-"],["P","内消費税","taxsm_c"],"", ""],
                             ["","","",["PF",sum.tax,"taxsm_c","{:,}"],"", ""],
-                            ["","","","","", ["P", '担当者: ' + h.person, "sm_r"]]
+                            ["","","","","", ""],
                         ],
                         "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
                         "table_style": [
-                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                            ["E", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
                             ["E", "('VALIGN',(0,0),(-1,-1),'MIDDLE')"],
-                            ["E", "('SPAN',(0,0),(3,0))"],
-                            ["E", "('GRID',(1,7),(1,8),0.15,colors.black)"],
-                            ["E", "('SPAN',(1,5),(2,6))"],
-                            ["E", "('SPAN',(1,7),(1,8))"],
-                            ["E", "('BACKGROUND',(1,7),(1,8),colors.lightblue)"],
-                            ["E", "('BOX',(2,7),(3,8),0.15,colors.black)"],
-                            ["E", "('SPAN',(2,7),(2,8))"]
+                            ["E", "('SPAN',(0,0),(-1,0))"],
+                            ["NOP", "('GRID',(1,7),(1,8),0.15,colors.black)"],
+                            ["NOP", "('SPAN',(1,5),(2,6))"],
+                            ["NOP", "('SPAN',(1,7),(1,8))"],
+                            ["NOP", "('BACKGROUND',(1,7),(1,8),colors.lightblue)"],
+                            ["NOP", "('BOX',(2,7),(3,8),0.15,colors.black)"],
+                            ["NOP", "('SPAN',(2,7),(2,8))"]
                         ],
                         "after": ["E", "Spacer(10*mm,5*mm)"]
                     }
