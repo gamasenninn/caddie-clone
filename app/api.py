@@ -263,24 +263,26 @@ def invoice_index_v1():
     # 各種フィルタリング処理
     if searchWord:
         if len(searchWord) == 4:
-            invoices = Invoice.query.filter(or_(
-                extract('year', Invoice.applyDate) == searchWord, Invoice.customerName.like('%'+searchWord+'%')))
+            invoices = Invoice.query.filter(and_(Invoice.isDelete == False, or_(
+                extract('year', Invoice.applyDate) == searchWord, Invoice.customerName.like('%'+searchWord+'%'))))
         elif len(searchWord) == 6:
             year = searchWord[:4]
             month = searchWord[4:]
-            invoices = Invoice.query.filter(or_(Invoice.customerName.like('%'+searchWord+'%'), and_(
-                extract('year', Invoice.applyDate) == year, extract('month', Invoice.applyDate) == month)))
+            invoices = Invoice.query.filter(and_(Invoice.isDelete == False, or_(
+                Invoice.customerName.like('%'+searchWord+'%'), and_(
+                    extract('year', Invoice.applyDate) == year, extract('month', Invoice.applyDate) == month))))
         elif len(searchWord) == 8:
             year = searchWord[:4]
             month = searchWord[4:6]
             day = searchWord[6:]
-            invoices = Invoice.query.filter(or_(Invoice.customerName.like('%'+searchWord+'%'), and_(
-                extract('year', Invoice.applyDate) == year, extract('month', Invoice.applyDate) == month, extract('day', Invoice.applyDate) == day)))
+            invoices = Invoice.query.filter(and_(Invoice.isDelete == False, or_(
+                Invoice.customerName.like('%'+searchWord+'%'), and_(
+                    extract('year', Invoice.applyDate) == year, extract('month', Invoice.applyDate) == month, extract('day', Invoice.applyDate) == day))))
         else:
             invoices = Invoice.query.filter(
-                Invoice.customerName.like('%'+searchWord+'%'))
+                and_(Invoice.isDelete == False, Invoice.customerName.like('%'+searchWord+'%')))
     else:
-        invoices = Invoice.query
+        invoices = Invoice.query.filter(Invoice.isDelete == False)
     if offset:
         invoices = invoices.offset(offset)
     if limit:
@@ -290,9 +292,40 @@ def invoice_index_v1():
 
 @app.route('/v1/dust-invoices', methods=['GET'])
 @app.route('/dust-invoices', methods=['GET'])
-def dust_invoice_index():
-    dust_invoices = Invoice.query.filter(Invoice.isDelete == True).all()
-    return jsonify(InvoiceSchema(many=True).dump(dust_invoices))
+def dust_invoice_index_v1():
+    # パラメータを準備
+    req = request.args
+    searchWord = req.get('search')
+    limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
+    offset = int(req.get('offset')) if req.get('offset') else 0
+    # 各種フィルタリング処理
+    if searchWord:
+        if len(searchWord) == 4:
+            invoices = Invoice.query.filter(and_(Invoice.isDelete == True, or_(
+                extract('year', Invoice.applyDate) == searchWord, Invoice.customerName.like('%'+searchWord+'%'))))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            invoices = Invoice.query.filter(and_(Invoice.isDelete == True, or_(
+                Invoice.customerName.like('%'+searchWord+'%'), and_(
+                    extract('year', Invoice.applyDate) == year, extract('month', Invoice.applyDate) == month))))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            invoices = Invoice.query.filter(and_(Invoice.isDelete == True, or_(
+                Invoice.customerName.like('%'+searchWord+'%'), and_(
+                    extract('year', Invoice.applyDate) == year, extract('month', Invoice.applyDate) == month, extract('day', Invoice.applyDate) == day))))
+        else:
+            invoices = Invoice.query.filter(
+                and_(Invoice.isDelete == True, Invoice.customerName.like('%'+searchWord+'%')))
+    else:
+        invoices = Invoice.query.filter(Invoice.isDelete == True)
+    if offset:
+        invoices = invoices.offset(offset)
+    if limit:
+        invoices = invoices.limit(limit)
+    return jsonify(InvoiceSchema(many=True).dump(invoices))
 
 
 @app.route('/v1/invoice/<id>', methods=['GET'])
@@ -510,24 +543,26 @@ def quotation_index_v1():
     # 各種フィルタリング処理
     if searchWord:
         if len(searchWord) == 4:
-            quotations = Quotation.query.filter(or_(
-                extract('year', Quotation.applyDate) == searchWord, Quotation.customerName.like('%'+searchWord+'%')))
+            quotations = Quotation.query.filter(and_(Invoice.isDelete == False, or_(
+                extract('year', Quotation.applyDate) == searchWord, Quotation.customerName.like('%'+searchWord+'%'))))
         elif len(searchWord) == 6:
             year = searchWord[:4]
             month = searchWord[4:]
-            quotations = Quotation.query.filter(or_(Quotation.customerName.like('%'+searchWord+'%'), and_(
-                extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month)))
+            quotations = Quotation.query.filter(and_(Invoice.isDelete == False, or_(
+                Quotation.customerName.like('%'+searchWord+'%'), and_(
+                    extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month))))
         elif len(searchWord) == 8:
             year = searchWord[:4]
             month = searchWord[4:6]
             day = searchWord[6:]
-            quotations = Quotation.query.filter(or_(Quotation.customerName.like('%'+searchWord+'%'), and_(
-                extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month, extract('day', Quotation.applyDate) == day)))
+            quotations = Quotation.query.filter(and_(Invoice.isDelete == False, or_(
+                Quotation.customerName.like('%'+searchWord+'%'), and_(
+                    extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month, extract('day', Quotation.applyDate) == day))))
         else:
             quotations = Quotation.query.filter(
-                Quotation.customerName.like('%'+searchWord+'%'))
+                and_(Invoice.isDelete == False, Quotation.customerName.like('%'+searchWord+'%')))
     else:
-        quotations = Quotation.query
+        quotations = Quotation.query.filter(Quotation.isDelete == False)
     if offset:
         quotations = quotations.offset(offset)
     if limit:
@@ -537,9 +572,40 @@ def quotation_index_v1():
 
 @app.route('/v1/dust-quotations', methods=['GET'])
 @app.route('/dust-quotations', methods=['GET'])
-def dust_quotation_index():
-    dust_quotations = Quotation.query.filter(Quotation.isDelete == True).all()
-    return jsonify(QuotationSchema(many=True).dump(dust_quotations))
+def dust_quotation_index_v1():
+    # パラメータを準備
+    req = request.args
+    searchWord = req.get('search')
+    limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
+    offset = int(req.get('offset')) if req.get('offset') else 0
+    # 各種フィルタリング処理
+    if searchWord:
+        if len(searchWord) == 4:
+            quotations = Quotation.query.filter(and_(Quotation.isDelete == True, or_(
+                extract('year', Quotation.applyDate) == searchWord, Quotation.customerName.like('%'+searchWord+'%'))))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            quotations = Quotation.query.filter(and_(Quotation.isDelete == True, or_(
+                Quotation.customerName.like('%'+searchWord+'%'), and_(
+                    extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month))))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            quotations = Quotation.query.filter(and_(Quotation.isDelete == True, or_(
+                Quotation.customerName.like('%'+searchWord+'%'), and_(
+                    extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month, extract('day', Quotation.applyDate) == day))))
+        else:
+            quotations = Quotation.query.filter(
+                and_(Quotation.isDelete == True, Quotation.customerName.like('%'+searchWord+'%')))
+    else:
+        quotations = Quotation.query.filter(Quotation.isDelete == True)
+    if offset:
+        quotations = quotations.offset(offset)
+    if limit:
+        quotations = quotations.limit(limit)
+    return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
 @app.route('/v1/quotation/<id>', methods=['GET'])
