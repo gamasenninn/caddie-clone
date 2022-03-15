@@ -396,7 +396,26 @@ function getPdfDataRcpt() {
     }
 }
 
-function getPdfDataRcpt2() {
+function getPdfDataRcpt2(invoice,setting,sum) {
+    hr.customerName = invoice.customerName;
+    hr.applyNumber = invoice.applyNumber;
+    hr.forPaymentOf = invoice.title;
+    hr.dueDate = invoice.paymentDate;
+    hr.myCompanyName = setting.companyName;
+    hr.myAddress1 = setting.address;
+    hr.myTel1 = setting.telNumber;
+    hr.myFax1 = setting.faxNumber;
+    hr.ceoName = setting.representative;
+    if (invoice.isTaxExp) {
+        sumr.amount = sum
+        sumr.tax = parseInt(sum * 0.1);
+        sumr.total = parseInt(sum * 1.1);
+    } else {
+        sumr.amount = sum;
+        sumr.total = sum;
+        sumr.tax = parseInt(sum.total - sum.total / 1.1)
+    };
+
     return {
         "defPdf": {
             "attr":{
@@ -427,7 +446,7 @@ function getPdfDataRcpt2() {
                             ["",["P", hr.headerTotalLabel, "sm_c"],["PF",sumr.total,"h_total","￥{:,}-"],"","", ""],
                             ["","","","","", ""],
                             ["","","","","", ["P", '担当者: ' + hr.person, "sm_r"]],
-                            ["",["P","内消費税","sm_l"],["PF",sumr.tax,"taxsm_r","{:,}"],"","", ""],
+                            ["",["P","内消費税","sm_l"],["PF",sumr.tax,"taxsm_r","￥{:,}-"],"","", ""],
                             ["",["P","現金","sm_l"],"","","", ""],
                             ["",["P","小切手","sm_l"],"","","", ["P","※電子領収書につき印紙不要","sm_l"]],
                             ["",["P","お振込","sm_l"],"","","", ""],

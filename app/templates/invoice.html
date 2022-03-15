@@ -985,25 +985,7 @@
                     },
                     pdfoutRcpt: async function () {
                         self = this;
-                        hr.customerName = self.invoice.customerName + self.invoice.honorificTitle;
-                        hr.applyNumber = self.invoice.applyNumber;
-                        hr.forPaymentOf = self.invoice.title;
-                        hr.dueDate = self.invoice.paymentDate;
-                        hr.myCompanyName = self.setting.companyName;
-                        hr.myAddress1 = self.setting.address;
-                        hr.myTel1 = self.setting.telNumber;
-                        hr.myFax1 = self.setting.faxNumber;
-                        hr.ceoName = self.setting.representative;
-                        //hr.amount = 123456789;
-                        if (this.invoice.isTaxExp) {
-                            hr.amount = parseInt(this.sum * 1.1);
-                        } else {
-                            hr.amount = this.sum;
-                        };
-
-                        pdfData = {};
-                        //pdfData = getPdfDataRcpt();
-                        pdfData = getPdfDataRcpt2();
+                        const pdfData = getPdfDataRcpt2(self.invoice,self.setting,this.sum);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
