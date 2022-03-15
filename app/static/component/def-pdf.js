@@ -91,12 +91,12 @@ function getPdfData(){
                     {
                         "table":[
                             ["","","","","",""],
-                            ["","",["P","P321-1111<br/>NewYork kanuma 12-1<br/>ggggggg 1-7777<br/>ffffff","sm_l"],"","","",["P", h.myCompanyName, "md_l_b"]],
+                            ["","",["P","P321-1111<br/>NewYork kanuma 12-1<br/>ggggggg 1-7777<br/>ffffff","sm_l"],"","","",""],
                             ["","","","","","",""],
-                            ["","","","","","",["P", h.myAddress1, "sm_r"]],
-                            ["","",["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","",["P", 'TEL: ' + h.myTel1, "sm_r"]],
+                            ["","","","","","",["P", h.myCompanyName, "md_l_b"]],
+                            ["","",["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","",["P", h.myAddress1, "sm_r"]],
+                            ["","","","","","",["P", 'TEL: ' + h.myTel1, "sm_r"]],
                             ["","","","","","",["P", 'FAX: ' + h.myFax1, "sm_r"]],
-                            ["","","","","","",""],
                         ],
                         "col_widths": ["E", "[5*mm,5*mm,88*mm,3*mm,9*mm,10*mm,70*mm]"],
                         "row_heights":  ["E", "(5*mm,7*mm,7*mm,7*mm,7*mm,7*mm,10*mm)"],
@@ -136,7 +136,7 @@ function getPdfData(){
                     }
                 ],
                 "drawImages": [
-                    ["('"+ h.logoPath +"', 410,720,50,50,mask='auto')"]
+                    ["('"+ h.logoPath +"', 450,760,50,50,mask='auto')"]
                 ]
             },
             "body": {
