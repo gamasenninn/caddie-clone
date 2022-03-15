@@ -316,20 +316,19 @@
                 </b-row>
             </b-card>
 
-            <!-- 保存モーダル -->
-            <div>
-                <select-modal modal-name='upsertModal' modal-message='保存しますか？'
-                    @selected="upsertModalProcess($event);" />
-            </div>
             <!-- 削除モーダル -->
             <div>
                 <select-modal modal-name='deleteModal' modal-message='削除しますか？'
                     @selected="deleteModalProcess($event);" />
             </div>
 
+            <!-- 確認モーダル -->
+            <confirm-modal :title="title" :message="message">
+            </confirm-modal>
+
             <!-- バリデーションエラーモーダル -->
             <confirm-modal-danger :title="title" :message="message">
-                </confirm-modal>
+            </confirm-modal-danger>
 
         </div>
 
@@ -390,8 +389,11 @@
                         await axios.post("/v1/customer", item)
                             .then(function (response) {
                                 Vue.set(self.customer, 'id', response.data.id)
-                                self.getCustomers();
                                 self.customer.isInsert = false;
+                                self.getCustomer(self.customer);
+                                localStorage.setItem('customer', JSON.stringify(self.customer));
+                                app.title = '新規作成';
+                                app.message = '保存しました。';
                                 self.countChanged = 0;
                             });
                     },
@@ -399,9 +401,12 @@
                         self = this;
                         await axios.put("/v1/customer/" + item.id, item)
                             .then(function (response) {
-                                self.getCustomers();
-                                self.countChanged = 0;
                                 console.log(response);
+                                self.getCustomer(self.customer)
+                                localStorage.setItem('customer', JSON.stringify(self.customer));
+                                app.title = '更新';
+                                app.message = '保存しました。'
+                                self.countChanged = 0;
                             });
                     },
                     deleteCustomer: async function (item) {
@@ -449,12 +454,13 @@
                     },
                     apply: function () {
                         if (this.customerKanaValidate === true) {
-                            this.modalShow(this.customer, 'upsertModal');
+                            this.bulkUpsert(this.customer);
+                            this.$bvModal.show('confirmModal');
                         }
                         else {
                             this.title = 'エラー';
                             this.message = 'フリガナを正しく入力してください。';
-                            this.$bvModal.show('confirmModal');
+                            this.$bvModal.show('confirmModalDanger');
                         }
                     },
                     modalShow: function (item, modalName) {
@@ -469,12 +475,6 @@
                         this.$bvModal.hide('deleteModal');
                         if (result === true) {
                             this.deleteCustomer(this.customer);
-                        }
-                    },
-                    upsertModalProcess(result) {
-                        this.$bvModal.hide('upsertModal');
-                        if (result === true) {
-                            this.bulkUpsert(this.customer);
                         }
                     },
                     formatter_postNum(value) {

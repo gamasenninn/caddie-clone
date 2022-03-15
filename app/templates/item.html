@@ -391,7 +391,7 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="primary" @click="modalShow(item,'upsertModal');">保存
+                        <b-button pill variant="primary" @click="bulkUpsert(item);showConfirmModal();">保存
                         </b-button>
                         <b-button pill size="lg" variant="primary" @click="alert('印刷しました。')"
                             v-b-tooltip.hover.top="'印刷'">
@@ -405,11 +405,8 @@
                 </b-row>
             </b-card>
 
-            <!-- 保存モーダル -->
-            <div>
-                <select-modal modal-name='upsertModal' modal-message='保存しますか？'
-                    @selected="upsertModalProcess($event);" />
-            </div>
+            <!-- 確認モーダル -->
+            <confirm-modal :title="title" :message="message"></confirm-modal>
 
             <!-- 削除モーダル -->
             <div>
@@ -454,7 +451,8 @@
                     isShowAll: false,
                     routeTo: '',
                     routeFrom: '',
-
+                    title: '',              //モーダルタイトル
+                    message: '',            //モーダルメッセージ
                 },
                 methods: {
                     // ---Items---
@@ -470,6 +468,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.items = response.data;
+                                self.countChanged = 0;
                             });
                     },
                     bulkUpsert: async function (item) {
@@ -485,17 +484,24 @@
                         await axios.post("/v1/item", item)
                             .then(function (response) {
                                 Vue.set(self.item, 'id', response.data.id)
-                                self.getItems();
                                 self.item.isInsert = false;
+                                self.getItem(self.item);
+                                localStorage.setItem('item', JSON.stringify(self.item));
+                                app.title = '新規作成';
+                                app.message = '保存しました。';
+                                self.countChanged = 0;
                             });
                     },
                     updateItem: async function (item) {
                         self = this;
                         await axios.put("/v1/item/" + item.id, item)
                             .then(function (response) {
-                                self.getItems();
-                                self.countChanged = 0;
                                 console.log(response);
+                                self.getItem(self.item);
+                                localStorage.setItem('item', JSON.stringify(self.item));
+                                app.title = '更新';
+                                app.message = '保存しました。'
+                                self.countChanged = 0;
                             });
                     },
                     deleteItem: async function (item) {
@@ -575,16 +581,13 @@
                         console.log(this.item);
                         this.$bvModal.show(modalName);
                     },
+                    showConfirmModal: function () {
+                        this.$bvModal.show('confirmModal');
+                    },
                     deleteModalProcess(result) {
                         this.$bvModal.hide('deleteModal');
                         if (result === true) {
                             this.deleteItem(this.item);
-                        }
-                    },
-                    upsertModalProcess(result) {
-                        this.$bvModal.hide('upsertModal');
-                        if (result === true) {
-                            this.bulkUpsert(this.item);
                         }
                     },
                     formatDate(date) {
