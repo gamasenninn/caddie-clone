@@ -77,7 +77,7 @@ function getPdfData(){
                 "name_jp": "請求書",
                 "page_size": "A4",
                 "page_type": "portrait",
-                "top_mergin": 2.83,
+                "top_mergin": 9,
                 "footter_size": 50
             },
             "file": {
