@@ -7,7 +7,7 @@ Vue.component('sc-menu', {
             <div class="p-3">
                 <b-button variant="danger" @click="hide"><b-icon icon="arrow-right"></b-icon>
                 </b-button>
-                <b-img src="../static/images/logo_a_color.png"
+                <b-img src="../static/images/logo_a_color2.png"
                     style="width: 50%; " center ></b-img>
                 <nav class="mt-3">
                     <b-nav vertical class="mb-4">
