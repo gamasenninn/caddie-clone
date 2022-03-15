@@ -99,12 +99,12 @@
                                 :items=quotationsIndicateIndex :fields="[
                           {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.', thClass: 'text-center', },
-                          {  key: 'applyNumber', label: '見積番号', thClass: 'text-center', },
-                          {  key: 'applyDate', label: '日付', thClass: 'text-center', },
+                          {  key: 'applyNumber', label: '見積番号', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'applyDate', label: '日付', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'expiry', label: '見積有効期限', thClass: 'text-center', },
                           {  key: 'title', label: '件名', thClass: 'text-center', },
                           {  key: 'memo', label: 'メモ', thClass: 'text-center', },
-                          {  key: 'updatedAt', label: '削除日時', thClass: 'text-center', },
+                          {  key: 'updatedAt', label: '削除日時', thClass: 'text-center', tdClass: 'text-center' },
                         ]">
                                 <template v-slot:cell(show)="data">
                                     <router-link to="?page=show">
@@ -115,9 +115,6 @@
                                 </template>
                                 <template v-slot:cell(applyDate)="data">
                                     {{formatDate(data.item.applyDate)}}
-                                </template>
-                                <template v-slot:cell(expiry)="data">
-                                    {{formatDate(data.item.expiry)}}
                                 </template>
                                 <template v-slot:cell(updatedAt)="data">
                                     {{formatDateTime(data.item.updatedAt)}}
