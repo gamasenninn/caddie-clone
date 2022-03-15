@@ -31,8 +31,8 @@ Vue.component('sc-menu', {
                         <b-button block @click="goMW" >
                                 </b-icon><b-icon icon="front"></b-icon>　マルチウィンドウ</b-button>
 
-                        <b-button block href="/logout">
-                                <b-icon icon="door-open"></b-icon>　ログアウト</b-button>
+                        <b-button block href="/logout" variant="outline-primary">
+                                <b-img src="../static/images/icon/icon_logout.png"></b-img>　ログアウト</b-button>
                     </b-nav>
                 </nav>
             </div>
