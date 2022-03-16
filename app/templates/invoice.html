@@ -658,6 +658,7 @@
                     invoice: [],                //選択中のinvoice
                     invoiceItem: [],            //選択中のinvoiceItem
                     customers: [],
+                    customer: [],
                     items: [],
                     units: [],
                     categories: [],
@@ -829,6 +830,13 @@
                                 self.customers = response.data;
                             });
                     },
+                    getCustomer: async function (item) {
+                        self = this;
+                        await axios.get("/customer/"+item.customerId)
+                            .then(function (response) {
+                                self.customer = response.data;
+                            });
+                    },
                     getItems: async function () {
                         self = this;
                         await axios.get("/items")
@@ -930,38 +938,10 @@
                         this.$refs['items-modal'].show()
                     },
                     pdfout: async function (mode) {
-                        self = this;
-                        if (mode == 'delivery') {
-                            h.category = '納品書';
-                        } else {
-                            h.category = '請求書';
-                        }
-                        h.customerName = nvl(self.invoice.customerName, '');
-                        h.honorificTitle = nvl(self.invoice.honorificTitle, '');
-                        h.applyNumber = self.invoice.applyNumber;
-                        h.applyDate = nvl(self.invoice.applyDate, ' / / ');
-                        h.myCompanyName = self.setting.companyName;
-                        h.myAddress1 = self.setting.address;
-                        h.myTel1 = self.setting.telNumber;
-                        h.myFax1 = self.setting.faxNumber;
-                        h.person = self.invoice.manager ? self.invoice.manager : '';
-                        h.title = self.invoice.title;
-                        if (this.invoice.isTaxExp) {
-                            sum.amount = this.sum
-                            sum.tax = parseInt(this.sum * 0.1);
-                            sum.total = parseInt(this.sum * 1.1);
-                        } else {
-                            sum.amountLabel = "小計(税込み)";
-                            sum.amount = this.sum;
-                            sum.total = this.sum;
-                            sum.tax = parseInt(sum.total - sum.total / 1.1)
-                        };
-                        h.logoPath = self.setting.logoFilePath;
-                        h.stampPath = self.setting.stampFilePath;
-                        pdfData = {};
-                        pdfData = getPdfData();
-                        if (self.invoice.invoice_items.length > 0) {
-                            pdfData.data.bdata = self.invoice.invoice_items;
+                        await this.getCustomer(this.invoice)
+                        const pdfData = getPdfDataInvoice(mode,this.invoice,this.setting,this.sum,this.customer);
+                        if (this.invoice.invoice_items.length > 0) {
+                            pdfData.data.bdata = this.invoice.invoice_items;
                             pdfData.data.bdata = pdfData.data.bdata.map(i => ({
                                 ...i,
                                 price: parseInt(i.price),
