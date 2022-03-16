@@ -853,6 +853,13 @@
                                 self.customers = response.data;
                             });
                     },
+                    getCustomer: async function (item) {
+                        self = this;
+                        await axios.get("/customer/"+item.customerId)
+                            .then(function (response) {
+                                self.customer = response.data;
+                            });
+                    },
                     getItems: async function () {
                         self = this;
                         await axios.get("/items")
@@ -1012,33 +1019,8 @@
                     },
                     pdfout: async function () {
                         self = this;
-                        h.category = "見積書"
-                        h.numberLabel = "見積番号:"
-                        h.customerName = self.quotation.customerName;
-                        h.honorificTitle = self.quotation.honorificTitle
-                        h.applyNumber = self.quotation.applyNumber;
-                        h.memo = self.quotation.memo;
-                        h.title = self.quotation.title;
-                        h.myCompanyName = self.setting.companyName;
-                        h.myAddress1 = self.setting.address;
-                        h.myTel1 = self.setting.telNumber;
-                        h.myFax1 = self.setting.faxNumber;
-                        h.person = self.quotation.manager ? self.quotation.manager : '';
-
-                        if (this.quotation.isTaxExp) {
-                            sum.amount = this.sum
-                            sum.tax = parseInt(this.sum * 0.1);
-                            sum.total = parseInt(this.sum * 1.1);
-                        } else {
-                            sum.amountLabel = "小計(税込み)";
-                            sum.amount = this.sum;
-                            sum.total = this.sum;
-                            sum.tax = parseInt(sum.total - sum.total / 1.1)
-                        };
-                        h.logoPath = self.setting.logoFilePath;
-                        h.stampPath = self.setting.stampFilePath;
-
-                        pdfData = getPdfData();
+                        await this.getCustomer(this.quotation)
+                        const pdfData = getPdfDataQuotation(this.quotation,this.setting,this.sum,this.customer);
                         if (self.quotation.quotation_items.length > 0) {
                             pdfData.data.bdata = self.quotation.quotation_items;
                             pdfData.data.bdata = pdfData.data.bdata.map(i => ({

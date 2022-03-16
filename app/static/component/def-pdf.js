@@ -4,7 +4,7 @@ function nvl(src_val, rep) {
     return (src_val == null) ? rep : src_val;
 }
 
-function getPdfDataInvoice(mode,invoice,setting,sumInvoice,customer) {
+function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     const h = {};
     const sum = {};
     if (mode == 'delivery') {
@@ -23,7 +23,7 @@ function getPdfDataInvoice(mode,invoice,setting,sumInvoice,customer) {
     h.person = invoice.manager ? invoice.manager : '';
     h.title = invoice.title;
     h.customerPostNumber = customer.postNumber;
-    h.customerAddress = customer.address+customer.addressSub;
+    h.customerAddress = customer.address + customer.addressSub;
     h.headerTotalLabel = "請求金額";
     if (invoice.isTaxExp) {
         sum.amount = sumInvoice;
@@ -37,9 +37,40 @@ function getPdfDataInvoice(mode,invoice,setting,sumInvoice,customer) {
     };
     h.logoPath = setting.logoFilePath;
     h.stampPath = setting.stampFilePath;
-    return getPdfData(h,sum);
+    return getPdfData(h, sum);
 }
-function getPdfData(h,sum){
+function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
+    const h = {};
+    const sum = {};
+    h.category = '見積書';
+    h.customerName = nvl(quotation.customerName, '');
+    h.honorificTitle = nvl(quotation.honorificTitle, '');
+    h.applyNumber = quotation.applyNumber;
+    h.applyDate = nvl(quotation.applyDate, ' / / ');
+    h.myCompanyName = setting.companyName;
+    h.myAddress1 = setting.address;
+    h.myTel1 = setting.telNumber;
+    h.myFax1 = setting.faxNumber;
+    h.person = quotation.manager ? quotation.manager : '';
+    h.title = quotation.title;
+    h.customerPostNumber = customer.postNumber;
+    h.customerAddress = customer.address + customer.addressSub;
+    h.headerTotalLabel = "見積金額";
+    if (quotation.isTaxExp) {
+        sum.amount = sumQuotation;
+        sum.tax = parseInt(sumQuotation * 0.1);
+        sum.total = parseInt(sumQuotation * 1.1);
+    } else {
+        sum.amountLabel = "小計(税込み)";
+        sum.amount = sumQuotation;
+        sum.total = sumQuotation;
+        sum.tax = parseInt(sum.total - sum.total / 1.1)
+    };
+    h.logoPath = setting.logoFilePath;
+    h.stampPath = setting.stampFilePath;
+    return getPdfData(h, sum);
+}
+function getPdfData(h, sum) {
     return {
         "defPdf": {
             "attr": {
@@ -59,17 +90,17 @@ function getPdfData(h,sum){
                 //"title_after": ["E", "Spacer(0,15*mm)"],
                 "table_infos": [
                     {
-                        "table":[
-                            ["","","","","",""],
-                            ["","",["P",h.customerPostNumber+"<br/>"+h.customerAddress,"sm_l"],"","","",""],
-                            ["","","","","","",""],
-                            ["","","","","","",["P", h.myCompanyName, "md_l_b"]],
-                            ["","",["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"],"","","",["P", h.myAddress1, "sm_r"]],
-                            ["","","","","","",["P", 'TEL: ' + h.myTel1, "sm_r"]],
-                            ["","","","","","",["P", 'FAX: ' + h.myFax1, "sm_r"]],
+                        "table": [
+                            ["", "", "", "", "", ""],
+                            ["", "", ["P", h.customerPostNumber + "<br/>" + h.customerAddress, "sm_l"], "", "", "", ""],
+                            ["", "", "", "", "", "", ""],
+                            ["", "", "", "", "", "", ["P", h.myCompanyName, "md_l_b"]],
+                            ["", "", ["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"], "", "", "", ["P", h.myAddress1, "sm_r"]],
+                            ["", "", "", "", "", "", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
+                            ["", "", "", "", "", "", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
                         ],
                         "col_widths": ["E", "[5*mm,5*mm,88*mm,3*mm,9*mm,10*mm,70*mm]"],
-                        "row_heights":  ["E", "(5*mm,7*mm,7*mm,7*mm,7*mm,7*mm,10*mm)"],
+                        "row_heights": ["E", "(5*mm,7*mm,7*mm,7*mm,7*mm,7*mm,10*mm)"],
                         //"row_heights": ["E", "(10*mm,10*mm,10*mm,10*mm,10*mm,10*mm)"],
                         "table_style": [
                             ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
@@ -79,12 +110,12 @@ function getPdfData(h,sum){
                     },
                     {
                         "table": [
-                            [["P",h.category,"big_center"],"","","", "",""],
-                            ["","","","","", ["P", h.numberLabel + h.applyNumber, "sm_r"]],
-                            ["",["P",h.title,"sm_l"],"","","", ["P", "日付: &nbsp;" + h.applyDate , "sm_r"]],
-                            ["",["P", h.headerTotalLabel, "sm_c"],["PF",sum.total,"h_total","￥{:,}-"],["P","内消費税","taxsm_c"],"", ["P", '担当者: ' + h.person, "sm_r"]],
-                            ["","","",["PF",sum.tax,"taxsm_c","￥{:,}-"],"",""],
-                            ["","","","","",""],
+                            [["P", h.category, "big_center"], "", "", "", "", ""],
+                            ["", "", "", "", "", ["P", h.numberLabel + h.applyNumber, "sm_r"]],
+                            ["", ["P", h.title, "sm_l"], "", "", "", ["P", "日付: &nbsp;" + h.applyDate, "sm_r"]],
+                            ["", ["P", h.headerTotalLabel, "sm_c"], ["PF", sum.total, "h_total", "￥{:,}-"], ["P", "内消費税", "taxsm_c"], "", ["P", '担当者: ' + h.person, "sm_r"]],
+                            ["", "", "", ["PF", sum.tax, "taxsm_c", "￥{:,}-"], "", ""],
+                            ["", "", "", "", "", ""],
                         ],
                         "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
                         "table_style": [
@@ -106,7 +137,7 @@ function getPdfData(h,sum){
                     }
                 ],
                 "drawImages": [
-                    ["('"+ h.logoPath +"', 450,760,50,50,mask='auto')"]
+                    ["('" + h.logoPath + "', 450,760,50,50,mask='auto')"]
                 ]
             },
             "body": {
@@ -136,9 +167,9 @@ function getPdfData(h,sum){
                 "detail_after": {
                     "table_info": {
                         "table": [
-                            ["", "",["PF", sum.amountLabel, "sm_l", "{:}"], ["PF", sum.amount, "sm_r", "{:,}"]],
-                            ["", "",["PF", sum.taxLabel, "sm_l", "{:}"], ["PF", sum.tax, "sm_r", "{:,}"]],
-                            ["", "",["PF", sum.totalLabel, "sm_l", "{:}"], ["PF", sum.total, "sm_r", "{:,}"]]
+                            ["", "", ["PF", sum.amountLabel, "sm_l", "{:}"], ["PF", sum.amount, "sm_r", "{:,}"]],
+                            ["", "", ["PF", sum.taxLabel, "sm_l", "{:}"], ["PF", sum.tax, "sm_r", "{:,}"]],
+                            ["", "", ["PF", sum.totalLabel, "sm_l", "{:}"], ["PF", sum.total, "sm_r", "{:,}"]]
                         ],
                         "col_widths": ["E", "(65*mm, 30*mm, 45*mm, 50*mm)"],
                         "table_style": [
@@ -155,8 +186,8 @@ function getPdfData(h,sum){
                 "table_infos": [
                     {
                         "table": [
-                            ["備考",["P", h.memo, "sm_l"],  "", ""],
-                            ["","", "", ""],
+                            ["備考", ["P", h.memo, "sm_l"], "", ""],
+                            ["", "", "", ""],
                         ],
                         "col_widths": ["E", "(15*mm,150*mm,5*mm,5*mm)"],
                         "row_heights": ["E", "(40*mm,5*mm)"],
@@ -168,7 +199,7 @@ function getPdfData(h,sum){
                     }
                 ],
                 "drawImages": [
-                    ["('"+h.stampPath+"', 510,720,50,50,mask='auto')"],
+                    ["('" + h.stampPath + "', 510,720,50,50,mask='auto')"],
                 ]
             }
         },
@@ -216,16 +247,16 @@ function getPdfData(h,sum){
 };
 /* -------  領収書　----------*/
 
-function getPdfDataRcpt(invoice,setting,sum) {
+function getPdfDataRcpt(invoice, setting, sum) {
     const hr = {};
     const sumr = {};
-    hr.category =  "領収書";
+    hr.category = "領収書";
     hr.customerName = invoice.customerName;
     hr.honorificTitle = invoice.honorificTitle;
     hr.numberLabel = "";
     hr.applyNumber = invoice.applyNumber;
-    hr.headerTotalLabel =  "領収金額",
-    hr.title = "下記の通り領収いたしました";
+    hr.headerTotalLabel = "領収金額",
+        hr.title = "下記の通り領収いたしました";
     hr.dueDate = invoice.paymentDate;
     hr.person = invoice.manager;
     hr.myCompanyName = setting.companyName;
@@ -248,9 +279,9 @@ function getPdfDataRcpt(invoice,setting,sum) {
 
     return {
         "defPdf": {
-            "attr":{
+            "attr": {
                 "name": "def_recept",
-                "name_jp":"領収書",
+                "name_jp": "領収書",
                 "page_size": "A4",
                 "page_type": "portrait",
                 "top_mergin": 10,
@@ -266,21 +297,21 @@ function getPdfDataRcpt(invoice,setting,sum) {
                 "table_infos": [
                     {
                         "table": [
-                            [["P", hr.customerName + '&nbsp;&nbsp;' + hr.honorificTitle, "client"],"","","", "",["P", "番号" + hr.applyNumber, "sm_r"]],
-                            ["","","","","", ["P", "日付: &nbsp;" + hr.dueDate , "sm_r"]],
-                            ["","","","","", ["P", hr.myCompanyName, "md_l_b"]],
-                            ["","","","","",""],
-                            ["","","","","", ["P", hr.myAddress1, "sm_r"]],
-                            ["",["P",hr.title,"sm_l"],"","","", ["P", 'TEL: ' + hr.myTel1, "sm_r"]],
-                            ["","","","","", ["P", 'FAX: ' + hr.myFax1, "sm_r"]],
-                            ["",["P", hr.headerTotalLabel, "sm_c"],["PF",sumr.total,"h_total","￥{:,}-"],"","", ""],
-                            ["","","","","", ""],
-                            ["","","","","", ["P", '担当者: ' + hr.person, "sm_r"]],
-                            ["",["P","内消費税","sm_l"],["PF",sumr.tax,"taxsm_r","￥{:,}-"],"","", ""],
-                            ["",["P","現金","sm_l"],"","","", ""],
-                            ["",["P","小切手","sm_l"],"","","", ["P","※電子領収書につき印紙不要","sm_l"]],
-                            ["",["P","お振込","sm_l"],"","","", ""],
-                            ["",["P","その他","sm_l"],"","","", ""]
+                            [["P", hr.customerName + '&nbsp;&nbsp;' + hr.honorificTitle, "client"], "", "", "", "", ["P", "番号" + hr.applyNumber, "sm_r"]],
+                            ["", "", "", "", "", ["P", "日付: &nbsp;" + hr.dueDate, "sm_r"]],
+                            ["", "", "", "", "", ["P", hr.myCompanyName, "md_l_b"]],
+                            ["", "", "", "", "", ""],
+                            ["", "", "", "", "", ["P", hr.myAddress1, "sm_r"]],
+                            ["", ["P", hr.title, "sm_l"], "", "", "", ["P", 'TEL: ' + hr.myTel1, "sm_r"]],
+                            ["", "", "", "", "", ["P", 'FAX: ' + hr.myFax1, "sm_r"]],
+                            ["", ["P", hr.headerTotalLabel, "sm_c"], ["PF", sumr.total, "h_total", "￥{:,}-"], "", "", ""],
+                            ["", "", "", "", "", ""],
+                            ["", "", "", "", "", ["P", '担当者: ' + hr.person, "sm_r"]],
+                            ["", ["P", "内消費税", "sm_l"], ["PF", sumr.tax, "taxsm_r", "￥{:,}-"], "", "", ""],
+                            ["", ["P", "現金", "sm_l"], "", "", "", ""],
+                            ["", ["P", "小切手", "sm_l"], "", "", "", ["P", "※電子領収書につき印紙不要", "sm_l"]],
+                            ["", ["P", "お振込", "sm_l"], "", "", "", ""],
+                            ["", ["P", "その他", "sm_l"], "", "", "", ""]
                         ],
                         "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
                         "table_style": [
@@ -304,11 +335,11 @@ function getPdfDataRcpt(invoice,setting,sum) {
                     }
                 ],
                 "drawImages": [
-                    ["('"+ hr.logoPath + "', 10,350+860/2,50,50,mask='auto')"]
+                    ["('" + hr.logoPath + "', 10,350+860/2,50,50,mask='auto')"]
                 ]
             },
             "footer": {
-                
+
                 "pos_xy": ["E", "(170*mm,40*mm+860/2)"],
                 "table_infos": [
                     {
@@ -325,9 +356,9 @@ function getPdfDataRcpt(invoice,setting,sum) {
                         ]
                     }
                 ],
-                
+
                 "drawImages": [
-                    ["('" + hr.stampPath+ "', 420,120+860/2,50,50,mask='auto')"]
+                    ["('" + hr.stampPath + "', 420,120+860/2,50,50,mask='auto')"]
                 ]
             }
         },
