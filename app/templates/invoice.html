@@ -969,7 +969,7 @@
                     },
                     pdfoutRcpt: async function () {
                         self = this;
-                        const pdfData = getPdfDataRcpt2(self.invoice, self.setting, this.sum);
+                        const pdfData = getPdfDataRcpt(self.invoice, self.setting, this.sum);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
