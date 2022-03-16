@@ -199,8 +199,10 @@
                         </b-card>
 
                         <div>
-                            <b-row class="mt-2" v-if="myUser.role==='crescom_support'">
-                                <b-button href="/crescom-support-page">クレスコムサポート画面へ</b-button>
+                            <b-row class="mt-2">
+                                <b-button v-if="myUser.role==='crescom_support'" href="/crescom-support-page">
+                                    クレスコムサポート画面へ</b-button>
+                                <b-button class="ml-1" @click="showModalVersion">バージョン情報</b-button>
                             </b-row>
                         </div>
 
@@ -253,6 +255,9 @@
                 </b-row>
             </b-card>
 
+            <!-- 確認モーダル -->
+            <confirm-modal :title="title" :message="message"></confirm-modal>
+
         </div>
 
         <script>
@@ -266,6 +271,8 @@
                     myUser: [],                 //ログイン中のユーザー情報
                     fileId: 'stamp',
                     fileId2: 'logo',
+                    title: '',                  //モーダルタイトル
+                    message: '',                //モーダルメッセージ
                 },
                 methods: {
                     // ---Settings---
@@ -304,6 +311,11 @@
                             solid: true,
                             appendToast: append,
                         })
+                    },
+                    showModalVersion: function () {
+                        this.title = 'バージョン情報';
+                        this.message = 'ver.1.0　Copyright © 2022-2022 Crescom inc. All Rights Reserved.';
+                        this.$bvModal.show('confirmModal');
                     },
                 },
                 mounted: function () {
