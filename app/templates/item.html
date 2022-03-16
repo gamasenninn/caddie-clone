@@ -767,7 +767,7 @@
                 dropz = new Dropzone("form#dropz", {
                     dictDefaultMessage: '+',
                     parallelUploads: 2,
-                    init: function () {
+                    init: function () {                        
                         this.on("complete", file => {
                             console.log("complete A file has been added");
                             this.removeFile(file);
