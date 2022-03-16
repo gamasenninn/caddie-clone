@@ -5,7 +5,7 @@ import sys
 import json
 import uuid
 from flask import redirect, request
-from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory, render_template
+from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory, render_template,flash
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 import importlib
 from models import *
@@ -64,8 +64,10 @@ def login_post():
             next = request.args.get('next')
             return redirect(next or '/')
         else:
+            flash("パスワードが間違っています")
             return redirect('/login')
     else:
+        flash("存在しないユーザです")
         return redirect('/login')
 
 
@@ -80,6 +82,8 @@ def logout():
     db.session.add(newHistory)
     db.session.commit()
     logout_user()
+    flash("ログアウトしました")
+
     return redirect('/')
 
 # ------　ユーザー認証ここまで -------
