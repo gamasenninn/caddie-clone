@@ -832,7 +832,7 @@
                     },
                     getCustomer: async function (item) {
                         self = this;
-                        await axios.get("/customer/"+item.customerId)
+                        await axios.get("/customer/" + item.customerId)
                             .then(function (response) {
                                 self.customer = response.data;
                             });
@@ -939,7 +939,14 @@
                     },
                     pdfout: async function (mode) {
                         await this.getCustomer(this.invoice)
-                        const pdfData = getPdfDataInvoice(mode,this.invoice,this.setting,this.sum,this.customer);
+                        const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, this.sum, this.customer);
+                        if (mode == 'delivery') {
+                            if (!this.setting.isDisplayDeliveryLogo) pdfData.defPdf.header.drawImages = [];
+                            if (!this.setting.isDisplayDeliveryStamp) pdfData.defPdf.footer.drawImages = [];
+                        } else {
+                            if (!this.setting.isDisplayInvoiceLogo) pdfData.defPdf.header.drawImages = [];
+                            if (!this.setting.isDisplayInvoiceStamp) pdfData.defPdf.footer.drawImages = [];
+                        }
                         if (this.invoice.invoice_items.length > 0) {
                             pdfData.data.bdata = this.invoice.invoice_items;
                             pdfData.data.bdata = pdfData.data.bdata.map(i => ({
