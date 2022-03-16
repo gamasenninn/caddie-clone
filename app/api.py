@@ -4,6 +4,7 @@ from flask import jsonify, request
 import json
 from datetime import date
 from sqlalchemy import or_, and_, extract
+from flask_login import current_user
 
 _LIMIT_NUM = 100
 
@@ -13,6 +14,14 @@ _LIMIT_NUM = 100
 @app.route('/users', methods=['GET'])
 def user_index():
     users = User.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='User',
+        modelId='',
+        action='get'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(UserSchema(many=True).dump(users))
 
 
@@ -21,6 +30,13 @@ def user_show(id):
     userCount = User.query.filter(User.id == id).count()
     if userCount:
         user = User.query.filter(User.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='User',
+            modelId=id,
+            action='get'
+        )
+        db.session.add(newHistory)
         return jsonify(UserSchema().dump(user))
     else:
         return jsonify([])
@@ -38,6 +54,14 @@ def user_create():
     db.session.add(newUser)
     db.session.commit()
     id = newUser.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='User',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -51,6 +75,13 @@ def user_update(id):
     user.group = data.get('group')
     user.role = data.get('role')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='User',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -58,6 +89,13 @@ def user_update(id):
 @app.route('/user/<id>', methods=['DELETE'])
 def user_destroy(id):
     user = User.query.filter(User.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='User',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
