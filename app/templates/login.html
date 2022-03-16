@@ -4,10 +4,6 @@
             .bg {
                 background-color: #e9ecef;
             }
-
-            [v-cloak] {
-                display: none;
-            }
         </style>
 
         <!--   mock up here -->
@@ -33,15 +29,19 @@
                                     </div>
 
                                 </form>
+                                <% with messages=get_flashed_messages() %>
+                                    <% if messages %>
+                                            <% for message in messages %>
+                                                <span class="h4">%% message %%</span>
+                                            <% endfor %>
+                                    <% endif %>
+                                <% endwith %>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
-
 
         <script>
             var app = new Vue({
@@ -49,26 +49,8 @@
                 data: {
                     userID: '',
                     password: '',
-                    userInfo: [
-                        { userID: 'monomonosu', password: '01234', role: 'administrator', name: 'モノモノス' },
-                        { userID: 'ono', password: '01234', role: 'operator', name: 'ガマ仙人' },
-                        { userID: 'ohira', password: '01234', role: 'administrator', name: '大平' },
-                    ],
                 },
-                methods: {
-                    checkUser: function (userID, password) {
-                        const targetUser = this.userInfo.find((v) => v.userID === userID);
-                        console.log(targetUser);
-                        if (targetUser && targetUser.password === password) {
-                            alert(targetUser.role + "権限で" + targetUser.name + "さんがログインしました")
-                        }
-                        else {
-                            alert("ログインエラー")
-                        }
-
-                    }
-                },
-                mounted:function(){
+                mounted: function () {
                     document.querySelector('title').textContent = 'ログイン';
                 }
             })
