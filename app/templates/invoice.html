@@ -42,6 +42,10 @@
                 background-color: #ccecf180;
             }
 
+            #invoicesIndicateAmount>div {
+                padding: 0;
+            }
+
             /* スピンボタン無効化 */
             /* Chrome/Safari */
             input[type="number"]::-webkit-outer-spin-button,
@@ -559,7 +563,7 @@
             <b-row class="mb-5"></b-row>
 
             <!-- 表示中請求書の合計金額 -->
-            <b-card v-if="pageName=='index'" class="fixed-bottom footer">
+            <b-card v-if="pageName=='index'" class="fixed-bottom footer" id="invoicesIndicateAmount">
                 <b-row>
                     <b-col cols="8"></b-col>
                     <b-col sm class="text-right">
@@ -959,11 +963,11 @@
                         if (self.invoice.invoice_items.length > 0) {
                             pdfData.data.bdata = self.invoice.invoice_items;
                             pdfData.data.bdata = pdfData.data.bdata.map(i => ({
-                                 ...i, 
-                                price: parseInt(i.price), 
-                                count: parseInt(i.count), 
-                                calcPrice: i.price*i.count,
-                                itemName: ( i.itemName ? i.itemName.replace(/\n/g, '<br />'): '' ) 
+                                ...i,
+                                price: parseInt(i.price),
+                                count: parseInt(i.count),
+                                calcPrice: i.price * i.count,
+                                itemName: (i.itemName ? i.itemName.replace(/\n/g, '<br />') : '')
                             }));
                         } else {
                             pdfData.data.bdata = [{}];
@@ -985,7 +989,7 @@
                     },
                     pdfoutRcpt: async function () {
                         self = this;
-                        const pdfData = getPdfDataRcpt2(self.invoice,self.setting,this.sum);
+                        const pdfData = getPdfDataRcpt2(self.invoice, self.setting, this.sum);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
