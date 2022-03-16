@@ -53,6 +53,14 @@ def login_post():
         if checkUser.password == password:
             user = LoginUser(user_id)
             login_user(user)
+            newHistory = History(
+                userName=user_id,
+                modelName='',
+                modelId='',
+                action='login'
+            )
+            db.session.add(newHistory)
+            db.session.commit()
             next = request.args.get('next')
             return redirect(next or '/')
         else:
@@ -63,6 +71,14 @@ def login_post():
 
 @app.route('/logout', methods=['GET'])
 def logout():
+    newHistory = History(
+        userName=current_user.id,
+        modelName='',
+        modelId='',
+        action='logout'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     logout_user()
     return redirect('/')
 
@@ -177,9 +193,9 @@ def makepdf_file(json_file):
     alter_file_name = pd.pdf_maker(d, file_name=uuid_file_name)
 
     # ------BytesIOを使えば、ファイル作成は必要ない(今回は使わない) ----
-    #pdfdata = pdf_maker(d,is_BytesIO=True)
-    #response = make_response(pdfdata)
-    #response.mimetype = "application/pdf"
+    # pdfdata = pdf_maker(d,is_BytesIO=True)
+    # response = make_response(pdfdata)
+    # response.mimetype = "application/pdf"
     # return response
     return alter_file_name
 
@@ -273,7 +289,6 @@ def userPage():
 
 # --------- UPLOAD function ----------
 
-#up_base_dir = './static/'
 up_base_dir = './static/'
 static_dir = './static'
 data_dir = './data'
@@ -288,7 +303,6 @@ def check_base_dir(base):
     else:
         return static_dir
 
-##up_dir = 'static/upload/'
 
 
 @app.route('/test-upload')
@@ -315,7 +329,7 @@ def delete_files(base):
 
 @app.route("/list-files/<base>/<path:dir_path>", methods=['GET'])
 def get_files_list(base, dir_path):
-    ##fid = dir_path.split('/')[-1]
+    # fid = dir_path.split('/')[-1]
     # return f" {fid} / {up_base_dir}{dir_path}"
     return jsonify(get_flist(check_base_dir(base), dir_path))
 
