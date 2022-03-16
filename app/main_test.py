@@ -304,7 +304,6 @@ def check_base_dir(base):
         return static_dir
 
 
-
 @app.route('/test-upload')
 def uptest():
     return render_template('./uptest.html')
