@@ -1188,8 +1188,8 @@
                     init: function () {
                         this.on("complete", file => {
                             console.log("complete A file has been added");
+                            this.removeFile(file);
                             if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
-                                this.removeFile(file);
                                 app.getFileListDZ();
                             }
                         });
