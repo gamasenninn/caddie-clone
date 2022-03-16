@@ -654,6 +654,7 @@
                     invoice: [],                //選択中のinvoice
                     invoiceItem: [],            //選択中のinvoiceItem
                     customers: [],
+                    customer: [],
                     items: [],
                     units: [],
                     categories: [],
@@ -825,6 +826,13 @@
                                 self.customers = response.data;
                             });
                     },
+                    getCustomer: async function (item) {
+                        self = this;
+                        await axios.get("/customer/"+item.customerId)
+                            .then(function (response) {
+                                self.customer = response.data;
+                            });
+                    },
                     getItems: async function () {
                         self = this;
                         await axios.get("/items")
@@ -926,7 +934,8 @@
                         this.$refs['items-modal'].show()
                     },
                     pdfout: async function (mode) {
-                        const pdfData = getPdfDataInvoice(mode,this.invoice,this.setting,this.sum);
+                        await this.getCustomer(this.invoice)
+                        const pdfData = getPdfDataInvoice(mode,this.invoice,this.setting,this.sum,this.customer);
                         if (this.invoice.invoice_items.length > 0) {
                             pdfData.data.bdata = this.invoice.invoice_items;
                             pdfData.data.bdata = pdfData.data.bdata.map(i => ({
@@ -956,7 +965,7 @@
                     },
                     pdfoutRcpt: async function () {
                         self = this;
-                        const pdfData = getPdfDataRcpt2(self.invoice,self.setting,this.sum);
+                        const pdfData = getPdfDataRcpt(self.invoice,self.setting,this.sum);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)

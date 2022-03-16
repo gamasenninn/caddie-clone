@@ -1,5 +1,3 @@
-#!/usr/local/bin/python3.8
-
 
 from io import BytesIO
 from reportlab.lib import colors
@@ -80,7 +78,6 @@ def make_table(table_info):
     for i,row in enumerate(t_data):
         for j,col in enumerate( row ):
             if type(col) is list:
-
                 col_val = cv(col)          
             else:
                 col_val  = col
@@ -178,7 +175,7 @@ def make_detail(detail,bdata):
 def footer(canvas, doc):
     canvas.saveState()
 
-    print(f"----- page number at footer ----- { canvas._pageNumber } ")
+    #print(f"----- page number at footer ----- { canvas._pageNumber } ")
     canvas.setTitle(defPdf['attr']['name_jp'])
 
     if not defPdf.get('footer'): return
@@ -199,7 +196,7 @@ def footer(canvas, doc):
     if canvas._pageNumber == 1:
         for di in defPdf['header'].get('drawImages'):
             cmd = f'canvas.drawImage{di[0]}'
-            print(cmd)
+            #print(cmd)
             eval(cmd)
 
 
@@ -213,18 +210,21 @@ def footer(canvas, doc):
 
 
 def firstPage(canvas):
-    print("------- first page-------------")
+    #print("------- first page-------------")
+    pass
 
 def coords(canvas):
-    print("-----COORDS-------")
+    #print("-----COORDS-------")
+    pass
 
 def monitor(type,val):
-    print(type,val)
+    #print(type,val)
+    pass
 
 def page_break(pageno):
 
-    print(f"-----------Page Break {pageno}------------------------")
-
+    #print(f"-----------Page Break {pageno}------------------------")
+    pass
 
 def cv(src_l):
     if not src_l: return
