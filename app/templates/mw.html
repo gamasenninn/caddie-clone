@@ -1,91 +1,96 @@
 <% extends "head.html" %>
-<% block content %>
+  <% block content %>
 
-<!-- jsPanel CSS -->
-<link href="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.css" rel="stylesheet">
-<!-- jsPanel JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.js"></script>
+    <!-- jsPanel CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.css" rel="stylesheet">
+    <!-- jsPanel JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/jspanel.js"></script>
 
-<!-- optional jsPanel extensions -->
-<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/modal/jspanel.modal.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/tooltip/jspanel.tooltip.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/hint/jspanel.hint.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/layout/jspanel.layout.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/contextmenu/jspanel.contextmenu.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/dock/jspanel.dock.js"></script>
+    <!-- optional jsPanel extensions -->
+    <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/modal/jspanel.modal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/tooltip/jspanel.tooltip.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/hint/jspanel.hint.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/layout/jspanel.layout.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/contextmenu/jspanel.contextmenu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspanel4@4.12.0/dist/extensions/dock/jspanel.dock.js"></script>
 
-<style>
-  body{
-    background-color: #f7f7f7;
-  }
+    <style>
+      body {
+        background-color: #f7f7f7;
+      }
 
-  #logo{
-    width: 400; 
-    position: fixed;
-    inset: 0;
-    margin: auto;
-  }
-</style>
+      #logo {
+        width: 400;
+        position: fixed;
+        inset: 0;
+        margin: auto;
+      }
+    </style>
 
-<div id="app">
-  <!--
+    <div id="app">
+      <!--
   <b-button size="lg" id="openMenu" @click="openMenu" class="mt-3 ml-3"><i class="fas fa-bars"></i></b-button>
   -->
-  <b-img id="logo" src="../static/images/logo_a_color2.png"></b-img>
-  <b-row>
-    <b-col class="text-right">
-      <div v-if="menuVisible">
-        <sc-menu  :visible="menuVisible" class="mt-3 mr-3"></sc-menu>
-      </div>
-    </b-col>
-  </b-row>
-</div>
+      <b-img id="logo" src="../static/images/logo_a_color2.png"></b-img>
+      <b-row>
+        <b-col class="text-right">
+          <div v-if="menuVisible">
+            <sc-menu :visible="menuVisible" class="mt-3 mr-3"></sc-menu>
+          </div>
+        </b-col>
+      </b-row>
+    </div>
 
-<script>
-    var app = new Vue({
+    <script>
+      var app = new Vue({
         el: '#app',
         data: {
-          item:[],
+          item: [],
           menuVisible: false,
 
         },
-        methods:{
-          openMenu: function(){
+        methods: {
+          openMenu: function () {
             openMenu();
           },
         },
-        mounted: function(){
+        mounted: function () {
           //if (localStorage.getItem('wMode')=='tb') {
           //}
-          if (localStorage.getItem('wMode')=='mw') {
-              this.menuVisible=false;
-          }
-          else{
-            this.menuVisible=true;
+          // タブレットメニュー表示
+          if (localStorage.getItem('wMode')) {
+            if (localStorage.getItem('wMode') == 'mw') {
+              this.menuVisible = false;
+            } else {
+              this.menuVisible = true;
+            }
+          } else {
+            this.menuVisible = false;
           }
         }
       });
 
-</script>
+    </script>
 
-<script>
+    <script>
 
-if (localStorage.getItem('wMode')===null){
-  localStorage.setItem('wMode',modeCheck());
-}
+      if (localStorage.getItem('wMode') === null) {
+        localStorage.setItem('wMode', modeCheck());
+      }
 
-let _left = 100;
-let _top = 100;
-wins={};
+      let _left = 100;
+      let _top = 100;
+      wins = {};
 
-function openMenu(obj){ 
-  self = obj;
+      function openMenu(obj) {
+        self = obj;
 
-  if (modeName()=='tb'){
-    return
-  }
+        if (modeName() == 'tb') {
+          return
+        }
 
-  jsPanel.create({
+        jsPanel.create({
           headerControls: 'closeOnly sm',
           headerTitle: 'menu',
           panelSize: '200 700',
@@ -93,217 +98,218 @@ function openMenu(obj){
           position: 'left-top 0 0',
           contentOverflow: 'hidden',
           content: '<div class="mt-2"><iframe src=/mw-menu width=100% height=100% frameborder="0"><iframe></div>',
-          onbeforeclose: function(panel){
+          onbeforeclose: function (panel) {
             return confirm('ログアウトしますか？');
           },
-          onclosed: function(panel){
+          onclosed: function (panel) {
             window.location.href = '/logout';
           },
           dragit: {
-            containment: [0, -100, -100,-100]
+            containment: [0, -100, -100, -100]
           },
-          callback: function(){
-            $('iframe').on('load',function(){
-                $(this).contents().find('#customer').on('click', function(){
-                  openWindow('/customer-page','得意先','customer')
-                });
-                $(this).contents().find('#item').on('click', function(){
-                  openWindow('/item-page','商品','item')
-                });
-                $(this).contents().find('#invoice').on('click', function(){
-                  openWindow('/invoice-page','請求書','invoice')
-                });
-                $(this).contents().find('#quotation').on('click', function(){
-                  openWindow('/quotation-page','見積書','quotation')
-                });
-                $(this).contents().find('#memo').on('click', function(){
-                  openWindow('/memo-page','メモ','memo')
-                });
-                $(this).contents().find('#setting').on('click', function(){
-                  openWindow('/setting-page','設定','setting')
-                });
-                $(this).contents().find('#logout').on('click', function(){
-                  window.location.href = '/logout';
-                });
-                $(this).contents().find('#tb-mode').on('click', function(){
-                  localStorage.setItem('wMode','tb')
-                  window.location.href = '/';
-                });
-                $(this).contents().find('#mw-mode').on('click', function(){
-                  localStorage.setItem('wMode','mw')
-                  window.location.href = '/';
-                });
+          callback: function () {
+            $('iframe').on('load', function () {
+              $(this).contents().find('#customer').on('click', function () {
+                openWindow('/customer-page', '得意先', 'customer')
+              });
+              $(this).contents().find('#item').on('click', function () {
+                openWindow('/item-page', '商品', 'item')
+              });
+              $(this).contents().find('#invoice').on('click', function () {
+                openWindow('/invoice-page', '請求書', 'invoice')
+              });
+              $(this).contents().find('#quotation').on('click', function () {
+                openWindow('/quotation-page', '見積書', 'quotation')
+              });
+              $(this).contents().find('#memo').on('click', function () {
+                openWindow('/memo-page', 'メモ', 'memo')
+              });
+              $(this).contents().find('#setting').on('click', function () {
+                openWindow('/setting-page', '設定', 'setting')
+              });
+              $(this).contents().find('#logout').on('click', function () {
+                window.location.href = '/logout';
+              });
+              $(this).contents().find('#tb-mode').on('click', function () {
+                localStorage.setItem('wMode', 'tb')
+                window.location.href = '/';
+              });
+              $(this).contents().find('#mw-mode').on('click', function () {
+                localStorage.setItem('wMode', 'mw')
+                window.location.href = '/';
+              });
             });
           },
-  });
-}
+        });
+      }
 
-function openWindow(url,title,name){
-  if(modeName() !=='mw'){
-    window.location.href = url;
-    return
-  } 
-  if (wins[name] ){
-    if (wins[name] == "loading" ) return;
-    wins[name].front();
-    return;
-  }
-  wins[name] = "loading";
+      function openWindow(url, title, name) {
+        if (modeName() !== 'mw') {
+          window.location.href = url;
+          return
+        }
+        if (wins[name]) {
+          if (wins[name] == "loading") return;
+          wins[name].front();
+          return;
+        }
+        wins[name] = "loading";
 
-  let panel = jsPanel.create({
-    headerControls: 'sm',
-    headerTitle: title,
-    data:{
-      title: title,
-      name: name
-    },
-    footerToolbar: '<span>footer</span>',
-    borderRadius: '.5rem',
-    contentOverflow: 'hidden hidden',
-    panelSize: {
-        width: () => window.innerWidth * 0.5,
-        height: '50vh'
-    },
-    position: { 
-        my: 'center-top',
-        at: 'center-top',
-        //of: 'header',
-        //autoposition: 'down',
-        offsetX: _left,
-        offsetY: _top,
-        //maxTop: 200
-    },
-    dragit: {
-        containment: [0, -200, -100,-200]
-    },
-    onbeforeclose: function(panel){
-      var doc = panel.content.querySelector('iframe').contentWindow.document; //iframe内のコンテンツを取得
-      //console.log(doc.body.innerHTML)
-      if (doc.body.querySelector('#countChanged')){
-        count = parseInt(doc.body.querySelector('#countChanged').value);
-        //alert(count);
-        if (count > 0){
-          return confirm('未保存のデータがありますが、保存せず終了しますか？');
+        let panel = jsPanel.create({
+          headerControls: 'sm',
+          headerTitle: title,
+          data: {
+            title: title,
+            name: name
+          },
+          footerToolbar: '<span>footer</span>',
+          borderRadius: '.5rem',
+          contentOverflow: 'hidden hidden',
+          panelSize: {
+            width: () => window.innerWidth * 0.5,
+            height: '50vh'
+          },
+          position: {
+            my: 'center-top',
+            at: 'center-top',
+            //of: 'header',
+            //autoposition: 'down',
+            offsetX: _left,
+            offsetY: _top,
+            //maxTop: 200
+          },
+          dragit: {
+            containment: [0, -200, -100, -200]
+          },
+          onbeforeclose: function (panel) {
+            var doc = panel.content.querySelector('iframe').contentWindow.document; //iframe内のコンテンツを取得
+            //console.log(doc.body.innerHTML)
+            if (doc.body.querySelector('#countChanged')) {
+              count = parseInt(doc.body.querySelector('#countChanged').value);
+              //alert(count);
+              if (count > 0) {
+                return confirm('未保存のデータがありますが、保存せず終了しますか？');
+              }
+            }
+            return true;
+          },
+          onclosed: function (panel) {
+            delete wins[panel.options.data.name];
+          },
+          callback: function () {
+            $('iframe').on('load', function () {
+              $(this).contents().on('click', function () {
+                panel.front();
+              });
+              wins[name] = panel;
+            });
+          },
+          content: '<iframe src=' + url + ' width="100%" height="100%" frameborder="0"><iframe>',
+        });
+        _left += 40;
+        _top += 40;
+        if (_left > 500) _left -= 400
+        if (_top > 300) _top -= 300
+
+      }
+
+      openMenu();
+
+      window.addEventListener('message', function (e) {
+        //if (event.origin !== "https://example.com") 
+        //  return;
+        console.log(event.origin)
+        //console.log(event.source)
+        if (e.data.action == 'pdfOut') {
+          console.log(e.data.message)
+          openPDF(e.data.message)
+        }
+      });
+
+      function openPDF(file) {
+        url = "pdf/" + file;
+        let panel = jsPanel.create({
+          headerControls: 'sm',
+          headerTitle: "PDF VIEWER",
+          footerToolbar: '<span>footer</span>',
+          borderRadius: '.5rem',
+          contentOverflow: 'hidden hidden',
+          panelSize: {
+            width: () => window.innerWidth * 0.3,
+            height: '100vh'
+          },
+          dragit: {
+            containment: [0, -200, -100, -200]
+          },
+          position: {
+            my: 'right-top',
+            at: 'right-top',
+            offsetX: _left,
+            offsetY: _top,
+            //maxTop: 200
+          },
+          callback: function () {
+            $('iframe').on('load', function () {
+              $(this).contents().on('click', function () {
+                panel.front();
+              });
+            });
+          },
+          content: '<iframe src=' + url + ' width=100% height=100%><iframe>',
+        });
+      }
+      /*
+      if(localStorage.getItem('wMode')=='mw'){
+        //  OSM map for test 
+          panel=jsPanel.create({
+          headerControls: 'sm',
+          headerTitle: "Client Map",
+          footerToolbar: '<span>footer</span>',
+          borderRadius: '.5rem',
+          contentOverflow: 'hidden hidden',
+          panelSize: {
+              width: 500,
+              height: 500
+          },
+          position: { 
+              my: 'left-top',
+              at: 'left-top',
+              offsetX: 250,
+              offsetY: 250,
+              //maxTop: 200
+          },
+          //callback: function(){
+          //  $('iframe').on('load',function(){
+          //    $(this).contents().on('click', function(){
+          //        panel.front();
+          //    });
+          //  });
+          //},  
+          content: `
+            <iframe src="/leaflet" width=100% height=100%></iframe>
+          `
+        });
+      
+       }
+      */
+
+
+      function modeCheck() {
+        var ua = navigator.userAgent;
+        if (ua.indexOf('iPhone') > 0 || ua.indexOf('iPod') > 0 || ua.indexOf('Android') > 0 && ua.indexOf('Mobile') > 0) {
+          return 'sm';
+        } else if (ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0) {
+          return 'tb';
+        } else {
+          return 'mw';
         }
       }
-      return true;
-    },
-    onclosed: function(panel){
-      delete wins[panel.options.data.name];
-    },
-    callback: function(){
-      $('iframe').on('load',function(){
-        $(this).contents().on('click', function(){
-            panel.front();
-        });
-        wins[name] = panel;
-      });
-    },  
-    content: '<iframe src='+ url +' width="100%" height="100%" frameborder="0"><iframe>',
-  });
-  _left += 40; 
-  _top += 40;
-  if ( _left > 500 ) _left -= 400   
-  if ( _top > 300 ) _top -= 300   
 
-}
-
-openMenu();
-
-window.addEventListener('message', function (e) {
-  //if (event.origin !== "https://example.com") 
-  //  return;
-  console.log(event.origin)
-  //console.log(event.source)
-  if (e.data.action == 'pdfOut') {
-      console.log(e.data.message)
-      openPDF(e.data.message)
-  }
-});
-
-function openPDF(file){
-  url ="pdf/"+file;
-  let panel=jsPanel.create({
-    headerControls: 'sm',
-    headerTitle: "PDF VIEWER",
-    footerToolbar: '<span>footer</span>',
-    borderRadius: '.5rem',
-    contentOverflow: 'hidden hidden',
-    panelSize: {
-        width: () => window.innerWidth * 0.3,
-        height: '100vh'
-    },
-    dragit: {
-        containment: [0, -200, -100,-200]
-    },
-    position: { 
-        my: 'right-top',
-        at: 'right-top',
-        offsetX: _left,
-        offsetY: _top,
-        //maxTop: 200
-    },
-    callback: function(){
-      $('iframe').on('load',function(){
-        $(this).contents().on('click', function(){
-            panel.front();
-        });
-      });
-    },  
-    content: '<iframe src='+ url +' width=100% height=100%><iframe>',
-  });
-}
-/*
-if(localStorage.getItem('wMode')=='mw'){
-  //  OSM map for test 
-    panel=jsPanel.create({
-    headerControls: 'sm',
-    headerTitle: "Client Map",
-    footerToolbar: '<span>footer</span>',
-    borderRadius: '.5rem',
-    contentOverflow: 'hidden hidden',
-    panelSize: {
-        width: 500,
-        height: 500
-    },
-    position: { 
-        my: 'left-top',
-        at: 'left-top',
-        offsetX: 250,
-        offsetY: 250,
-        //maxTop: 200
-    },
-    //callback: function(){
-    //  $('iframe').on('load',function(){
-    //    $(this).contents().on('click', function(){
-    //        panel.front();
-    //    });
-    //  });
-    //},  
-    content: `
-      <iframe src="/leaflet" width=100% height=100%></iframe>
-    `
-  });
-
- }
-*/
-
-
-function modeCheck() {
-      var ua = navigator.userAgent;
-      if(ua.indexOf('iPhone') > 0 || ua.indexOf('iPod') > 0 || ua.indexOf('Android') > 0 && ua.indexOf('Mobile') > 0){
-          return 'sm';
-      }else if(ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0){
-          return 'tb';
-      }else{
-          return 'mw';
+      function modeName() {
+        return localStorage.getItem('wMode');
       }
-}
 
-function modeName(){
-  return localStorage.getItem('wMode');
-}
-
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<% endblock %>
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <% endblock %>
