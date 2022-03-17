@@ -6,7 +6,7 @@ from models import *
 def seeder():
 
     models = [User, Customer, Item, Invoice,
-              Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker, Setting]
+              Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
 
     for model in models:
         db.session.query(model).delete()
@@ -207,9 +207,12 @@ def seeder():
     # -----History-----
     print('----History----')
     history = [
-        History(id=1, userName='tanaka_taro', modelName='Customer',modelId=1,action='GET',),
-        History(id=2, userName='suzuki_jiro', modelName='Item',modelId=2,action='POST',),
-        History(id=3, userName='satou_saburo', modelName='Invoice',modelId=3,action='DELETE',),
+        History(id=1, userName='tanaka_taro',
+                modelName='Customer', modelId=1, action='GET',),
+        History(id=2, userName='suzuki_jiro',
+                modelName='Item', modelId=2, action='POST',),
+        History(id=3, userName='satou_saburo',
+                modelName='Invoice', modelId=3, action='DELETE',),
     ]
     db.session.add_all(history)
     db.session.commit()
@@ -221,8 +224,8 @@ def seeder():
     # -----Setting-----
     print('----Setting----')
     setting = [
-        Setting(id=1, companyName='自社株式会社', representative='自社代表者', postNumber='000-0000', address='宇都宮市北若松原', telNumber='000-0000-0000', faxNumber='000-0000-0000', url='mypage.com', email='mymail@co.jp', logoFilePath='../static/asset/logo/logo2.jpg',
-                stampFilePath='../static/asset/stamp/inkan.png', isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True, isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True)
+        Setting(id=1, companyName='自社株式会社', representative='自社代表者', postNumber='000-0000', address='宇都宮市北若松原', telNumber='000-0000-0000', faxNumber='000-0000-0000', url='mypage.com', email='mymail@co.jp', logoFilePath='./static/asset/logo/logo2.jpg',
+                stampFilePath='./static/asset/stamp/inkan.png', isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True, isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True)
     ]
     db.session.add_all(setting)
     db.session.commit()
