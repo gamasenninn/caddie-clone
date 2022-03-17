@@ -93,19 +93,22 @@
         jsPanel.create({
           headerControls: 'closeOnly sm',
           headerTitle: 'menu',
-          panelSize: '200 700',
-          contentSize: '300 700',
+          panelSize: '200 600',
+          contentSize: '300 600',
           position: 'left-top 0 0',
           contentOverflow: 'hidden',
           content: '<div class="mt-2"><iframe src=/mw-menu width=100% height=100% frameborder="0"><iframe></div>',
+          dragit: {
+            containment: [0, -100, -100, -100]
+          },
+          resizeit:{
+            disable: true
+          },
           onbeforeclose: function (panel) {
             return confirm('ログアウトしますか？');
           },
           onclosed: function (panel) {
             window.location.href = '/logout';
-          },
-          dragit: {
-            containment: [0, -100, -100, -100]
           },
           callback: function () {
             $('iframe').on('load', function () {
