@@ -65,10 +65,10 @@ def login_post():
             next = request.args.get('next')
             return redirect(next or '/')
         else:
-            flash("パスワードが間違っています")
+            flash("ユーザーIDもしくはパスワードが間違っています")
             return redirect('/login')
     else:
-        flash("存在しないユーザです")
+        flash("ユーザーIDもしくはパスワードが間違っています")
         return redirect('/login')
 
 
