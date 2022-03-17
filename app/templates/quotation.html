@@ -1021,6 +1021,9 @@
                         self = this;
                         await this.getCustomer(this.quotation)
                         const pdfData = getPdfDataQuotation(this.quotation,this.setting,this.sum,this.customer);
+                        if (!this.setting.isDisplayQuotationLogo) pdfData.defPdf.header.drawImages = [];
+                        if (!this.setting.isDisplayQuotationStamp) pdfData.defPdf.footer.drawImages = [];
+
                         if (self.quotation.quotation_items.length > 0) {
                             pdfData.data.bdata = self.quotation.quotation_items;
                             pdfData.data.bdata = pdfData.data.bdata.map(i => ({

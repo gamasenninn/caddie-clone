@@ -195,15 +195,17 @@ def footer(canvas, doc):
     #print("_pageNumber:",canvas._pageNumber)
     if canvas._pageNumber == 1:
         for di in defPdf['header'].get('drawImages'):
-            cmd = f'canvas.drawImage{di[0]}'
-            #print(cmd)
-            eval(cmd)
+            if di:
+                cmd = f'canvas.drawImage{di[0]}'
+                #print(cmd)
+                eval(cmd)
 
 
     for di in defPdf['footer'].get('drawImages'):
-        cmd = f'canvas.drawImage{di[0]}'
-        #print(cmd)
-        eval(cmd)
+        if di:
+            cmd = f'canvas.drawImage{di[0]}'
+            #print(cmd)
+            eval(cmd)
 
 
     canvas.restoreState()
