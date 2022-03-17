@@ -696,6 +696,13 @@ def invoice_item_create():
     db.session.add(newInvoiceItem)
     db.session.commit()
     id = newInvoiceItem.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoiceItems',
+        modelId=id,
+        action='post')
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -710,6 +717,14 @@ def invoice_item_update(id):
     invoiceItem.cost = data.get('cost')
     invoiceItem.count = data.get('count')
     invoiceItem.unit = data.get('unit')
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoiceItems',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -717,6 +732,13 @@ def invoice_item_update(id):
 @app.route('/invoice_item/<id>', methods=['DELETE'])
 def invoice_item_destroy(id):
     invoiceItem = Invoice_Item.query.filter(Invoice_Item.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoiceItems',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
