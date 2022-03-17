@@ -167,7 +167,7 @@
           contentOverflow: 'hidden hidden',
           panelSize: {
             width: '1220px',
-            height: '50vh'
+            height: '70vh'
           },
           position: {
             my: 'center-top',
@@ -196,7 +196,7 @@
           onclosed: function (panel) {
             delete wins[panel.options.data.name];
           },
-          callback: function () {
+          callback: function (panel) {
             $('iframe').on('load', function () {
               $(this).contents().on('click', function () {
                 panel.front();
