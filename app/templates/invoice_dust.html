@@ -1,5 +1,8 @@
 <% extends "head.html" %>
     <% block content %>
+        <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+        <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
+
         <style>
             .sm-mode {
                 display: none;
@@ -350,13 +353,13 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-dropdown split dropup id="dropdown-dropup" size="lg" class="m-2" @click="alert('印刷しました。');"
+                        <b-dropdown split dropup id="dropdown-dropup" size="lg" class="m-2" @click="pdfout('invoice')"
                             id="pdfout" v-b-tooltip.hover.top="'印刷'">
                             <template #button-content>
                                 <i class="fas fa-print"></i>
                             </template>
-                            <b-dropdown-item>納品書</b-dropdown-item>
-                            <b-dropdown-item>領収書</b-dropdown-item>
+                            <b-dropdown-item @click="pdfout('delivery')" >納品書</b-dropdown-item>
+                            <b-dropdown-item @click="pdfoutRcpt">領収書</b-dropdown-item>
                         </b-dropdown>
                     </b-col>
                 </b-row>
@@ -374,6 +377,7 @@
 
         </div>
 
+        <script src="static/component/def-pdf.js"></script>
         <script>
             Vue.filter('nf', function (val) {
                 return val.toLocaleString();
@@ -390,6 +394,8 @@
                     invoices: [],                   //全件invoice
                     invoice: [],                    //選択中のinvoice
                     invoiceItem: [],                //選択中のinvoiceItem
+                    customer:[],
+                    setting: [],
                 },
                 methods: {
                     // ---Invoices---
@@ -440,6 +446,68 @@
                     formatDateTime(datetime) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
                     },
+                    getCustomer: async function (item) {
+                        self = this;
+                        await axios.get("/customer/" + item.customerId)
+                            .then(function (response) {
+                                self.customer = response.data;
+                            });
+                    },
+                    getSetting: async function () {
+                        self = this;
+                        await axios.get("/setting")
+                            .then(function (response) {
+                                console.log(response);
+                                self.setting = response.data;
+                            });
+                    },                   
+                    pdfout: async function (mode) {
+                        await this.getCustomer(this.invoice);
+                        await this.getSetting();
+                        const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, this.sum, this.customer);
+                        if (mode == 'delivery') {
+                            if (!this.setting.isDisplayDeliveryLogo) pdfData.defPdf.header.drawImages = [];
+                            if (!this.setting.isDisplayDeliveryStamp) pdfData.defPdf.footer.drawImages = [];
+                        } else {
+                            if (!this.setting.isDisplayInvoiceLogo) pdfData.defPdf.header.drawImages = [];
+                            if (!this.setting.isDisplayInvoiceStamp) pdfData.defPdf.footer.drawImages = [];
+                        }
+                        if (this.invoice.invoice_items.length > 0) {
+                            pdfData.data.bdata = this.invoice.invoice_items;
+                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({
+                                ...i,
+                                price: parseInt(i.price),
+                                count: parseInt(i.count),
+                                calcPrice: i.price * i.count,
+                                itemName: (i.itemName ? i.itemName.replace(/\n/g, '<br />') : '')
+                            }));
+                        } else {
+                            pdfData.data.bdata = [{}];
+                        }
+                        await axios.post("/pdfmaker", pdfData)
+                            .then(function (response) {
+                                printJS('/pdf/' + response.data)
+                                /*
+                                                                if (self.modeName == 'mw') {
+                                                                    window.parent.postMessage({
+                                                                        action: 'pdfOut',
+                                                                        message: response.data
+                                                                    }, "*");
+                                                                } else {
+                                                                    window.open('/pdf/' + response.data)
+                                                                }
+                                */
+                            });
+                    },
+                    pdfoutRcpt: async function () {
+                        self = this;
+                        const pdfData = getPdfDataRcpt(self.invoice, self.setting, this.sum);
+                        await axios.post("/pdfmaker", pdfData)
+                            .then(function (response) {
+                                printJS('/pdf/' + response.data)
+                            });
+                    },
+
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
