@@ -25,11 +25,15 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     h.customerPostNumber = customer.postNumber;
     h.customerAddress = customer.address + customer.addressSub;
     h.headerTotalLabel = "請求金額";
+    sum.amountLabel = "小計";
+    sum.taxLabel = "消費税";
+    sum.totalLabel = "合計金額";
     if (invoice.isTaxExp) {
         sum.amount = sumInvoice;
         sum.tax = parseInt(sumInvoice * 0.1);
         sum.total = parseInt(sumInvoice * 1.1);
     } else {
+        sum.taxLabel = "うち消費税";
         sum.amountLabel = "小計(税込み)";
         sum.amount = sumInvoice;
         sum.total = sumInvoice;
@@ -56,12 +60,14 @@ function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
     h.customerPostNumber = customer.postNumber;
     h.customerAddress = customer.address + customer.addressSub;
     h.headerTotalLabel = "見積金額";
+    sum.amountLabel = "小計(税込み)";
+    sum.taxLabel = "うち消費税";
+    sum.totalLabel = "合計金額";
     if (quotation.isTaxExp) {
         sum.amount = sumQuotation;
         sum.tax = parseInt(sumQuotation * 0.1);
         sum.total = parseInt(sumQuotation * 1.1);
     } else {
-        sum.amountLabel = "小計(税込み)";
         sum.amount = sumQuotation;
         sum.total = sumQuotation;
         sum.tax = parseInt(sum.total - sum.total / 1.1)
