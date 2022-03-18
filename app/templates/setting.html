@@ -183,6 +183,17 @@
                                         <input hidden type="file" name="file" id="logo-dropzone" multiple>
                                     </form>
                                     <span>ここにロゴ用ファイルをドロップしてください。</span>
+                                    <b-form-group label-cols="4" label-size="sm" label="高さ" label-for="logoHeight"
+                                        class="mt-3">
+                                        <b-form-input v-model="setting.logoHeight" id="logoHeight" size="sm"
+                                            type="number">
+                                        </b-form-input>
+                                    </b-form-group>
+                                    <b-form-group label-cols="4" label-size="sm" label="幅" label-for="logoWidth">
+                                        <b-form-input v-model="setting.logoWidth" id="logoWidth" size="sm"
+                                            type="number">
+                                        </b-form-input>
+                                    </b-form-group>
                                 </b-col>
                                 <b-col cols="1"></b-col>
                                 <b-col sm>
@@ -193,6 +204,17 @@
                                         <input hidden type="file" name="file" id="stamp-dropzone" multiple>
                                     </form>
                                     <span>ここに印鑑用ファイルをドロップしてください。</span>
+                                    <b-form-group label-cols="4" label-size="sm" label="高さ" label-for="stampHeight"
+                                        class="mt-3">
+                                        <b-form-input v-model="setting.stampHeight" id="stampHeight" size="sm"
+                                            type="number">
+                                        </b-form-input>
+                                    </b-form-group>
+                                    <b-form-group label-cols="4" label-size="sm" label="幅" label-for="stampWidth">
+                                        <b-form-input v-model="setting.stampWidth" id="stampWidth" size="sm"
+                                            type="number">
+                                        </b-form-input>
+                                    </b-form-group>
                                 </b-col>
                                 <b-col cols="1"></b-col>
                             </b-row>
@@ -263,12 +285,13 @@
                     </template>
                     <div class="d-block text-center">
                         <p>
-                            ver:1.0<br/>
+                            ver:1.0<br />
                             Copyright © 2022-2022 Crescom inc. All Rights Reserved.
                         </p>
                         <p>
-                            Released under the MIT license<br/>
-                            <a href="https://github.com/gamasenninn/soho-caddie/blob/main/LICENSE">https://github.com/gamasenninn/soho-caddie/blob/main/LICENSE</a>
+                            Released under the MIT license<br />
+                            <a
+                                href="https://github.com/gamasenninn/soho-caddie/blob/main/LICENSE">https://github.com/gamasenninn/soho-caddie/blob/main/LICENSE</a>
                         </p>
                     </div>
                 </b-modal>

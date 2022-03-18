@@ -225,7 +225,7 @@ def seeder():
     print('----Setting----')
     setting = [
         Setting(id=1, companyName='自社株式会社', representative='自社代表者', postNumber='000-0000', address='宇都宮市北若松原', telNumber='000-0000-0000', faxNumber='000-0000-0000', url='mypage.com', email='mymail@co.jp', logoFilePath='./static/asset/logo/logo2.jpg',
-                stampFilePath='./static/asset/stamp/inkan.png', isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True, isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True)
+                logoHeight=100, logoWidth=100, stampFilePath='./static/asset/stamp/inkan.png', stampHeight=100, stampWidth=100, isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True, isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True)
     ]
     db.session.add_all(setting)
     db.session.commit()

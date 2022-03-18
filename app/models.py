@@ -287,7 +287,11 @@ class Setting(db.Model):
     url = db.Column(db.String)
     email = db.Column(db.String)
     logoFilePath = db.Column(db.String)
+    logoHeight = db.Column(db.Integer)
+    logoWidth = db.Column(db.Integer)
     stampFilePath = db.Column(db.String)
+    stampHeight = db.Column(db.Integer)
+    stampWidth = db.Column(db.Integer)
     isDisplayQuotationLogo = db.Column(
         db.Boolean, nullable=False, default=True)
     isDisplayInvoiceLogo = db.Column(db.Boolean, nullable=False, default=True)

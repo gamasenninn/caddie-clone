@@ -224,7 +224,11 @@
 | url                     | ホームページURL  | text        |                          | 
 | email                   | メールアドレス   | text        |                          | 
 | logoFilePath            | ロゴファイルパス | text        |                          | 
-| stampFilePath           | 印鑑ファイルパス | text        |                          | 
+| logoHeight              | ロゴ高さ        | integer     |                          | 
+| logoWidth               | ロゴ幅          | integer     |                          | 
+| stampFilePath           | 印鑑ファイルパス | text        |                          |
+| stampHeight             | 印鑑高さ        | integer     |                          | 
+| stampWidth              | 印鑑幅          | integer     |                          |  
 | isDisplayQuotationLogo  | ロゴ見積書表示   | boolean     | 印刷時に表示するかどうか | 
 | isDisplayInvoiceLogo    | ロゴ請求書表示   | boolean     | 印刷時に表示するかどうか | 
 | isDisplayDeliveryLogo   | ロゴ納品書表示   | boolean     | 印刷時に表示するかどうか | 
