@@ -5,7 +5,7 @@ import sys
 import json
 import uuid
 from flask import redirect, request
-from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory, render_template,flash
+from flask import Flask, request, json, jsonify, Response, make_response, send_file, send_from_directory, render_template, flash
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 import importlib
 from models import *
@@ -83,7 +83,7 @@ def logout():
     db.session.add(newHistory)
     db.session.commit()
     logout_user()
-    ##flash("ログアウトしました")
+    # flash("ログアウトしました")
 
     return redirect('/')
 
