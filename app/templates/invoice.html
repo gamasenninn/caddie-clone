@@ -215,23 +215,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="請求書入力"
                             header-border-variant="light">
                             <b-row>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="日付"
-                                        label-for="applyDate" label-align="right">
-                                        <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm" type="date">
-                                        </b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="支払期限"
-                                        label-for="deadLine" label-align="right">
-                                        <b-form-input v-model="invoice.deadLine" id="deadLine" size="sm" type="date">
-                                        </b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
+                                <b-col xl>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
                                         label-for="customer" class="customer" label-align="right">
                                         <b-form-input v-model="invoice.customerName" id="customerName" size="sm"
@@ -264,18 +248,48 @@
                                         </b-modal>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm>
+                                <b-col xl>
                                     <b-row>
-                                        <b-col sm>
-                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="敬称"
+                                        <b-col xl>
+                                            <b-form-group label-cols="2" label-cols-xl="4" label-size="sm" label="敬称"
                                                 label-for="honorificTitle" label-align="right">
                                                 <b-form-input v-model="invoice.honorificTitle" id="honorificTitle"
                                                     size="sm" autocomplete="off">
                                                 </b-form-input>
                                             </b-form-group>
                                         </b-col>
-                                        <b-col sm>
-                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="担当者"
+                                        <b-col xl>
+                                            <b-form-group label-cols="2" label-cols-xl="4" label-size="sm" label="日付"
+                                                label-for="applyDate" label-align="right">
+                                                <b-form-input v-model="invoice.applyDate" id="applyDate" size="sm"
+                                                    type="date">
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-col>
+                                    </b-row>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col xl>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
+                                        label-for="department" label-align="right">
+                                        <b-form-input v-model="invoice.department" id="department" size="sm"
+                                            autocomplete="off">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col xl>
+                                    <b-row>
+                                        <b-col xl>
+                                            <b-form-group label-cols="2" label-cols-xl="4" label-size="sm" label="支払期限"
+                                                label-for="deadLine" label-align="right">
+                                                <b-form-input v-model="invoice.deadLine" id="deadLine" size="sm"
+                                                    type="date">
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-col>
+                                        <b-col xl>
+                                            <b-form-group label-cols="2" label-cols-xl="4" label-size="sm" label="担当者"
                                                 label-for="manager" label-align="right">
                                                 <b-form-input v-model="invoice.manager" id="manager" size="sm"
                                                     autocomplete="off">
@@ -286,13 +300,7 @@
                                 </b-col>
                             </b-row>
                             <b-row>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
-                                        label-for="department" label-align="right">
-                                        <b-form-input v-model="invoice.department" id="department" size="sm"
-                                            autocomplete="off">
-                                        </b-form-input>
-                                    </b-form-group>
+                                <b-col xl>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="先方担当者"
                                         label-for="otherPartyManager" label-align="right">
                                         <b-form-input v-model="invoice.otherPartyManager" id="otherPartyManager"
@@ -304,16 +312,15 @@
                                         <b-form-input v-model="invoice.title" id="title" size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
+                                </b-col>
+                                <b-col xl>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="メモ" label-align="right">
-                                        <b-form-textarea v-model="invoice.memo" size="sm" rows="2">
+                                        <b-form-textarea v-model="invoice.memo" size="sm" rows="3">
                                         </b-form-textarea>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm>
-                                </b-col>
                             </b-row>
-
                         </b-card>
 
                         <!--  table list & edit -->
