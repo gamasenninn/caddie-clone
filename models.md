@@ -223,6 +223,9 @@
 | faxNumber               | FAX番号          | string(30)  |                          | 
 | url                     | ホームページURL  | text        |                          | 
 | email                   | メールアドレス   | text        |                          | 
+| payee                   | 振込先          | text        |                          | 
+| accountHolder           | 口座名義        | text        |                          | 
+| accountHolderKana       | 口座名義カナ     | text        |                          | 
 | logoFilePath            | ロゴファイルパス | text        |                          | 
 | logoHeight              | ロゴ高さ        | integer     |                          | 
 | logoWidth               | ロゴ幅          | integer     |                          | 
