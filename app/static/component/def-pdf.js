@@ -197,23 +197,24 @@ function getPdfData(h, sum) {
                 "table_infos": [
                     h.category == '請求書' ? {
                         "table": [
-                            [["P","振込先","memo"], "",["P", h.payee, "sm_l"],  ""],
-                            ["","","",""],
-                            ["","","",""],
-                            ["","","",""],
-                            [["P","","備考","memo"],"", ["P", h.memo, "sm_l"],  ""],
+                            [["P","■振込先","memo"], ["P", h.payee, "sm_l"],"",  ""],
+                            ["",["P","カナ","sm_r"],["P", h.accountHolderKana, "sm_l"],""],
+                            ["",["P","名義","sm_r"],["P", h.accountHolder, "sm_l"],""],
+                            ["","","","",],
+                            [["P","■備考","memo"],["P", h.memo, "sm_l"],"",""],
                         ],
                         "col_widths": ["E", "(20*mm,15*mm,90*mm,5*mm)"],
-                        "row_heights": ["E", "(7*mm,7*mm,7*mm,7*mm,25*mm)"],
+                        "row_heights": ["E", "(6*mm,6*mm,6*mm,4*mm,25*mm)"],
                         "table_style": [
-                            ["E", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
-                            ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
                             ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
+                            ["E", "('SPAN',(1,0),(2,0))"],
+                            ["E", "('SPAN',(1,4),(2,4))"],
                         ]
                     } 
                     :{
                         "table": [
-                            [["P","備考","memo"], ["P", h.memo, "sm_l"], "", ""],
+                            [["P","■備考","memo"], ["P", h.memo, "sm_l"], "", ""],
                             ["", "", "", ""],
                         ],
                         "col_widths": ["E", "(15*mm,150*mm,5*mm,5*mm)"],
