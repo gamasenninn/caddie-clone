@@ -286,6 +286,9 @@ class Setting(db.Model):
     faxNumber = db.Column(db.String(30))
     url = db.Column(db.String)
     email = db.Column(db.String)
+    payee = db.Column(db.String)
+    accountHolder = db.Column(db.String)
+    accountHolderKana = db.Column(db.String)
     logoFilePath = db.Column(db.String)
     stampFilePath = db.Column(db.String)
     isDisplayQuotationLogo = db.Column(
