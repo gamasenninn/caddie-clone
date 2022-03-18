@@ -344,10 +344,6 @@
                             </b-row>
                             <b-row>
                                 <b-col xl>
-                                    <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="件名"
-                                        label-for="title" label-align="right">
-                                        <b-form-input v-model="quotation.title" id="title" size="sm"></b-form-input>
-                                    </b-form-group>
                                 </b-col>
                                 <b-col xl>
                                     <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="メモ"
@@ -355,6 +351,16 @@
                                         <b-form-textarea v-model="quotation.memo" size="sm" rows="2">
                                         </b-form-textarea>
                                     </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col xl>
+                                    <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="件名"
+                                        label-for="title" label-align="right">
+                                        <b-form-input v-model="quotation.title" id="title" size="sm"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col xl>
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -855,7 +861,7 @@
                     },
                     getCustomer: async function (item) {
                         self = this;
-                        await axios.get("/customer/"+item.customerId)
+                        await axios.get("/customer/" + item.customerId)
                             .then(function (response) {
                                 self.customer = response.data;
                             });
@@ -1020,7 +1026,7 @@
                     pdfout: async function () {
                         self = this;
                         await this.getCustomer(this.quotation)
-                        const pdfData = getPdfDataQuotation(this.quotation,this.setting,this.sum,this.customer);
+                        const pdfData = getPdfDataQuotation(this.quotation, this.setting, this.sum, this.customer);
                         if (!this.setting.isDisplayQuotationLogo) pdfData.defPdf.header.drawImages = [];
                         if (!this.setting.isDisplayQuotationStamp) pdfData.defPdf.footer.drawImages = [];
 
