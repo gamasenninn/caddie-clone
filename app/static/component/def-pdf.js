@@ -40,7 +40,9 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
         sum.tax = parseInt(sum.total - sum.total / 1.1)
     };
     h.memo = invoice.memo;
-    h.payment = setting.payee +"<br/>"+ setting.accountHolder + "" + setting.accountHolderKana;
+    h.payee = setting.payee;
+    h.accountHolderKana = setting.accountHolderKana;
+    h.accountHolder = setting.accountHolder;
     h.logoPath = setting.logoFilePath;
     h.stampPath = setting.stampFilePath;
     return getPdfData(h, sum);
@@ -195,13 +197,16 @@ function getPdfData(h, sum) {
                 "table_infos": [
                     h.category == '請求書' ? {
                         "table": [
-                            [["P","振込先","memo"], ["P", h.payment, "sm_l"], "", ""],
-                            [["P","備考","memo"], ["P", h.memo, "sm_l"], "", ""],
+                            [["P","振込先","memo"], "",["P", h.payee, "sm_l"],  ""],
+                            ["","","",""],
+                            ["","","",""],
+                            ["","","",""],
+                            [["P","","備考","memo"],"", ["P", h.memo, "sm_l"],  ""],
                         ],
-                        "col_widths": ["E", "(20*mm,150*mm,5*mm,5*mm)"],
-                        "row_heights": ["E", "(20*mm,25*mm)"],
+                        "col_widths": ["E", "(20*mm,15*mm,90*mm,5*mm)"],
+                        "row_heights": ["E", "(7*mm,7*mm,7*mm,7*mm,25*mm)"],
                         "table_style": [
-                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
+                            ["E", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
                             ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
                             ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
                         ]
