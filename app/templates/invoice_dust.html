@@ -359,7 +359,6 @@
                                 <i class="fas fa-print"></i>
                             </template>
                             <b-dropdown-item @click="pdfout('delivery')" >納品書</b-dropdown-item>
-                            <b-dropdown-item @click="pdfoutRcpt">領収書</b-dropdown-item>
                         </b-dropdown>
                     </b-col>
                 </b-row>
@@ -484,6 +483,7 @@
                         } else {
                             pdfData.data.bdata = [{}];
                         }
+                        pdfData.defPdf.header.table_infos[0].table[0][6]= ["P","削除日付: "+this.formatDateTime(this.invoice.updatedAt),"sm_r"];
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
@@ -497,14 +497,6 @@
                                                                     window.open('/pdf/' + response.data)
                                                                 }
                                 */
-                            });
-                    },
-                    pdfoutRcpt: async function () {
-                        self = this;
-                        const pdfData = getPdfDataRcpt(self.invoice, self.setting, this.sum);
-                        await axios.post("/pdfmaker", pdfData)
-                            .then(function (response) {
-                                printJS('/pdf/' + response.data)
                             });
                     },
 
