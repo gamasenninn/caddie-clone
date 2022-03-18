@@ -1,5 +1,8 @@
 <% extends "head.html" %>
     <% block content %>
+        <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+        <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
+
         <style>
             .sm-mode {
                 display: none;
@@ -340,7 +343,7 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill size="lg" variant="primary" @click="alert('印刷しました。')" id="pdfout"
+                        <b-button pill size="lg" variant="primary" @click="pdfout" id="pdfout"
                             v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
                         </b-button>
                     </b-col>
@@ -359,6 +362,7 @@
 
         </div>
 
+        <script src="static/component/def-pdf.js"></script>
         <script>
             Vue.filter('nf', function (val) {
                 return val.toLocaleString();
@@ -375,6 +379,8 @@
                     quotations: [],               //全件quotation
                     quotation: [],                //選択中のquotation
                     quotationItem: [],            //選択中のquotationItem
+                    customer:[],
+                    setting: [],
                 },
                 methods: {
                     // ---Quotations---
@@ -425,10 +431,62 @@
                     formatDateTime(datetime) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
                     },
+                    getCustomer: async function (item) {
+                        self = this;
+                        await axios.get("/customer/" + item.customerId)
+                            .then(function (response) {
+                                self.customer = response.data;
+                            });
+                    },
+                    getSetting: async function () {
+                        self = this;
+                        await axios.get("/setting")
+                            .then(function (response) {
+                                console.log(response);
+                                self.setting = response.data;
+                            });
+                    },                   
+                    pdfout: async function () {
+                        self = this;
+                        await this.getCustomer(this.quotation);
+
+                        const pdfData = getPdfDataQuotation(this.quotation,this.setting,this.sum,this.customer);
+                        if (!this.setting.isDisplayQuotationLogo) pdfData.defPdf.header.drawImages = [];
+                        if (!this.setting.isDisplayQuotationStamp) pdfData.defPdf.footer.drawImages = [];
+
+                        if (self.quotation.quotation_items.length > 0) {
+                            pdfData.data.bdata = self.quotation.quotation_items;
+                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({
+                                ...i,
+                                price: parseInt(i.price),
+                                count: parseInt(i.count),
+                                calcPrice: i.price * i.count,
+                                itemName: (i.itemName ? i.itemName.replace(/\n/g, '<br />') : '')
+                            }));
+                        } else {
+                            pdfData.data.bdata = [{}];
+                        }
+                        pdfData.defPdf.header.table_infos[0].table[0][6]= ["P","削除日付: "+this.formatDateTime(this.quotation.updatedAt),"sm_r"];
+                        await axios.post("/pdfmaker", pdfData)
+                            .then(function (response) {
+                                printJS('/pdf/' + response.data)
+                                /*
+                                                                if (self.modeName == 'mw') {
+                                                                    window.parent.postMessage({
+                                                                        action: 'pdfOut',
+                                                                        message: response.data
+                                                                    }, "*");
+                                                                } else {
+                                                                    window.open('/pdf/' + response.data)
+                                                                }
+                                */
+                            });
+                    },
                 },
                 mounted: function () {
                     this.quotation = JSON.parse(localStorage.getItem('quotation'));
                     this.getQuotations();
+                    this.getSetting();
                     document.querySelector('title').textContent = '削除済み見積書管理';
                 },
                 router,

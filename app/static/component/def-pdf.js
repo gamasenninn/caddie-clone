@@ -97,7 +97,7 @@ function getPdfData(h, sum) {
                 "table_infos": [
                     {
                         "table": [
-                            ["", "", "", "", "", ""],
+                            ["", "", "", "", "", "",""],
                             ["", "", ["P", h.customerPostNumber + "<br/>" + h.customerAddress, "sm_l"], "", "", "", ""],
                             ["", "", "", "", "", "", ""],
                             ["", "", "", "", "", "", ["P", h.myCompanyName, "md_l_b"]],
