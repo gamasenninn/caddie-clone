@@ -74,7 +74,7 @@ function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
         sum.total = sumQuotation;
         sum.tax = parseInt(sum.total - sum.total / 1.1)
     };
-    h.memo = "memo";
+    h.memo = quotation.memo;
     h.logoPath = setting.logoFilePath;
     h.stampPath = setting.stampFilePath;
     return getPdfData(h, sum);
