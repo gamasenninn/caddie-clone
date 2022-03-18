@@ -100,7 +100,7 @@ function getPdfData(h, sum) {
                             ["", "", "", "", "", "",""],
                             ["", "", ["P", h.customerPostNumber + "<br/>" + h.customerAddress, "sm_l"], "", "", "", ""],
                             ["", "", "", "", "", "", ""],
-                            ["", "", "", "", "", "", ["P", h.myCompanyName, "md_l_b"]],
+                            ["", "", "", "", "", "", ["P", h.myCompanyName, "my_company"]],
                             ["", "", ["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"], "", "", "", ["P", h.myAddress1, "sm_r"]],
                             ["", "", "", "", "", "", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
                             ["", "", "", "", "", "", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
@@ -109,9 +109,9 @@ function getPdfData(h, sum) {
                         "row_heights": ["E", "(5*mm,7*mm,7*mm,7*mm,7*mm,7*mm,10*mm)"],
                         //"row_heights": ["E", "(10*mm,10*mm,10*mm,10*mm,10*mm,10*mm)"],
                         "table_style": [
-                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.lightblue)"],
                             ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
-                            ["E", "('BOX',(1,0),(2,5),0.15,colors.black,None, (3,3,3,3))"],
+                            ["E", "('BOX',(1,0),(2,5),0.15,colors.lightblue,None, (3,3,3,3))"],
                         ],
                     },
                     {
@@ -131,12 +131,12 @@ function getPdfData(h, sum) {
                             ["E", "('SPAN',(1,2),(2,2))"],
                             ["E", "('SPAN',(1,3),(1,4))"],
                             ["E", "('SPAN',(2,3),(2,4))"],
-                            ["E", "('BOX',(1,3),(1,4),0.15,colors.black)"],
+                            ["E", "('BOX',(1,3),(1,4),0.15,colors.lightblue)"],
                             ["E", "('BACKGROUND',(1,3),(1,4),colors.lightblue)"],
-                            ["E", "('BOX',(1,3),(3,4),0.15,colors.black)"],
+                            ["E", "('BOX',(1,3),(3,4),0.15,colors.lightblue)"],
                             ["NOP", "('SPAN',(1,5),(2,6))"],
                             ["NOP", "('SPAN',(1,7),(1,8))"],
-                            ["NOP", "('BOX',(2,7),(3,8),0.15,colors.black)"],
+                            ["NOP", "('BOX',(2,7),(3,8),0.15,colors.lightblue)"],
                             ["NOP", "('SPAN',(2,7),(2,8))"]
                         ],
                         "after": ["E", "Spacer(10*mm,5*mm)"]
@@ -151,22 +151,22 @@ function getPdfData(h, sum) {
                     "row_max": 15,
                     "label_style": "sm_c",
                     "fields": [
-                        { "key": "num", "label": "No.", "width": 10, "p_style": "sm_r", "eval": "_ROWNUM+1" },
-                        { "key": "itemName", "label": "商品名", "width": 95, "p_style": "sm_l" },
+                        //{ "key": "num", "label": "No.", "width": 10, "p_style": "sm_r", "eval": "_ROWNUM+1" },
+                        { "key": "itemName", "label": "商品名", "width": 100, "p_style": "sm_l" },
                         { "key": "count", "label": "数量", "width": 20, "p_style": "sm_r", "format": "{:,}" },
                         { "key": "unit", "label": "単位", "width": 15, "p_style": "sm_r" },
                         { "key": "price", "label": "単価", "width": 25, "p_style": "sm_r", "format": "{:,}" },
-                        { "key": "calcPrice", "label": "金額", "width": 25, "p_style": "sm_r", "format": "{:,}" }
+                        { "key": "calcPrice", "label": "金額", "width": 30, "p_style": "sm_r", "format": "{:,}" }
                     ],
                     "styles": [
                         ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
                         ["E", "('VALIGN', (0, 0), (-1, -1), 'MIDDLE')"],
-                        ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
-                        ["E", "('LINEBEFORE', (0, 0), (-1,-1), 0.25, colors.black)"],
-                        ["E", "('LINEAFTER', (0, 0), (-1,-1), 0.25, colors.black)"],
+                        ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
+                        ["E", "('LINEBEFORE', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
+                        ["E", "('LINEAFTER', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
                         ["E", "('ALIGN', (0, 0), (-1, 0), 'CENTER')"],
                         ["E", "('BACKGROUND', (0, 0), (6, 0), colors.lightblue)"],
-                        ["E", "('GRID', (0, 0), (6, 0), 0.25,colors.black)"]
+                        ["E", "('GRID', (0, 0), (6, 0), 0.25,colors.lightblue)"]
                     ],
                     "stripe_backcrounds": ["colors.lightcyan", "colors.white"]
                 },
@@ -179,10 +179,10 @@ function getPdfData(h, sum) {
                         ],
                         "col_widths": ["E", "(65*mm, 30*mm, 45*mm, 50*mm)"],
                         "table_style": [
-                            ["E", "('LINEBEFORE', (0, 0), (0, -1), 0.15, colors.black)"],
-                            ["E", "('LINEABOVE', (0, 0), (-1, -1), 0.15, colors.black)"],
-                            ["E", "('LINEBELOW', (0, 0), (-1, -1), 0.15, colors.black)"],
-                            ["E", "('GRID',(3,0),(-1,-1),0.15,colors.black)"]
+                            ["E", "('LINEBEFORE', (0, 0), (0, -1), 0.15, colors.lightblue)"],
+                            ["E", "('LINEABOVE', (0, 0), (-1, -1), 0.15, colors.lightblue)"],
+                            ["E", "('LINEBELOW', (0, 0), (-1, -1), 0.15, colors.lightblue)"],
+                            ["E", "('GRID',(3,0),(-1,-1),0.15,colors.lightblue)"]
                         ]
                     }
                 }
@@ -225,6 +225,7 @@ function getPdfData(h, sum) {
             "taxsm_l": { "name": "Normal", "alignment": 2, "fontName": "IPAexMincho", "fontSize": 9 },
             "taxsm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexMincho", "fontSize": 9 },
             "h_total": { "name": "Normal", "alignment": 1, "fontName": "IPAexMincho", "fontSize": 15 },
+            "my_company": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 15 },
             "memo": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 11 },
             "big_center": {
                 "name": "Normal",
@@ -242,7 +243,7 @@ function getPdfData(h, sum) {
             "client": {
                 "name": "Normal",
                 "alignment": 0,
-                "fontName": "IPAexGothic",
+                "fontName": "IPAexMincho",
                 "fontSize": 15,
                 "underlineWidth": 1,
                 "underlineGap": 1,
