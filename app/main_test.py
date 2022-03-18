@@ -20,7 +20,7 @@ from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist
 app.secret_key = os.urandom(24)
 login_manager = LoginManager()
 login_manager.login_view = 'get_login'
-login_manager.login_message = "ログインしてください"
+login_manager.login_message = ""
 login_manager.init_app(app)
 
 
