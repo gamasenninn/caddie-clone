@@ -951,6 +951,7 @@
                         this.$refs['items-modal'].show()
                     },
                     pdfout: async function (mode) {
+                        self = this;
                         await this.getCustomer(this.invoice)
                         const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, this.sum, this.customer);
                         if (mode == 'delivery') {
@@ -974,7 +975,7 @@
                         }
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
-                                printJS('/pdf/' + response.data)
+                                self.printPdf('/pdf/' + response.data);
                                 /*
                                                                 if (self.modeName == 'mw') {
                                                                     window.parent.postMessage({
@@ -992,8 +993,17 @@
                         const pdfData = getPdfDataRcpt(self.invoice, self.setting, this.sum);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
-                                printJS('/pdf/' + response.data)
+                                self.printPdf('/pdf/' + response.data)
                             });
+                    },
+                    printPdf(url) {
+                        if (checkUserAgent() == 'pc') {
+                            printJS(url)
+                        } else {
+                            content = "<div class='iframe-wrapper' ><iframe src=" + url + " frameborder='0'></iframe></div>"
+                            this.modal.setContent(content);
+                            this.modal.open();
+                        }
                     },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
@@ -1218,9 +1228,16 @@
             }
             // end アップロード機能
 
-            function nvl(src_val, rep) {
-                return (src_val == null) ? rep : src_val;
+            // ユーザエージェントモードチェック（PCかスマホか）
+            function checkUserAgent() {
+                var ua = navigator.userAgent;
+                if (ua.indexOf('iPhone') > 0 || ua.indexOf('iPod') > 0 || ua.indexOf('Android') > 0 && ua.indexOf('Mobile') > 0) {
+                    return 'sm';
+                } else if (ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0) {
+                    return 'tb';
+                } else {
+                    return 'pc';
+                }
             }
-
         </script>
         <% endblock %>
