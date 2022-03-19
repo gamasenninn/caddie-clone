@@ -41,6 +41,10 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     };
     h.logoPath = setting.logoFilePath;
     h.stampPath = setting.stampFilePath;
+    h.logoWidth = setting.logoWidth ? setting.logoWidth:50;
+    h.logoHeight = setting.logoHeight ? setting.logoHeight:50;
+    h.stampWidth = setting.stampWidth ? setting.stampWidth:50;
+    h.stampHeight = setting.stampHeight ? setting.stampHeight:50;
     return getPdfData(h, sum);
 }
 function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
@@ -143,7 +147,7 @@ function getPdfData(h, sum) {
                     }
                 ],
                 "drawImages": [
-                    ["('" + h.logoPath + "', 450,760,50,50,mask='auto')"]
+                    ["('" + h.logoPath + "', 450,760," +h.logoWidth+ ","+h.logoHeight+",mask='auto')"]
                 ]
             },
             "body": {
@@ -205,7 +209,7 @@ function getPdfData(h, sum) {
                     }
                 ],
                 "drawImages": [
-                    ["('" + h.stampPath + "', 510,720,50,50,mask='auto')"],
+                    ["('" + h.stampPath + "', 510,720,"+h.stampWidth+ ","+h.stampHeight+",mask='auto')"]
                 ]
             }
         },
