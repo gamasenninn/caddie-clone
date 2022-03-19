@@ -117,17 +117,17 @@ def make_row(detail,bdata):
             val = b_row.get(k) #値の取得
             #print("row val:", val,type(val))
             if not val:
-                val=''
-
-            if 'eval' in f:
-                val = eval(str(f.get('eval')))
-            if 'format' in f:
-                if val:
-                    fmt = f.get('format')
-                    try:
-                        if fmt: val = fmt.format(val)
-                    except:
-                        val="format error!"
+                val='&nbsp;'  #空行対応
+            else:
+                if 'eval' in f:
+                    val = eval(str(f.get('eval')))
+                if 'format' in f:
+                    if val:
+                        fmt = f.get('format')
+                        try:
+                            if fmt: val = fmt.format(val)
+                        except:
+                            val="format error!"
             val = Paragraph(str(val),PS(**styles[f.get('p_style')]))
             vals.append(val)
         #print(vals)

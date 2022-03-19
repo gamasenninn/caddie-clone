@@ -39,6 +39,10 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
         sum.total = sumInvoice;
         sum.tax = parseInt(sum.total - sum.total / 1.1)
     };
+    h.memo = invoice.memo;
+    h.payee = setting.payee;
+    h.accountHolderKana = setting.accountHolderKana;
+    h.accountHolder = setting.accountHolder;
     h.logoPath = setting.logoFilePath;
     h.stampPath = setting.stampFilePath;
     return getPdfData(h, sum);
@@ -72,6 +76,7 @@ function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
         sum.total = sumQuotation;
         sum.tax = parseInt(sum.total - sum.total / 1.1)
     };
+    h.memo = quotation.memo;
     h.logoPath = setting.logoFilePath;
     h.stampPath = setting.stampFilePath;
     return getPdfData(h, sum);
@@ -190,9 +195,26 @@ function getPdfData(h, sum) {
             "footer": {
                 "pos_xy": ["E", "(10*mm,5*mm)"],
                 "table_infos": [
-                    {
+                    h.category == '請求書' ? {
                         "table": [
-                            [["P","備考","memo"], ["P", h.memo, "sm_l"], "", ""],
+                            [["P","■振込先","memo"], ["P", h.payee, "sm_l"],"",  ""],
+                            ["",["P","カナ","sm_r"],["P", h.accountHolderKana, "sm_l"],""],
+                            ["",["P","名義","sm_r"],["P", h.accountHolder, "sm_l"],""],
+                            ["","","","",],
+                            [["P","■備考","memo"],["P", h.memo, "sm_l"],"",""],
+                        ],
+                        "col_widths": ["E", "(20*mm,15*mm,90*mm,5*mm)"],
+                        "row_heights": ["E", "(6*mm,6*mm,6*mm,4*mm,25*mm)"],
+                        "table_style": [
+                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
+                            ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
+                            ["E", "('SPAN',(1,0),(2,0))"],
+                            ["E", "('SPAN',(1,4),(2,4))"],
+                        ]
+                    } 
+                    :{
+                        "table": [
+                            [["P","■備考","memo"], ["P", h.memo, "sm_l"], "", ""],
                             ["", "", "", ""],
                         ],
                         "col_widths": ["E", "(15*mm,150*mm,5*mm,5*mm)"],
