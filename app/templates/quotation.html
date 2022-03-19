@@ -1044,7 +1044,7 @@
                         }
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
-                                printJS('/pdf/' + response.data)
+                                self.printPdf('/pdf/' + response.data)
                                 /*
                                                                 if (self.modeName == 'mw') {
                                                                     window.parent.postMessage({
@@ -1056,6 +1056,15 @@
                                                                 }
                                 */
                             });
+                    },
+                    printPdf(url) {
+                        if (checkUserAgent() == 'pc') {
+                            printJS(url)
+                        } else {
+                            content = "<div class='iframe-wrapper' ><iframe src=" + url + " frameborder='0'></iframe></div>"
+                            this.modal.setContent(content);
+                            this.modal.open();
+                        }
                     },
                     openViewer: function (f) {
                         //this.modal.setFooterContent(f.filename);
@@ -1215,6 +1224,18 @@
                 });
             }
             // end アップロード機能
+            // ユーザエージェントモードチェック（PCかスマホか）
+            function checkUserAgent() {
+                var ua = navigator.userAgent;
+                if (ua.indexOf('iPhone') > 0 || ua.indexOf('iPod') > 0 || ua.indexOf('Android') > 0 && ua.indexOf('Mobile') > 0) {
+                    return 'sm';
+                } else if (ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0) {
+                    return 'tb';
+                } else {
+                    return 'pc';
+                }
+            }
+
         </script>
 
         <% endblock %>
