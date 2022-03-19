@@ -24,6 +24,8 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     h.title = invoice.title;
     h.customerPostNumber = customer.postNumber;
     h.customerAddress = customer.address + customer.addressSub;
+    h.customerDepartment = invoice.department;
+    h.customerManager = invoice.otherPartyManager ? invoice.otherPartyManager+" 様": "";
     h.headerTotalLabel = "請求金額";
     sum.amountLabel = "小計";
     sum.taxLabel = "消費税";
@@ -67,6 +69,8 @@ function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
     h.title = quotation.title;
     h.customerPostNumber = customer.postNumber;
     h.customerAddress = customer.address + customer.addressSub;
+    h.customerDepartment = quotation.department;
+    h.customerManager = quotation.otherPartyManager ? quotation.otherPartyManager+" 様": "";;
     h.headerTotalLabel = "見積金額";
     sum.amountLabel = "小計(税込み)";
     sum.taxLabel = "うち消費税";
@@ -107,18 +111,18 @@ function getPdfData(h, sum) {
                     {
                         "table": [
                             ["", "", "", "", "", "",""],
-                            ["", "", ["P", h.customerPostNumber + "<br/>" + h.customerAddress, "sm_l"], "", "", "", ""],
+                            ["", "", ["P", h.customerPostNumber + "<br/>" + h.customerAddress  , "sm_l"], "", "", "", ""],
                             ["", "", "", "", "", "", ""],
                             ["", "", "", "", "", "", ["P", h.myCompanyName, "my_company"]],
                             ["", "", ["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"], "", "", "", ["P", h.myAddress1, "sm_r"]],
-                            ["", "", "", "", "", "", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
+                            ["", "", ["P",h.customerDepartment+""+h.customerManager,"sm_l"], "", "", "", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
                             ["", "", "", "", "", "", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
                         ],
                         "col_widths": ["E", "[5*mm,5*mm,88*mm,3*mm,9*mm,10*mm,70*mm]"],
-                        "row_heights": ["E", "(5*mm,7*mm,7*mm,7*mm,7*mm,7*mm,10*mm)"],
+                        "row_heights": ["E", "(5*mm,7*mm,7*mm,5*mm,7*mm,9*mm,10*mm)"],
                         //"row_heights": ["E", "(10*mm,10*mm,10*mm,10*mm,10*mm,10*mm)"],
                         "table_style": [
-                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.lightblue)"],
+                            ["E", "('NOP',(0,0),(-1,-1),0.15,colors.lightblue)"],
                             ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
                             ["E", "('BOX',(1,0),(2,5),0.15,colors.lightblue,None, (3,3,3,3))"],
                         ],
