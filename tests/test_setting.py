@@ -1,7 +1,11 @@
+import unittest
+import sys,os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../app'))
 from app import db, app
 from models import *
-import unittest
 from seeder import seeder
+
 
 
 class BasicTest(unittest.TestCase):

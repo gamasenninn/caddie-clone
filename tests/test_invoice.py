@@ -1,8 +1,13 @@
+from datetime import datetime
+import unittest
+import sys,os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../app'))
 from app import db, app
 from models import *
-import unittest
-from datetime import datetime
 from seeder import seeder
+
+
 
 
 class BasicTest(unittest.TestCase):
@@ -67,10 +72,10 @@ class BasicTest(unittest.TestCase):
     def test_create_invoice(self):
         print('---Invoice新規作成---')
         invoices = [
-            Invoice(customerId=1, applyNumber=1000004, applyDate=datetime.now(), expiry=datetime.now(),
-                    title='○○建設への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
-            Invoice(customerId=1, applyNumber=1000005, applyDate=datetime.now(), expiry=datetime.now(),
-                    title='○○商店への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True),
+            Invoice(customerId=1, customerName='○○建設', applyNumber=1000004, applyDate=datetime.now(), deadLine=datetime.now(),
+                    title='○○建設への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, isDelete=False),
+            Invoice(customerId=1, customerName='○○商店', applyNumber=1000005, applyDate=datetime.now(), deadLine=datetime.now(),
+                    title='○○商店への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, isDelete=False),
         ]
         db.session.add_all(invoices)
         db.session.commit()
@@ -78,8 +83,8 @@ class BasicTest(unittest.TestCase):
 
     def test_delete_invoice(self):
         print('---Invoice一件削除---')
-        invoice = Invoice(customerId=1, applyNumber=1000006, applyDate=datetime.now(), expiry=datetime.now(),
-                          title='デリートテスト会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True)
+        invoice = Invoice(customerId=1, customerName='テスト会社', applyNumber=1000006, applyDate=datetime.now(), deadLine=datetime.now(),
+                          title='デリートテスト会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, isDelete=False)
         db.session.add(invoice)
         db.session.commit()
         newId = invoice.id
