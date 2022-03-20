@@ -278,6 +278,7 @@ class Setting(db.Model):
     __tablename__ = 'settings'
 
     id = db.Column(db.Integer, primary_key=True)
+    # 会社情報
     companyName = db.Column(db.String)
     representative = db.Column(db.String)
     postNumber = db.Column(db.String(20))
@@ -289,6 +290,7 @@ class Setting(db.Model):
     payee = db.Column(db.String)
     accountHolder = db.Column(db.String)
     accountHolderKana = db.Column(db.String)
+    # ロゴ・印鑑
     logoFilePath = db.Column(db.String)
     logoHeight = db.Column(db.Integer)
     logoWidth = db.Column(db.Integer)
@@ -304,6 +306,9 @@ class Setting(db.Model):
     isDisplayInvoiceStamp = db.Column(db.Boolean, nullable=False, default=True)
     isDisplayDeliveryStamp = db.Column(
         db.Boolean, nullable=False, default=True)
+    # 設定
+    defaultTax = db.Column(db.Integer, nullable=False,
+                           default=10, server_default=db.text('10'))
     updatedAt = updatedAt = db.Column(
         db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
