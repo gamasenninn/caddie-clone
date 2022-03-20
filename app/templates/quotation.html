@@ -444,7 +444,8 @@
 
                             </template>
                             <template v-slot:cell(count)="data">
-                                <b-form-input v-model="data.item.count" type="number" size="sm"></b-form-input>
+                                <b-form-input v-model="data.item.count" type="number" size="sm"
+                                    :formatter="formatter_count"></b-form-input>
                             </template>
                             <template v-slot:cell(unit)="data">
                                 <b-form-select v-model="data.item.unit" :options="units" size="sm"></b-form-select>
@@ -512,15 +513,15 @@
                                         <b-td class="text-right">消費税</b-td>
                                         <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount"
                                             style="border-bottom: 2px solid white;">
-                                            {{parseInt(sum*0.1)|nf}}</b-td>
+                                            {{Math.round(sum*0.1)|nf}}</b-td>
                                         <b-td v-else class="text-center" id="tdAmount"
                                             style="border-bottom: 2px solid white;">
-                                            {{parseInt(sum-sum/1.1)|nf}}</b-td>
+                                            {{Math.round(sum-sum/1.1)|nf}}</b-td>
                                     </b-tr>
                                     <b-tr>
                                         <b-td class="text-right">見積総額</b-td>
                                         <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount">
-                                            {{sum*1.1|nf}}</b-td>
+                                            {{Math.round(sum*1.1)|nf}}</b-td>
                                         <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
@@ -969,10 +970,14 @@
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
+                    //商品個数小数点以下切り捨て
+                    formatter_count(value) {
+                        return Math.floor(value);
+                    },
                     amountCalculation(quotation) {
                         if (!quotation.quotation_items.length) return 0;
-                        let amount = quotation.quotation_items.map(item => item.count * item.price).reduce((a, b) => a + b);
-                        if (quotation.isTaxExp === true) return Math.floor(amount * 1.1);
+                        let amount = quotation.quotation_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
+                        if (quotation.isTaxExp === true) return Math.round(amount * 1.1);
                         return amount;
                     },
                     //---- upload funcrions --
@@ -1130,7 +1135,7 @@
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
-                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * Math.round(quotation_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
                     },
                     quotationsIndicateIndex: function () {
                         let quotations = this.quotations;
@@ -1141,7 +1146,7 @@
                             quotations = quotations.filter(quotation => quotation.isConvert === true);
                         let quotationAmounts = quotations.map(
                             quotation => quotation.quotation_items.map(
-                                item => parseInt(item.count * item.price * (quotation.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
+                                item => Math.round(item.count * Math.round(item.price) * (quotation.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
                         quotationAmounts.forEach(value => {
                             amount += value;
                         });

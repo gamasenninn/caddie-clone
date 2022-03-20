@@ -408,7 +408,8 @@
 
                             </template>
                             <template v-slot:cell(count)="data">
-                                <b-form-input v-model="data.item.count" type="number" size="sm" autocomplete="off">
+                                <b-form-input v-model="data.item.count" type="number" size="sm"
+                                    :formatter="formatter_count" autocomplete="off">
                                 </b-form-input>
                             </template>
                             <template v-slot:cell(unit)="data">
@@ -490,15 +491,15 @@
                                         <b-td class="text-right">消費税</b-td>
                                         <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount"
                                             style="border-bottom: 2px solid white;">
-                                            {{parseInt(sum*0.1)|nf}}</b-td>
+                                            {{Math.round(sum*0.1)|nf}}</b-td>
                                         <b-td v-else class="text-center" id="tdAmount"
                                             style="border-bottom: 2px solid white;">
-                                            {{parseInt(sum-sum/1.1)|nf}}</b-td>
+                                            {{Math.round(sum-sum/1.1)|nf}}</b-td>
                                     </b-tr>
                                     <b-tr>
                                         <b-td class="text-right">請求総額</b-td>
                                         <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount">
-                                            {{sum*1.1|nf}}</b-td>
+                                            {{Math.round(sum*1.1)|nf}}</b-td>
                                         <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
@@ -1008,10 +1009,14 @@
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
+                    //商品個数小数点以下切り捨て
+                    formatter_count(value) {
+                        return Math.floor(value);
+                    },
                     amountCalculation(invoice) {
                         if (!invoice.invoice_items.length) return 0;
-                        let amount = invoice.invoice_items.map(item => item.count * item.price).reduce((a, b) => a + b);
-                        if (invoice.isTaxExp === true) return Math.floor(amount * 1.1);
+                        let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
+                        if (invoice.isTaxExp === true) return Math.round(amount * 1.1);
                         return amount;
                     },
                     //---- upload funcrions --
@@ -1134,7 +1139,7 @@
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
-                        return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * invoice_item.price)).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                        return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * Math.round(invoice_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
                     },
                     invoicesIndicateIndex: function () {
                         let invoices = this.invoices;
@@ -1143,7 +1148,7 @@
                             invoices = invoices.filter(invoice => invoice.isPaid === false);
                         let invoiceAmounts = invoices.map(
                             invoice => invoice.invoice_items.map(
-                                item => parseInt(item.count * item.price * (invoice.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
+                                item => Math.round(item.count * Math.round(item.price) * (invoice.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
                         invoiceAmounts.forEach(value => {
                             amount += value;
                         });

@@ -307,15 +307,15 @@
                                         <b-td class="text-right">消費税</b-td>
                                         <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount"
                                             style="border-bottom: 2px solid white;">
-                                            {{parseInt(sum*0.1)|nf}}</b-td>
+                                            {{Math.round(sum*0.1)|nf}}</b-td>
                                         <b-td v-else class="text-center" id="tdAmount"
                                             style="border-bottom: 2px solid white;">
-                                            {{parseInt(sum-sum/1.1)|nf}}</b-td>
+                                            {{Math.round(sum-sum/1.1)|nf}}</b-td>
                                     </b-tr>
                                     <b-tr>
                                         <b-td class="text-right">見積総額</b-td>
                                         <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount">
-                                            {{sum*1.1|nf}}</b-td>
+                                            {{Math.round(sum*1.1)|nf}}</b-td>
                                         <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                     </b-tr>
                                 </b-table-simple>
@@ -379,7 +379,7 @@
                     quotations: [],               //全件quotation
                     quotation: [],                //選択中のquotation
                     quotationItem: [],            //選択中のquotationItem
-                    customer:[],
+                    customer: [],
                     setting: [],
                 },
                 methods: {
@@ -445,12 +445,12 @@
                                 console.log(response);
                                 self.setting = response.data;
                             });
-                    },                   
+                    },
                     pdfout: async function () {
                         self = this;
                         await this.getCustomer(this.quotation);
 
-                        const pdfData = getPdfDataQuotation(this.quotation,this.setting,this.sum,this.customer);
+                        const pdfData = getPdfDataQuotation(this.quotation, this.setting, this.sum, this.customer);
                         if (!this.setting.isDisplayQuotationLogo) pdfData.defPdf.header.drawImages = [];
                         if (!this.setting.isDisplayQuotationStamp) pdfData.defPdf.footer.drawImages = [];
 
@@ -466,7 +466,7 @@
                         } else {
                             pdfData.data.bdata = [{}];
                         }
-                        pdfData.defPdf.header.table_infos[0].table[0][6]= ["P","削除日付: "+this.formatDateTime(this.quotation.updatedAt),"sm_r"];
+                        pdfData.defPdf.header.table_infos[0].table[0][6] = ["P", "削除日付: " + this.formatDateTime(this.quotation.updatedAt), "sm_r"];
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)
@@ -502,7 +502,7 @@
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
-                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * quotation_item.price)).reduce(function (a, b) { return a + b }, 0);
+                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * Math.round(quotation_item.price))).reduce(function (a, b) { return a + b }, 0);
                     },
                     quotationsIndicateIndex: function () {
                         let quotations = this.quotations;
