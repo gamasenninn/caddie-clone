@@ -66,11 +66,18 @@
                                     </b-input-group>
                                 </b-col>
                                 <b-col sm></b-col>
-                                <b-col sm>
-                                    <b-row align-h="end">
-                                        <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り</b-form-checkbox>
-                                        <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示</b-form-checkbox>
-                                    </b-row>
+                                <b-col class="text-right">
+                                    <b-col sm class="text-left">
+                                        <b-form-group label-cols="4" label-cols-lg="4" label-size="sm"
+                                            label-align="right" label="　　">
+                                            <b-form-select v-model="customersShowValue" :options="[
+                                            {value:'',text:''},
+                                            {value:'all',text:'すべて表示'},
+                                            {value:'favorite',text:'お気に入り'},
+                                            ]" size="sm">
+                                            </b-form-select>
+                                        </b-form-group>
+                                    </b-col>
                                 </b-col>
                             </b-row>
                             <b-row align-h="end">
@@ -340,13 +347,12 @@
                 el: '#app',
                 data: {
                     sortByCustomers: 'customerKana',
-                    searchCustomerWord: '',
-                    customersIndicateCount: 0,
+                    searchCustomerWord: '',     //得意先検索
+                    customersShowValue: '',     //得意先検索
+                    customersIndicateCount: 0,  //得意先検索
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
                     selectHonorificTitle: ['', '様', '御中', '殿',],    //敬称セレクトボックス用
-                    isShowAll: false,            // trueの時、全表示
-                    isShowFavorite: false,
                     title: '',
                     message: '',
                     countChanged: 0
@@ -545,9 +551,9 @@
                     },
                     customersIndicateIndex: function () {
                         let customers = this.customers
-                        if (this.isShowAll === false)
+                        if (this.customersShowValue === '')
                             customers = customers.filter(customer => customer.isHide === false);
-                        if (this.isShowFavorite === true)
+                        if (this.customersShowValue === 'favorite')
                             customers = customers.filter(customer => customer.isFavorite === true);
                         this.customersIndicateCount = customers.length;
                         return customers;
