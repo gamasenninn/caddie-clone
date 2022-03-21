@@ -250,7 +250,7 @@
                             <b-row class="mt-2">
                                 <b-button v-if="myUser.role==='crescom_support'" href="/crescom-support-page">
                                     クレスコムサポート画面へ</b-button>
-                                <b-button class="ml-1" @click="$bvModal.show('confirmModal');">バージョン情報</b-button>
+                                <b-button class="ml-1" @click="$bvModal.show('versionModal');">バージョン情報</b-button>
                             </b-row>
                         </div>
 
@@ -298,14 +298,18 @@
                         </b-button>
                     </b-col>
                     <b-col cols="4" class="text-right">
-                        <b-button variant="primary" class="mr-3" @click="bulkUpsert(setting)">保存</b-button>
+                        <b-button variant="primary" class="mr-3" @click="bulkUpsert(setting);showConfirmModal();">保存
+                        </b-button>
                     </b-col>
                 </b-row>
             </b-card>
 
+            <!-- 確認モーダル -->
+            <confirm-modal :title="title" :message="message"></confirm-modal>
+
             <!-- バージョンモーダル -->
             <div>
-                <b-modal id="confirmModal" size="xl" hide-footer>
+                <b-modal id="versionModal" size="xl" hide-footer>
                     <template #modal-title>
                         バージョン情報
                     </template>
@@ -336,12 +340,13 @@
                     myUser: [],                 //ログイン中のユーザー情報
                     fileId: 'stamp',
                     fileId2: 'logo',
+                    title: '',                  //モーダルタイトル
+                    message: '',                //モーダルメッセージ
                 },
                 methods: {
                     // ---Settings---
                     bulkUpsert(item) {
                         this.updateSetting(item);
-                        this.toast("更新しました");
                     },
                     updateSetting: async function (item) {
                         self = this;
@@ -350,6 +355,8 @@
                                 self.getSetting(self.setting);
                                 console.log(response);
                             });
+                        app.title = '更新';
+                        app.message = '保存しました。';
                     },
                     getSetting: async function () {
                         self = this;
@@ -367,13 +374,8 @@
                                 self.myUser = response.data;
                             });
                     },
-                    toast(toaster, append = false) {
-                        this.$bvToast.toast(`${toaster}`, {
-                            title: `確認`,
-                            toaster: 'b-toaster-top-right',
-                            solid: true,
-                            appendToast: append,
-                        })
+                    showConfirmModal: function () {
+                        this.$bvModal.show('confirmModal');
                     },
                 },
                 mounted: function () {
