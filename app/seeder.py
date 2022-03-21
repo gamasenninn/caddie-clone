@@ -73,11 +73,11 @@ def seeder():
     print('----Invoices-----')
     invoices = [
         Invoice(customerId=1, customerName='○○株式会社', honorificTitle='御中', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=2, customerName="○○有限会社", honorificTitle='御中', department='部署2', manager='田中次郎', otherPartyManager='先方次郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=3, customerName="○○商事", honorificTitle='御中', department='部署3', manager='田中三郎', otherPartyManager='先方三郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
     ]
     db.session.add_all(invoices)
     db.session.commit()
@@ -111,11 +111,11 @@ def seeder():
     print('----Quotations----')
     quotations = [
         Quotation(customerId=1, customerName='○○株式会社', honorificTitle='御中', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), expiry='2週間以内',
-                  dayOfDelivery='受注後1週間以内', termOfSale='御社決済条件にて', isConvert=False, title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
+                  dayOfDelivery='受注後1週間以内', termOfSale='御社決済条件にて', isConvert=False, title='○○株式会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
         Quotation(customerId=2, customerName="○○有限会社", honorificTitle='御中', department='部署2', manager='田中次郎', otherPartyManager='先方次郎', applyDate=date(2022, 1, 1), expiry='1ヶ月以内',
-                  dayOfDelivery='受注後2週間以内', termOfSale='代金引換', isConvert=False, title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
+                  dayOfDelivery='受注後2週間以内', termOfSale='代金引換', isConvert=False, title='○○有限会社への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
         Quotation(customerId=3, customerName="○○商事", honorificTitle='御中', department='部署3', manager='田中三郎', otherPartyManager='先方三郎', applyDate=date(2022, 1, 1), expiry='2ヶ月以内',
-                  dayOfDelivery='受注後1ヶ月以内', termOfSale='応相談', isConvert=False, title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', isTaxExp=True, numberOfAttachments=0),
+                  dayOfDelivery='受注後1ヶ月以内', termOfSale='応相談', isConvert=False, title='○○商事への見積書', memo='これは見積書のメモです', remarks='これは見積書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
     ]
     db.session.add_all(quotations)
     db.session.commit()
