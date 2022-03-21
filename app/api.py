@@ -1319,6 +1319,14 @@ def unit_destroy(id):
 @app.route('/categories', methods=['GET'])
 def category_index():
     categories = Category.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Category',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(CategorySchema(many=True).dump(categories))
 
 
@@ -1327,6 +1335,13 @@ def category_show(id):
     categoryCount = Category.query.filter(Category.id == id).count()
     if categoryCount:
         category = Category.query.filter(Category.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Category',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(CategorySchema().dump(category))
     else:
         return jsonify([])
@@ -1341,6 +1356,15 @@ def category_create():
     db.session.add(newCategory)
     db.session.commit()
     id = newCategory.id
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Category',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1351,6 +1375,13 @@ def category_update(id):
 
     category.categoryName = data.get('categoryName')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Category',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1358,6 +1389,13 @@ def category_update(id):
 @app.route('/category/<id>', methods=['DELETE'])
 def category_destroy(id):
     category = Category.query.filter(Category.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Category',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
