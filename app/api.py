@@ -1404,6 +1404,14 @@ def category_destroy(id):
 @app.route('/makers', methods=['GET'])
 def maker_index():
     makers = Maker.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Maker',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(MakerSchema(many=True).dump(makers))
 
 
@@ -1412,6 +1420,13 @@ def maker_show(id):
     makerCount = Maker.query.filter(Maker.id == id).count()
     if makerCount:
         maker = Maker.query.filter(Maker.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Maker',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(MakerSchema().dump(maker))
     else:
         return jsonify([])
@@ -1426,6 +1441,15 @@ def maker_create():
     db.session.add(newMaker)
     db.session.commit()
     id = newMaker.id
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Maker',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1436,6 +1460,13 @@ def maker_update(id):
 
     maker.makerName = data.get('makerName')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Maker',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1443,6 +1474,13 @@ def maker_update(id):
 @app.route('/maker/<id>', methods=['DELETE'])
 def maker_destroy(id):
     maker = Maker.query.filter(Maker.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Maker',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
