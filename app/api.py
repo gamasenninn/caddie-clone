@@ -1488,6 +1488,13 @@ def maker_destroy(id):
 @app.route('/setting', methods=['GET'])
 def setting_show():
     setting = Setting.query.filter(Setting.id == 1).first()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Setting',
+        modelId=1,
+        action='get')
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(SettingSchema().dump(setting))
 
 
@@ -1520,6 +1527,13 @@ def setting_update(id):
     setting.isDisplayInvoiceStamp = data.get('isDisplayInvoiceStamp')
     setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Setting',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
