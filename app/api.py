@@ -610,7 +610,7 @@ def invoice_update(id):
 
     newHistory = History(
         userName=current_user.id,
-        modelName='invoice',
+        modelName='Invoice',
         modelId=id,
         action='put'
     )
@@ -779,6 +779,15 @@ def quotation_index_v1():
         quotations = quotations.offset(offset)
     if limit:
         quotations = quotations.limit(limit)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
@@ -817,6 +826,15 @@ def dust_quotation_index_v1():
         quotations = quotations.offset(offset)
     if limit:
         quotations = quotations.limit(limit)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation(dust)',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
@@ -826,6 +844,13 @@ def quotation_show(id):
     quotationCount = Quotation.query.filter(Quotation.id == id).count()
     if quotationCount:
         quotation = Quotation.query.filter(Quotation.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Quotation',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(QuotationSchema().dump(quotation))
     else:
         return jsonify([])
@@ -876,6 +901,14 @@ def quotation_create():
     db.session.add(newQuotation)
     db.session.commit()
     id = newQuotation.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -934,6 +967,13 @@ def quotation_update(id):
         db.session.query(Quotation_Item).filter(Quotation_Item.id.in_(
             delete_in_list)).delete(synchronize_session='fetch')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -943,6 +983,13 @@ def quotation_update(id):
 def quotation_destroy(id):
     quotation = Quotation.query.filter(Quotation.id == id).one()
     quotation.isDelete = True
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation',
+        modelId=id,
+        action='put(dust)'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ""})
 
@@ -951,6 +998,14 @@ def quotation_destroy(id):
 @app.route('/quotation_items', methods=['GET'])
 def quotation_item_index():
     quotationItems = Quotation_Item.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(Quotation_ItemSchema(many=True).dump(quotationItems))
 
 
@@ -961,6 +1016,13 @@ def quotation_item_show(id):
     if quotationItemCount:
         quotationItem = Quotation_Item.query.filter(
             Quotation_Item.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='QuotationItems',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(Quotation_ItemSchema().dump(quotationItem))
     else:
         return jsonify([])
@@ -970,6 +1032,13 @@ def quotation_item_show(id):
 def quotation_item_show_by_quotationId(hid):
     quotationItems = Quotation_Item.query.filter(
         Quotation_Item.quotationId == hid).all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId=hid,
+        action='gets')
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(Quotation_ItemSchema(many=True).dump(quotationItems))
 
 
@@ -988,6 +1057,14 @@ def quotation_item_create():
     db.session.add(newQuotationItem)
     db.session.commit()
     id = newQuotationItem.id
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId=id,
+        action='post')
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1002,6 +1079,14 @@ def quotation_item_update(id):
     quotationItem.cost = data.get('cost')
     quotationItem.count = data.get('count')
     quotationItem.unit = data.get('unit')
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1010,6 +1095,13 @@ def quotation_item_update(id):
 def quotation_item_destroy(id):
     quotationItem = Quotation_Item.query.filter(
         Quotation_Item.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
