@@ -1236,6 +1236,14 @@ def memo_destroy(id):
 @app.route('/units', methods=['GET'])
 def unit_index():
     units = Unit.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Unit',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(UnitSchema(many=True).dump(units))
 
 
@@ -1244,6 +1252,13 @@ def unit_show(id):
     unitCount = Unit.query.filter(Unit.id == id).count()
     if unitCount:
         unit = Unit.query.filter(Unit.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Unit',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(UnitSchema().dump(unit))
     else:
         return jsonify([])
@@ -1258,6 +1273,14 @@ def unit_create():
     db.session.add(newUnit)
     db.session.commit()
     id = newUnit.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Unit',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1267,7 +1290,13 @@ def unit_update(id):
     unit = Unit.query.filter(Unit.id == id).one()
 
     unit.unitName = data.get('unitName')
-
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Unit',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1275,6 +1304,13 @@ def unit_update(id):
 @app.route('/unit/<id>', methods=['DELETE'])
 def unit_destroy(id):
     unit = Unit.query.filter(Unit.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Unit',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
