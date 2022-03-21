@@ -612,7 +612,7 @@ def invoice_update(id):
 
     newHistory = History(
         userName=current_user.id,
-        modelName='invoice',
+        modelName='Invoice',
         modelId=id,
         action='put'
     )
@@ -781,6 +781,15 @@ def quotation_index_v1():
         quotations = quotations.offset(offset)
     if limit:
         quotations = quotations.limit(limit)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
@@ -819,6 +828,15 @@ def dust_quotation_index_v1():
         quotations = quotations.offset(offset)
     if limit:
         quotations = quotations.limit(limit)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation(dust)',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
@@ -828,6 +846,13 @@ def quotation_show(id):
     quotationCount = Quotation.query.filter(Quotation.id == id).count()
     if quotationCount:
         quotation = Quotation.query.filter(Quotation.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Quotation',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(QuotationSchema().dump(quotation))
     else:
         return jsonify([])
@@ -879,6 +904,14 @@ def quotation_create():
     db.session.add(newQuotation)
     db.session.commit()
     id = newQuotation.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -938,6 +971,13 @@ def quotation_update(id):
         db.session.query(Quotation_Item).filter(Quotation_Item.id.in_(
             delete_in_list)).delete(synchronize_session='fetch')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -947,6 +987,13 @@ def quotation_update(id):
 def quotation_destroy(id):
     quotation = Quotation.query.filter(Quotation.id == id).one()
     quotation.isDelete = True
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Quotation',
+        modelId=id,
+        action='put(dust)'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ""})
 
@@ -955,6 +1002,14 @@ def quotation_destroy(id):
 @app.route('/quotation_items', methods=['GET'])
 def quotation_item_index():
     quotationItems = Quotation_Item.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(Quotation_ItemSchema(many=True).dump(quotationItems))
 
 
@@ -965,6 +1020,13 @@ def quotation_item_show(id):
     if quotationItemCount:
         quotationItem = Quotation_Item.query.filter(
             Quotation_Item.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='QuotationItems',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(Quotation_ItemSchema().dump(quotationItem))
     else:
         return jsonify([])
@@ -974,6 +1036,13 @@ def quotation_item_show(id):
 def quotation_item_show_by_quotationId(hid):
     quotationItems = Quotation_Item.query.filter(
         Quotation_Item.quotationId == hid).all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId=hid,
+        action='gets')
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(Quotation_ItemSchema(many=True).dump(quotationItems))
 
 
@@ -992,6 +1061,14 @@ def quotation_item_create():
     db.session.add(newQuotationItem)
     db.session.commit()
     id = newQuotationItem.id
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId=id,
+        action='post')
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1006,6 +1083,14 @@ def quotation_item_update(id):
     quotationItem.cost = data.get('cost')
     quotationItem.count = data.get('count')
     quotationItem.unit = data.get('unit')
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1014,6 +1099,13 @@ def quotation_item_update(id):
 def quotation_item_destroy(id):
     quotationItem = Quotation_Item.query.filter(
         Quotation_Item.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='QuotationItems',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
@@ -1052,6 +1144,15 @@ def memo_index_v1():
         memos = memos.offset(offset)
     if limit:
         memos = memos.limit(limit)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Memo',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(MemoSchema(many=True).dump(memos))
 
 
@@ -1061,6 +1162,13 @@ def memo_show(id):
     memoCount = Memo.query.filter(Memo.id == id).count()
     if memoCount:
         memo = Memo.query.filter(Memo.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Memo',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(MemoSchema().dump(memo))
     else:
         return jsonify([])
@@ -1079,6 +1187,14 @@ def memo_create():
     db.session.add(newMemo)
     db.session.commit()
     id = newMemo.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Memo',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1094,6 +1210,13 @@ def memo_update(id):
         'isFavorite') else False  # ページリロード後、更新時のエラー防止
     memo.content = data.get('content')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Memo',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1102,6 +1225,13 @@ def memo_update(id):
 @app.route('/memo/<id>', methods=['DELETE'])
 def memo_destroy(id):
     memo = Memo.query.filter(Memo.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Memo',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
@@ -1110,6 +1240,14 @@ def memo_destroy(id):
 @app.route('/units', methods=['GET'])
 def unit_index():
     units = Unit.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Unit',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(UnitSchema(many=True).dump(units))
 
 
@@ -1118,6 +1256,13 @@ def unit_show(id):
     unitCount = Unit.query.filter(Unit.id == id).count()
     if unitCount:
         unit = Unit.query.filter(Unit.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Unit',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(UnitSchema().dump(unit))
     else:
         return jsonify([])
@@ -1132,6 +1277,14 @@ def unit_create():
     db.session.add(newUnit)
     db.session.commit()
     id = newUnit.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Unit',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1141,7 +1294,13 @@ def unit_update(id):
     unit = Unit.query.filter(Unit.id == id).one()
 
     unit.unitName = data.get('unitName')
-
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Unit',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1149,6 +1308,13 @@ def unit_update(id):
 @app.route('/unit/<id>', methods=['DELETE'])
 def unit_destroy(id):
     unit = Unit.query.filter(Unit.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Unit',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
@@ -1157,6 +1323,14 @@ def unit_destroy(id):
 @app.route('/categories', methods=['GET'])
 def category_index():
     categories = Category.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Category',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(CategorySchema(many=True).dump(categories))
 
 
@@ -1165,6 +1339,13 @@ def category_show(id):
     categoryCount = Category.query.filter(Category.id == id).count()
     if categoryCount:
         category = Category.query.filter(Category.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Category',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(CategorySchema().dump(category))
     else:
         return jsonify([])
@@ -1179,6 +1360,15 @@ def category_create():
     db.session.add(newCategory)
     db.session.commit()
     id = newCategory.id
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Category',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1189,6 +1379,13 @@ def category_update(id):
 
     category.categoryName = data.get('categoryName')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Category',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1196,6 +1393,13 @@ def category_update(id):
 @app.route('/category/<id>', methods=['DELETE'])
 def category_destroy(id):
     category = Category.query.filter(Category.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Category',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
@@ -1204,6 +1408,14 @@ def category_destroy(id):
 @app.route('/makers', methods=['GET'])
 def maker_index():
     makers = Maker.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Maker',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(MakerSchema(many=True).dump(makers))
 
 
@@ -1212,6 +1424,13 @@ def maker_show(id):
     makerCount = Maker.query.filter(Maker.id == id).count()
     if makerCount:
         maker = Maker.query.filter(Maker.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Maker',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(MakerSchema().dump(maker))
     else:
         return jsonify([])
@@ -1226,6 +1445,15 @@ def maker_create():
     db.session.add(newMaker)
     db.session.commit()
     id = newMaker.id
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Maker',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1236,6 +1464,13 @@ def maker_update(id):
 
     maker.makerName = data.get('makerName')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Maker',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1243,6 +1478,13 @@ def maker_update(id):
 @app.route('/maker/<id>', methods=['DELETE'])
 def maker_destroy(id):
     maker = Maker.query.filter(Maker.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Maker',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
@@ -1250,6 +1492,13 @@ def maker_destroy(id):
 @app.route('/setting', methods=['GET'])
 def setting_show():
     setting = Setting.query.filter(Setting.id == 1).first()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Setting',
+        modelId=1,
+        action='get')
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(SettingSchema().dump(setting))
 
 
@@ -1283,6 +1532,13 @@ def setting_update(id):
     setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
     setting.defaultTax = data.get('defaultTax')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Setting',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
