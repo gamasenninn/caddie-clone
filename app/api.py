@@ -1140,6 +1140,15 @@ def memo_index_v1():
         memos = memos.offset(offset)
     if limit:
         memos = memos.limit(limit)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Memo',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify(MemoSchema(many=True).dump(memos))
 
 
@@ -1149,6 +1158,13 @@ def memo_show(id):
     memoCount = Memo.query.filter(Memo.id == id).count()
     if memoCount:
         memo = Memo.query.filter(Memo.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='Memo',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
         return jsonify(MemoSchema().dump(memo))
     else:
         return jsonify([])
@@ -1167,6 +1183,14 @@ def memo_create():
     db.session.add(newMemo)
     db.session.commit()
     id = newMemo.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Memo',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
@@ -1182,6 +1206,13 @@ def memo_update(id):
         'isFavorite') else False  # ページリロード後、更新時のエラー防止
     memo.content = data.get('content')
 
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Memo',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
@@ -1190,6 +1221,13 @@ def memo_update(id):
 @app.route('/memo/<id>', methods=['DELETE'])
 def memo_destroy(id):
     memo = Memo.query.filter(Memo.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Memo',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
 
