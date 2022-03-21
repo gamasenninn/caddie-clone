@@ -116,6 +116,8 @@ class Invoice(db.Model):
     title = db.Column(db.String)
     memo = db.Column(db.String)
     remarks = db.Column(db.String)
+    tax = db.Column(db.Integer, nullable=False, default=10,
+                    server_default=db.text('10'))
     isTaxExp = db.Column(db.Boolean, nullable=False, default=True)
     isDelete = db.Column(db.Boolean, nullable=False, default=False)
     numberOfAttachments = db.Column(
@@ -185,6 +187,8 @@ class Quotation(db.Model):
     title = db.Column(db.String)
     memo = db.Column(db.String)
     remarks = db.Column(db.String)
+    tax = db.Column(db.Integer, nullable=False, default=10,
+                    server_default=db.text('10'))
     isTaxExp = db.Column(db.Boolean, nullable=False, default=True)
     isDelete = db.Column(db.Boolean, nullable=False, default=False)
     numberOfAttachments = db.Column(

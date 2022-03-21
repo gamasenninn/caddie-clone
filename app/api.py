@@ -535,6 +535,7 @@ def invoice_create():
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
+        tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
         invoice_items=newInvoiceItems,
@@ -579,8 +580,9 @@ def invoice_update(id):
     invoice.title = data.get('title')
     invoice.memo = data.get('memo')
     invoice.remarks = data.get('remarks')
-    invoice.numberOfAttachments = data.get('numberOfAttachments')
+    invoice.tax = data.get('tax')
     invoice.isTaxExp = data.get('isTaxExp')
+    invoice.numberOfAttachments = data.get('numberOfAttachments')
 
     if data.get('invoice_items'):
         update_list = []
@@ -869,6 +871,7 @@ def quotation_create():
         title=data.get('title'),
         memo=data.get('memo'),
         remarks=data.get('remarks'),
+        tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
         quotation_items=newQuotationItems,
@@ -905,6 +908,7 @@ def quotation_update(id):
     quotation.title = data.get('title')
     quotation.memo = data.get('memo')
     quotation.remarks = data.get('remarks')
+    quotation.tax = data.get('tax')
     quotation.isTaxExp = data.get('isTaxExp')
     quotation.numberOfAttachments = data.get('numberOfAttachments')
 
