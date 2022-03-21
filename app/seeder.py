@@ -226,7 +226,8 @@ def seeder():
     setting = [
         Setting(id=1, companyName='自社株式会社', representative='自社代表者', postNumber='000-0000', address='宇都宮市北若松原', telNumber='000-0000-0000', faxNumber='000-0000-0000', url='mypage.com',
                 email='mymail@co.jp', payee='テスト銀行　本店(999) 普通 9999999', accountHolder='自社株式会社', accountHolderKana='カ）ジシャ', logoFilePath='./static/asset/logo/logo2.jpg', logoHeight=100, logoWidth=100,
-                stampFilePath='./static/asset/stamp/inkan.png', stampHeight=100, stampWidth=100, isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True, isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True)
+                stampFilePath='./static/asset/stamp/inkan.png', stampHeight=100, stampWidth=100, isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True,
+                isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True, defaultTax=10)
     ]
     db.session.add_all(setting)
     db.session.commit()

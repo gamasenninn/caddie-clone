@@ -1281,6 +1281,7 @@ def setting_update(id):
     setting.isDisplayQuotationStamp = data.get('isDisplayQuotationStamp')
     setting.isDisplayInvoiceStamp = data.get('isDisplayInvoiceStamp')
     setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
+    setting.defaultTax = data.get('defaultTax')
 
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})

@@ -240,4 +240,5 @@
 | isDisplayQuotationStamp | 印鑑見積書表示   | boolean     | 印刷時に表示するかどうか | 
 | isDisplayInvoiceStamp   | 印鑑請求書表示   | boolean     | 印刷時に表示するかどうか | 
 | isDisplayDeliveryStamp  | 印鑑納品書表示   | boolean     | 印刷時に表示するかどうか | 
+| defaultTax              | 初期消費税       | integer     | 請求・見積作成時に自動的に設定される消費税率 | 
 | updatedAt               | 更新日時         | datetime    |                          | 

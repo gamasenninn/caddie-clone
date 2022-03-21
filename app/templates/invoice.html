@@ -482,32 +482,36 @@
                                 </b-form-textarea>
                             </b-col>
                             <b-col md>
-                                <b-table-simple borderless>
-                                    <b-tr>
-                                        <b-td class="text-right">小計</b-td>
-                                        <b-td class="text-center" id="tdAmount" style="border-bottom: 2px solid white;">
-                                            {{sum|nf}}
-                                        </b-td>
-                                        <!-- <b-form-checkbox v-model="invoice.isTaxExp" class="text-right">外税 -->
-                                        <b-form-checkbox v-model="invoice.isTaxExp" class="ml-3">外税
-                                        </b-form-checkbox>
-                                    </b-tr>
-                                    <b-tr>
-                                        <b-td class="text-right">消費税</b-td>
-                                        <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount"
-                                            style="border-bottom: 2px solid white;">
-                                            {{Math.round(sum*0.1)|nf}}</b-td>
-                                        <b-td v-else class="text-center" id="tdAmount"
-                                            style="border-bottom: 2px solid white;">
-                                            {{Math.round(sum-sum/1.1)|nf}}</b-td>
-                                    </b-tr>
-                                    <b-tr>
-                                        <b-td class="text-right">請求総額</b-td>
-                                        <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount">
-                                            {{Math.round(sum*1.1)|nf}}</b-td>
-                                        <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
-                                    </b-tr>
-                                </b-table-simple>
+                                <b-container style="max-width: 500px; margin-right: 0;">
+                                    <b-table-simple borderless>
+                                        <b-tr>
+                                            <b-td class="text-right" style="width: 100px;">小計</b-td>
+                                            <b-td class="text-center" id="tdAmount"
+                                                style="border-bottom: 2px solid white;">
+                                                {{sum|nf}}
+                                            </b-td>
+                                            <b-td style="width: 100px;">
+                                                <b-form-checkbox v-model="invoice.isTaxExp" class="ml-3">外税
+                                                </b-form-checkbox>
+                                            </b-td>
+                                        </b-tr>
+                                        <b-tr>
+                                            <b-td class="text-right">消費税</b-td>
+                                            <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount"
+                                                style="border-bottom: 2px solid white;">
+                                                {{Math.round(sum*0.1)|nf}}</b-td>
+                                            <b-td v-else class="text-center" id="tdAmount"
+                                                style="border-bottom: 2px solid white;">
+                                                {{Math.round(sum-sum/1.1)|nf}}</b-td>
+                                        </b-tr>
+                                        <b-tr>
+                                            <b-td class="text-right">請求総額</b-td>
+                                            <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount">
+                                                {{Math.round(sum*1.1)|nf}}</b-td>
+                                            <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
+                                        </b-tr>
+                                    </b-table-simple>
+                                </b-container>
                             </b-col>
                         </b-row>
                         <!-- アップロード機能　-->
