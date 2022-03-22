@@ -42,6 +42,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
         sum.tax = parseInt(sum.total - sum.total / 1.1)
     };
     h.memo = invoice.memo;
+    h.deadLine = invoice.deadLine;
     h.payee = setting.payee;
     h.accountHolderKana = setting.accountHolderKana;
     h.accountHolder = setting.accountHolder;
@@ -142,7 +143,7 @@ function getPdfData(h, sum) {
                 "detail": {
                     "row_max": 14,
                     "label_style": "sm_c",
-                    "pos_xy": ["E", "(1*mm,190*mm)"],
+                    //"pos_xy": ["E", "(1*mm,190*mm)"],
                     "fields": [
                         //{ "key": "num", "label": "No.", "width": 10, "p_style": "sm_r", "eval": "_ROWNUM+1" },
                         { "key": "itemName", "label": "商品名", "width": 100, "p_style": "sm_l" },
@@ -155,13 +156,13 @@ function getPdfData(h, sum) {
                         ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
                         ["E", "('VALIGN', (0, 0), (-1, -1), 'MIDDLE')"],
                         ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
-                        ["E", "('LINEBEFORE', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
-                        ["E", "('LINEAFTER', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
+                        ["E", "('LINEBEFORE', (0, 0), (-1,-1), 0.25, colors.white)"],
+                        ["E", "('LINEAFTER', (0, 0), (-1,-1), 0.25, colors.white)"],
                         ["E", "('ALIGN', (0, 0), (-1, 0), 'CENTER')"],
-                        ["E", "('BACKGROUND', (0, 0), (6, 0), colors.lightblue)"],
-                        ["E", "('GRID', (0, 0), (6, 0), 0.25,colors.lightblue)"]
+                        ["E", "('BACKGROUND', (0, 0), (6, 0), '#10AFC5')"],
+                        ["E", "('GRID', (0, 0), (6, 0), 0.25,'#10AFC5')"]
                     ],
-                    "stripe_backcrounds": ["colors.lightcyan", "colors.white"]
+                    "stripe_backcrounds": ["'#EBF5FF'", "colors.white"]
                 },
             },
             "footer": {
@@ -170,15 +171,20 @@ function getPdfData(h, sum) {
                 //    ["P", h.payee, "sm_l","(40*mm,50*mm)"],
                 //],
                 "table_infos": [
+                    // top right area 
+                    {   "pos_xy": ["E", "(175*mm,278*mm)"],"table": [[["P", h.applyDate, "sm_l"]]],"col_widths": ["E", "(30*mm)"] },
+                    {   "pos_xy": ["E", "(175*mm,272*mm)"],"table": [[["PF", h.applyNumber, "sm_l","{:}"]]],"col_widths": ["E", "(30*mm)"] },
                     // total area 
+                    {   "pos_xy": ["E", "(40*mm,208*mm)"],"table": [[["P", h.title, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
                     {   "pos_xy": ["E", "(45*mm,197*mm)"],"table": [[["PF", sum.total, "md_l_b","￥{:,}-"]]],"col_widths": ["E", "(50*mm)"] },
                     // left side footer
+                    {   "pos_xy": ["E", "(40*mm,71*mm)"],"table": [[["P", h.deadLine, "sm_l"]]],"col_widths": ["E", "(50*mm)"] },
                     {   "pos_xy": ["E", "(40*mm,64*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
-                    {   "pos_xy": ["E", "(40*mm,52*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
-                    {   "pos_xy": ["E", "(40*mm,46*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
+                    {   "pos_xy": ["E", "(40*mm,52*mm)"],"table": [[["P", h.accountHolderKana, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
+                    {   "pos_xy": ["E", "(40*mm,46*mm)"],"table": [[["P", h.accountHolder, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
                     // right side footer sum
-                    {   "pos_xy": ["E", "(140*mm,73*mm)"],"table": [[["PF", sum.total, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
-                    {   "pos_xy": ["E", "(140*mm,64*mm)"],"table": [[["PF", sum.total, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
+                    {   "pos_xy": ["E", "(140*mm,73*mm)"],"table": [[["PF", sum.amount, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
+                    {   "pos_xy": ["E", "(140*mm,64*mm)"],"table": [[["PF", sum.tax, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
                     {   "pos_xy": ["E", "(140*mm,57*mm)"],"table": [[["PF", sum.total, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
                     // under side footer
                     {   "pos_xy": ["E", "(19*mm,13*mm)"],"table": [[["P", h.memo, "sm_l"]]],
