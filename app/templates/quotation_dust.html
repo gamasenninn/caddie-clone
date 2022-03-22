@@ -208,10 +208,6 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="消費税率"
-                                        label-for="tax" label-align="right">
-                                        <p class="text-left pl-2" id="tax">{{quotation.tax}}</p>
-                                    </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
@@ -318,6 +314,9 @@
                                             <b-td v-else class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
                                                 {{Math.round(sum-sum/includeTaxCoefficient(this.quotation))|nf}}</b-td>
+                                            <b-td class="text-center">
+                                                {{quotation.tax}}%
+                                            </b-td>
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">見積総額</b-td>

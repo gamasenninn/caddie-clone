@@ -307,12 +307,6 @@
                                             size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="消費税率"
-                                        label-for="tax" label-align="right">
-                                        <b-form-input v-model="invoice.tax" id="tax" size="sm" autocomplete="off"
-                                            type="number">
-                                        </b-form-input>
-                                    </b-form-group>
                                 </b-col>
                                 <b-col xl>
                                     <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="メモ"
@@ -504,6 +498,12 @@
                                             <b-td v-else class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
                                                 {{Math.round(sum-sum/includeTaxCoefficient(this.invoice))|nf}}</b-td>
+                                            <b-td style="padding: 8px;">
+                                                <b-input-group append="%" size="sm">
+                                                    <b-form-input v-model="invoice.tax" id="tax" size="sm">
+                                                    </b-form-input>
+                                                </b-input-group>
+                                            </b-td>
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">請求総額</b-td>
