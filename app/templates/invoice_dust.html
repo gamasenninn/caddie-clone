@@ -324,15 +324,15 @@
                                             <b-td class="text-right">消費税</b-td>
                                             <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum*0.1)|nf}}</b-td>
+                                                {{Math.round(sum*taxCoefficient(this.invoice))|nf}}</b-td>
                                             <b-td v-else class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum-sum/1.1)|nf}}</b-td>
+                                                {{Math.round(sum-sum/includeTaxCoefficient(this.invoice))|nf}}</b-td>
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">請求総額</b-td>
                                             <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount">
-                                                {{Math.round(sum*1.1)|nf}}</b-td>
+                                                {{Math.round(sum*includeTaxCoefficient(this.invoice))|nf}}</b-td>
                                             <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                         </b-tr>
                                     </b-table-simple>
@@ -452,6 +452,14 @@
                     },
                     formatDateTime(datetime) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
+                    },
+                    //税係数
+                    taxCoefficient: function (invoice) {
+                        return invoice.tax / 100;
+                    },
+                    //税込み係数
+                    includeTaxCoefficient: function (invoice) {
+                        return 1 + (invoice.tax / 100);
                     },
                     getCustomer: async function (item) {
                         self = this;

@@ -309,7 +309,8 @@
                                     </b-form-group>
                                     <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="消費税率"
                                         label-for="tax" label-align="right">
-                                        <b-form-input v-model="invoice.tax" id="tax" size="sm" autocomplete="off">
+                                        <b-form-input v-model="invoice.tax" id="tax" size="sm" autocomplete="off"
+                                            type="number">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -499,15 +500,15 @@
                                             <b-td class="text-right">消費税</b-td>
                                             <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum*0.1)|nf}}</b-td>
+                                                {{Math.round(sum*taxCoefficient(this.invoice))|nf}}</b-td>
                                             <b-td v-else class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum-sum/1.1)|nf}}</b-td>
+                                                {{Math.round(sum-sum/includeTaxCoefficient(this.invoice))|nf}}</b-td>
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">請求総額</b-td>
                                             <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount">
-                                                {{Math.round(sum*1.1)|nf}}</b-td>
+                                                {{Math.round(sum*includeTaxCoefficient(this.invoice))|nf}}</b-td>
                                             <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                         </b-tr>
                                     </b-table-simple>
@@ -787,6 +788,7 @@
                         });
                         self.invoice = self.invoices.slice(-1)[0];
                         Vue.set(self.invoice, 'isTaxExp', true);
+                        Vue.set(self.invoice, 'tax', self.setting.defaultTax);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         this.countChanged = 0;
                         this.clearFileList();
@@ -1025,8 +1027,16 @@
                     amountCalculation(invoice) {
                         if (!invoice.invoice_items.length) return 0;
                         let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
-                        if (invoice.isTaxExp === true) return Math.round(amount * 1.1);
+                        if (invoice.isTaxExp === true) return Math.round(amount * this.includeTaxCoefficient(invoice));
                         return amount;
+                    },
+                    //税係数
+                    taxCoefficient: function (invoice) {
+                        return invoice.tax / 100;
+                    },
+                    //税込み係数
+                    includeTaxCoefficient: function (invoice) {
+                        return 1 + (invoice.tax / 100);
                     },
                     //---- upload funcrions --
                     async getFileListDZ() {
@@ -1157,7 +1167,7 @@
                             invoices = invoices.filter(invoice => invoice.isPaid === false);
                         let invoiceAmounts = invoices.map(
                             invoice => invoice.invoice_items.map(
-                                item => Math.round(item.count * Math.round(item.price) * (invoice.isTaxExp == true ? 1.1 : 1))).reduce((a, b) => a + b));
+                                item => Math.round(item.count * Math.round(item.price) * (invoice.isTaxExp == true ? this.includeTaxCoefficient(invoice) : 1))).reduce((a, b) => a + b));
                         invoiceAmounts.forEach(value => {
                             amount += value;
                         });
