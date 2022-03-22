@@ -104,6 +104,12 @@
                 padding: 0.25rem 1.25rem;
                 border-bottom: 1px solid #CED4DA;
             }
+
+            @media screen and (max-width: 1200px) {
+                #input-interval {
+                    display: none
+                }
+            }
         </style>
 
         <div id="app" v-cloak>
@@ -218,8 +224,7 @@
                                 <span class="mr-2">更新日:{{formatDate(quotation.updatedAt)}}</span>
                             </b-col>
                         </b-row>
-                        <b-card border-variant="white" class="mb-3 text-center" header="見積書入力"
-                            header-border-variant="light">
+                        <b-card border-variant="white" class="text-center" header="見積書入力" header-border-variant="light">
                             <b-row>
                                 <b-col xl>
                                     <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="顧客名"
@@ -344,23 +349,19 @@
                             </b-row>
                             <b-row>
                                 <b-col xl>
+                                    <div id="input-interval" style="height: 40px;"></div>
+                                    <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="件名"
+                                        label-for="title" label-align="right">
+                                        <b-form-input v-model="quotation.title" id="title" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
                                 </b-col>
                                 <b-col xl>
                                     <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="メモ"
                                         label-for="メモ" label-align="right">
-                                        <b-form-textarea v-model="quotation.memo" size="sm" rows="2">
+                                        <b-form-textarea v-model="quotation.memo" size="sm" rows="3">
                                         </b-form-textarea>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col xl>
-                                    <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="件名"
-                                        label-for="title" label-align="right">
-                                        <b-form-input v-model="quotation.title" id="title" size="sm"></b-form-input>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col xl>
                                 </b-col>
                             </b-row>
                         </b-card>
