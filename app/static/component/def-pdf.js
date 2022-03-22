@@ -51,6 +51,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     h.logoHeight = setting.logoHeight ? setting.logoHeight:50;
     h.stampWidth = setting.stampWidth ? setting.stampWidth:50;
     h.stampHeight = setting.stampHeight ? setting.stampHeight:50;
+    h.baseImagePath = "./static/asset/invoice_base.png";
     return getPdfData(h, sum);
 }
 function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
@@ -152,16 +153,20 @@ function getPdfData(h, sum) {
                             ["NOP", "('BOX',(2,7),(3,8),0.15,colors.lightblue)"],
                             ["NOP", "('SPAN',(2,7),(2,8))"]
                         ],
-                        "after": ["E", "Spacer(10*mm,5*mm)"]
+                        "after": ["E", "Spacer(10*mm,10*mm)"]
                     }
                 ],
+                "drawBaseImages": [
+                    ["('" + h.baseImagePath + "',0,0, 210*mm,295*mm,mask='auto')"]
+                ],
                 "drawImages": [
+                    //["('" + h.baseImagePath + "',0,0, 210*mm,295*mm,mask='auto')"],
                     ["('" + h.logoPath + "', 450,760," +h.logoWidth+ ","+h.logoHeight+",mask='auto')"]
                 ]
             },
             "body": {
                 "detail": {
-                    "row_max": 15,
+                    "row_max": 14,
                     "label_style": "sm_c",
                     "fields": [
                         //{ "key": "num", "label": "No.", "width": 10, "p_style": "sm_r", "eval": "_ROWNUM+1" },
@@ -183,56 +188,27 @@ function getPdfData(h, sum) {
                     ],
                     "stripe_backcrounds": ["colors.lightcyan", "colors.white"]
                 },
-                "detail_after": {
-                    "table_info": {
-                        "table": [
-                            ["", "", ["PF", sum.amountLabel, "sm_l", "{:}"], ["PF", sum.amount, "sm_r", "{:,}"]],
-                            ["", "", ["PF", sum.taxLabel, "sm_l", "{:}"], ["PF", sum.tax, "sm_r", "{:,}"]],
-                            ["", "", ["PF", sum.totalLabel, "sm_l", "{:}"], ["PF", sum.total, "sm_r", "{:,}"]]
-                        ],
-                        "col_widths": ["E", "(65*mm, 30*mm, 45*mm, 50*mm)"],
-                        "table_style": [
-                            ["E", "('LINEBEFORE', (0, 0), (0, -1), 0.15, colors.lightblue)"],
-                            ["E", "('LINEABOVE', (0, 0), (-1, -1), 0.15, colors.lightblue)"],
-                            ["E", "('LINEBELOW', (0, 0), (-1, -1), 0.15, colors.lightblue)"],
-                            ["E", "('GRID',(3,0),(-1,-1),0.15,colors.lightblue)"]
-                        ]
-                    }
-                }
             },
             "footer": {
                 "pos_xy": ["E", "(10*mm,5*mm)"],
+                //"paras":[
+                //    ["P", h.payee, "sm_l","(40*mm,50*mm)"],
+                //],
                 "table_infos": [
-                    h.category == '請求書' ? {
+                    {
+                        //"pos_xy": ["E", "(40*mm,64*mm)"],
                         "table": [
-                            [["P","■振込先","memo"], ["P", h.payee, "sm_l"],"",  ""],
-                            ["",["P","カナ","sm_r"],["P", h.accountHolderKana, "sm_l"],""],
-                            ["",["P","名義","sm_r"],["P", h.accountHolder, "sm_l"],""],
-                            ["","","","",],
-                            [["P","■備考","memo"],["P", h.memo, "sm_l"],"",""],
+                            [["P", h.payee, "sm_l"]],
+                            [["P", h.payee, "sm_l"]],
+                            [["P", h.payee, "sm_l"]],
+                            [["P", h.payee, "sm_l"]],
+                            [["P", h.payee, "sm_l"]],
                         ],
-                        "col_widths": ["E", "(20*mm,15*mm,90*mm,5*mm)"],
-                        "row_heights": ["E", "(6*mm,6*mm,6*mm,4*mm,25*mm)"],
+                        "col_widths": ["E", "(70*mm)"],
                         "table_style": [
-                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
-                            ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
-                            ["E", "('SPAN',(1,0),(2,0))"],
-                            ["E", "('SPAN',(1,4),(2,4))"],
+                            ["E", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
                         ]
                     } 
-                    :{
-                        "table": [
-                            [["P","■備考","memo"], ["P", h.memo, "sm_l"], "", ""],
-                            ["", "", "", ""],
-                        ],
-                        "col_widths": ["E", "(15*mm,150*mm,5*mm,5*mm)"],
-                        "row_heights": ["E", "(40*mm,5*mm)"],
-                        "table_style": [
-                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
-                            ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
-                            ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
-                        ]
-                    }
                 ],
                 "drawImages": [
                     ["('" + h.stampPath + "', 510,720,"+h.stampWidth+ ","+h.stampHeight+",mask='auto')"]

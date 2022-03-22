@@ -175,20 +175,39 @@ def make_detail(detail,bdata):
 def footer(canvas, doc):
     canvas.saveState()
 
+
     #print(f"----- page number at footer ----- { canvas._pageNumber } ")
     canvas.setTitle(defPdf['attr']['name_jp'])
 
     if not defPdf.get('footer'): return
 
-    for table_info in defPdf['footer'].get('table_infos'):
-        ft = make_table(table_info)
+    if canvas._pageNumber == 1:
+        if defPdf['header'].get('drawBaseImages'):
+            for di in defPdf['header'].get('drawBaseImages'):
+                if di:
+                    cmd = f'canvas.drawImage{di[0]}'
+                    #print(cmd)
+                    eval(cmd)
 
-    x,y =cv(defPdf['footer']['pos_xy'])
+    if defPdf['footer'].get('pos_xy') : x,y =cv(defPdf['footer']['pos_xy'])
+    for table_info in defPdf['footer'].get('table_infos'):
+        if table_info.get('pos_xy'): x,y =cv(table_info.get('pos_xy'))
+        ft = make_table(table_info)
+        ft.wrapOn(canvas, x, y)
+        ft.drawOn(canvas, x, y)
+
+
+    #for para in defPdf['footer'].get('paras'):
+    #    pt = cv(para)
+    #    x,y = eval(para[3])
+    #    pt.wrapOn(canvas, x, y)
+    #    pt.drawOn(canvas, x, y)
+
+
+    #x,y =cv(defPdf['footer']['pos_xy'])
     #print("xy:",type(x),x)
     #print("xy:",type(y),y)
 
-    ft.wrapOn(canvas, x, y)
-    ft.drawOn(canvas, x, y)
 
 
     #canvas.drawImage('./inkan.png', 300,300,50,50,mask='auto')
@@ -331,8 +350,9 @@ def pdf_maker(d,is_BytesIO=False,file_name=''):
         bt = make_detail(defPdf['body']['detail'],data.get('bdata'))
         elements.append(bt)
 
-        bt = make_table(defPdf['body']['detail_after'].get('table_info'))
-        elements.append(bt)
+        if defPdf['body'].get('detail_after'):
+            bt = make_table(defPdf['body']['detail_after'].get('table_info'))
+            elements.append(bt)
 
     #ft = make_table(defPdf['footer']['table_info'])
     #elements.append(ft)
