@@ -766,22 +766,29 @@
                         app.message = '保存しました。'
 
                     },
-                    copyQuotation: function (item) {
+                    copyQuotation: async function (item) {
                         let quotationResource = JSON.stringify(item);
                         quotationResource = JSON.parse(quotationResource);  //参照渡し対策
+                        quotationResource.numberOfAttachments = 0;
                         delete quotationResource.id;
-                        this.insertQuotation(quotationResource);
+                        await this.insertQuotation(quotationResource);
+                        this.getQuotations();
                     },
                     convertQuotation: function (item) {
                         let invoiceResource = JSON.stringify(item);
                         invoiceResource = JSON.parse(invoiceResource);  //参照渡し対策
-                        let quotationResource = JSON.parse(localStorage.getItem('quotation'));;
-                        invoiceResource.deadLine = item.expiry;
+                        let quotationResource = JSON.parse(localStorage.getItem('quotation'));  //isConvert更新用
+                        // invoiceResource.paymentDate = '';
+                        // invoiceResource.isPaid = false;
+                        invoiceResource.numberOfAttachments = 0;
                         invoiceResource.invoice_items = item.quotation_items;
                         delete invoiceResource.id;
                         delete invoiceResource.expiry;
+                        delete invoiceResource.dayOfDelivery;
+                        delete invoiceResource.termOfSale;
+                        delete invoiceResource.isConvert;
                         delete invoiceResource.quotation_items;
-                        quotationResource.isConvert = true;
+                        quotationResource.isConvert = true;     //変換済みフラグ
                         this.insertInvoice(invoiceResource);
                         this.updateQuotation(quotationResource);
                     },
