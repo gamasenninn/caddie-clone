@@ -142,7 +142,7 @@ function getPdfData(h, sum) {
             "body": {
                 "detail": {
                     "row_max": 14,
-                    "label_style": "sm_c",
+                    "label_style": "sm_l_color",
                     //"pos_xy": ["E", "(1*mm,190*mm)"],
                     "fields": [
                         //{ "key": "num", "label": "No.", "width": 10, "p_style": "sm_r", "eval": "_ROWNUM+1" },
@@ -159,8 +159,9 @@ function getPdfData(h, sum) {
                         ["E", "('LINEBEFORE', (0, 0), (-1,-1), 0.25, colors.white)"],
                         ["E", "('LINEAFTER', (0, 0), (-1,-1), 0.25, colors.white)"],
                         ["E", "('ALIGN', (0, 0), (-1, 0), 'CENTER')"],
-                        ["E", "('BACKGROUND', (0, 0), (6, 0), '#10AFC5')"],
-                        ["E", "('GRID', (0, 0), (6, 0), 0.25,'#10AFC5')"]
+                        ["E", "('BACKGROUND', (0, 0), (6, 0), '#EBF5FF')"],
+                        ["E", "('TEXTCOLOR', (0, 0), (-1, -1), colors.red)"],
+                        ["E", "('BOX', (0, 0), (6, 0), 0.25,'#10AFC5')"],
                     ],
                     "stripe_backcrounds": ["'#EBF5FF'", "colors.white"]
                 },
@@ -212,6 +213,7 @@ function getPdfData(h, sum) {
         "style": {
             "sm_r": { "name": "Normal", "alignment": 2, "fontName": "IPAexMincho", "fontSize": 11 },
             "sm_l": { "name": "Normal", "alignment": 0, "fontName": "IPAexMincho", "fontSize": 11 },
+            "sm_l_color": { "name": "Normal", "alignment": 0, "fontName": "IPAexMincho", "fontSize": 11,"textColor": "#10AFC5" },
             "sm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexMincho", "fontSize": 11 },
             "md_l_b": { "name": "Normal", "alignment": 0, "fontName": "IPAexMincho", "fontSize": 15 },
             "taxsm_l": { "name": "Normal", "alignment": 2, "fontName": "IPAexMincho", "fontSize": 9 },
