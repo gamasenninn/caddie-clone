@@ -158,8 +158,8 @@ def make_detail(detail,bdata):
         cv_style = cv(t_style)
         if cv_style : t_styles.append(cv_style)
     #stripe設定
-    if detail.get('stripe_backcrounds'):
-        clr = detail['stripe_backcrounds']
+    if detail.get('stripe_backgrounds'):
+        clr = detail['stripe_backgrounds']
         stripes = [
             ('BACKGROUND',(0,i),(-1,i),eval(clr[i%2]))
             for i in range(1,len(vals_l))

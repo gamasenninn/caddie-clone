@@ -163,7 +163,7 @@ function getPdfData(h, sum) {
                         ["E", "('TEXTCOLOR', (0, 0), (-1, -1), colors.red)"],
                         ["E", "('BOX', (0, 0), (6, 0), 0.25,'#10AFC5')"],
                     ],
-                    "stripe_backcrounds": ["'#EBF5FF'", "colors.white"]
+                    "stripe_backgrounds": ["'#EBF5FF'", "colors.white"]
                 },
             },
             "footer": {
