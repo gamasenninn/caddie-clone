@@ -89,9 +89,10 @@ def make_table(table_info):
         ht=Table(t_data,colWidths=cv(table_info['col_widths']))
 
     t_styles = []
-    for t_style in table_info['table_style']:
-        cv_style = cv(t_style)
-        if cv_style : t_styles.append(cv_style)
+    if table_info.get('table_style'):
+        for t_style in table_info['table_style']:
+            cv_style = cv(t_style)
+            if cv_style : t_styles.append(cv_style)
 
     ht.setStyle(TableStyle(t_styles))
     #print(t_styles)    
@@ -196,12 +197,12 @@ def footer(canvas, doc):
         ft.wrapOn(canvas, x, y)
         ft.drawOn(canvas, x, y)
 
-
-    #for para in defPdf['footer'].get('paras'):
-    #    pt = cv(para)
-    #    x,y = eval(para[3])
-    #    pt.wrapOn(canvas, x, y)
-    #    pt.drawOn(canvas, x, y)
+    if defPdf['footer'].get('paras'):
+        for para in defPdf['footer'].get('paras'):
+            pt = cv(para)
+            x,y = eval(para[3])
+            pt.wrapOn(canvas, x, y)
+            pt.drawOn(canvas, x, y)
 
 
     #x,y =cv(defPdf['footer']['pos_xy'])
@@ -349,6 +350,14 @@ def pdf_maker(d,is_BytesIO=False,file_name=''):
     if data.get('bdata'):
         bt = make_detail(defPdf['body']['detail'],data.get('bdata'))
         elements.append(bt)
+
+#        if defPdf['body']['detail'].get('pos_xy'):
+#            x,y = eval(defPdf['body']['detail']['pos_xy'][1])
+#            bt.wrapOn(canvas, x, y)
+#            bt.drawOn(canvas, x, y)
+#            ##elements.append(bt)
+#        else:
+#            elements.append(bt)
 
         if defPdf['body'].get('detail_after'):
             bt = make_table(defPdf['body']['detail_after'].get('table_info'))

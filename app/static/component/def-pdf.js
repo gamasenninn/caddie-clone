@@ -125,49 +125,24 @@ function getPdfData(h, sum) {
                         "table_style": [
                             ["E", "('NOP',(0,0),(-1,-1),0.15,colors.lightblue)"],
                             ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
-                            ["E", "('BOX',(1,0),(2,5),0.15,colors.lightblue,None, (3,3,3,3))"],
+                            ["NOP", "('BOX',(1,0),(2,5),0.15,colors.lightblue,None, (3,3,3,3))"],
                         ],
+                        "after": ["E", "Spacer(10*mm,50*mm)"]
                     },
-                    {
-                        "table": [
-                            [["P", h.category, "big_center"], "", "", "", "", ""],
-                            ["", "", "", "", "", ["P", h.numberLabel + h.applyNumber, "sm_r"]],
-                            ["", ["P", h.title, "sm_l"], "", "", "", ["P", "日付: &nbsp;" + h.applyDate, "sm_r"]],
-                            ["", ["P", h.headerTotalLabel, "sm_c"], ["PF", sum.total, "h_total", "￥{:,}-"], ["P", "内消費税", "taxsm_c"], "", ["P", '担当者: ' + h.person, "sm_r"]],
-                            ["", "", "", ["PF", sum.tax, "taxsm_c", "￥{:,}-"], "", ""],
-                            ["", "", "", "", "", ""],
-                        ],
-                        "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
-                        "table_style": [
-                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
-                            ["E", "('VALIGN',(0,0),(-1,-1),'MIDDLE')"],
-                            ["E", "('SPAN',(0,0),(-1,0))"],
-                            ["E", "('SPAN',(1,2),(2,2))"],
-                            ["E", "('SPAN',(1,3),(1,4))"],
-                            ["E", "('SPAN',(2,3),(2,4))"],
-                            ["E", "('BOX',(1,3),(1,4),0.15,colors.lightblue)"],
-                            ["E", "('BACKGROUND',(1,3),(1,4),colors.lightblue)"],
-                            ["E", "('BOX',(1,3),(3,4),0.15,colors.lightblue)"],
-                            ["NOP", "('SPAN',(1,5),(2,6))"],
-                            ["NOP", "('SPAN',(1,7),(1,8))"],
-                            ["NOP", "('BOX',(2,7),(3,8),0.15,colors.lightblue)"],
-                            ["NOP", "('SPAN',(2,7),(2,8))"]
-                        ],
-                        "after": ["E", "Spacer(10*mm,10*mm)"]
-                    }
                 ],
                 "drawBaseImages": [
                     ["('" + h.baseImagePath + "',0,0, 210*mm,295*mm,mask='auto')"]
                 ],
                 "drawImages": [
                     //["('" + h.baseImagePath + "',0,0, 210*mm,295*mm,mask='auto')"],
-                    ["('" + h.logoPath + "', 450,760," +h.logoWidth+ ","+h.logoHeight+",mask='auto')"]
+                    ["('" + h.logoPath + "', 370,760," +h.logoWidth+ ","+h.logoHeight+",mask='auto')"]
                 ]
             },
             "body": {
                 "detail": {
                     "row_max": 14,
                     "label_style": "sm_c",
+                    "pos_xy": ["E", "(1*mm,190*mm)"],
                     "fields": [
                         //{ "key": "num", "label": "No.", "width": 10, "p_style": "sm_r", "eval": "_ROWNUM+1" },
                         { "key": "itemName", "label": "商品名", "width": 100, "p_style": "sm_l" },
@@ -190,25 +165,30 @@ function getPdfData(h, sum) {
                 },
             },
             "footer": {
-                "pos_xy": ["E", "(10*mm,5*mm)"],
+                //"pos_xy": ["E", "(10*mm,5*mm)"],
                 //"paras":[
                 //    ["P", h.payee, "sm_l","(40*mm,50*mm)"],
                 //],
                 "table_infos": [
-                    {
-                        //"pos_xy": ["E", "(40*mm,64*mm)"],
-                        "table": [
-                            [["P", h.payee, "sm_l"]],
-                            [["P", h.payee, "sm_l"]],
-                            [["P", h.payee, "sm_l"]],
-                            [["P", h.payee, "sm_l"]],
-                            [["P", h.payee, "sm_l"]],
-                        ],
-                        "col_widths": ["E", "(70*mm)"],
+                    // total area 
+                    {   "pos_xy": ["E", "(45*mm,197*mm)"],"table": [[["PF", sum.total, "md_l_b","￥{:,}-"]]],"col_widths": ["E", "(50*mm)"] },
+                    // left side footer
+                    {   "pos_xy": ["E", "(40*mm,64*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
+                    {   "pos_xy": ["E", "(40*mm,52*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
+                    {   "pos_xy": ["E", "(40*mm,46*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
+                    // right side footer sum
+                    {   "pos_xy": ["E", "(140*mm,73*mm)"],"table": [[["PF", sum.total, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
+                    {   "pos_xy": ["E", "(140*mm,64*mm)"],"table": [[["PF", sum.total, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
+                    {   "pos_xy": ["E", "(140*mm,57*mm)"],"table": [[["PF", sum.total, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
+                    // under side footer
+                    {   "pos_xy": ["E", "(19*mm,13*mm)"],"table": [[["P", h.memo, "sm_l"]]],
+                        "col_widths":   ["E", "(172*mm)"], 
+                        "row_heights":  ["E", "(24*mm)"],
                         "table_style": [
-                            ["E", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
+                            ["E", "('VALIGN', (0, 0), (-1, -1), 'TOP')"],
+                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],    
                         ]
-                    } 
+                    },
                 ],
                 "drawImages": [
                     ["('" + h.stampPath + "', 510,720,"+h.stampWidth+ ","+h.stampHeight+",mask='auto')"]
