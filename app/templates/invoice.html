@@ -753,19 +753,27 @@
                         app.title = '更新';
                         app.message = '保存しました。';
                     },
-                    copyInvoice: function (item) {
+                    copyInvoice: async function (item) {
                         let invoiceResource = JSON.stringify(item);
                         invoiceResource = JSON.parse(invoiceResource);  //参照渡し対策
+                        invoiceResource.numberOfAttachments = 0;
                         delete invoiceResource.id;
-                        this.insertInvoice(invoiceResource);
+                        await this.insertInvoice(invoiceResource);
+                        this.getInvoices();
                     },
                     convertInvoice: function (item) {
                         let quotationResource = JSON.stringify(item);
                         quotationResource = JSON.parse(quotationResource);  //参照渡し対策
-                        quotationResource.expiry = item.deadLine;
+                        // quotationResource.expiry = '';
+                        // quotationResource.dayOfDelivery = '';
+                        // quotationResource.termOfSale = '';
+                        // quotationResource.isConvert = false;
+                        quotationResource.numberOfAttachments = 0;
                         quotationResource.quotation_items = item.invoice_items;
                         delete quotationResource.id;
                         delete quotationResource.deadLine;
+                        delete quotationResource.paymentDate;
+                        delete quotationResource.isPaid;
                         delete quotationResource.invoice_items;
                         this.insertQuotation(quotationResource);
                     },
