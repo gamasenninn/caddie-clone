@@ -208,10 +208,6 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="消費税率"
-                                        label-for="tax" label-align="right">
-                                        <p class="text-left pl-2" id="tax">{{quotation.tax}}</p>
-                                    </b-form-group>
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
@@ -314,15 +310,18 @@
                                             <b-td class="text-right">消費税</b-td>
                                             <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum*0.1)|nf}}</b-td>
+                                                {{Math.round(sum*taxCoefficient(this.quotation))|nf}}</b-td>
                                             <b-td v-else class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum-sum/1.1)|nf}}</b-td>
+                                                {{Math.round(sum-sum/includeTaxCoefficient(this.quotation))|nf}}</b-td>
+                                            <b-td class="text-center">
+                                                {{quotation.tax}}%
+                                            </b-td>
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">見積総額</b-td>
                                             <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount">
-                                                {{Math.round(sum*1.1)|nf}}</b-td>
+                                                {{Math.round(sum*includeTaxCoefficient(this.quotation))|nf}}</b-td>
                                             <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
                                         </b-tr>
                                     </b-table-simple>
@@ -438,6 +437,14 @@
                     },
                     formatDateTime(datetime) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
+                    },
+                    //税係数
+                    taxCoefficient: function (quotation) {
+                        return quotation.tax / 100;
+                    },
+                    //税込み係数
+                    includeTaxCoefficient: function (quotation) {
+                        return 1 + (quotation.tax / 100);
                     },
                     getCustomer: async function (item) {
                         self = this;
