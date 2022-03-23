@@ -9,12 +9,9 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     const sum = {};
     if (mode == 'delivery') {
         h.category = '納品書';
-        h.baseImagePath = "./static/asset/delivery_base.png";
     } else {
         h.category = '請求書';
-        h.baseImagePath = "./static/asset/invoice_base.png";
     }
-    h.mode = mode;
     h.customerName = nvl(invoice.customerName, '');
     h.honorificTitle = nvl(invoice.honorificTitle, '');
     h.applyNumber = invoice.applyNumber;
@@ -45,7 +42,6 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
         sum.tax = parseInt(sum.total - sum.total / 1.1)
     };
     h.memo = invoice.memo;
-    h.deadLine = invoice.deadLine;
     h.payee = setting.payee;
     h.accountHolderKana = setting.accountHolderKana;
     h.accountHolder = setting.accountHolder;
@@ -60,9 +56,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
 function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
     const h = {};
     const sum = {};
-    h.mode = 'quotation';
     h.category = '見積書';
-    h.baseImagePath = "./static/asset/quotes_base.png";
     h.customerName = nvl(quotation.customerName, '');
     h.honorificTitle = nvl(quotation.honorificTitle, '');
     h.applyNumber = quotation.applyNumber;
@@ -91,19 +85,8 @@ function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
         sum.tax = parseInt(sum.total - sum.total / 1.1)
     };
     h.memo = quotation.memo;
-    h.expiry = quotation.expiry;
-    h.dayOfDelivery = quotation.dayOfDelivery;
-    h.termOfSale = quotation.termOfSale;
-
     h.logoPath = setting.logoFilePath;
     h.stampPath = setting.stampFilePath;
-    h.logoWidth = setting.logoWidth ? setting.logoWidth:50;
-    h.logoHeight = setting.logoHeight ? setting.logoHeight:50;
-    h.stampWidth = setting.stampWidth ? setting.stampWidth:50;
-    h.stampHeight = setting.stampHeight ? setting.stampHeight:50;
-
-    h.dayOfDelivery
-
     return getPdfData(h, sum);
 }
 function getPdfData(h, sum) {
@@ -115,7 +98,7 @@ function getPdfData(h, sum) {
                 "page_size": "A4",
                 "page_type": "portrait",
                 "top_mergin": 9,
-                "footter_size": 80
+                "footter_size": 50
             },
             "file": {
                 "outDir": "./static/pdf",
@@ -123,21 +106,66 @@ function getPdfData(h, sum) {
             },
             "header": {
                 //"title": ["P", h.category, "big_center"],
-                "title_after": ["E", "Spacer(0,100*mm)"],             
-                "table_infos": [],
-                "drawBaseImages": [
-                    ["('" + h.baseImagePath + "',0,0, 210*mm,295*mm,mask='auto')"]
+                //"title_after": ["E", "Spacer(0,15*mm)"],
+                "table_infos": [
+                    {
+                        "table": [
+                            ["", "", "", "", "", "",""],
+                            ["", "", ["P", h.customerPostNumber + "<br/>" + h.customerAddress  , "sm_l"], "", "", "", ""],
+                            ["", "", "", "", "", "", ""],
+                            ["", "", "", "", "", "", ["P", h.myCompanyName, "my_company"]],
+                            ["", "", ["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"], "", "", "", ["P", h.myAddress1, "sm_r"]],
+                            ["", "", ["P",h.customerDepartment+""+h.customerManager,"sm_l"], "", "", "", ["P", 'TEL: ' + h.myTel1, "sm_r"]],
+                            ["", "", "", "", "", "", ["P", 'FAX: ' + h.myFax1, "sm_r"]],
+                        ],
+                        "col_widths": ["E", "[5*mm,5*mm,88*mm,3*mm,9*mm,10*mm,70*mm]"],
+                        "row_heights": ["E", "(5*mm,7*mm,7*mm,5*mm,7*mm,9*mm,10*mm)"],
+                        //"row_heights": ["E", "(10*mm,10*mm,10*mm,10*mm,10*mm,10*mm)"],
+                        "table_style": [
+                            ["E", "('NOP',(0,0),(-1,-1),0.15,colors.lightblue)"],
+                            ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
+                            ["E", "('BOX',(1,0),(2,5),0.15,colors.lightblue,None, (3,3,3,3))"],
+                        ],
+                    },
+                    {
+                        "table": [
+                            [["P", h.category, "big_center"], "", "", "", "", ""],
+                            ["", "", "", "", "", ["P", h.numberLabel + h.applyNumber, "sm_r"]],
+                            ["", ["P", h.title, "sm_l"], "", "", "", ["P", "日付: &nbsp;" + h.applyDate, "sm_r"]],
+                            ["", ["P", h.headerTotalLabel, "sm_c"], ["PF", sum.total, "h_total", "￥{:,}-"], ["P", "内消費税", "taxsm_c"], "", ["P", '担当者: ' + h.person, "sm_r"]],
+                            ["", "", "", ["PF", sum.tax, "taxsm_c", "￥{:,}-"], "", ""],
+                            ["", "", "", "", "", ""],
+                        ],
+                        "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
+                        "table_style": [
+                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
+                            ["E", "('VALIGN',(0,0),(-1,-1),'MIDDLE')"],
+                            ["E", "('SPAN',(0,0),(-1,0))"],
+                            ["E", "('SPAN',(1,2),(2,2))"],
+                            ["E", "('SPAN',(1,3),(1,4))"],
+                            ["E", "('SPAN',(2,3),(2,4))"],
+                            ["E", "('BOX',(1,3),(1,4),0.15,colors.lightblue)"],
+                            ["E", "('BACKGROUND',(1,3),(1,4),colors.lightblue)"],
+                            ["E", "('BOX',(1,3),(3,4),0.15,colors.lightblue)"],
+                            ["NOP", "('SPAN',(1,5),(2,6))"],
+                            ["NOP", "('SPAN',(1,7),(1,8))"],
+                            ["NOP", "('BOX',(2,7),(3,8),0.15,colors.lightblue)"],
+                            ["NOP", "('SPAN',(2,7),(2,8))"]
+                        ],
+                        "after": ["E", "Spacer(10*mm,5*mm)"]
+                    }
                 ],
                 "drawImages": [
-                    ["('" + h.logoPath + "', 370,760," +h.logoWidth+ ","+h.logoHeight+",mask='auto')"]
+                    ["('" + h.logoPath + "', 450,760," +h.logoWidth+ ","+h.logoHeight+",mask='auto')"]
                 ]
             },
             "body": {
                 "detail": {
-                    "row_max": 10,
-                    "label_style": "sm_l_color",
+                    "row_max": 15,
+                    "label_style": "sm_c",
                     "fields": [
-                        { "key": "itemName", "label": "商品名", "width": 90, "p_style": "sm_l" },
+                        //{ "key": "num", "label": "No.", "width": 10, "p_style": "sm_r", "eval": "_ROWNUM+1" },
+                        { "key": "itemName", "label": "商品名", "width": 100, "p_style": "sm_l" },
                         { "key": "count", "label": "数量", "width": 20, "p_style": "sm_r", "format": "{:,}" },
                         { "key": "unit", "label": "単位", "width": 15, "p_style": "sm_r" },
                         { "key": "price", "label": "単価", "width": 25, "p_style": "sm_r", "format": "{:,}" },
@@ -147,77 +175,69 @@ function getPdfData(h, sum) {
                         ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
                         ["E", "('VALIGN', (0, 0), (-1, -1), 'MIDDLE')"],
                         ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
-                        ["E", "('LINEBEFORE', (0, 0), (-1,-1), 0.25, colors.white)"],
-                        ["E", "('LINEAFTER', (0, 0), (-1,-1), 0.25, colors.white)"],
+                        ["E", "('LINEBEFORE', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
+                        ["E", "('LINEAFTER', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
                         ["E", "('ALIGN', (0, 0), (-1, 0), 'CENTER')"],
-                        ["E", "('BACKGROUND', (0, 0), (6, 0), '#EBF5FF')"],
-                        ["E", "('TEXTCOLOR', (0, 0), (-1, -1), colors.red)"],
-                        ["E", "('BOX', (0, 0), (6, 0), 0.25,'#10AFC5')"],
+                        ["E", "('BACKGROUND', (0, 0), (6, 0), colors.lightblue)"],
+                        ["E", "('GRID', (0, 0), (6, 0), 0.25,colors.lightblue)"]
                     ],
-                    "stripe_backgrounds": ["'#EBF5FF'", "colors.white"]
+                    "stripe_backgounds": ["colors.lightcyan", "colors.white"]
                 },
+                "detail_after": {
+                    "table_info": {
+                        "table": [
+                            ["", "", ["PF", sum.amountLabel, "sm_l", "{:}"], ["PF", sum.amount, "sm_r", "{:,}"]],
+                            ["", "", ["PF", sum.taxLabel, "sm_l", "{:}"], ["PF", sum.tax, "sm_r", "{:,}"]],
+                            ["", "", ["PF", sum.totalLabel, "sm_l", "{:}"], ["PF", sum.total, "sm_r", "{:,}"]]
+                        ],
+                        "col_widths": ["E", "(65*mm, 30*mm, 45*mm, 50*mm)"],
+                        "table_style": [
+                            ["E", "('LINEBEFORE', (0, 0), (0, -1), 0.15, colors.lightblue)"],
+                            ["E", "('LINEABOVE', (0, 0), (-1, -1), 0.15, colors.lightblue)"],
+                            ["E", "('LINEBELOW', (0, 0), (-1, -1), 0.15, colors.lightblue)"],
+                            ["E", "('GRID',(3,0),(-1,-1),0.15,colors.lightblue)"]
+                        ]
+                    }
+                }
             },
-            "first_page": {
+            "footer": {
+                "pos_xy": ["E", "(10*mm,5*mm)"],
                 "table_infos": [
-                    // top leftt area 
-                    {   "pos_xy": ["E", "(20*mm,245*mm)"],
+                    h.category == '請求書' ? {
                         "table": [
-                            [["P", h.customerPostNumber + "<br/>" + h.customerAddress  , "sm_l"]],
-                            [["P", h.customerName + '&nbsp;&nbsp;' + h.honorificTitle, "client"]],
-                            [["P",h.customerDepartment+""+h.customerManager,"sm_l"]],
+                            [["P","■振込先","memo"], ["P", h.payee, "sm_l"],"",  ""],
+                            ["",["P","カナ","sm_r"],["P", h.accountHolderKana, "sm_l"],""],
+                            ["",["P","名義","sm_r"],["P", h.accountHolder, "sm_l"],""],
+                            ["","","","",],
+                            [["P","■備考","memo"],["P", h.memo, "sm_l"],"",""],
                         ],
-                        "col_widths": ["E", "(86*mm)"],"row_heights": ["E", "(17*mm,10*mm,7*mm)"],
+                        "col_widths": ["E", "(20*mm,15*mm,90*mm,5*mm)"],
+                        "row_heights": ["E", "(6*mm,6*mm,6*mm,4*mm,25*mm)"],
                         "table_style": [
-                            ["NOP","('GRID', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
-                            ["E", "('VALIGN', (0, 0), (-1, -1), 'TOP')"],
+                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
+                            ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
+                            ["E", "('SPAN',(1,0),(2,0))"],
+                            ["E", "('SPAN',(1,4),(2,4))"],
                         ]
-                    },
-                    // top right area 
-                    {   "pos_xy": ["E", "(175*mm,277*mm)"],"table": [[["P", h.applyDate, "sm_l"]]],"col_widths": ["E", "(30*mm)"] },
-                    {   "pos_xy": ["E", "(175*mm,271*mm)"],"table": [[["PF", h.applyNumber, "sm_l","{:}"]]],"col_widths": ["E", "(30*mm)"] },
-                    {   "pos_xy": ["E", "(130*mm,235*mm)"],
+                    } 
+                    :{
                         "table": [
-                            [["P", h.myCompanyName, "my_company"]],
-                            [["P", h.myAddress1 +'<br/>TEL: ' + h.myTel1+'<br/>FAX: ' + h.myFax1, "sm_r"]],
+                            [["P","■備考","memo"], ["P", h.memo, "sm_l"], "", ""],
+                            ["", "", "", ""],
                         ],
-                        "col_widths": ["E", "(70*mm)"],"row_heights": ["E", "(10*mm,20*mm)"],
+                        "col_widths": ["E", "(15*mm,150*mm,5*mm,5*mm)"],
+                        "row_heights": ["E", "(40*mm,5*mm)"],
                         "table_style": [
-                            ["NOP","('GRID', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
-                            ["E", "('VALIGN', (0, 0), (-1, -1), 'TOP')"],
+                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],
+                            ["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
+                            ["E", "('VALIGN',(0,0),(-1,-1),'TOP')"],
                         ]
-                    },
-                    // total area 
-                    {   "pos_xy": ["E", "(40*mm,208*mm)"],"table": [[["P", h.title, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
-                    {   "pos_xy": ["E", "(45*mm,197*mm)"],"table": [[["PF", sum.total, "md_l_b","￥{:,}-"]]],"col_widths": ["E", "(50*mm)"] },
-                    // quotes area
-                    h.mode=='quotation' ? {   "pos_xy": ["E", "(145*mm,207*mm)"],"table": [[["P", h.expiry, "sm_l"]]],"col_widths": ["E", "(50*mm)"] }:{},
-                    h.mode=='quotation' ? {   "pos_xy": ["E", "(145*mm,200*mm)"],"table": [[["P", h.dayOfDelivery, "sm_l"]]],"col_widths": ["E", "(50*mm)"] }:{},
-                    h.mode=='quotation' ? {   "pos_xy": ["E", "(145*mm,194*mm)"],"table": [[["P", h.termOfSale, "sm_l"]]],"col_widths": ["E", "(50*mm)"] }:{},
-
-                    // left side footer
-                    h.mode=='invoice' ?  {   "pos_xy": ["E", "(40*mm,71*mm)"],"table": [[["P", h.deadLine, "sm_l"]]],"col_widths": ["E", "(50*mm)"] } : {} ,
-                    h.mode=='invoice' ?  {   "pos_xy": ["E", "(40*mm,64*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] } : {} ,
-                    h.mode=='invoice' ?  {   "pos_xy": ["E", "(40*mm,52*mm)"],"table": [[["P", h.accountHolderKana, "sm_l"]]],"col_widths": ["E", "(70*mm)"] } : {} ,
-                    h.mode=='invoice' ?  {   "pos_xy": ["E", "(40*mm,46*mm)"],"table": [[["P", h.accountHolder, "sm_l"]]],"col_widths": ["E", "(70*mm)"] } : {} ,
-                    // right side footer sum
-                    {   "pos_xy": ["E", "(140*mm,73*mm)"],"table": [[["PF", sum.amount, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
-                    {   "pos_xy": ["E", "(140*mm,64*mm)"],"table": [[["PF", sum.tax, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
-                    {   "pos_xy": ["E", "(140*mm,57*mm)"],"table": [[["PF", sum.total, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
-                    // under side footer
-                    {   "pos_xy": ["E", "(19*mm,13*mm)"],"table": [[["P", h.memo, "sm_l"]]],
-                        "col_widths":   ["E", "(172*mm)"], 
-                        "row_heights":  ["E", "(24*mm)"],
-                        "table_style": [
-                            ["E", "('VALIGN', (0, 0), (-1, -1), 'TOP')"],
-                            ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.black)"],    
-                        ]
-                    },
+                    }
                 ],
                 "drawImages": [
                     ["('" + h.stampPath + "', 510,720,"+h.stampWidth+ ","+h.stampHeight+",mask='auto')"]
                 ]
-            },
-            "footer": {},
+            }
         },
         data: {
             "bdata": [
@@ -230,7 +250,6 @@ function getPdfData(h, sum) {
         "style": {
             "sm_r": { "name": "Normal", "alignment": 2, "fontName": "IPAexMincho", "fontSize": 11 },
             "sm_l": { "name": "Normal", "alignment": 0, "fontName": "IPAexMincho", "fontSize": 11 },
-            "sm_l_color": { "name": "Normal", "alignment": 0, "fontName": "IPAexMincho", "fontSize": 11,"textColor": "#10AFC5" },
             "sm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexMincho", "fontSize": 11 },
             "md_l_b": { "name": "Normal", "alignment": 0, "fontName": "IPAexMincho", "fontSize": 15 },
             "taxsm_l": { "name": "Normal", "alignment": 2, "fontName": "IPAexMincho", "fontSize": 9 },

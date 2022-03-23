@@ -73,6 +73,8 @@ class NumberedCanvas(canvas.Canvas):
 
 def make_table(table_info):
 
+    if not table_info.get('table'): return
+
     t_data = table_info['table']
 
     for i,row in enumerate(t_data):
@@ -89,14 +91,12 @@ def make_table(table_info):
         ht=Table(t_data,colWidths=cv(table_info['col_widths']))
 
     t_styles = []
-    for t_style in table_info['table_style']:
-        cv_style = cv(t_style)
-        if cv_style : t_styles.append(cv_style)
+    if table_info.get('table_style'):
+        for t_style in table_info['table_style']:
+            cv_style = cv(t_style)
+            if cv_style : t_styles.append(cv_style)
 
     ht.setStyle(TableStyle(t_styles))
-    #print(t_styles)    
-    #----　after -----
-    #cv(table_info['after'])
 
     if table_info.get('hAlign'):
         ht.hAlign = table_info.get('hAlign')
@@ -157,8 +157,8 @@ def make_detail(detail,bdata):
         cv_style = cv(t_style)
         if cv_style : t_styles.append(cv_style)
     #stripe設定
-    if detail.get('stripe_backcrounds'):
-        clr = detail['stripe_backcrounds']
+    if detail.get('stripe_backgrounds'):
+        clr = detail['stripe_backgrounds']
         stripes = [
             ('BACKGROUND',(0,i),(-1,i),eval(clr[i%2]))
             for i in range(1,len(vals_l))
@@ -172,26 +172,40 @@ def make_detail(detail,bdata):
     return bt
 
 
-def footer(canvas, doc):
+def on_page(canvas, doc):
     canvas.saveState()
+
 
     #print(f"----- page number at footer ----- { canvas._pageNumber } ")
     canvas.setTitle(defPdf['attr']['name_jp'])
 
-    if not defPdf.get('footer'): return
+    if not (defPdf.get('footer') or defPdf.get('first_page') ): return
 
-    for table_info in defPdf['footer'].get('table_infos'):
-        ft = make_table(table_info)
+    if canvas._pageNumber == 1:
+        if defPdf['header'].get('drawBaseImages'):
+            for di in defPdf['header'].get('drawBaseImages'):
+                if di:
+                    cmd = f'canvas.drawImage{di[0]}'
+                    #print(cmd)
+                    eval(cmd)
+        if defPdf.get('first_page'):
+            if defPdf['first_page'].get('pos_xy') : x,y =cv(defPdf['first_page']['pos_xy'])
+            for table_info in defPdf['first_page'].get('table_infos'):
+                if not table_info: continue
+                if table_info.get('pos_xy'): x,y =cv(table_info.get('pos_xy'))
+                ft = make_table(table_info)
+                ft.wrapOn(canvas, x, y)
+                ft.drawOn(canvas, x, y)
+                            
+    if defPdf.get('footer'):
+        if defPdf['footer'].get('pos_xy') : x,y =cv(defPdf['footer']['pos_xy'])
+        for table_info in defPdf['footer'].get('table_infos'):
+            if not table_info: continue
+            if table_info.get('pos_xy'): x,y =cv(table_info.get('pos_xy'))
+            ft = make_table(table_info)
+            ft.wrapOn(canvas, x, y)
+            ft.drawOn(canvas, x, y)
 
-    x,y =cv(defPdf['footer']['pos_xy'])
-    #print("xy:",type(x),x)
-    #print("xy:",type(y),y)
-
-    ft.wrapOn(canvas, x, y)
-    ft.drawOn(canvas, x, y)
-
-
-    #canvas.drawImage('./inkan.png', 300,300,50,50,mask='auto')
     #print("_pageNumber:",canvas._pageNumber)
     if canvas._pageNumber == 1:
         for di in defPdf['header'].get('drawImages'):
@@ -199,13 +213,20 @@ def footer(canvas, doc):
                 cmd = f'canvas.drawImage{di[0]}'
                 #print(cmd)
                 eval(cmd)
+        if defPdf.get('first_page'):
+            for di in defPdf['first_page'].get('drawImages'):
+                if di:
+                    cmd = f'canvas.drawImage{di[0]}'
+                    #print(cmd)
+                    eval(cmd)
 
 
-    for di in defPdf['footer'].get('drawImages'):
-        if di:
-            cmd = f'canvas.drawImage{di[0]}'
-            #print(cmd)
-            eval(cmd)
+    if defPdf.get('footer'):
+        for di in defPdf['footer'].get('drawImages'):
+            if di:
+                cmd = f'canvas.drawImage{di[0]}'
+                #print(cmd)
+                eval(cmd)
 
 
     canvas.restoreState()
@@ -304,7 +325,7 @@ def pdf_maker(d,is_BytesIO=False,file_name=''):
         Frame(0 * mm, ft_size, w, h-ft_size-top_mergin, showBoundary=0)
     ]
 
-    page_template = PageTemplate("frames", frames=frames,onPage=footer)
+    page_template = PageTemplate("frames", frames=frames,onPage=on_page)
     #page_template = PageTemplate("frames", frames=frames)
     #beforeDrawPage(canv,doc):
     #    print ("----brfore draw pae------"
@@ -320,19 +341,20 @@ def pdf_maker(d,is_BytesIO=False,file_name=''):
     elements.append(cv(defPdf['header'].get('title')))
     elements.append(cv(defPdf['header'].get('title_after')))
 
-
-    for table_info in defPdf['header'].get('table_infos'):
-        if table_info.get('before') : elements.append(cv(table_info.get('before')))
-        ht = make_table(table_info)
-        elements.append(ht)
-        if table_info.get('after') : elements.append(cv(table_info.get('after')))
+    if defPdf.get('header'):
+        for table_info in defPdf['header'].get('table_infos'):
+            if table_info.get('before') : elements.append(cv(table_info.get('before')))
+            ht = make_table(table_info)
+            elements.append(ht)
+            if table_info.get('after') : elements.append(cv(table_info.get('after')))
 
     if data.get('bdata'):
         bt = make_detail(defPdf['body']['detail'],data.get('bdata'))
         elements.append(bt)
 
-        bt = make_table(defPdf['body']['detail_after'].get('table_info'))
-        elements.append(bt)
+        if defPdf['body'].get('detail_after'):
+            bt = make_table(defPdf['body']['detail_after'].get('table_info'))
+            elements.append(bt)
 
     #ft = make_table(defPdf['footer']['table_info'])
     #elements.append(ft)
