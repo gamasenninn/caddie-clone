@@ -1,3 +1,4 @@
+import sqlite3
 from app import app
 from models import *
 from flask import jsonify, request
@@ -46,7 +47,13 @@ def user_show(id):
 @app.route('/user', methods=['POST'])
 def user_create():
     data = request.json
+    query = User.query.filter(User.anyNumber == data.get('anyNumber'))
+    if db.session.query(query.exists()).scalar():
+        return jsonify({"result": "error", "message": "その値は既に存在します。存在しない値を入力してください。"}), 500
+    # if data.get('anyNumber') is None or data.get('name') is None or data.get('password') is None:
+    #     return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"})
     newUser = User(
+        anyNumber=data.get('anyNumber'),
         name=data.get('name'),
         password=data.get('password'),
         group=data.get('group'),
@@ -62,15 +69,24 @@ def user_create():
         action='post'
     )
     db.session.add(newHistory)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except sqlite3.IntegrityError as e:
+        return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。", "e_message": str(e)}), 500
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
 @app.route('/user/<id>', methods=['PUT'])
 def user_update(id):
     data = request.json
+    query = User.query.filter(User.anyNumber == data.get('anyNumber'))
+    if db.session.query(query.exists()).scalar() and query.anyNumber != data.get('anyNumber'):
+        return jsonify({"result": "error", "message": "その値は既に存在します。存在しない値を入力してください。"}), 500
+    # if data.get('anyNumber') is '' or data.get('name') is '' or data.get('password') is '':
+    #     return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"})
     user = User.query.filter(User.id == id).one()
 
+    user.anyNumber = data.get('anyNumber')
     user.name = data.get('name')
     user.password = data.get('password')
     user.group = data.get('group')
@@ -83,7 +99,10 @@ def user_update(id):
         action='put'
     )
     db.session.add(newHistory)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except sqlite3.IntegrityError as e:
+        return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。", "e_message": str(e)}), 500
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
