@@ -22,4 +22,4 @@ RUN flask db init
 RUN flask db migrate
 RUN flask db upgrade
 RUN python ./seeder.py
-
+RUN cp /usr/share/zoneinfo/Japan /etc/localtime
