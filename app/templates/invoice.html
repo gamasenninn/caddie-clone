@@ -967,7 +967,12 @@
                     pdfout: async function (mode) {
                         self = this;
                         await this.getCustomer(this.invoice)
-                        const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, this.sum, this.customer);
+                        const sumInvoice ={
+                            sum: this.sum,
+                            taxAmount: this.taxAmount,
+                            priceIncludingTax: this.priceIncludingTax
+                        }
+                        const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, sumInvoice, this.customer);
                         if (mode == 'delivery') {
                             if (!this.setting.isDisplayDeliveryLogo) pdfData.defPdf.header.drawImages = [];
                             if (!this.setting.isDisplayDeliveryStamp) pdfData.defPdf.footer.drawImages = [];
@@ -1004,7 +1009,12 @@
                     },
                     pdfoutRcpt: async function () {
                         self = this;
-                        const pdfData = getPdfDataRcpt(self.invoice, self.setting, this.sum);
+                        const sumInvoice ={
+                            sum: this.sum,
+                            taxAmount: this.taxAmount,
+                            priceIncludingTax: this.priceIncludingTax
+                        }
+                        const pdfData = getPdfDataRcpt(self.invoice, self.setting, sumInvoice);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data)

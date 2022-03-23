@@ -33,17 +33,9 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     sum.amountLabel = "小計";
     sum.taxLabel = "消費税";
     sum.totalLabel = "合計金額";
-    if (invoice.isTaxExp) {
-        sum.amount = sumInvoice;
-        sum.tax = parseInt(sumInvoice * 0.1);
-        sum.total = parseInt(sumInvoice * 1.1);
-    } else {
-        sum.taxLabel = "うち消費税";
-        sum.amountLabel = "小計(税込み)";
-        sum.amount = sumInvoice;
-        sum.total = sumInvoice;
-        sum.tax = parseInt(sum.total - sum.total / 1.1)
-    };
+    sum.amount = sumInvoice.sum;
+    sum.tax = sumInvoice.taxAmount;
+    sum.total = sumInvoice.priceIncludingTax
     h.memo = invoice.memo;
     h.deadLine = invoice.deadLine;
     h.payee = setting.payee;
@@ -81,15 +73,9 @@ function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
     sum.amountLabel = "小計(税込み)";
     sum.taxLabel = "うち消費税";
     sum.totalLabel = "合計金額";
-    if (quotation.isTaxExp) {
-        sum.amount = sumQuotation;
-        sum.tax = parseInt(sumQuotation * 0.1);
-        sum.total = parseInt(sumQuotation * 1.1);
-    } else {
-        sum.amount = sumQuotation;
-        sum.total = sumQuotation;
-        sum.tax = parseInt(sum.total - sum.total / 1.1)
-    };
+    sum.amount = sumQuotation.sum;
+    sum.tax = sumQuotation.taxAmount;
+    sum.total = sumQuotation.priceIncludingTax;
     h.memo = quotation.memo;
     h.expiry = quotation.expiry;
     h.dayOfDelivery = quotation.dayOfDelivery;
@@ -266,7 +252,7 @@ function getPdfData(h, sum) {
 };
 /* -------  領収書　----------*/
 
-function getPdfDataRcpt(invoice, setting, sum) {
+function getPdfDataRcpt(invoice, setting, sumInvoice) {
     const hr = {};
     const sumr = {};
     hr.category = "領収書";
@@ -285,17 +271,20 @@ function getPdfDataRcpt(invoice, setting, sum) {
     hr.ceoName = setting.representative;
     hr.logoPath = setting.logoFilePath;
     hr.stampPath = setting.stampFilePath;
-
+    sumr.amount = sumInvoice.sum;
+    sumr.tax = sumInvoice.taxAmount;
+    sumr.total = sumInvoice.priceIncludingTax;
+/*
+                            sum: this.sum,
+                            taxAmount: this.taxAmount,
+                            priceIncludingTax: this.priceIncludingTax
     if (invoice.isTaxExp) {
-        sumr.amount = sum
-        sumr.tax = parseInt(sum * 0.1);
-        sumr.total = parseInt(sum * 1.1);
     } else {
         sumr.amount = sum;
         sumr.total = sum;
         sumr.tax = parseInt(sum.total - sum.total / 1.1)
     };
-
+*/
     return {
         "defPdf": {
             "attr": {
