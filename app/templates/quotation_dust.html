@@ -451,8 +451,12 @@
                     pdfout: async function () {
                         self = this;
                         await this.getCustomer(this.quotation);
-
-                        const pdfData = getPdfDataQuotation(this.quotation, this.setting, this.sum, this.customer);
+                        const sumQuotation ={
+                            sum: this.sum,
+                            taxAmount: this.taxAmount,
+                            priceIncludingTax: this.priceIncludingTax
+                        }
+                        const pdfData = getPdfDataQuotation(this.quotation, this.setting, sumQuotation, this.customer);
                         if (!this.setting.isDisplayQuotationLogo) pdfData.defPdf.header.drawImages = [];
                         if (!this.setting.isDisplayQuotationStamp) pdfData.defPdf.footer.drawImages = [];
 
@@ -468,7 +472,9 @@
                         } else {
                             pdfData.data.bdata = [{}];
                         }
-                        pdfData.defPdf.header.table_infos[0].table[0][6] = ["P", "削除日付: " + this.formatDateTime(this.quotation.updatedAt), "sm_r"];
+                        pdfData.defPdf.first_page.table_infos.push(
+                            {"pos_xy": ["E", "(100*mm,286*mm)"],"table": [[["P", "削除日付: " + this.formatDateTime(this.quotation.updatedAt), "sm_r"]]],"col_widths": ["E", "(100*mm)"] }
+                        );
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 printJS('/pdf/' + response.data)

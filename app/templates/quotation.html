@@ -1045,7 +1045,12 @@
                     pdfout: async function () {
                         self = this;
                         await this.getCustomer(this.quotation)
-                        const pdfData = getPdfDataQuotation(this.quotation, this.setting, this.sum, this.customer);
+                        const sumQuotation ={
+                            sum: this.sum,
+                            taxAmount: this.taxAmount,
+                            priceIncludingTax: this.priceIncludingTax
+                        }
+                        const pdfData = getPdfDataQuotation(this.quotation, this.setting, sumQuotation, this.customer);
                         if (!this.setting.isDisplayQuotationLogo) pdfData.defPdf.header.drawImages = [];
                         if (!this.setting.isDisplayQuotationStamp) pdfData.defPdf.footer.drawImages = [];
 
