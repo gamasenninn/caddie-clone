@@ -308,21 +308,16 @@
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">消費税</b-td>
-                                            <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount"
+                                            <b-td class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum*taxCoefficient(this.quotation))|nf}}</b-td>
-                                            <b-td v-else class="text-center" id="tdAmount"
-                                                style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum-sum/includeTaxCoefficient(this.quotation))|nf}}</b-td>
+                                                {{taxAmount|nf}}</b-td>
                                             <b-td class="text-center">
                                                 {{quotation.tax}}%
                                             </b-td>
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">見積総額</b-td>
-                                            <b-td v-if="quotation.isTaxExp" class="text-center" id="tdAmount">
-                                                {{Math.round(sum*includeTaxCoefficient(this.quotation))|nf}}</b-td>
-                                            <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
+                                            <b-td class="text-center" id="tdAmount">{{priceIncludingTax|nf}}</b-td>
                                         </b-tr>
                                     </b-table-simple>
                                 </b-container>
@@ -438,14 +433,6 @@
                     formatDateTime(datetime) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
                     },
-                    //税係数
-                    taxCoefficient: function (quotation) {
-                        return quotation.tax / 100;
-                    },
-                    //税込み係数
-                    includeTaxCoefficient: function (quotation) {
-                        return 1 + (quotation.tax / 100);
-                    },
                     getCustomer: async function (item) {
                         self = this;
                         await axios.get("/customer/" + item.customerId)
@@ -518,6 +505,18 @@
                     sum: function () {
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * Math.round(quotation_item.price))).reduce(function (a, b) { return a + b }, 0);
+                    },
+                    //消費税総額
+                    taxAmount: function () {
+                        if (this.quotation.isTaxExp)
+                            return Math.round(this.sum * (this.quotation.tax / 100));
+                        return Math.round(this.sum - this.sum / (1 + this.quotation.tax / 100));
+                    },
+                    //税込み総額
+                    priceIncludingTax: function () {
+                        if (this.quotation.isTaxExp)
+                            return Math.round(this.sum * (1 + this.quotation.tax / 100));
+                        return this.sum;
                     },
                     quotationsIndicateIndex: function () {
                         let quotations = this.quotations;
