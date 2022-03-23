@@ -306,17 +306,6 @@
                                             size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col xl>
-                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="メモ"
-                                        label-for="メモ" label-align="right">
-                                        <b-form-textarea v-model="invoice.memo" size="sm" rows="2">
-                                        </b-form-textarea>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col xl>
                                     <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="件名"
                                         label-for="title" label-align="right">
                                         <b-form-input v-model="invoice.title" id="title" size="sm" autocomplete="off">
@@ -324,6 +313,11 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col xl>
+                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="メモ"
+                                        label-for="メモ" label-align="right">
+                                        <b-form-textarea v-model="invoice.memo" size="sm" rows="3">
+                                        </b-form-textarea>
+                                    </b-form-group>
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -1098,7 +1092,7 @@
                         this.modal.open();
                     },
                     heightItemName: function (data) {
-                        if (!data) return "height: 30px";
+                        if (!data) return "height: 31px";
                         row = data.indexOf('\n') != -1 ? 2 : 1;
                         interval = row > 1 ? 0 : 5;
                         return "height: " + (26 * row + interval) + "px";
