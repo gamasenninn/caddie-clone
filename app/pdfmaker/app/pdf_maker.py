@@ -73,6 +73,8 @@ class NumberedCanvas(canvas.Canvas):
 
 def make_table(table_info):
 
+    if not table_info.get('table'): return
+
     t_data = table_info['table']
 
     for i,row in enumerate(t_data):
@@ -189,6 +191,7 @@ def on_page(canvas, doc):
         if defPdf.get('first_page'):
             if defPdf['first_page'].get('pos_xy') : x,y =cv(defPdf['first_page']['pos_xy'])
             for table_info in defPdf['first_page'].get('table_infos'):
+                if not table_info: continue
                 if table_info.get('pos_xy'): x,y =cv(table_info.get('pos_xy'))
                 ft = make_table(table_info)
                 ft.wrapOn(canvas, x, y)
@@ -197,6 +200,7 @@ def on_page(canvas, doc):
     if defPdf.get('footer'):
         if defPdf['footer'].get('pos_xy') : x,y =cv(defPdf['footer']['pos_xy'])
         for table_info in defPdf['footer'].get('table_infos'):
+            if not table_info: continue
             if table_info.get('pos_xy'): x,y =cv(table_info.get('pos_xy'))
             ft = make_table(table_info)
             ft.wrapOn(canvas, x, y)

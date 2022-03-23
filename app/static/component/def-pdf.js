@@ -9,9 +9,12 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     const sum = {};
     if (mode == 'delivery') {
         h.category = '納品書';
+        h.baseImagePath = "./static/asset/delivery_base.png";
     } else {
         h.category = '請求書';
+        h.baseImagePath = "./static/asset/invoice_base.png";
     }
+    h.mode = mode;
     h.customerName = nvl(invoice.customerName, '');
     h.honorificTitle = nvl(invoice.honorificTitle, '');
     h.applyNumber = invoice.applyNumber;
@@ -52,13 +55,14 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer) {
     h.logoHeight = setting.logoHeight ? setting.logoHeight:50;
     h.stampWidth = setting.stampWidth ? setting.stampWidth:50;
     h.stampHeight = setting.stampHeight ? setting.stampHeight:50;
-    h.baseImagePath = "./static/asset/invoice_base.png";
     return getPdfData(h, sum);
 }
 function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
     const h = {};
     const sum = {};
+    h.mode = 'quotation';
     h.category = '見積書';
+    h.baseImagePath = "./static/asset/quotes_base.png";
     h.customerName = nvl(quotation.customerName, '');
     h.honorificTitle = nvl(quotation.honorificTitle, '');
     h.applyNumber = quotation.applyNumber;
@@ -87,8 +91,19 @@ function getPdfDataQuotation( quotation, setting, sumQuotation, customer) {
         sum.tax = parseInt(sum.total - sum.total / 1.1)
     };
     h.memo = quotation.memo;
+    h.expiry = quotation.expiry;
+    h.dayOfDelivery = quotation.dayOfDelivery;
+    h.termOfSale = quotation.termOfSale;
+
     h.logoPath = setting.logoFilePath;
     h.stampPath = setting.stampFilePath;
+    h.logoWidth = setting.logoWidth ? setting.logoWidth:50;
+    h.logoHeight = setting.logoHeight ? setting.logoHeight:50;
+    h.stampWidth = setting.stampWidth ? setting.stampWidth:50;
+    h.stampHeight = setting.stampHeight ? setting.stampHeight:50;
+
+    h.dayOfDelivery
+
     return getPdfData(h, sum);
 }
 function getPdfData(h, sum) {
@@ -174,11 +189,16 @@ function getPdfData(h, sum) {
                     // total area 
                     {   "pos_xy": ["E", "(40*mm,208*mm)"],"table": [[["P", h.title, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
                     {   "pos_xy": ["E", "(45*mm,197*mm)"],"table": [[["PF", sum.total, "md_l_b","￥{:,}-"]]],"col_widths": ["E", "(50*mm)"] },
+                    // quotes area
+                    h.mode=='quotation' ? {   "pos_xy": ["E", "(145*mm,207*mm)"],"table": [[["P", h.expiry, "sm_l"]]],"col_widths": ["E", "(50*mm)"] }:{},
+                    h.mode=='quotation' ? {   "pos_xy": ["E", "(145*mm,200*mm)"],"table": [[["P", h.dayOfDelivery, "sm_l"]]],"col_widths": ["E", "(50*mm)"] }:{},
+                    h.mode=='quotation' ? {   "pos_xy": ["E", "(145*mm,194*mm)"],"table": [[["P", h.termOfSale, "sm_l"]]],"col_widths": ["E", "(50*mm)"] }:{},
+
                     // left side footer
-                    {   "pos_xy": ["E", "(40*mm,71*mm)"],"table": [[["P", h.deadLine, "sm_l"]]],"col_widths": ["E", "(50*mm)"] },
-                    {   "pos_xy": ["E", "(40*mm,64*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
-                    {   "pos_xy": ["E", "(40*mm,52*mm)"],"table": [[["P", h.accountHolderKana, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
-                    {   "pos_xy": ["E", "(40*mm,46*mm)"],"table": [[["P", h.accountHolder, "sm_l"]]],"col_widths": ["E", "(70*mm)"] },
+                    h.mode=='invoice' ?  {   "pos_xy": ["E", "(40*mm,71*mm)"],"table": [[["P", h.deadLine, "sm_l"]]],"col_widths": ["E", "(50*mm)"] } : {} ,
+                    h.mode=='invoice' ?  {   "pos_xy": ["E", "(40*mm,64*mm)"],"table": [[["P", h.payee, "sm_l"]]],"col_widths": ["E", "(70*mm)"] } : {} ,
+                    h.mode=='invoice' ?  {   "pos_xy": ["E", "(40*mm,52*mm)"],"table": [[["P", h.accountHolderKana, "sm_l"]]],"col_widths": ["E", "(70*mm)"] } : {} ,
+                    h.mode=='invoice' ?  {   "pos_xy": ["E", "(40*mm,46*mm)"],"table": [[["P", h.accountHolder, "sm_l"]]],"col_widths": ["E", "(70*mm)"] } : {} ,
                     // right side footer sum
                     {   "pos_xy": ["E", "(140*mm,73*mm)"],"table": [[["PF", sum.amount, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
                     {   "pos_xy": ["E", "(140*mm,64*mm)"],"table": [[["PF", sum.tax, "sm_r","{:,}"]]],"col_widths": ["E", "(50*mm)"] },
