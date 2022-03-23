@@ -318,21 +318,16 @@
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">消費税</b-td>
-                                            <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount"
+                                            <b-td class="text-center" id="tdAmount"
                                                 style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum*taxCoefficient(this.invoice))|nf}}</b-td>
-                                            <b-td v-else class="text-center" id="tdAmount"
-                                                style="border-bottom: 2px solid white;">
-                                                {{Math.round(sum-sum/includeTaxCoefficient(this.invoice))|nf}}</b-td>
+                                                {{taxAmount|nf}}</b-td>
                                             <b-td class="text-center">
                                                 {{invoice.tax}}%
                                             </b-td>
                                         </b-tr>
                                         <b-tr>
                                             <b-td class="text-right">請求総額</b-td>
-                                            <b-td v-if="invoice.isTaxExp" class="text-center" id="tdAmount">
-                                                {{Math.round(sum*includeTaxCoefficient(this.invoice))|nf}}</b-td>
-                                            <b-td v-else class="text-center" id="tdAmount">{{sum|nf}}</b-td>
+                                            <b-td class="text-center" id="tdAmount">{{priceIncludingTax|nf}}</b-td>
                                         </b-tr>
                                     </b-table-simple>
                                 </b-container>
@@ -452,14 +447,6 @@
                     formatDateTime(datetime) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
                     },
-                    //税係数
-                    taxCoefficient: function (invoice) {
-                        return invoice.tax / 100;
-                    },
-                    //税込み係数
-                    includeTaxCoefficient: function (invoice) {
-                        return 1 + (invoice.tax / 100);
-                    },
                     getCustomer: async function (item) {
                         self = this;
                         await axios.get("/customer/" + item.customerId)
@@ -535,6 +522,18 @@
                     sum: function () {
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * Math.round(invoice_item.price))).reduce(function (a, b) { return a + b }, 0);
+                    },
+                    //消費税総額
+                    taxAmount: function () {
+                        if (this.invoice.isTaxExp)
+                            return Math.round(this.sum * (this.invoice.tax / 100));
+                        return Math.round(this.sum - this.sum / (1 + this.invoice.tax / 100));
+                    },
+                    //税込み総額
+                    priceIncludingTax: function () {
+                        if (this.invoice.isTaxExp)
+                            return Math.round(this.sum * (1 + this.invoice.tax / 100));
+                        return this.sum;
                     },
                     invoicesIndicateIndex: function () {
                         let invoices = this.invoices;
