@@ -49,9 +49,8 @@ def user_create():
     data = request.json
     query = User.query.filter(User.anyNumber == data.get('anyNumber'))
     if db.session.query(query.exists()).scalar():
-        return jsonify({"result": "error", "message": "その値は既に存在します。存在しない値を入力してください。"}), 500
-    # if data.get('anyNumber') is None or data.get('name') is None or data.get('password') is None:
-    #     return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"})
+        return jsonify({"data": "data", "result": "error", "message": "入力した任意番号は既に存在します。存在しない値を入力してください。"}), 500
+    # 入力欄に値を入力後、値を削除すると空欄が入ってしまうので後で修正する。
     newUser = User(
         anyNumber=data.get('anyNumber'),
         name=data.get('name'),
@@ -81,9 +80,8 @@ def user_update(id):
     data = request.json
     query = User.query.filter(User.anyNumber == data.get('anyNumber'))
     if db.session.query(query.exists()).scalar() and query.anyNumber != data.get('anyNumber'):
-        return jsonify({"result": "error", "message": "その値は既に存在します。存在しない値を入力してください。"}), 500
-    # if data.get('anyNumber') is '' or data.get('name') is '' or data.get('password') is '':
-    #     return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"})
+        return jsonify({"result": "error", "message": "入力した任意番号は既に存在します。存在しない値を入力してください。"}), 500
+    # 入力欄に値を入力後、値を削除すると空欄が入ってしまうので後で修正する。
     user = User.query.filter(User.id == id).one()
 
     user.anyNumber = data.get('anyNumber')
