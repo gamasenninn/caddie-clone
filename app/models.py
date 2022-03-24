@@ -12,7 +12,7 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    anyNumber = db.Column(db.Integer, nullable=False)
+    anyNumber = db.Column(db.Integer)
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     group = db.Column(db.String(255))
