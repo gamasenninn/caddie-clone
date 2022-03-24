@@ -103,6 +103,17 @@
 
                             <b-row>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="任意番号"
+                                        label-for="anyNumber" label-align="right">
+                                        <b-form-input v-model="user.anyNumber" id="anyNumber" size="sm" type="number">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ユーザー名"
                                         label-for="name" label-align="right">
                                         <b-form-input v-model="user.name" id="name" size="sm"></b-form-input>
@@ -258,6 +269,10 @@
                                 Vue.set(self.user, 'id', response.data.id)
                                 self.getUsers();
                                 self.user.isInsert = false;
+                            })
+                            .catch(function (response) {
+                                console.log('エラー');
+                                console.log(response);
                             });
                     },
                     updateUser: async function (item) {
@@ -265,6 +280,10 @@
                         await axios.put("/user/" + item.id, item)
                             .then(function (response) {
                                 self.getUsers();
+                                console.log(response);
+                            })
+                            .catch(function (response) {
+                                console.log('エラー');
                                 console.log(response);
                             });
                     },
