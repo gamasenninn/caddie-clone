@@ -222,7 +222,7 @@
 
             <!-- 保存モーダル -->
             <div>
-                <select-modal modal-name='upsertModal' modal-message='保存しますか？'
+                <select-modal-static modal-name='upsertModal' modal-message='保存しますか？'
                     @selected="upsertModalProcess($event);" />
             </div>
 
@@ -231,6 +231,10 @@
                 <select-modal modal-name='deleteModal' modal-message='削除しますか？'
                     @selected="deleteModalProcess($event);" />
             </div>
+
+            <!-- エラーモーダル -->
+            <confirm-modal-danger :title="title" :message="message">
+            </confirm-modal-danger>
 
         </div>
 
@@ -243,6 +247,8 @@
                 data: {
                     users: [],               //全件user
                     user: [],                //選択中のuser
+                    title: '',
+                    message: '',
                 },
                 methods: {
                     // ---Items---
@@ -269,10 +275,15 @@
                                 Vue.set(self.user, 'id', response.data.id)
                                 self.getUsers();
                                 self.user.isInsert = false;
+                                app.$router.push({ query: { page: 'index' } });
                             })
-                            .catch(function (response) {
-                                console.log('エラー');
-                                console.log(response);
+                            .catch(function (error) {
+                                app.title = 'エラー';
+                                app.message = error.response.data.message;
+                                if (error.response.data.message === undefined)  //応急処置。後でちゃんとエラーハンドリングする。
+                                    app.message = '必須項目に空欄があります。値を入力してください。';
+                                app.$bvModal.show('confirmModalDanger');
+                                console.log(error);
                             });
                     },
                     updateUser: async function (item) {
@@ -281,10 +292,15 @@
                             .then(function (response) {
                                 self.getUsers();
                                 console.log(response);
+                                app.$router.push({ query: { page: 'index' } });
                             })
-                            .catch(function (response) {
-                                console.log('エラー');
-                                console.log(response);
+                            .catch(function (error) {
+                                app.title = 'エラー';
+                                app.message = error.response.data.message;
+                                if (error.response.data.message === undefined)  //応急処置。後でちゃんとエラーハンドリングする。
+                                    app.message = '必須項目に空欄があります。値を入力してください。';
+                                app.$bvModal.show('confirmModalDanger');
+                                console.log(error);
                             });
                     },
                     deleteUser: async function (item) {
