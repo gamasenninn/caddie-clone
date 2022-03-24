@@ -63,9 +63,9 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="ユーザー一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="usertable" sort-by="ID" small label="Table Options"
-                                :items=underAdministrator :fields="[
+                                :items=underAdministrator :sort-by.sync="sortByUsers" :fields="[
                           {  key: 'update', label: '' },
-                          {  key: 'id', label: 'No.', thClass: 'text-center', },
+                          {  key: 'anyNumber', label: 'No.', thClass: 'text-center', },
                           {  key: 'name', label: 'ユーザー名', thClass: 'text-center', },
                           {  key: 'password', label: 'パスワード', thClass: 'text-center', },
                           {  key: 'group', label: 'グループ', thClass: 'text-center', },
@@ -116,7 +116,8 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ユーザー名"
                                         label-for="name" label-align="right">
-                                        <b-form-input v-model="user.name" id="name" size="sm"></b-form-input>
+                                        <b-form-input v-model="user.name" id="name" size="sm"
+                                            :formatter="formatter_delete_space"></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
@@ -124,7 +125,7 @@
                                         label-for="password" label-align="right">
                                         <b-input-group>
                                             <b-form-input v-model="user.password" id="password" size="sm"
-                                                type="password">
+                                                type="password" :formatter="formatter_delete_space">
                                             </b-form-input>
                                             <b-input-group-append>
                                                 <b-button variant="outline-secondary" size="sm" @click="pushHideButton">
@@ -176,7 +177,7 @@
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="primary" @click="modalShow(user,'upsertModal');">保存
+                        <b-button pill variant="primary" @click="bulkUpsert(user);">保存
                         </b-button>
                         <b-button pill size="lg" variant="primary" @click="alert('印刷しました。')"
                             v-b-tooltip.hover.top="'印刷'">
@@ -220,11 +221,8 @@
                 </b-row>
             </b-card>
 
-            <!-- 保存モーダル -->
-            <div>
-                <select-modal-static modal-name='upsertModal' modal-message='保存しますか？'
-                    @selected="upsertModalProcess($event);" />
-            </div>
+            <!-- 確認モーダル -->
+            <confirm-modal :title="title" :message="message"></confirm-modal>
 
             <!-- 削除モーダル -->
             <div>
@@ -245,6 +243,7 @@
             var app = new Vue({
                 el: '#app',
                 data: {
+                    sortByUsers: 'anyNumber',
                     users: [],               //全件user
                     user: [],                //選択中のuser
                     title: '',
@@ -275,13 +274,13 @@
                                 Vue.set(self.user, 'id', response.data.id)
                                 self.getUsers();
                                 self.user.isInsert = false;
-                                app.$router.push({ query: { page: 'index' } });
+                                app.title = '新規作成';
+                                app.message = '保存しました';
+                                app.$bvModal.show('confirmModal');
                             })
                             .catch(function (error) {
                                 app.title = 'エラー';
                                 app.message = error.response.data.message;
-                                if (error.response.data.message === undefined)  //応急処置。後でちゃんとエラーハンドリングする。
-                                    app.message = '必須項目に空欄があります。値を入力してください。';
                                 app.$bvModal.show('confirmModalDanger');
                                 console.log(error);
                             });
@@ -292,13 +291,13 @@
                             .then(function (response) {
                                 self.getUsers();
                                 console.log(response);
-                                app.$router.push({ query: { page: 'index' } });
+                                app.title = '更新';
+                                app.message = '保存しました';
+                                app.$bvModal.show('confirmModal');
                             })
                             .catch(function (error) {
                                 app.title = 'エラー';
                                 app.message = error.response.data.message;
-                                if (error.response.data.message === undefined)  //応急処置。後でちゃんとエラーハンドリングする。
-                                    app.message = '必須項目に空欄があります。値を入力してください。';
                                 app.$bvModal.show('confirmModalDanger');
                                 console.log(error);
                             });
@@ -340,11 +339,9 @@
                             this.deleteUser(this.user);
                         }
                     },
-                    upsertModalProcess(result) {
-                        this.$bvModal.hide('upsertModal');
-                        if (result === true) {
-                            this.bulkUpsert(this.user);
-                        }
+                    //スペース消去
+                    formatter_delete_space(value) {
+                        return value.replace(/\s+/g, "");
                     },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
