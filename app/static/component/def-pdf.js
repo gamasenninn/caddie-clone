@@ -123,7 +123,7 @@ function getPdfData(h, sum) {
                     "row_max": 10,
                     "label_style": "sm_c_color",
                     "fields": [
-                        { "key": "itemName", "label": "商品名", "width": 90, "p_style": "sm_l" },
+                        { "key": "itemName", "label": "内容", "width": 90, "p_style": "sm_l" },
                         { "key": "count", "label": "数量", "width": 20, "p_style": "sm_r", "format": "{:,}" },
                         { "key": "unit", "label": "単位", "width": 15, "p_style": "sm_r" },
                         { "key": "price", "label": "単価", "width": 25, "p_style": "sm_r", "format": "{:,}" },
@@ -159,8 +159,8 @@ function getPdfData(h, sum) {
                         ]
                     },
                     // top right area 
-                    {   "pos_xy": ["E", "(175*mm,277*mm)"],"table": [[["P", h.applyDate, "sm_l"]]],"col_widths": ["E", "(30*mm)"] },
-                    {   "pos_xy": ["E", "(175*mm,271*mm)"],"table": [[["PF", h.applyNumber, "sm_l","{:}"]]],"col_widths": ["E", "(30*mm)"] },
+                    {   "pos_xy": ["E", "(175*mm,277*mm)"],"table": [[["PF",  h.applyNumber, "sm_l","{:}"]]],"col_widths": ["E", "(30*mm)"] },
+                    {   "pos_xy": ["E", "(175*mm,271*mm)"],"table": [[["P", h.applyDate, "sm_l"]]],"col_widths": ["E", "(30*mm)"] },
                     {   "pos_xy": ["E", "(120*mm,227*mm)"],
                         "table": [
                             [["P", h.myCompanyName, "my_company"]],
