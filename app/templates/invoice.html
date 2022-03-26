@@ -958,7 +958,7 @@
                     showModalItems() {
                         this.$refs['items-modal'].show()
                     },
-                    pdfout: async function (mode) {
+                    pdfout: async function (mode,docClass='origin') {
                         self = this;
                         await this.getCustomer(this.invoice)
                         const sumInvoice ={
@@ -966,7 +966,7 @@
                             taxAmount: this.taxAmount,
                             priceIncludingTax: this.priceIncludingTax
                         }
-                        const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, sumInvoice, this.customer);
+                        const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, sumInvoice, this.customer,docClass);
                         if (mode == 'delivery') {
                             if (!this.setting.isDisplayDeliveryLogo) pdfData.defPdf.header.drawImages = [];
                             if (!this.setting.isDisplayDeliveryStamp) pdfData.defPdf.footer.drawImages = [];
