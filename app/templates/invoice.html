@@ -613,7 +613,7 @@
                                 <i class="fas fa-print"></i>
                             </template>
                             <b-dropdown-item @click="pdfout('invoice','copy')">請求書控え</b-dropdown-item>
-                            <b-dropdown-item @click="">日付なし請求書</b-dropdown-item>
+                            <b-dropdown-item @click="pdfout('invoice','nodate')">日付なし請求書</b-dropdown-item>
                             <b-dropdown-item @click="pdfout('delivery')">納品書</b-dropdown-item>
                             <b-dropdown-item @click="pdfoutRcpt">領収書</b-dropdown-item>
                         </b-dropdown>
