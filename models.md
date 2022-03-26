@@ -97,6 +97,7 @@
 | id         | id       | integer  |                         | 
 | invoiceId  | 請求書ID | integer  |  請求書テーブルと紐づく | 
 | itemId     | 商品ID   | integer  |  商品テーブルと紐づく   | 
+| any        | 自由項目 | string   |  ユーザーが自由に書き込む参照項目      | 
 | itemName   | 商品名   | string   |  紐づいたものor入力 両対応できるように | 
 | price      | 値段     | integer  |  Itemsテーブルを参照可能             |
 | cost       | 原価     | integer  |  Itemsテーブルを参照可能             |
@@ -143,6 +144,7 @@
 | id          | id       | integer  |                         | 
 | quotationId | 見積書ID | integer  |  見積書テーブルと紐づく   | 
 | itemId      | 商品ID   | integer  |  商品テーブルと紐づく     | 
+| any         | 自由項目 | string   |  ユーザーが自由に書き込む参照項目      | 
 | itemName    | 商品名   | string   |  紐づいたものor入力 両対応できるように |
 | price       | 値段     | integer  |  Itemsテーブルを参照可能             |
 | cost        | 原価     | integer  |  Itemsテーブルを参照可能             |
