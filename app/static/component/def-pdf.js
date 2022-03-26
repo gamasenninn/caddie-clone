@@ -19,7 +19,11 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     h.customerName = nvl(invoice.customerName, '');
     h.honorificTitle = nvl(invoice.honorificTitle, '');
     h.applyNumber = invoice.applyNumber;
-    h.applyDate = nvl(invoice.applyDate, '');
+    if ( docClass == 'nodate' ){
+        h.applyDate = " 年 &nbsp;&nbsp; 月 &nbsp;&nbsp; 日";
+    } else {
+        h.applyDate = nvl(invoice.applyDate, '');
+    }
     h.myPostNumber = nvl(setting.postNumber, '');
     h.myCompanyName = nvl(setting.companyName, '');
     h.myAddress1 = nvl(setting.address, '');
