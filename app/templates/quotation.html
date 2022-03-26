@@ -21,8 +21,8 @@
                 vertical-align: middle;
             }
 
-            .td-item-id {
-                width: 90px;
+            .td-any {
+                width: 70px;
             }
 
             .td-count {
@@ -370,7 +370,8 @@
                         <b-table hover caption-top small id="quotation_items_table" primary-key="id" small
                             label="Table Options" :items=quotation.quotation_items :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
-                          {  key: 'itemId', label: '商品ID', tdClass:'td-item-id' ,sortable: true},
+                          {  key: 'itemId', thClass: 'd-none', tdClass:'d-none' },
+                          {  key: 'any', label: '', tdClass:'td-any' },
                           {  key: 'itemName', label: '商品名' ,sortable: true},
                           {  key: 'count',   label: '個数', tdClass:'td-count' },
                           {  key: 'unit',   label: '単位', tdClass:'td-unit' },
@@ -379,6 +380,10 @@
                           {  key: 'detail', label: '詳細',class:'text-center' },
                           {  key: 'isDelete', label: '削除',class:'text-center' },
                         ]">
+
+                            <template v-slot:cell(any)="data">
+                                <b-form-input v-model="data.item.any" size="sm" autocomplete="off"></b-form-input>
+                            </template>
                             <template v-slot:cell(itemName)="data">
                                 <textarea v-model="data.item.itemName" class="form-control form-control-sm itemNameArea"
                                     rows="1" @dblclick="showModalItems(); selectQuotationItem(data.item);"
@@ -1045,7 +1050,7 @@
                     pdfout: async function () {
                         self = this;
                         await this.getCustomer(this.quotation)
-                        const sumQuotation ={
+                        const sumQuotation = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
                             priceIncludingTax: this.priceIncludingTax

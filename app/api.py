@@ -512,10 +512,11 @@ def invoice_create():
                 Invoice_Item(
                     invoiceId=item.get('invoiceId'),
                     itemId=item.get('itemId'),
+                    any=item.get('any'),
+                    itemName=item.get('itemName'),
                     price=item.get('price'),
                     count=item.get('count'),
                     unit=item.get('unit'),
-                    itemName=item.get('itemName'),
                 )
             )
 
@@ -886,10 +887,11 @@ def quotation_create():
                 Quotation_Item(
                     quotationId=item.get('quotationId'),
                     itemId=item.get('itemId'),
+                    any=item.get('any'),
+                    itemName=item.get('itemName'),
                     price=item.get('price'),
                     count=item.get('count'),
                     unit=item.get('unit'),
-                    itemName=item.get('itemName'),
                 )
             )
 
