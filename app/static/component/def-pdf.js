@@ -128,7 +128,8 @@ function getPdfData(h, sum) {
                     "row_max": 10,
                     "label_style": "sm_c_color",
                     "fields": [
-                        { "key": "itemName", "label": "内容", "width": 90, "p_style": "sm_l" },
+                        { "key": "any", "label": "#", "width": 15, "p_style": "sm_l" },
+                        { "key": "itemName", "label": "内容", "width": 75, "p_style": "sm_l" },
                         { "key": "count", "label": "数量", "width": 20, "p_style": "sm_r", "format": "{:,}" },
                         { "key": "unit", "label": "単位", "width": 15, "p_style": "sm_r" },
                         { "key": "price", "label": "単価", "width": 25, "p_style": "sm_r", "format": "{:,}" },
