@@ -1,6 +1,8 @@
 from datetime import date
 from app import db, app
 from models import *
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 def seeder():
@@ -15,7 +17,7 @@ def seeder():
     # -----Users-----
     print('----Users----')
     users = [
-        User(id=1, anyNumber=9999, name='caddie', password='567vzu2022',
+        User(id=1, anyNumber=9999, name='caddie', password=generate_password_hash('567vzu2022') ,
              group='operator', role='crescom_support'),
     ]
     db.session.add_all(users)
