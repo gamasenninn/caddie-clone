@@ -6,6 +6,8 @@ import json
 from datetime import date
 from sqlalchemy import or_, and_, extract
 from flask_login import current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 _LIMIT_NUM = 100
 
@@ -55,7 +57,7 @@ def user_create():
     newUser = User(
         anyNumber=data.get('anyNumber'),
         name=data.get('name'),
-        password=data.get('password'),
+        password=generate_password_hash(data.get('password')) ,
         group=data.get('group'),
         role=data.get('role'),
     )
@@ -85,7 +87,7 @@ def user_update(id):
 
     user.anyNumber = data.get('anyNumber')
     user.name = data.get('name')
-    user.password = data.get('password')
+    user.password = generate_password_hash(data.get('password'))
     user.group = data.get('group')
     user.role = data.get('role')
 

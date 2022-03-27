@@ -15,6 +15,7 @@ import csv
 # sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
 from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # ------　ユーザー認証 -------
 app.secret_key = os.urandom(24)
@@ -45,28 +46,31 @@ def get_login():
     return render_template('login.html')
 
 
+def checkPassword(user_id,password):
+    user = User.query.filter_by(name=user_id).first()
+    if user:
+        if user.password == password:
+            return True
+        pw_hash = user.password
+        return check_password_hash(pw_hash,password)
+
 @app.route('/login', methods=['POST'])
 def login_post():
     user_id = request.form["userId"]
     password = request.form["password"]
-    checkUser = User.query.filter_by(name=user_id).first()
-    if checkUser:
-        if checkUser.password == password:
-            user = LoginUser(user_id)
-            login_user(user)
-            newHistory = History(
-                userName=user_id,
-                modelName='',
-                modelId='',
-                action='login'
-            )
-            db.session.add(newHistory)
-            db.session.commit()
-            next = request.args.get('next')
-            return redirect(next or '/')
-        else:
-            flash("ユーザーIDもしくはパスワードが間違っています")
-            return redirect('/login')
+    if checkPassword(user_id,password):
+        user = LoginUser(user_id)
+        login_user(user)
+        newHistory = History(
+            userName=user_id,
+            modelName='',
+            modelId='',
+            action='login'
+        )
+        db.session.add(newHistory)
+        db.session.commit()
+        next = request.args.get('next')
+        return redirect(next or '/')
     else:
         flash("ユーザーIDもしくはパスワードが間違っています")
         return redirect('/login')
