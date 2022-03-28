@@ -635,7 +635,7 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="primary" @click="bulkUpsert(quotation);showConfirmModal();">保存
+                        <b-button pill variant="primary" @click="bulkUpsert(quotation);">保存
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
                             @click="modalShow(quotation,'copyModal');" v-b-tooltip.hover.top="'複製'"><i
@@ -656,6 +656,9 @@
 
             <!-- 確認モーダル -->
             <confirm-modal :title="title" :message="message"></confirm-modal>
+
+            <!-- エラーモーダル -->
+            <confirm-modal-danger :title="title" :message="message"></confirm-modal-danger>
 
             <!-- コピーモーダル -->
             <div>
@@ -740,11 +743,19 @@
                             });
                     },
                     bulkUpsert: async function (item) {
+                        if (!item.customerId) {
+                            this.title = 'エラー';
+                            this.message = '得意先を選択してください。';
+                            this.$bvModal.show('confirmModalDanger');
+                            return
+                        }
                         if (!item.id) {
                             await this.insertQuotation(item);
+                            this.$bvModal.show('confirmModal');
                         }
                         else {
                             await this.updateQuotation(item);
+                            this.$bvModal.show('confirmModal');
                         }
                     },
                     insertQuotation: async function (item) {
@@ -946,9 +957,6 @@
                         console.log(this.quotation);
                         this.$bvModal.show(modalName);
                     },
-                    showConfirmModal: function () {
-                        this.$bvModal.show('confirmModal');
-                    },
                     deleteModalProcess(result) {
                         this.$bvModal.hide('deleteModal');
                         if (result === true) {
@@ -1058,7 +1066,9 @@
                             this.getQuotations();
                             this.countChanged = 0;
                         }
-                        router.push({ path: "?page=index" });
+                        if (!isUpdate || (isUpdate && this.quotation.customerId)) {
+                            router.push({ path: "?page=index" });
+                        }
                     },
                     pdfout: async function () {
                         self = this;
