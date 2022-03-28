@@ -229,10 +229,11 @@
                                 <b-col xl>
                                     <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="顧客名"
                                         label-for="customer" class="customer" label-align="right">
-                                        <b-form-input v-model="quotation.customerName" id="customerName" size="sm"
-                                            @dblclick="$bvModal.show('customer-modal')"
-                                            v-on:keydown.enter="onKeyDownCustomer">
-                                        </b-form-input>
+                                        <b-container class="text-left" style="padding: 0;">
+                                            <b-button @click="$bvModal.show('customer-modal')" size="sm"
+                                                variant="primary">検索</b-button>
+                                            {{quotation.customerName}}
+                                        </b-container>
                                         <!-- 得意先一覧モーダル -->
                                         <b-modal size="xl" id="customer-modal">
                                             <p>顧客を選択してください</p>
@@ -972,11 +973,6 @@
                         Vue.set(self.quotation, 'customerName', record.customerName);
                         Vue.set(self.quotation, 'honorificTitle', record.honorificTitle);
                         this.$bvModal.hide("customer-modal");
-                    },
-                    // 顧客名入力→Enter
-                    onKeyDownCustomer(record) {
-                        console.log(record);
-                        Vue.set(self.quotation, 'customerId', null);
                     },
                     // 商品名モーダル選択時
                     itemSelect(record) {
