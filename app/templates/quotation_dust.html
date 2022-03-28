@@ -1,7 +1,8 @@
 <% extends "head.html" %>
     <% block content %>
-        <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
-        <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
+        <!-- print.js -->
+        <script src="../static/library/print.min.js"></script>
+        <link rel="stylesheet" href="../static/library/print.min.css" type="text/css" />
 
         <style>
             .sm-mode {
@@ -457,7 +458,7 @@
                     pdfout: async function () {
                         self = this;
                         await this.getCustomer(this.quotation);
-                        const sumQuotation ={
+                        const sumQuotation = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
                             priceIncludingTax: this.priceIncludingTax
@@ -479,7 +480,7 @@
                             pdfData.data.bdata = [{}];
                         }
                         pdfData.defPdf.first_page.table_infos.push(
-                            {"pos_xy": ["E", "(100*mm,286*mm)"],"table": [[["P", "削除日付: " + this.formatDateTime(this.quotation.updatedAt), "sm_r"]]],"col_widths": ["E", "(100*mm)"] }
+                            { "pos_xy": ["E", "(100*mm,286*mm)"], "table": [[["P", "削除日付: " + this.formatDateTime(this.quotation.updatedAt), "sm_r"]]], "col_widths": ["E", "(100*mm)"] }
                         );
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
