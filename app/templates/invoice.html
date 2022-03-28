@@ -214,10 +214,11 @@
                                 <b-col xl>
                                     <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="顧客名"
                                         label-for="customer" class="customer" label-align="right">
-                                        <b-form-input v-model="invoice.customerName" id="customerName" size="sm"
-                                            autocomplete="off" @dblclick="$bvModal.show('customer-modal')"
-                                            v-on:keydown.enter="onKeyDownCustomer">
-                                        </b-form-input>
+                                        <b-container class="text-left" style="padding: 0;">
+                                            <b-button @click="$bvModal.show('customer-modal')" size="sm"
+                                                variant="primary">検索</b-button>
+                                            {{invoice.customerName}}
+                                        </b-container>
                                         <!-- 得意先一覧モーダル -->
                                         <b-modal size="xl" id="customer-modal">
                                             <p>顧客を選択してください</p>
@@ -601,7 +602,7 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right" md="auto" cols="auto">
-                        <b-button pill variant="primary" @click="bulkUpsert(invoice);showConfirmModal();">保存
+                        <b-button pill variant="primary" @click="bulkUpsert(invoice);">保存
                         </b-button>
                         <b-button v-if="pageName==='show'" pill size="lg" id="copy-button"
                             @click="modalShow(invoice,'copyModal');" v-b-tooltip.hover.top="'複製'"><i
@@ -629,6 +630,9 @@
 
             <!-- 確認モーダル -->
             <confirm-modal :title="title" :message="message"></confirm-modal>
+
+            <!-- エラーモーダル -->
+            <confirm-modal-danger :title="title" :message="message"></confirm-modal-danger>
 
             <!-- コピーモーダル -->
             <div>
@@ -718,11 +722,19 @@
                             });
                     },
                     bulkUpsert: async function (item) {
+                        if (!item.customerId) {
+                            this.title = 'エラー';
+                            this.message = '得意先を選択してください。';
+                            this.$bvModal.show('confirmModalDanger');
+                            return
+                        }
                         if (!item.id) {
                             await this.insertInvoice(item);
+                            this.$bvModal.show('confirmModal');
                         }
                         else {
                             await this.updateInvoice(item);
+                            this.$bvModal.show('confirmModal');
                         }
                     },
                     insertInvoice: async function (item) {
@@ -921,9 +933,6 @@
                         console.log(this.invoice);
                         this.$bvModal.show(modalName);
                     },
-                    showConfirmModal: function () {
-                        this.$bvModal.show('confirmModal');
-                    },
                     deleteModalProcess(result) {
                         this.$bvModal.hide('deleteModal');
                         if (result === true) {
@@ -948,11 +957,6 @@
                         Vue.set(self.invoice, 'customerName', record.customerName);
                         Vue.set(self.invoice, 'honorificTitle', record.honorificTitle);
                         this.$bvModal.hide("customer-modal");
-                    },
-                    // 顧客名入力→Enter
-                    onKeyDownCustomer(record) {
-                        console.log(record);
-                        Vue.set(self.invoice, 'customerId', null);
                     },
                     // 商品名モーダル選択時
                     itemSelect(record) {
@@ -1106,8 +1110,10 @@
                             this.getInvoices();
                             this.countChanged = 0;
                         }
-                        this.clearFileList();
-                        router.push({ path: "?page=index" });
+                        if (!isUpdate || (isUpdate && this.invoice.customerId)) {
+                            this.clearFileList();
+                            router.push({ path: "?page=index" });
+                        }
                     },
                     openViewer: function (f) {
                         //this.modal.setFooterContent(f.filename);
