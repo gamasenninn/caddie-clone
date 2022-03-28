@@ -161,7 +161,7 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="見積有効期限"
                                         label-for="expiry" label-align="right">
-                                        <p class="text-left pl-2" id="expiry">{{formatDate(quotation.expiry)}}</p>
+                                        <p class="text-left pl-2" id="expiry">{{quotation.expiry}}</p>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -457,7 +457,7 @@
                     pdfout: async function () {
                         self = this;
                         await this.getCustomer(this.quotation);
-                        const sumQuotation ={
+                        const sumQuotation = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
                             priceIncludingTax: this.priceIncludingTax
@@ -479,7 +479,7 @@
                             pdfData.data.bdata = [{}];
                         }
                         pdfData.defPdf.first_page.table_infos.push(
-                            {"pos_xy": ["E", "(100*mm,286*mm)"],"table": [[["P", "削除日付: " + this.formatDateTime(this.quotation.updatedAt), "sm_r"]]],"col_widths": ["E", "(100*mm)"] }
+                            { "pos_xy": ["E", "(100*mm,286*mm)"], "table": [[["P", "削除日付: " + this.formatDateTime(this.quotation.updatedAt), "sm_r"]]], "col_widths": ["E", "(100*mm)"] }
                         );
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
