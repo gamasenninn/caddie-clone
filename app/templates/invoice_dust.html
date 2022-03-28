@@ -269,15 +269,17 @@
 
                             <template #row-details="data">
                                 <b-row>
-                                    <b-col cols=1></b-col>
-                                    <b-col cols=4>
-                                        <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="原価:"
-                                            label-for="cost">
-                                            <p>{{data.item.cost}}</p>
-                                        </b-form-group>
+                                    <b-col>
+                                        <p class="mt-1">原価単価: {{data.item.cost}}</p>
                                     </b-col>
                                     <b-col>
-                                        <p class="mt-1">原価率: {{data.item.cost/data.item.price}}</p>
+                                        <p class="mt-1">原価: {{costTotal(data)}}</p>
+                                    </b-col>
+                                    <b-col>
+                                        <p class="mt-1">原価率: {{costRate(data)}}</p>
+                                    </b-col>
+                                    <b-col>
+                                        <p class="mt-1">粗利金額: {{profit(data)}}</p>
                                     </b-col>
                                 </b-row>
                             </template>
@@ -433,19 +435,23 @@
                     searchInvoice: function () {
                         this.getInvoices(this.searchInvoiceWord);
                     },
-                    toast(toaster, append = false) {
-                        this.$bvToast.toast(`${toaster}`, {
-                            title: `確認`,
-                            toaster: 'b-toaster-top-right',
-                            solid: true,
-                            appendToast: append,
-                        })
-                    },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY年MM月DD日");
                     },
                     formatDateTime(datetime) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
+                    },
+                    //明細欄　原価
+                    costTotal: function (data) {
+                        return data.item.cost * data.item.count;
+                    },
+                    //明細欄　原価率
+                    costRate: function (data) {
+                        return data.item.cost / data.item.price;
+                    },
+                    //明細欄　粗利金額
+                    profit: function (data) {
+                        return (data.item.price * data.item.count) - (data.item.cost * data.item.count);
                     },
                     getCustomer: async function (item) {
                         self = this;
@@ -465,7 +471,7 @@
                     pdfout: async function (mode) {
                         await this.getCustomer(this.invoice);
                         await this.getSetting();
-                        const sumInvoice ={
+                        const sumInvoice = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
                             priceIncludingTax: this.priceIncludingTax
@@ -491,7 +497,7 @@
                             pdfData.data.bdata = [{}];
                         }
                         pdfData.defPdf.first_page.table_infos.push(
-                            {"pos_xy": ["E", "(100*mm,286*mm)"],"table": [[["P", "削除日付: " + this.formatDateTime(this.invoice.updatedAt), "sm_r"]]],"col_widths": ["E", "(100*mm)"] }
+                            { "pos_xy": ["E", "(100*mm,286*mm)"], "table": [[["P", "削除日付: " + this.formatDateTime(this.invoice.updatedAt), "sm_r"]]], "col_widths": ["E", "(100*mm)"] }
                         );
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {

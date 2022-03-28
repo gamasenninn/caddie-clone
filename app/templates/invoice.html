@@ -428,16 +428,21 @@
 
                             <template #row-details="data">
                                 <b-row>
-                                    <b-col cols=1></b-col>
-                                    <b-col cols=4>
-                                        <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="原価:"
+                                    <b-col>
+                                        <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="原価単価:"
                                             label-for="cost">
-                                            <b-form-input v-model="data.item.cost" id="cost" size="sm">
+                                            <b-form-input v-model="data.item.cost" id="cost" size="sm" type="number">
                                             </b-form-input>
                                         </b-form-group>
                                     </b-col>
                                     <b-col>
-                                        <p class="mt-1">原価率: {{data.item.cost/data.item.price}}</p>
+                                        <p class="mt-1">原価: {{costTotal(data)}}</p>
+                                    </b-col>
+                                    <b-col>
+                                        <p class="mt-1">原価率: {{costRate(data)}}</p>
+                                    </b-col>
+                                    <b-col>
+                                        <p class="mt-1">粗利金額: {{profit(data)}}</p>
                                     </b-col>
                                 </b-row>
                             </template>
@@ -1042,6 +1047,18 @@
                         let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
                         if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
                         return amount;
+                    },
+                    //明細欄　原価
+                    costTotal: function (data) {
+                        return data.item.cost * data.item.count;
+                    },
+                    //明細欄　原価率
+                    costRate: function (data) {
+                        return data.item.cost / data.item.price;
+                    },
+                    //明細欄　粗利金額
+                    profit: function (data) {
+                        return (data.item.price * data.item.count) - (data.item.cost * data.item.count);
                     },
                     //---- upload funcrions --
                     async getFileListDZ() {
