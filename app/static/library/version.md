@@ -31,3 +31,25 @@
 
 - jquery
    - jquery-3.6.0.min.js:3.6.0
+
+- print
+   - print.min.js:不明
+   - print.min.css:不明
+
+- tingle
+   - tingle.min.js:0.16.0
+   - tingle.css:0.16.0
+
+- vue-select
+   - vue-select.js:3.0.0
+   - vue-select.css:3.0.0
+
+- jspanel
+   - jspanel.js:v4.12.0
+   - jspanel.modal.js:v4.12.0
+   - jspanel.tooltip.js:v4.12.0
+   - jspanel.hint.js:v4.12.0
+   - jspanel.layout.js:v4.12.0
+   - jspanel.contextmenu.js:v4.12.0
+   - jspanel.dock.js:v4.12.0
+   - jspanel.css:v4.12.0
