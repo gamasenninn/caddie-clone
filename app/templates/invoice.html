@@ -1058,7 +1058,7 @@
                             .then(function (response) {
                                 console.log(response.data);
                                 self.dicFiles = response.data;
-                                //flen = self.dicFiles.length;
+                                self.countedFiles[fid] = self.dicFiles.length;
                             })
                         //return flen;
                     },
