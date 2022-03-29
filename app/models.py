@@ -1,4 +1,3 @@
-from pyexpat import model
 from app import db, app, ma
 from datetime import datetime
 from datetime import date
@@ -12,7 +11,7 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    anyNumber = db.Column(db.Integer)
+    anyNumber = db.Column(db.Integer, unique=True)
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     group = db.Column(db.String(255))
