@@ -167,7 +167,7 @@
                           {  key: 'customerName', label: '顧客名', thClass: 'text-center', },
                           {  key: 'title', label: '件名', thClass: 'text-center', },
                           {  key: 'totalAmount', label: '請求金額', thClass: 'text-center', tdClass: 'text-right' },
-                          {  key: 'numberOfAttachments', label: '' },
+                          {  key: 'numberOfAttachments', label: '', tdClass: 'text-center' },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
@@ -183,8 +183,8 @@
                                     {{amountCalculation(data.item)|nf}}
                                 </template>
                                 <template v-slot:cell(numberOfAttachments)="data">
-                                    <b-badge pill variant="warning" v-if="data.item.numberOfAttachments > 0">
-                                        {{data.item.numberOfAttachments}}</b-badge>
+                                    <b-img v-if="data.item.numberOfAttachments > 0"
+                                        src="../static/images/icon/icon_clip.png"></b-img>
                                 </template>
 
                             </b-table>
