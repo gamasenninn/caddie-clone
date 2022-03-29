@@ -387,7 +387,7 @@
                         <b-button @click="checkChange" v-b-tooltip.hover.top="'戻る'">＜</b-button>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button pill variant="primary" @click="bulkUpsert(item);showConfirmModal();">保存
+                        <b-button pill variant="primary" @click="bulkUpsert(item);">保存
                         </b-button>
                         <b-button pill size="lg" variant="primary" @click="alert('印刷しました。')"
                             v-b-tooltip.hover.top="'印刷'">
@@ -403,6 +403,10 @@
 
             <!-- 確認モーダル -->
             <confirm-modal :title="title" :message="message"></confirm-modal>
+
+            <!-- エラーモーダル -->
+            <confirm-modal-danger :title="title" :message="message">
+            </confirm-modal-danger>
 
             <!-- 削除モーダル -->
             <div>
@@ -485,7 +489,14 @@
                                 localStorage.setItem('item', JSON.stringify(self.item));
                                 app.title = '新規作成';
                                 app.message = '保存しました。';
+                                app.$bvModal.show('confirmModal');
                                 self.countChanged = 0;
+                            })
+                            .catch(function (error) {
+                                app.title = 'エラー';
+                                app.message = error.response.data.message;
+                                app.$bvModal.show('confirmModalDanger');
+                                console.log(error);
                             });
                     },
                     updateItem: async function (item) {
@@ -497,7 +508,14 @@
                                 localStorage.setItem('item', JSON.stringify(self.item));
                                 app.title = '更新';
                                 app.message = '保存しました。'
+                                app.$bvModal.show('confirmModal');
                                 self.countChanged = 0;
+                            })
+                            .catch(function (error) {
+                                app.title = 'エラー';
+                                app.message = error.response.data.message;
+                                app.$bvModal.show('confirmModalDanger');
+                                console.log(error);
                             });
                     },
                     deleteItem: async function (item) {
@@ -577,9 +595,6 @@
                         console.log(this.item);
                         this.$bvModal.show(modalName);
                     },
-                    showConfirmModal: function () {
-                        this.$bvModal.show('confirmModal');
-                    },
                     deleteModalProcess(result) {
                         this.$bvModal.hide('deleteModal');
                         if (result === true) {
@@ -655,6 +670,7 @@
                         }
                         this.clearFileList();
                         router.push({ path: "?page=index" });
+                        //TODO：商品コードが被っている際に保存して戻るを押下するとハンドリングされたエラー文を吐いたまま一覧ページに戻るので、時間のある時に修正したい。
                     },
                     openViewer: function (f) {
                         //this.modal.setFooterContent(f.filename);
@@ -764,7 +780,7 @@
                 dropz = new Dropzone("form#dropz", {
                     dictDefaultMessage: '+',
                     parallelUploads: 2,
-                    init: function () {                        
+                    init: function () {
                         this.on("complete", file => {
                             console.log("complete A file has been added");
                             this.removeFile(file);
