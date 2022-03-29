@@ -197,7 +197,7 @@
                                     {{amountCalculation(data.item)|nf}}
                                 </template>
                                 <template v-slot:cell(numberOfAttachments)="data">
-                                    <b-img v-if="data.item.numberOfAttachments > 0"
+                                    <b-img v-if="countedFiles[data.item.applyNumber] > 0"
                                         src="../static/images/icon/icon_clip.png"></b-img>
                                 </template>
                             </b-table>
@@ -721,6 +721,7 @@
                     message: '',    //モーダルメッセージ
                     routeTo: '',
                     routeFrom: '',
+                    countedFiles: {},
 
                 },
                 methods: {
@@ -836,7 +837,6 @@
                         this.quotation.quotation_items = this.quotation.quotation_items.map(quotationItem => ({ ...quotationItem, isDelete: false }));
                         console.log(this.quotation);
                         localStorage.setItem('quotation', JSON.stringify(item));
-                        //this.getFileList(this.quotation.applyNumber);
                         this.getFileListDZ();
                         this.countChanged = 0;
                     },
@@ -856,20 +856,6 @@
                                 //this.countChanged = 0;
                             });
                     },
-                    //deleteQuotationItem: async function (item) {
-                    //    self = this;
-                    //    if (item.id) {
-                    //        await axios.delete("/quotation_item/" + item.id)
-                    //            .then(function (response) {
-                    //                console.log(response);
-                    //                self.getQuotation(self.quotation);
-                    //            });
-                    //    }
-                    //    else {
-                    //        let indexNum = this.quotation.quotation_items.indexOf(item);
-                    //        this.quotation.quotation_items.splice(indexNum, 1);
-                    //    }
-                    //},
                     addRowQuotationItem: function () {
                         if (this.quotation.length === 0) {
                             alert('見積書を選択してください');
@@ -950,6 +936,14 @@
                                 self.setting = response.data;
                             });
                     },
+                    coutFiles: function () {
+                        self = this;
+                        axios.get("/count-files/s/upload/quotes")
+                            .then(function (response) {
+                                console.log(response);
+                                self.countedFiles = response.data;
+                            });
+                    },                    
                     modalShow: function (item, modalName) {
                         this.quotation = item;
                         console.log(this.quotation);
@@ -1020,7 +1014,8 @@
                     },
                     //---- upload funcrions --
                     async getFileListDZ() {
-                        this.quotation.numberOfAttachments = await this.getFileList(this.quotation.applyNumber);
+                        //this.quotation.numberOfAttachments = await this.getFileList(this.quotation.applyNumber);
+                        this.getFileList(this.quotation.applyNumber);
                     },
                     getFileList: async function (fid) {
                         self = this;
@@ -1030,9 +1025,9 @@
                             .then(function (response) {
                                 console.log(response.data);
                                 self.dicFiles = response.data;
-                                flen = self.dicFiles.length;
+                                self.countedFiles[fid] = self.dicFiles.length;
                             })
-                        return flen;
+                        //return flen;
                     },
                     clearFileList: function () {
                         this.dicFiles = {};
@@ -1095,16 +1090,6 @@
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data)
-                                /*
-                                                                if (self.modeName == 'mw') {
-                                                                    window.parent.postMessage({
-                                                                        action: 'pdfOut',
-                                                                        message: response.data
-                                                                    }, "*");
-                                                                } else {
-                                                                    window.open('/pdf/' + response.data)
-                                                                }
-                                */
                             });
                     },
                     printPdf(url) {
@@ -1145,6 +1130,7 @@
                     this.getCategories();
                     this.getMakers();
                     this.getSetting();
+                    this.coutFiles();
                     document.querySelector('title').textContent = '見積書管理';
                     if (this.pageName == 'show') {
                         this.getFileListDZ();
