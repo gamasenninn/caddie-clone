@@ -14,7 +14,7 @@ import csv
 
 # sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
-from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist
+from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist,get_dir_info
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # ------　ユーザー認証 -------
@@ -340,6 +340,14 @@ def get_files_list(base, dir_path):
     # fid = dir_path.split('/')[-1]
     # return f" {fid} / {up_base_dir}{dir_path}"
     return jsonify(get_flist(check_base_dir(base), dir_path))
+
+@app.route("/count-files/<base>/<path:dir_path>", methods=['GET'])
+def get_files_count(base, dir_path):
+    d_dict={}
+    for d in get_dir_info(check_base_dir(base),dir_path):
+        d_dict[d['key']] = d['count_files']
+    #print (d_dict)    
+    return jsonify(d_dict)
 
 
 @app.route("/get-file/<path:path>", methods=['GET'])
