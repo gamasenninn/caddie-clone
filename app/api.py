@@ -57,7 +57,7 @@ def user_create():
     newUser = User(
         anyNumber=data.get('anyNumber'),
         name=data.get('name'),
-        password=generate_password_hash(data.get('password')) ,
+        password=generate_password_hash(data.get('password')),
         group=data.get('group'),
         role=data.get('role'),
     )
@@ -308,12 +308,15 @@ def item_show(id):
         db.session.commit()
         return jsonify(ItemSchema().dump(item))
     else:
-        return jsonify([])
+        return jsonify({})
 
 
 @app.route('/v1/item', methods=['POST'])
 def item_create():
     data = request.json
+    query = Item.query.filter(Item.itemCode == data.get('itemCode'))
+    if db.session.query(query.exists()).scalar() and data.get('itemCode') != None and data.get('itemCode') != '':
+        return jsonify({"result": "error", "message": "入力した任意番号は既に存在します。存在しない値を入力してください。"}), 500
     newItem = Item(
         itemName=data.get('itemName'),
         itemCode=data.get('itemCode'),
@@ -346,6 +349,9 @@ def item_create():
 def item_update(id):
     data = request.json
     item = Item.query.filter(Item.id == id).one()
+    query = Item.query.filter(Item.itemCode == data.get('itemCode'))
+    if db.session.query(query.exists()).scalar() and item.itemCode != data.get('itemCode') and (data.get('itemCode') != None and data.get('itemCode') != ''):
+        return jsonify({"result": "error", "message": "入力した任意番号は既に存在します。存在しない値を入力してください。"}), 500
 
     item.itemName = data.get('itemName')
     item.itemCode = data.get('itemCode')
