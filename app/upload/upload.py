@@ -192,9 +192,37 @@ def get_flist(base_dir,dir_path):
             arry.append(dict_flist)
     return arry
 
+def get_dir_info(base_dir,dir_path):
+    print("get_flist:",base_dir,dir_path)
+    file_path_list = glob.glob(f'{base_dir}/{dir_path}/*')
+    arry = []
+    for f in file_path_list:
+        if os.path.isdir(f):
+            f_0 = os.path.split(f)[0]
+            f_1 = os.path.split(f)[1]
+            f_2 = os.path.split(f)[-1]
+            f_sub = f_0.replace(f"{base_dir}/",'') 
+            count = [os.path.isfile(ff) for ff in glob.glob(f+'/*')].count(True)
+            dict_flist = { 
+                "path": f_0+"/"+f_1,
+                "base_dir": base_dir,
+                "sub_path": f_sub+"/"+f_1,
+                "dir" : f_0,
+                "key": f_2,
+                "count_files": count
+            }
+            arry.append(dict_flist)
+    return arry
+
 
 if __name__ == "__main__":
-    files = ["./test1.Doc","./test2.Zip","./test3.pdf","./test4.xyz","./test5.jpg"]
-    for f in files:
-        #make_thumb(f,'./thumbs')
-        make_thumb(f)
+    #files = ["./test1.Doc","./test2.Zip","./test3.pdf","./test4.xyz","./test5.jpg"]
+    #for f in files:
+    #    #make_thumb(f,'./thumbs')
+    #    make_thumb(f)
+
+    d_dict={}
+    for d in get_dir_info('../static','upload/invoices'):
+        print(d['key'],d['count_files'])
+        d_dict[d['key']] = d['count_files']
+    print (d_dict)

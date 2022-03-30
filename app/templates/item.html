@@ -170,7 +170,7 @@
                                     {{ data.item.baseCost|nf }}
                                 </template>
                                 <template v-slot:cell(numberOfAttachments)="data">
-                                    <b-img v-if="data.item.numberOfAttachments > 0"
+                                    <b-img v-if="countedFiles[data.item.itemCode] > 0"
                                         src="../static/images/icon/icon_clip.png"></b-img>
                                 </template>
                                 <template v-slot:cell(update)="data">
@@ -453,6 +453,7 @@
                     routeFrom: '',
                     title: '',              //モーダルタイトル
                     message: '',            //モーダルメッセージ
+                    countedFiles:{}
                 },
                 methods: {
                     // ---Items---
@@ -590,6 +591,14 @@
                                 self.makers.unshift('');
                             });
                     },
+                    coutFiles: function () {
+                        self = this;
+                        axios.get("/count-files/s/upload/items")
+                            .then(function (response) {
+                                console.log(response);
+                                self.countedFiles = response.data;
+                            });
+                    },
                     modalShow: function (item, modalName) {
                         this.item = item;
                         console.log(this.item);
@@ -605,7 +614,7 @@
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                     async getFileListDZ() {
-                        this.item.numberOfAttachments = await this.getFileList(this.item.itemCode);
+                        this.getFileList(this.item.itemCode);
                     },
                     getFileList: async function (fid) {
                         self = this;
@@ -615,9 +624,9 @@
                             .then(function (response) {
                                 console.log(response.data);
                                 self.dicFiles = response.data;
-                                flen = self.dicFiles.length;
+                                self.countedFiles[fid] = self.dicFiles.length;
                             })
-                        return flen;
+                        //return flen;
                     },
                     clearFileList: function () {
                         this.dicFiles = {};
@@ -692,6 +701,7 @@
                     this.getUnits();
                     this.getCategories();
                     this.getMakers();
+                    this.coutFiles();
                     document.querySelector('title').textContent = '商品管理';
                     if (this.pageName == 'show' || this.pageName == 'store') {
                         this.getFileListDZ();
