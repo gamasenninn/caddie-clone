@@ -32,7 +32,7 @@ convention = {
 }
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///flask_sample.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///caddie.db"
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 metadata = MetaData(naming_convention=convention)
