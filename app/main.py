@@ -150,6 +150,11 @@ def homePage():
     return render_template('home.html')
 
 
+@app.route('/check-page')
+def checkPage():
+    return render_template('check.html')
+
+
 @app.route('/invoice-page')
 @login_required
 def invoicePage():

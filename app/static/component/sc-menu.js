@@ -15,6 +15,9 @@ Vue.component('sc-menu', {
                         </b-button>
                     </b-nav>
                     <b-nav vertical>
+                        <b-button variant="primary" block href="/check-page">
+                        <b-icon icon="check"></b-icon>　チェック
+                        </b-button>
                         <b-button variant="primary" block href="/customer-page"><i
                                 class="fas fa-building"></i>　得意先
                         </b-button>
