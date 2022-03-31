@@ -2,7 +2,7 @@ FROM tiangolo/uwsgi-nginx-flask:python3.8
 
 COPY /app /app
 # For now test. Comment out when nessesary.
-COPY /app/main_test.py /app/main.py
+# COPY /app/main_test.py /app/main.py
 
 RUN pip install reportlab
 RUN pip install flask_cors
