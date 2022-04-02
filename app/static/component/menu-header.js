@@ -8,7 +8,7 @@ Vue.component('menu-header', {
                     <b-row>
                         <b-col>
                             <router-link to="?page=store">
-                                <b-button pill variant="success" class="mr-3" @click="InvoiceAddRow();">＋新規作成
+                                <b-button pill variant="success" class="mr-3" @click="mainAddRow();">＋新規作成
                                 </b-button>
                             </router-link>
                         </b-col>
@@ -23,7 +23,7 @@ Vue.component('menu-header', {
     </div>
     `,
     props: {
-        InvoiceAddRow: Function,
+        mainAddRow: Function,
     },
     methods: {
         modeName: function () {
