@@ -32,30 +32,8 @@
         <div id="app" v-cloak>
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">
-                <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
-                    <b-row>
-                        <b-col></b-col>
-                        <b-col cols="11">
-                            <b-row>
-                                <b-col>
-                                    <router-link to="?page=store">
-                                        <b-button pill variant="success" class="mr-3" @click="CategoryAddRow();">＋新規作成
-                                        </b-button>
-                                    </router-link>
-                                </b-col>
-                                <b-col class="text-right">
-                                    <b-button pill href="/item-page">商品画面へ
-                                    </b-button>
-                                </b-col>
-                                <!-- サイドバー -->
-                                <b-col cols="1" class="text-right">
-                                    <sc-menu v-if="modeName!='mw'"></sc-menu>
-                                </b-col>
-                            </b-row>
-                        </b-col>
-                        <b-col></b-col>
-                    </b-row>
-                </b-card>
+                <!-- ヘッダー -->
+                <menu-header :main-add-row="CategoryAddRow"></menu-header>
 
                 <!-- 空行 -->
                 <b-row class="mb-5"></b-row>

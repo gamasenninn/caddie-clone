@@ -10,7 +10,6 @@
 
         <!-- コンポーネント -->
         <script src="../static/component/list-invoice.js"></script>
-        <script src="../static/component/menu-header.js"></script>
 
         <style>
             .card-header {
@@ -111,7 +110,7 @@
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">
                 <!-- ヘッダー -->
-                <menu-header :Invoice-add-row="InvoiceAddRow"></menu-header>
+                <menu-header :main-add-row="InvoiceAddRow"></menu-header>
 
                 <!-- 空行 -->
                 <b-row class="mb-5"></b-row>
