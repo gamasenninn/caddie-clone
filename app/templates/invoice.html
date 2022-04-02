@@ -8,8 +8,9 @@
         <script src="../static//library/tingle.min.js"></script>
         <link rel="stylesheet" href="../static/library/tingle.css" type="text/css" />
 
-
+        <!-- コンポーネント -->
         <script src="../static/component/list-invoice.js"></script>
+        <script src="../static/component/menu-header.js"></script>
 
         <style>
             .card-header {
@@ -108,12 +109,21 @@
 
         <div id="app" v-cloak>
             <!-- 一覧表示 -->
-            <invoice-list :page-name='pageName' :mode-name="modeName" :search-invoice-word="searchInvoiceWord"
-                :select-invoice="selectInvoice" :search-invoice="searchInvoice"
-                :is-invoices-show-all="isInvoicesShowAll" :invoices-indicate-count="invoicesIndicateCount"
-                :invoices-indicate-index="invoicesIndicateIndex" :row-class="rowClass" :format-date="formatDate"
-                :amount-calculation="amountCalculation" :counted-files="countedFiles">
-            </invoice-list>
+            <div v-if="pageName=='index'">
+                <!-- ヘッダー -->
+                <menu-header :Invoice-add-row="InvoiceAddRow"></menu-header>
+
+                <!-- 空行 -->
+                <b-row class="mb-5"></b-row>
+                <b-row class="mb-5"></b-row>
+
+                <!-- 一覧 -->
+                <invoice-list :search-invoice-word="searchInvoiceWord" :select-invoice="selectInvoice"
+                    :search-invoice="searchInvoice" :is-invoices-show-all="isInvoicesShowAll"
+                    :invoices-indicate-count="invoicesIndicateCount" :invoices-indicate-index="invoicesIndicateIndex"
+                    :row-class="rowClass" :counted-files="countedFiles">
+                </invoice-list>
+            </div>
 
             <!-- 新規作成・詳細(更新)ページ -->
             <div v-if="pageName=='show' || pageName=='store'">
@@ -948,12 +958,6 @@
                     formatter_count(value) {
                         return Math.floor(value);
                     },
-                    amountCalculation(invoice) {
-                        if (!invoice.invoice_items.length) return 0;
-                        let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
-                        if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
-                        return amount;
-                    },
                     //明細欄　原価
                     costTotal: function (data) {
                         return data.item.cost * data.item.count;
@@ -1082,10 +1086,6 @@
                     pageName() {
                         if (this.$route.query.page == undefined) return 'index';
                         return this.$route.query.page;
-                    },
-                    modeName() {
-                        //return this.$route.query.mode;
-                        return localStorage.getItem('wMode');
                     },
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
