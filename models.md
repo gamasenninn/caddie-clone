@@ -18,6 +18,7 @@
 | 項目名           | 和名           | タイプ      |  備考                             | 
 | --------------- | --------------- | -------    |  -------------------------------- | 
 | id              | id              | integer    |                                   | 
+| anyNumber       | 任意番号         | integer    | ソート用。重複禁止。Null禁止。     | 
 | customerName    | 得意先名         | text       |                                   | 
 | customerKana    | ふりがな         | text       |  ジャンル分けするためのもの         | 
 | honorificTitle  | 敬称            | text       |                                   | 

@@ -26,6 +26,7 @@ class Customer(db.Model):
     __tablename__ = 'customers'
 
     id = db.Column(db.Integer, primary_key=True)
+    anyNumber = db.Column(db.Integer, unique=True)
     customerName = db.Column(db.String)
     customerKana = db.Column(db.String)
     honorificTitle = db.Column(db.String)

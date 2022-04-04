@@ -172,7 +172,13 @@ def customer_show(id):
 @app.route('/customer', methods=['POST'])
 def customer_create():
     data = request.json
+    query = Customer.query.filter(Customer.anyNumber == data.get('anyNumber'))
+    if db.session.query(query.exists()).scalar():
+        return jsonify({"result": "error", "message": "入力した任意番号は既に存在します。存在しない値を入力してください。"}), 500
+    if data.get('anyNumber') is None or data.get('anyNumber') == '':
+        return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
     newCustomer = Customer(
+        anyNumber=data.get('anyNumber'),
         customerName=data.get('customerName'),
         customerKana=data.get('customerKana'),
         honorificTitle=data.get('honorificTitle'),
@@ -209,8 +215,14 @@ def customer_create():
 @app.route('/customer/<id>', methods=['PUT'])
 def customer_update(id):
     data = request.json
+    query = Customer.query.filter(Customer.anyNumber == data.get('anyNumber'))
     customer = Customer.query.filter(Customer.id == id).one()
+    if db.session.query(query.exists()).scalar() and customer.anyNumber != data.get('anyNumber'):
+        return jsonify({"result": "error", "message": "入力した任意番号は既に存在します。存在しない値を入力してください。"}), 500
+    if data.get('anyNumber') is None or data.get('anyNumber') == '':
+        return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
 
+    customer.anyNumber = data.get('anyNumber')
     customer.customerName = data.get('customerName')
     customer.customerKana = data.get('customerKana')
     customer.honorificTitle = data.get('honorificTitle')
