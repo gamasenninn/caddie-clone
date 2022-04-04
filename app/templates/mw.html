@@ -112,7 +112,7 @@
           callback: function () {
             $('iframe').on('load', function () {
               $(this).contents().find('#check').on('click', function () {
-                openWindow('/check-page', 'チェック選択', 'check')
+                openWindow('/check-page', 'チェック', 'check')
               });
               $(this).contents().find('#customer').on('click', function () {
                 openWindow('/customer-page', '得意先', 'customer')
