@@ -20,7 +20,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     h.honorificTitle = nvl(invoice.honorificTitle, '');
     h.applyNumber = invoice.applyNumber;
     if ( docClass == 'nodate' ){
-        h.applyDate = " 年 &nbsp;&nbsp; 月 &nbsp;&nbsp; 日";
+        h.applyDate = "&nbsp;&nbsp; 年 &nbsp;&nbsp; 月 &nbsp;&nbsp; 日";
     } else {
         h.applyDate = nvl(invoice.applyDate, '');
     }
