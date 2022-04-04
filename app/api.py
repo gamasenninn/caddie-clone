@@ -316,7 +316,7 @@ def item_create():
     data = request.json
     query = Item.query.filter(Item.itemCode == data.get('itemCode'))
     if db.session.query(query.exists()).scalar() and data.get('itemCode') != None and data.get('itemCode') != '':
-        return jsonify({"result": "error", "message": "入力した任意番号は既に存在します。存在しない値を入力してください。"}), 500
+        return jsonify({"result": "error", "message": "入力した商品コードは既に存在します。存在しない値を入力してください。"}), 500
     newItem = Item(
         itemName=data.get('itemName'),
         itemCode=data.get('itemCode'),
@@ -351,7 +351,7 @@ def item_update(id):
     item = Item.query.filter(Item.id == id).one()
     query = Item.query.filter(Item.itemCode == data.get('itemCode'))
     if db.session.query(query.exists()).scalar() and item.itemCode != data.get('itemCode') and (data.get('itemCode') != None and data.get('itemCode') != ''):
-        return jsonify({"result": "error", "message": "入力した任意番号は既に存在します。存在しない値を入力してください。"}), 500
+        return jsonify({"result": "error", "message": "入力した商品コードは既に存在します。存在しない値を入力してください。"}), 500
 
     item.itemName = data.get('itemName')
     item.itemCode = data.get('itemCode')
