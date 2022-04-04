@@ -111,6 +111,18 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="任意番号"
+                                        label-for="anyNumber" label-align="right">
+                                        <b-form-input v-model="customer.anyNumber" id="anyNumber" size="sm"
+                                            type="number" :formatter="formatter_delete_space" autocomplete="off">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先名"
                                         label-for="customerName" label-align="right">
                                         <b-form-input v-model="customer.customerName" id="customerName" size="sm"
@@ -383,8 +395,16 @@
                                 localStorage.setItem('customer', JSON.stringify(self.customer));
                                 app.title = '新規作成';
                                 app.message = '保存しました。';
+                                app.$bvModal.show('confirmModal');
                                 self.countChanged = 0;
+                            })
+                            .catch(function (error) {
+                                app.title = 'エラー';
+                                app.message = error.response.data.message;
+                                app.$bvModal.show('confirmModalDanger');
+                                console.log(error);
                             });
+
                     },
                     updateCustomer: async function (item) {
                         self = this;
@@ -395,7 +415,14 @@
                                 localStorage.setItem('customer', JSON.stringify(self.customer));
                                 app.title = '更新';
                                 app.message = '保存しました。'
+                                app.$bvModal.show('confirmModal');
                                 self.countChanged = 0;
+                            })
+                            .catch(function (error) {
+                                app.title = 'エラー';
+                                app.message = error.response.data.message;
+                                app.$bvModal.show('confirmModalDanger');
+                                console.log(error);
                             });
                     },
                     deleteCustomer: async function (item) {
@@ -444,7 +471,6 @@
                     apply: function () {
                         if (this.customerKanaValidate === true) {
                             this.bulkUpsert(this.customer);
-                            this.$bvModal.show('confirmModal');
                         }
                         else {
                             this.title = 'エラー';
@@ -486,6 +512,10 @@
                             action: 'pdfOut',
                             message: 'this is message'
                         }, "*");
+                    },
+                    //スペース消去
+                    formatter_delete_space(value) {
+                        return value.replace(/\s+/g, "");
                     },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
