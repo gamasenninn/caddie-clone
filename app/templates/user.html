@@ -92,6 +92,12 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="任意名"
+                                        label-for="anyName" label-align="right">
+                                        <b-form-input v-model="user.anyName" id="anyName" size="sm"
+                                            :formatter="formatter_delete_space">
+                                        </b-form-input>
+                                    </b-form-group>
                                 </b-col>
                             </b-row>
                             <b-row>
