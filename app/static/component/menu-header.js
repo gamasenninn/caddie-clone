@@ -24,10 +24,6 @@ Vue.component('menu-header', {
     `,
     props: {
         mainAddRow: Function,
-    },
-    methods: {
-        modeName: function () {
-            return localStorage.getItem('wMode');
-        },
+        modeName: String,
     },
 })

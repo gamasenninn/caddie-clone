@@ -110,7 +110,7 @@
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">
                 <!-- ヘッダー -->
-                <menu-header :main-add-row="InvoiceAddRow"></menu-header>
+                <menu-header :main-add-row="InvoiceAddRow" :mode-name="modeName"></menu-header>
 
                 <!-- 空行 -->
                 <b-row class="mb-5"></b-row>
@@ -1085,6 +1085,9 @@
                     pageName() {
                         if (this.$route.query.page == undefined) return 'index';
                         return this.$route.query.page;
+                    },
+                    modeName() {
+                        return localStorage.getItem('wMode');
                     },
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
