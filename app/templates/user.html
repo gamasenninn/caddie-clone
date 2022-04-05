@@ -87,7 +87,8 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="任意番号"
                                         label-for="anyNumber" label-align="right">
-                                        <b-form-input v-model="user.anyNumber" id="anyNumber" size="sm" type="number">
+                                        <b-form-input v-model="user.anyNumber" id="anyNumber" size="sm"
+                                            :formatter="formatterNumberAll">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -330,6 +331,10 @@
                     //スペース消去
                     formatter_delete_space(value) {
                         return value.replace(/\s+/g, "");
+                    },
+                    //整数意外禁止
+                    formatterNumberAll(value) {
+                        return value.replace(/\D/g, '');
                     },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
