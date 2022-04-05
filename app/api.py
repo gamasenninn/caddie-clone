@@ -787,6 +787,114 @@ def invoice_item_destroy(id):
     return jsonify({"result": "OK", "id": id, "data": ''})
 
 
+# 請求書＿入金(Invoice_Payments)
+@app.route('/invoice_payments', methods=['GET'])
+def invoice_payment_index():
+    invoicePayments = Invoice_Payment.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoicePayments',
+        modelId='',
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(Invoice_PaymentSchema(many=True).dump(invoicePayments))
+
+
+@app.route('/invoice_payment/<id>', methods=['GET'])
+def invoice_payment_show(id):
+    invoicePaymentCount = Invoice_Payment.query.filter(
+        Invoice_Payment.id == id).count()
+    if invoicePaymentCount:
+        invoicePayment = Invoice_Payment.query.filter(
+            Invoice_Payment.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='InvoicePayments',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
+        return jsonify(Invoice_PaymentSchema().dump(invoicePayment))
+    else:
+        return jsonify([])
+
+
+@app.route('/invoice_payments/<hid>', methods=['GET'])
+def invoice_payment_show_by_invoiceId(hid):
+    invoicePayments = Invoice_Payment.query.filter(
+        Invoice_Payment.invoiceId == hid).all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoicePayments',
+        modelId=hid,
+        action='gets')
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(Invoice_PaymentSchema(many=True).dump(invoicePayments))
+
+
+@app.route('/invoice_payment', methods=['POST'])
+def invoice_payment_create():
+    data = request.json
+    newInvoiceItem = Invoice_Payment(
+        invoiceId=data.get('invoiceId'),
+        paymentDate=data.get('paymentDate'),
+        paymentMethod=data.get('paymentMethod'),
+        paymentAmount=data.get('paymentAmount'),
+        remarks=data.get('remarks'),
+    )
+    db.session.add(newInvoiceItem)
+    db.session.commit()
+    id = newInvoiceItem.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoicePayments',
+        modelId=id,
+        action='post')
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/invoice_payment/<id>', methods=['PUT'])
+def invoice_payment_update(id):
+    data = request.json
+    invoicePayment = Invoice_Payment.query.filter(
+        Invoice_Payment.id == id).one()
+    invoicePayment.invoiceId = data.get('invoiceId')
+    invoicePayment.paymentDate = data.get('paymentDate')
+    invoicePayment.paymentMethod = data.get('paymentMethod')
+    invoicePayment.paymentAmount = data.get('paymentAmount')
+    invoicePayment.remarks = data.get('remarks')
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoicePayments',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/invoice_payment/<id>', methods=['DELETE'])
+def invoice_payment_destroy(id):
+    invoicePayment = Invoice_Payment.query.filter(
+        Invoice_Payment.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoicePayments',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ''})
+
+
 # 見積書(Quotations)
 @app.route('/v1/quotations', methods=['GET'])
 @app.route('/quotations', methods=['GET'])
