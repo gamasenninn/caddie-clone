@@ -110,6 +110,21 @@
 
 <br>
 
+## Invoice_Payments
+
+| 項目名        | 和名       | タイプ   | 備考                           | 
+| ------------- | ---------- | -------- | ------------------------------ | 
+| id            | id         | integer  |                                | 
+| invoiceId     | 請求書ID   | integer  | 請求書テーブルと紐づく         | 
+| paymentDate   | 支払い日付 | date     |                                | 
+| paymentMethod | 支払い方法 | string   | 口座振込・現金・クレジット        | 
+| paymentAmount | 入金金額   | integer  |                                | 
+| remarks       | 備考       | string   |                                | 
+| createdAt     | 作成日時   | datetime |                                | 
+| updatedAt     | 更新日時   | datetime |                                | 
+
+<br>
+
 ## Quotations
 
 | 項目名       | 和名           | タイプ    |  備考                                                     | 

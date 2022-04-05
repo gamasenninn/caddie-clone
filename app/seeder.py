@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 def seeder():
 
     models = [User, Customer, Item, Invoice,
-              Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
+              Invoice_Item, Invoice_Payment, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
 
     for model in models:
         db.session.query(model).delete()
@@ -107,6 +107,27 @@ def seeder():
     invoice_items = Invoice_Item.query.all()
     for invoice_item in invoice_items:
         print(invoice_item.count)
+
+    # -----Invoice_Payments-----
+    print('----Invoice_Payments----')
+    invoice_payments = [
+        Invoice_Payment(invoiceId=1, paymentDate=date(2022, 1, 1),
+                        paymentMethod='口座振込', paymentAmount=100, remarks="備考１"),
+        Invoice_Payment(invoiceId=1, paymentDate=date(2022, 1, 1),
+                        paymentMethod='現金', paymentAmount=20, remarks="備考２"),
+        Invoice_Payment(invoiceId=2, paymentDate=date(2022, 1, 1),
+                        paymentMethod='クレジット', paymentAmount=30, remarks="備考３"),
+        Invoice_Payment(invoiceId=2, paymentDate=date(2022, 1, 1),
+                        paymentMethod='口座振込', paymentAmount=1100,  remarks="備考４"),
+        Invoice_Payment(invoiceId=3, paymentDate=date(2022, 1, 1),
+                        paymentMethod='クレジット', paymentAmount=120,  remarks="備考５"),
+    ]
+    db.session.add_all(invoice_payments)
+    db.session.commit()
+
+    invoice_payments = Invoice_Payment.query.all()
+    for invoice_payment in invoice_payments:
+        print(invoice_payment.paymentAmount)
 
     # -----Quotations-----
     print('----Quotations----')
