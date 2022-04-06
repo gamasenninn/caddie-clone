@@ -129,12 +129,12 @@
                                     <b-col sm>
                                     </b-col>
                                     <b-col sm>
+                                        <is-show @emit-show-all="updateIsInvoicesShowAll"></is-show>
                                     </b-col>
                                 </b-row>
                                 <!-- 一覧 -->
                                 <invoice-list :search-invoice-word="searchInvoiceWord" :select-invoice="selectInvoice"
-                                    :search-invoice="searchInvoice" :is-invoices-show-all="isInvoicesShowAll"
-                                    :invoices-indicate-count="invoicesIndicateCount"
+                                    :search-invoice="searchInvoice" :invoices-indicate-count="invoicesIndicateCount"
                                     :invoices-indicate-index="invoicesIndicateIndex" :row-class="rowClass"
                                     :counted-files="countedFiles">
                                 </invoice-list>
@@ -1071,6 +1071,9 @@
                     updateInvoices(invoices) {
                         this.invoices = invoices;
                     },
+                    updateIsInvoicesShowAll(isShow) {
+                        this.isInvoicesShowAll = isShow;
+                    }
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));

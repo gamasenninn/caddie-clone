@@ -1,3 +1,4 @@
+// 検索コンポーネント
 var search = Vue.component('search', {
     template: `
     <b-input-group>
@@ -44,13 +45,27 @@ var search = Vue.component('search', {
     },
 })
 
+// 「全て表示」機能コンポーネント
+var isShow = Vue.component('is-show', {
+    template: `
+    <b-row align-h="end">
+        <b-form-checkbox class="mr-3" v-model="isShow.isInvoicesShowAll" @change="changeIsInvoicesShowAll">全て表示</b-form-checkbox>
+    </b-row>
+    `,
+    data: {
+        isInvoicesShowAll: false
+    },
+    methods: {
+        changeIsInvoicesShowAll() {
+            this.$emit('emit-show-all', isShow.isInvoicesShowAll);
+        },
+    },
+})
+
 
 Vue.component('invoice-list', {
     template: `
     <div>
-                <b-row align-h="end">
-                    <b-form-checkbox class="mr-3" v-model="isInvoicesShowAll">全て表示</b-form-checkbox>
-                </b-row>
         <b-row align-h="end">
             <p class="mr-3">表示件数 {{ invoicesIndicateCount }}件</p>
         </b-row>
@@ -91,7 +106,6 @@ Vue.component('invoice-list', {
         searchInvoice: Function,
         rowClass: Function,
         countedFiles: Function,
-        isInvoicesShowAll: Boolean,
         searchInvoiceWord: String,
         invoicesIndicateCount: Number,
         invoicesIndicateIndex: Array,
