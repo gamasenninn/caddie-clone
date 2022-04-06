@@ -103,13 +103,12 @@ Vue.component('invoice-list', {
                 <b-img v-if="countedFiles[data.item.applyNumber] > 0"
                     src="../static/images/icon/icon_clip.png"></b-img>
             </template>
-
         </b-table>
     </div>
     `,
     props: {
         selectInvoice: Function,
-        countedFiles: Function,
+        countedFiles: Object,
         invoicesIndicateIndex: Array,
     },
     methods: {
