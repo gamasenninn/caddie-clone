@@ -134,7 +134,7 @@
                                 </b-row>
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
                                 <!-- 一覧 -->
-                                <invoice-list :search-invoice-word="searchInvoiceWord" :select-invoice="selectInvoice"
+                                <invoice-list :select-invoice="selectInvoice"
                                     :invoices-indicate-index="invoicesIndicateIndex" :row-class="rowClass"
                                     :counted-files="countedFiles">
                                 </invoice-list>
@@ -625,7 +625,6 @@
             var app = new Vue({
                 el: '#app',
                 data: {
-                    searchInvoiceWord: '',          //請求書検索
                     isInvoicesShowAll: false,               //請求書検索
                     invoicesIndicateCount: 0,       //請求書検索
                     invoicesIndicateAmount: 0,      //一覧表示中請求書の合計金額

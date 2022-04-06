@@ -113,7 +113,6 @@ Vue.component('invoice-list', {
         selectInvoice: Function,
         rowClass: Function,
         countedFiles: Function,
-        searchInvoiceWord: String,
         invoicesIndicateIndex: Array,
     },
     methods: {
