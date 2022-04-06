@@ -129,6 +129,8 @@ class Invoice(db.Model):
                           default=datetime.now, onupdate=datetime.now)
     invoice_items = db.relationship(
         'Invoice_Item', backref='invoice', uselist=True, cascade='all, delete',)
+    invoice_payments = db.relationship(
+        'Invoice_Payment', backref='invoice', uselist=True, cascade='all, delete',)
 
 
 class Invoice_Item(db.Model):
@@ -144,6 +146,21 @@ class Invoice_Item(db.Model):
     cost = db.Column(db.Integer)
     count = db.Column(db.Integer)
     unit = db.Column(db.String)
+    createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updatedAt = db.Column(db.DateTime, nullable=False,
+                          default=datetime.now, onupdate=datetime.now)
+
+
+class Invoice_Payment(db.Model):
+
+    __tablename__ = 'invoice_payments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    invoiceId = db.Column(db.Integer, db.ForeignKey('invoices.id'))
+    paymentDate = db.Column(db.Date)
+    paymentMethod = db.Column(db.String)
+    paymentAmount = db.Column(db.Integer)
+    remarks = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
@@ -345,11 +362,18 @@ class Invoice_ItemSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
 
 
+class Invoice_PaymentSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Invoice_Payment
+        include_fk = True
+
+
 class InvoiceSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Invoice
         include_fk = True
     invoice_items = ma.Nested(Invoice_ItemSchema, many=True)
+    invoice_payments = ma.Nested(Invoice_PaymentSchema, many=True)
 
 
 class Quotation_ItemSchema(ma.SQLAlchemyAutoSchema):
