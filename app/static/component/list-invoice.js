@@ -62,13 +62,21 @@ var isShow = Vue.component('is-show', {
     },
 })
 
+// 表示件数コンポーネント
+var indicateCount = Vue.component('indicate-count', {
+    template: `
+    <b-row align-h="end">
+        <p class="mr-3">表示件数 {{ this.indicateCount }}件</p>
+    </b-row>
+    `,
+    props: {
+        indicateCount: Number,
+    },
+})
 
 Vue.component('invoice-list', {
     template: `
     <div>
-        <b-row align-h="end">
-            <p class="mr-3">表示件数 {{ invoicesIndicateCount }}件</p>
-        </b-row>
         <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
             :items=invoicesIndicateIndex :fields="[
         {  key: 'update', label: '' },
@@ -107,7 +115,6 @@ Vue.component('invoice-list', {
         rowClass: Function,
         countedFiles: Function,
         searchInvoiceWord: String,
-        invoicesIndicateCount: Number,
         invoicesIndicateIndex: Array,
     },
     methods: {
