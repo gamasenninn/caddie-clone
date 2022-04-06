@@ -135,8 +135,8 @@
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
                                 <!-- 一覧 -->
                                 <invoice-list :search-invoice-word="searchInvoiceWord" :select-invoice="selectInvoice"
-                                    :search-invoice="searchInvoice" :invoices-indicate-index="invoicesIndicateIndex"
-                                    :row-class="rowClass" :counted-files="countedFiles">
+                                    :invoices-indicate-index="invoicesIndicateIndex" :row-class="rowClass"
+                                    :counted-files="countedFiles">
                                 </invoice-list>
                             </b-card>
                             <b-card v-else border-variant="white" class="mb-3 text-center" header="未入金"
@@ -826,9 +826,6 @@
                                 console.log(response);
                                 self.items = response.data;
                             });
-                    },
-                    searchInvoice: function () {
-                        this.getInvoices(this.searchInvoiceWord);
                     },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return

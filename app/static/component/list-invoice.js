@@ -111,7 +111,6 @@ Vue.component('invoice-list', {
     `,
     props: {
         selectInvoice: Function,
-        searchInvoice: Function,
         rowClass: Function,
         countedFiles: Function,
         searchInvoiceWord: String,
