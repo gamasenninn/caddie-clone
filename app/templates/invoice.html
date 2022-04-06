@@ -120,8 +120,8 @@
                     <b-row class="mt-1">
                         <b-col></b-col>
                         <b-col cols="11">
-                            <b-card v-if="procName=='normal'" border-variant="white" class="mb-3 text-center"
-                                header="請求書入力" header-border-variant="light">
+                            <b-card border-variant="white" class="mb-3 text-center" :header="headerName"
+                                header-border-variant="light">
                                 <b-row>
                                     <b-col sm>
                                         <search :invoices="invoices" @emit-invoices="updateInvoices"></search>
@@ -135,12 +135,8 @@
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
                                 <!-- 一覧 -->
                                 <invoice-list :select-invoice="selectInvoice"
-                                    :invoices-indicate-index="invoicesIndicateIndex" :row-class="rowClass"
-                                    :counted-files="countedFiles">
+                                    :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles">
                                 </invoice-list>
-                            </b-card>
-                            <b-card v-else border-variant="white" class="mb-3 text-center" header="未入金"
-                                header-border-variant="light">
                             </b-card>
                         </b-col>
                         <b-col></b-col>
@@ -826,10 +822,6 @@
                                 self.items = response.data;
                             });
                     },
-                    rowClass: function (item, type) {
-                        if (!item || type !== 'row') return
-                        if (!item.id) return "d-none";
-                    },
                     getUnits: async function () {
                         self = this;
                         await axios.get("/units")
@@ -1111,6 +1103,10 @@
                     pageName() {
                         if (this.$route.query.page == undefined) return 'index';
                         return this.$route.query.page;
+                    },
+                    headerName() {
+                        if (this.procName == "normal") return "請求書入力";
+                        else return "未入金一覧";
                     },
                     procName() {
                         let url = new URL(window.location.href);

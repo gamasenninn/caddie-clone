@@ -16,14 +16,12 @@ var search = Vue.component('search', {
     },
     props: {
         invoices: Array,
-
     },
     methods: {
         searchInvoice: function () {
             this.getInvoices(search.searchInvoiceWord);
         },
         getInvoices: async function (searchWord = '', offset = 0) {
-            console.log('hogehoge');
             self = this;
             url = '/v1/invoices'
             await axios.get(url, {
@@ -87,7 +85,7 @@ Vue.component('invoice-list', {
         {  key: 'title', label: '件名', thClass: 'text-center', },
         {  key: 'totalAmount', label: '請求金額', thClass: 'text-center', tdClass: 'text-right' },
         {  key: 'numberOfAttachments', label: '', tdClass: 'text-center' },
-    ]" :tbody-tr-class="rowClass">
+    ]" :tbody-tr-class="this.rowClass">
             <template v-slot:cell(update)="data">
                 <router-link to="?page=show">
                     <b-button variant="primary" @click="selectInvoice(data.item)">
@@ -111,11 +109,14 @@ Vue.component('invoice-list', {
     `,
     props: {
         selectInvoice: Function,
-        rowClass: Function,
         countedFiles: Function,
         invoicesIndicateIndex: Array,
     },
     methods: {
+        rowClass: function (item, type) {
+            if (!item || type !== 'row') return
+            if (!item.id) return "d-none";
+        },
         //日付カラム
         formatDate(date) {
             if (!!date) return moment(date).format("YYYY/MM/DD");
