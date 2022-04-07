@@ -763,6 +763,7 @@
                     selectInvoice: function (item) {
                         this.invoice = item;
                         this.invoice.invoice_items = this.invoice.invoice_items.map(invoiceItem => ({ ...invoiceItem, isDelete: false }));
+                        this.getCustomer(this.invoice);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.invoice);
                         localStorage.setItem('invoice', JSON.stringify(item));
                         this.getFileListDZ();
@@ -909,7 +910,7 @@
                     },
                     pdfout: async function (mode, docClass = 'origin') {
                         self = this;
-                        await this.getCustomer(this.invoice)
+                        //await this.getCustomer(this.invoice)
                         const sumInvoice = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
