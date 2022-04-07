@@ -60,6 +60,38 @@ var isShow = Vue.component('is-show', {
     },
 })
 
+// 日付範囲検索コンポーネント
+let daySearch = Vue.component('day-search', {
+    template: `
+    <b-row align-h="end">
+        <div id="searchDay">
+            <b-form inline>
+                <label>日付</label>
+                <b-form-input v-model="daySearch.searchDayStart" id="searchDayStart" size="sm"
+                    class="mr-2 ml-2" autocomplete="off" type="date" @change="changeSearchDayStart">
+                </b-form-input>
+                ～
+                <b-form-input v-model="daySearch.searchDayEnd" id="searchDayEnd" size="sm"
+                    class="ml-2" autocomplete="off" type="date" @change="changeSearchDayEnd">
+                </b-form-input>
+            </b-form>
+        </div>
+    </b-row>
+    `,
+    data: {
+        searchDayStart: '',
+        searchDayEnd: '',
+    },
+    methods: {
+        changeSearchDayStart() {
+            this.$emit('emit-day-start', daySearch.searchDayStart);
+        },
+        changeSearchDayEnd() {
+            this.$emit('emit-day-end', daySearch.searchDayEnd);
+        }
+    }
+})
+
 // 表示件数コンポーネント
 var indicateCount = Vue.component('indicate-count', {
     template: `
