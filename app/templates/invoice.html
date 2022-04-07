@@ -129,14 +129,20 @@
                                     <b-col sm>
                                     </b-col>
                                     <b-col sm>
-                                        <is-show @emit-show-all="updateIsInvoicesShowAll"></is-show>
+                                        <is-show v-if="procName=='normal'" @emit-show-all="updateIsInvoicesShowAll">
+                                        </is-show>
+                                        <day-search v-else @emit-day-start="updateDayStart"
+                                            @emit-day-end="updateDayEnd"></day-search>
                                     </b-col>
                                 </b-row>
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
                                 <!-- 一覧 -->
-                                <invoice-list :select-invoice="selectInvoice"
+                                <invoice-list v-if="procName=='normal'" :select-invoice="selectInvoice"
                                     :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles">
                                 </invoice-list>
+                                <invoice-list-payment v-else :select-invoice="selectInvoice"
+                                    :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles">
+                                    </invoice-list>
                             </b-card>
                         </b-col>
                         <b-col></b-col>
@@ -621,6 +627,8 @@
             var app = new Vue({
                 el: '#app',
                 data: {
+                    searchDayStart: '',             //請求書検索
+                    searchDayEnd: '',               //請求書検索
                     isInvoicesShowAll: false,               //請求書検索
                     invoicesIndicateCount: 0,       //請求書検索
                     invoicesIndicateAmount: 0,      //一覧表示中請求書の合計金額
@@ -1061,7 +1069,13 @@
                     },
                     updateIsInvoicesShowAll(isShow) {
                         this.isInvoicesShowAll = isShow;
-                    }
+                    },
+                    updateDayStart(start) {
+                        this.searchDayStart = start;
+                    },
+                    updateDayEnd(end) {
+                        this.searchDayEnd = end;
+                    },
                 },
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
@@ -1139,6 +1153,15 @@
                         let amount = 0;
                         if (this.isInvoicesShowAll === false)
                             invoices = invoices.filter(invoice => invoice.isPaid === false);
+                        if (this.searchDayStart != '' && this.searchDayEnd == '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate >= this.searchDayStart);
+                        }
+                        if (this.searchDayStart == '' && this.searchDayEnd != '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate <= this.searchDayEnd);
+                        }
+                        if (this.searchDayStart != '' && this.searchDayEnd != '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate >= this.searchDayStart && invoice.applyDate <= this.searchDayEnd);
+                        }
                         let invoiceAmounts = invoices.map(
                             invoice => invoice.invoice_items.map(
                                 item => Math.round(item.count * Math.round(item.price) * (invoice.isTaxExp == true ? (1 + invoice.tax / 100) : 1))).reduce((a, b) => a + b));
