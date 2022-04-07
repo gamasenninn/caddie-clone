@@ -137,9 +137,12 @@
                                 </b-row>
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
                                 <!-- 一覧 -->
-                                <invoice-list :select-invoice="selectInvoice"
+                                <invoice-list v-if="procName=='normal'" :select-invoice="selectInvoice"
                                     :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles">
                                 </invoice-list>
+                                <invoice-list-payment v-else :select-invoice="selectInvoice"
+                                    :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles">
+                                    </invoice-list>
                             </b-card>
                         </b-col>
                         <b-col></b-col>

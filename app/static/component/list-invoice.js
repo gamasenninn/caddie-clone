@@ -104,6 +104,7 @@ var indicateCount = Vue.component('indicate-count', {
     },
 })
 
+// 請求書一覧（通常）
 Vue.component('invoice-list', {
     template: `
     <div>
@@ -158,6 +159,61 @@ Vue.component('invoice-list', {
             let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
             if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
             return amount;
+        },
+    },
+})
+
+// 請求書一覧（未入金）
+Vue.component('invoice-list-payment', {
+    template: `
+    <div>
+        <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
+            :items=invoicesIndicateIndex :fields="[
+        {  key: 'update', label: '' },
+        {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+        {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'applyDate', label: '日付', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'customerName', label: '顧客名', thClass: 'text-center', },
+        {  key: 'title', label: '件名', thClass: 'text-center', },
+        {  key: 'unpaidAmount', label: '未入金額', thClass: 'text-center', tdClass: 'text-right' },
+        {  key: 'numberOfAttachments', label: '', tdClass: 'text-center' },
+    ]" :tbody-tr-class="this.rowClass">
+            <template v-slot:cell(update)="data">
+                <router-link to="?page=show">
+                    <b-button variant="primary" @click="selectInvoice(data.item)">
+                        <i class="fas fa-edit"></i>
+                    </b-button>
+                </router-link>
+            </template>
+            <template v-slot:cell(applyDate)="data">
+                {{formatDate(data.item.applyDate)}}
+            </template>
+            <template v-slot:cell(unpaidAmount)="data">
+                {{unpaidCalculation(data.item)|nf}}
+            </template>
+            <template v-slot:cell(numberOfAttachments)="data">
+                <b-img v-if="countedFiles[data.item.applyNumber] > 0"
+                    src="../static/images/icon/icon_clip.png"></b-img>
+            </template>
+        </b-table>
+    </div>
+    `,
+    props: {
+        selectInvoice: Function,
+        countedFiles: Object,
+        invoicesIndicateIndex: Array,
+    },
+    methods: {
+        rowClass: function (item, type) {
+            if (!item || type !== 'row') return
+            if (!item.id) return "d-none";
+        },
+        //日付カラム
+        formatDate(date) {
+            if (!!date) return moment(date).format("YYYY/MM/DD");
+        },
+        // TODO：計算ロジックを作成？
+        unpaidCalculation(data) {
         },
     },
 })
