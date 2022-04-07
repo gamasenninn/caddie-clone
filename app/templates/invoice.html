@@ -104,6 +104,11 @@
                 padding: 0.25rem 1.25rem;
                 border-bottom: 1px solid #CED4DA;
             }
+
+            #payment-delete:hover {
+                border-color: #ed254e;
+                background-color: #ed254e;
+            }
         </style>
 
         <div id="app" v-cloak>
@@ -412,13 +417,14 @@
 
                         <b-row class="mb-3">
                             <b-col cols="auto">
-                                <b-form-checkbox class="mr-3" v-model="invoice.isPaid">入金済み</b-form-checkbox>
+                                <b-button variant="primary" @click="modalShow(invoice,'payment-modal');">入金処理</b-button>
+                                <!-- <b-form-checkbox class="mr-3" v-model="invoice.isPaid">入金済み</b-form-checkbox> -->
                             </b-col>
-                            <b-col>
+                            <!-- <b-col>
                                 <b-form-input v-model="invoice.paymentDate" id="paymentDate" size="sm" type="date"
                                     style="width: 150px;">
                                 </b-form-input>
-                            </b-col>
+                            </b-col> -->
                         </b-row>
 
                         <b-row>
@@ -597,6 +603,48 @@
             <div>
                 <select-modal modal-name='deleteModal' modal-message='削除しますか？'
                     @selected="deleteModalProcess($event);" />
+            </div>
+
+            <!-- 入金モーダル -->
+            <div>
+                <b-modal size="xl" id="payment-modal" :title="'請求書No. ' + invoice.applyNumber">
+                    <b-table hover striped small sort-by="ID" id="payment-table" :items="invoice.invoice_payments"
+                        label="Table Options" :fields="[
+                              {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                              {  key: 'paymentDate', label: '入金日' },
+                              {  key: 'paymentMethod', label: '支払い方法' },
+                              {  key: 'paymentAmount', label: '入金金額' },
+                              {  key: 'remarks', label: '備考' },
+                              {  key: 'delete', thClass: 'd-none' },
+                        ]">
+                        <template v-slot:cell(paymentDate)="data">
+                            <b-form-input v-model="data.item.paymentDate" type="date" size="sm" autocomplete="off">
+                            </b-form-input>
+                        </template>
+                        <template v-slot:cell(paymentMethod)="data">
+                            <b-form-select v-model="data.item.paymentMethod" :options="['口座振込','現金','クレジット']" size="sm"
+                                autocomplete="off">
+                            </b-form-select>
+                        </template>
+                        <template v-slot:cell(paymentAmount)="data">
+                            <b-form-input v-model="data.item.paymentAmount" type="number" size="sm" autocomplete="off">
+                            </b-form-input>
+                        </template>
+                        <template v-slot:cell(remarks)="data">
+                            <b-form-input v-model="data.item.remarks" size="sm" autocomplete="off">
+                            </b-form-input>
+                        </template>
+                        <template v-slot:cell(delete)="data">
+                            <b-button pill id="payment-delete" size="sm" @click="deleteRowInvoicePayment(data.item)">－
+                            </b-button>
+                        </template>
+                    </b-table>
+                    <b-row class="d-flex justify-content-end" id="item_add">
+                        <b-col cols="16" md="auto">
+                            <b-button pill variant="primary" @click="addRowInvoicePayment();">✙</b-button>
+                        </b-col>
+                    </b-row>
+                </b-modal>
             </div>
         </div>
 
@@ -791,6 +839,19 @@
                         this.invoice.invoice_items.push({
                             invoiceId: this.invoice.id
                         })
+                    },
+                    addRowInvoicePayment: function () {
+                        if (this.invoice.length === 0) {
+                            alert('請求書を選択してください');
+                            return;
+                        }
+                        this.invoice.invoice_payments.push({
+                            invoiceId: this.invoice.id
+                        })
+                    },
+                    deleteRowInvoicePayment: function (data) {
+                        console.log(data);
+                        // TODO:ここで削除処理
                     },
                     insertQuotation: async function (item) {
                         self = this;
