@@ -641,7 +641,7 @@
                             </b-form-input>
                         </template>
                         <template v-slot:cell(delete)="data">
-                            <b-button pill id="payment-delete" size="sm" @click="deleteRowInvoicePayment(data.item)">－
+                            <b-button pill id="payment-delete" size="sm" @click="deleteRowInvoicePayment(data.index)">－
                             </b-button>
                         </template>
                     </b-table>
@@ -855,12 +855,11 @@
                             return;
                         }
                         this.invoice.invoice_payments.push({
-                            invoiceId: this.invoice.id
+                            invoiceId: this.invoice.id,
                         })
                     },
-                    deleteRowInvoicePayment: function (data) {
-                        console.log(data);
-                        // TODO:ここで削除処理
+                    deleteRowInvoicePayment: function (index) {
+                        this.invoice.invoice_payments.splice(index, 1);
                     },
                     insertQuotation: async function (item) {
                         self = this;
