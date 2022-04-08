@@ -423,7 +423,10 @@
 
                         <b-row class="mb-3">
                             <b-col cols="auto">
-                                <b-button variant="primary" @click="modalShow(invoice,'payment-modal');">入金処理</b-button>
+                                <!-- 請求書発行前に請求書＿入金テーブルにINSERTするとFKが迷子になるので -->
+                                <b-button v-if="invoice.id" variant="primary"
+                                    @click="modalShow(invoice,'payment-modal');">入金処理</b-button>
+                                <b-button v-else variant="primary" disabled>入金処理</b-button>
                                 <!-- <b-form-checkbox class="mr-3" v-model="invoice.isPaid">入金済み</b-form-checkbox> -->
                             </b-col>
                             <!-- <b-col>
@@ -650,6 +653,11 @@
                             <b-button pill variant="primary" @click="addRowInvoicePayment();">✙</b-button>
                         </b-col>
                     </b-row>
+                    <template #modal-footer>
+                        <button v-b-modal.modal-close_visit class="btn btn-secondary m-1">Cancel</button>
+                        <button v-b-modal.modal-close_visit class="btn btn-primary m-1"
+                            @click="console.log('save!');">Save</button>
+                    </template>
                 </b-modal>
             </div>
         </div>
