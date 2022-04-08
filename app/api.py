@@ -869,11 +869,6 @@ def invoice_payment_update(id):
         update_list = []
         insert_list = []
         delete_in_list = invoice.invoice_payments
-        print('hogehoge:')
-        print(delete_in_list)
-        for x in invoice.invoice_payments:
-            print('DB')
-            print(x.id)
         for item in data['invoice_payments']:
             if 'createdAt' in item:
                 del(item['createdAt'])
@@ -881,24 +876,14 @@ def invoice_payment_update(id):
                 del(item['updatedAt'])
 
             if item.get('id'):
-                print('--idあり--')
-                print(next((i for i, x in enumerate(
-                    invoice.invoice_payments) if x.id == item['id']), None))
-                if next((i for i, x in enumerate(invoice.invoice_payments) if x.id == item['id']), None) != None:
-                    delete_in_list.remove(x)
-                    print('deletelist')
-                    print(delete_in_list)
-                    update_list.append(x)
+                index = next((i for i, x in enumerate(
+                    delete_in_list) if x.id == item['id']), None)
+                if index != None:
+                    delete_in_list.pop(index)
+                    update_list.append(item)
             else:
-                print('--idあり--')
                 insert_list.append(item)
 
-        print('update')
-        print(update_list)
-        print('insert')
-        print(insert_list)
-        print('delete')
-        print(delete_in_list)
         db.session.bulk_update_mappings(Invoice_Payment, update_list)
         db.session.bulk_insert_mappings(Invoice_Payment, insert_list)
         db.session.query(Invoice_Payment).filter(Invoice_Payment.id.in_(
