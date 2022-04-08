@@ -656,7 +656,7 @@
                     <template #modal-footer>
                         <button v-b-modal.modal-close_visit class="btn btn-secondary m-1">Cancel</button>
                         <button v-b-modal.modal-close_visit class="btn btn-primary m-1"
-                            @click="console.log('save!');">Save</button>
+                            @click="upsertInvoicePayments(invoice)">Save</button>
                     </template>
                 </b-modal>
             </div>
@@ -776,6 +776,13 @@
                         self.countChanged = 0;
                         app.title = '更新';
                         app.message = '保存しました。';
+                    },
+                    upsertInvoicePayments: async function (item) {
+                        self = this;
+                        await axios.put("/invoice_payment/" + item.id, item)
+                            .then(function (response) {
+                                console.log(response);
+                            });
                     },
                     copyInvoice: async function (item) {
                         let invoiceResource = JSON.stringify(item);

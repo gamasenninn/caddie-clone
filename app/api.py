@@ -861,21 +861,49 @@ def invoice_payment_create():
 @app.route('/invoice_payment/<id>', methods=['PUT'])
 def invoice_payment_update(id):
     data = request.json
-    invoicePayment = Invoice_Payment.query.filter(
-        Invoice_Payment.id == id).one()
-    invoicePayment.invoiceId = data.get('invoiceId')
-    invoicePayment.paymentDate = data.get('paymentDate')
-    invoicePayment.paymentMethod = data.get('paymentMethod')
-    invoicePayment.paymentAmount = data.get('paymentAmount')
-    invoicePayment.remarks = data.get('remarks')
+    invoice = Invoice.query.filter(Invoice.id == id).one()
+    if not invoice:
+        return jsonify({"result": "No Data", "id": id, "data": data})
 
-    newHistory = History(
-        userName=current_user.id,
-        modelName='InvoicePayments',
-        modelId=id,
-        action='put'
-    )
-    db.session.add(newHistory)
+    if data.get('invoice_payments'):
+        update_list = []
+        insert_list = []
+        delete_in_list = invoice.invoice_payments
+        print('hogehoge:')
+        print(delete_in_list)
+        for x in invoice.invoice_payments:
+            print('DB')
+            print(x.id)
+        for item in data['invoice_payments']:
+            if 'createdAt' in item:
+                del(item['createdAt'])
+            if 'updatedAt' in item:
+                del(item['updatedAt'])
+
+            if item.get('id'):
+                print('--idあり--')
+                print(next((i for i, x in enumerate(
+                    invoice.invoice_payments) if x.id == item['id']), None))
+                if next((i for i, x in enumerate(invoice.invoice_payments) if x.id == item['id']), None) != None:
+                    delete_in_list.remove(x)
+                    print('deletelist')
+                    print(delete_in_list)
+                    update_list.append(x)
+            else:
+                print('--idあり--')
+                insert_list.append(item)
+
+        print('update')
+        print(update_list)
+        print('insert')
+        print(insert_list)
+        print('delete')
+        print(delete_in_list)
+        db.session.bulk_update_mappings(Invoice_Payment, update_list)
+        db.session.bulk_insert_mappings(Invoice_Payment, insert_list)
+        db.session.query(Invoice_Payment).filter(Invoice_Payment.id.in_(
+            delete_in_list)).delete(synchronize_session='fetch')
+
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
