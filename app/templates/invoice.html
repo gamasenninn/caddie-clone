@@ -528,8 +528,6 @@
                     <b-col></b-col>
                 </b-row>
 
-                <!-- iframe用コミュニケーション変数-->
-                <input type="hidden" v-model="countChanged" id="countChanged">
 
             </div>
 
@@ -638,6 +636,7 @@
                     searchCustomerWord: '',         //得意先選択モーダル検索
                     invoices: [],               //全件invoice
                     invoice: [],                //選択中のinvoice
+                    oldInvoice: [],             //選択中の退避invoice
                     invoiceItem: [],            //選択中のinvoiceItem
                     customers: [],
                     customer: [],
@@ -648,7 +647,6 @@
                     setting: [],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
-                    countChanged: 0,
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -705,9 +703,10 @@
                             });
                         await self.getInvoice(self.invoice);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                        self.countChanged = 0;
+                        //self.countChanged = 0;
                         app.title = '新規作成';
                         app.message = '保存しました。';
+                        self.oldInvoice = {...self.invoice};
                     },
                     updateInvoice: async function (item) {
                         self = this;
@@ -717,9 +716,10 @@
                             });
                         await self.getInvoice(self.invoice);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                        self.countChanged = 0;
+                        //self.countChanged = 0;
                         app.title = '更新';
                         app.message = '保存しました。';
+                        self.oldInvoice = {...self.invoice};
                     },
                     copyInvoice: async function (item) {
                         let invoiceResource = JSON.stringify(item);
@@ -765,11 +765,12 @@
                         Vue.set(self.invoice, 'isTaxExp', true);
                         Vue.set(self.invoice, 'tax', self.setting.defaultTax);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                        this.countChanged = 0;
+                        //this.countChanged = 0;
                         this.clearFileList();
                     },
                     selectInvoice: function (item) {
                         this.invoice = item;
+                        this.oldInvoice = {...item};
                         this.invoice.invoice_items = this.invoice.invoice_items.map(invoiceItem => ({ ...invoiceItem, isDelete: false }));
                         this.getCustomer(this.invoice);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.invoice);
@@ -1023,9 +1024,14 @@
 
                         });
                     }, //-- end upload functions
+                    isDiffObject: function(){
+                        if (this.oldInvoice.length==0 || this.invoice.length==0 ) return false;
+                        if (JSON.stringify(this.oldInvoice) === JSON.stringify(this.invoice)) return false;
+                        else return true;  
+                    },
                     checkChange: async function () {
                         isUpdate = false;
-                        if (this.countChanged) {
+                        if (this.isDiffObject()) {
                             await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
                                 okTitle: '保存して戻る',
@@ -1038,7 +1044,7 @@
                             });
                             if (isUpdate) await this.bulkUpsert(this.invoice);
                             this.getInvoices();
-                            this.countChanged = 0;
+                            //this.countChanged = 0;
                         }
                         if (!isUpdate || (isUpdate && this.invoice.customerId)) {
                             this.clearFileList();
@@ -1196,14 +1202,14 @@
                     },
                 },
                 watch: {
-                    invoice: {
-                        handler: function (val, oldval) {
-                            if (this.pageName == 'show' || this.pageName == 'store') {
-                                this.countChanged += 1;
-                            }
-                        },
-                        deep: true
-                    },
+//                    invoice: {
+//                        handler: function (val, oldval) {
+//                            if (this.pageName == 'show' || this.pageName == 'store') {
+//                                this.countChanged += 1;
+//                            }
+//                        },
+//                        deep: true
+//                    },
                     $route(to, from) { // パラメータの変更でドロップゾーンを初期化するため
                         this.routeFrom = from.query.page;
                         this.routeTo = to.query.page;
