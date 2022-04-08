@@ -419,6 +419,7 @@
                     },
                     selectInvoice: function (item) {
                         this.invoice = item;
+                        this.getCustomer(this.invoice);
                         console.log(this.invoice);
                         localStorage.setItem('invoice', JSON.stringify(item));
                     },
@@ -470,8 +471,8 @@
                             });
                     },
                     pdfout: async function (mode) {
-                        await this.getCustomer(this.invoice);
-                        await this.getSetting();
+                        //await this.getCustomer(this.invoice);
+                        //await this.getSetting();
                         const sumInvoice = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
@@ -520,6 +521,8 @@
                 mounted: function () {
                     this.invoice = JSON.parse(localStorage.getItem('invoice'));
                     this.getInvoices();
+                    this.getSetting();
+
                     document.querySelector('title').textContent = '削除済み請求書管理';
                 },
                 router,

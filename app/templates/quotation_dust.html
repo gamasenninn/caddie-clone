@@ -405,6 +405,7 @@
                     },
                     selectQuotation: function (item) {
                         this.quotation = item;
+                        this.getCustomer(this.quotation);
                         console.log(this.quotation);
                         localStorage.setItem('quotation', JSON.stringify(item));
                     },
@@ -457,7 +458,7 @@
                     },
                     pdfout: async function () {
                         self = this;
-                        await this.getCustomer(this.quotation);
+                        //await this.getCustomer(this.quotation);
                         const sumQuotation = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
