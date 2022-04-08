@@ -289,8 +289,6 @@
                     <b-col></b-col>
 
                 </b-row>
-                <!-- iframe用コミュニケーション変数-->
-                <input type="hidden" v-model="countChanged" id="countChanged">
 
             </div>
 
@@ -348,10 +346,10 @@
                     customersIndicateCount: 0,  //得意先検索
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
+                    oldCustomer: [],                //選択中の元customer
                     selectHonorificTitle: ['', '様', '御中', '殿',],    //敬称セレクトボックス用
                     title: '',
                     message: '',
-                    countChanged: 0
                 },
                 methods: {
                     // ---Customers---
@@ -367,7 +365,6 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.customers = response.data;
-                                self.countChanged = 0;
                             });
                     },
                     //                    getCustomersSearch: async function (item) {
@@ -392,19 +389,21 @@
                             .then(function (response) {
                                 Vue.set(self.customer, 'id', response.data.id)
                                 self.customer.isInsert = false;
-                                self.getCustomer(self.customer);
+                                //self.getCustomer(self.customer);
                                 localStorage.setItem('customer', JSON.stringify(self.customer));
                                 app.title = '新規作成';
                                 app.message = '保存しました。';
                                 app.$bvModal.show('confirmModal');
-                                self.countChanged = 0;
                             })
                             .catch(function (error) {
                                 app.title = 'エラー';
                                 app.message = error.response.data.message;
                                 app.$bvModal.show('confirmModalDanger');
                                 console.log(error);
+                                return;
                             });
+                        await self.getCustomer(self.customer)
+                        self.oldCustomer = { ...self.customer };
 
                     },
                     updateCustomer: async function (item) {
@@ -412,19 +411,21 @@
                         await axios.put("/v1/customer/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
-                                self.getCustomer(self.customer)
+                                //self.getCustomer(self.customer)
                                 localStorage.setItem('customer', JSON.stringify(self.customer));
                                 app.title = '更新';
                                 app.message = '保存しました。'
                                 app.$bvModal.show('confirmModal');
-                                self.countChanged = 0;
                             })
                             .catch(function (error) {
                                 app.title = 'エラー';
                                 app.message = error.response.data.message;
                                 app.$bvModal.show('confirmModalDanger');
                                 console.log(error);
+                                return;
                             });
+                        await self.getCustomer(self.customer)
+                        self.oldCustomer = { ...self.customer };
                     },
                     deleteCustomer: async function (item) {
                         self = this;
@@ -443,13 +444,12 @@
                         });
                         self.customer = self.customers.slice(-1)[0];
                         localStorage.setItem('customer', JSON.stringify(self.customer))
-                        self.countChanged = 0;
                     },
                     selectCustomer: function (item) {
                         this.customer = item;
+                        this.oldCustomer = { ...item };
                         console.log(this.customer);
                         localStorage.setItem('customer', JSON.stringify(item))
-                        self.countChanged = 0;
                     },
                     getCustomer: async function (item) {
                         self = this;
@@ -529,10 +529,15 @@
                     formatMemo(data) {
                         if (data && data.length > 20) return data.substr(0, 20) + '...';
                         return data;
+                    },                   
+                    isDiffObject: function(){
+                        if (this.oldCustomer.length==0 || this.customer.length==0 ) return false;
+                        if (JSON.stringify(this.oldCustomer) === JSON.stringify(this.customer)) return false;
+                        else return true;  
                     },
                     checkChange: async function () {
                         isUpdate = false;
-                        if (this.countChanged) {
+                        if (this.isDiffObject()) {
                             await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
                                 okTitle: '保存して戻る',
@@ -544,7 +549,6 @@
                             });
                             if (isUpdate) await this.bulkUpsert(this.customer);
                             this.getCustomers();
-                            this.countChanged = 0;
                         }
                         router.push({ path: "?page=index" });
                     }
@@ -579,17 +583,6 @@
                         return result
                     }
                 },
-                watch: {
-                    customer: {
-                        handler: function (val, oldval) {
-                            if (this.pageName == 'show' || this.pageName == 'store') {
-                                this.countChanged += 1;
-                            }
-                        },
-                        deep: true
-                    }
-                }
-
             })
 
             function sendMessage() {
@@ -600,7 +593,6 @@
                 }, "*");
 
             }
-
 
         </script>
         <% endblock %>
