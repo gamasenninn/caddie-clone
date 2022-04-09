@@ -674,7 +674,6 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.invoices = response.data;
-                                self.countChanged = 0;
                             });
                     },
                     bulkUpsert: async function (item) {
@@ -703,7 +702,6 @@
                             });
                         await self.getInvoice(self.invoice);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                        //self.countChanged = 0;
                         app.title = '新規作成';
                         app.message = '保存しました。';
                         self.oldInvoice = {...self.invoice};
@@ -716,7 +714,6 @@
                             });
                         await self.getInvoice(self.invoice);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                        //self.countChanged = 0;
                         app.title = '更新';
                         app.message = '保存しました。';
                         self.oldInvoice = {...self.invoice};
@@ -765,18 +762,16 @@
                         Vue.set(self.invoice, 'isTaxExp', true);
                         Vue.set(self.invoice, 'tax', self.setting.defaultTax);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                        //this.countChanged = 0;
                         this.clearFileList();
                     },
                     selectInvoice: function (item) {
                         this.invoice = item;
-                        this.oldInvoice = {...item};
                         this.invoice.invoice_items = this.invoice.invoice_items.map(invoiceItem => ({ ...invoiceItem, isDelete: false }));
+                        this.oldInvoice = {...item};
                         this.getCustomer(this.invoice);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.invoice);
                         localStorage.setItem('invoice', JSON.stringify(item));
                         this.getFileListDZ();
-                        this.countChanged = 0;
                     },
                     selectInvoiceItem: function (item) {
                         this.invoiceItem = item;
@@ -1044,7 +1039,6 @@
                             });
                             if (isUpdate) await this.bulkUpsert(this.invoice);
                             this.getInvoices();
-                            //this.countChanged = 0;
                         }
                         if (!isUpdate || (isUpdate && this.invoice.customerId)) {
                             this.clearFileList();
@@ -1202,14 +1196,6 @@
                     },
                 },
                 watch: {
-//                    invoice: {
-//                        handler: function (val, oldval) {
-//                            if (this.pageName == 'show' || this.pageName == 'store') {
-//                                this.countChanged += 1;
-//                            }
-//                        },
-//                        deep: true
-//                    },
                     $route(to, from) { // パラメータの変更でドロップゾーンを初期化するため
                         this.routeFrom = from.query.page;
                         this.routeTo = to.query.page;

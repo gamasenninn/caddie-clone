@@ -188,8 +188,10 @@
           },
           onbeforeclose: function (panel) {
             var con = panel.content.querySelector('iframe').contentWindow
-            if(con.app.isDiffObject()){  //本体のオブジェクト比較関数を呼ぶ
-              return confirm('未保存のデータがありますが、保存せず終了しますか？');
+            if (typeof con.app.isDiffObject == 'function') {
+              if (con.app.isDiffObject()) {  //本体のオブジェクト比較関数を呼ぶ
+                return confirm('未保存のデータがありますが、保存せず終了しますか？');
+              }
             }
             return true;
           },
