@@ -818,6 +818,7 @@
                     selectQuotation: function (item) {
                         this.quotation = item;
                         this.quotation.quotation_items = this.quotation.quotation_items.map(quotationItem => ({ ...quotationItem, isDelete: false }));
+                        this.getCustomer(this.quotation);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.quotation);
                         localStorage.setItem('quotation', JSON.stringify(item));
                         this.getFileListDZ();
@@ -1048,7 +1049,7 @@
                     },
                     pdfout: async function () {
                         self = this;
-                        await this.getCustomer(this.quotation)
+                        //await this.getCustomer(this.quotation)
                         const sumQuotation = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
