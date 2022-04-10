@@ -874,6 +874,9 @@ def invoice_payment_update(id):
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
+            if item.get('paymentDate'):
+                item['paymentDate'] = datetime.strptime(
+                    item.get('paymentDate'), "%Y-%m-%d")
 
             if item.get('id'):
                 index = next((i for i, x in enumerate(
