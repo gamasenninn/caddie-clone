@@ -783,6 +783,8 @@
                             .then(function (response) {
                                 console.log(response);
                             });
+                        await self.getInvoice(self.invoice);
+                        localStorage.setItem('invoice', JSON.stringify(self.invoice));
                     },
                     copyInvoice: async function (item) {
                         let invoiceResource = JSON.stringify(item);

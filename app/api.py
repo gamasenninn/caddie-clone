@@ -862,13 +862,17 @@ def invoice_payment_create():
 def invoice_payment_update(id):
     data = request.json
     invoice = Invoice.query.filter(Invoice.id == id).one()
+    invoicePaymentIds = db.session.query(Invoice_Payment.id).filter(
+        Invoice_Payment.invoiceId == id).all()
     if not invoice:
         return jsonify({"result": "No Data", "id": id, "data": data})
 
     if data.get('invoice_payments'):
         update_list = []
         insert_list = []
-        delete_in_list = invoice.invoice_payments
+        delete_in_list = []
+        for i in invoicePaymentIds:
+            delete_in_list.append(i.id)
         for item in data['invoice_payments']:
             if 'createdAt' in item:
                 del(item['createdAt'])
@@ -879,11 +883,11 @@ def invoice_payment_update(id):
                     item.get('paymentDate'), "%Y-%m-%d")
 
             if item.get('id'):
+                update_list.append(item)
                 index = next((i for i, x in enumerate(
-                    delete_in_list) if x.id == item['id']), None)
+                    delete_in_list) if x == item['id']), None)
                 if index != None:
                     delete_in_list.pop(index)
-                    update_list.append(item)
             else:
                 insert_list.append(item)
 
