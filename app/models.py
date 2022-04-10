@@ -50,8 +50,10 @@ class Customer(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoices = db.relationship('Invoice', backref='customer')
-    quotations = db.relationship('Quotation', backref='customer')
+    invoices = db.relationship(
+        'Invoice', backref='customer', uselist=True, cascade='all, delete',)
+    quotations = db.relationship(
+        'Quotation', backref='customer', uselist=True, cascade='all, delete',)
 
 
 class Item(db.Model):
@@ -346,11 +348,6 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         model = User
 
 
-class CustomerSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Customer
-
-
 class ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Item
@@ -387,6 +384,14 @@ class QuotationSchema(ma.SQLAlchemyAutoSchema):
         model = Quotation
         include_fk = True
     quotation_items = ma.Nested(Quotation_ItemSchema, many=True)
+
+
+class CustomerSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Customer
+        include_fk = True
+    invoices = ma.Nested(InvoiceSchema, many=True)
+    quotations = ma.Nested(QuotationSchema, many=True)
 
 
 class MemoSchema(ma.SQLAlchemyAutoSchema):
