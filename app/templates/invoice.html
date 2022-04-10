@@ -660,13 +660,22 @@
             </div>
         </div>
 
-        <script src="static/component/def-pdf.js"></script>
         <!--
+        <script src="static/component/00def-pdf.js"></script>
+        <script src="static/component/customize/00def-pdf.js"></script>
         <script src="static/component/sc-upload.js"></script>
         -->
 
 
         <script>
+
+            //カスタマイズファイルの動的読み込み
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = "static/component/customize/def-pdf.js";
+            var firstScript = document.getElementsByTagName('script')[0];
+            firstScript.parentNode.insertBefore(script, firstScript);
+
 
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
@@ -998,25 +1007,6 @@
                             priceIncludingTax: this.priceIncludingTax
                         }
                         const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, sumInvoice, this.customer, docClass);
-                        if (mode == 'delivery') {
-                            if (!this.setting.isDisplayDeliveryLogo) pdfData.defPdf.header.drawImages = [];
-                            if (!this.setting.isDisplayDeliveryStamp) pdfData.defPdf.footer.drawImages = [];
-                        } else {
-                            if (!this.setting.isDisplayInvoiceLogo) pdfData.defPdf.header.drawImages = [];
-                            if (!this.setting.isDisplayInvoiceStamp) pdfData.defPdf.footer.drawImages = [];
-                        }
-                        if (this.invoice.invoice_items.length > 0) {
-                            pdfData.data.bdata = this.invoice.invoice_items;
-                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({
-                                ...i,
-                                price: parseInt(i.price),
-                                count: parseInt(i.count),
-                                calcPrice: i.price * i.count,
-                                itemName: (i.itemName ? i.itemName.replace(/\n/g, '<br />') : '')
-                            }));
-                        } else {
-                            pdfData.data.bdata = [{}];
-                        }
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data);
