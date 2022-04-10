@@ -187,12 +187,9 @@
             containment: [0, -200, -100, -200]
           },
           onbeforeclose: function (panel) {
-            var doc = panel.content.querySelector('iframe').contentWindow.document; //iframe内のコンテンツを取得
-            //console.log(doc.body.innerHTML)
-            if (doc.body.querySelector('#countChanged')) {
-              count = parseInt(doc.body.querySelector('#countChanged').value);
-              //alert(count);
-              if (count > 0) {
+            var con = panel.content.querySelector('iframe').contentWindow
+            if (typeof con.app.isDiffObject == 'function') {
+              if (con.app.isDiffObject()) {  //本体のオブジェクト比較関数を呼ぶ
                 return confirm('未保存のデータがありますが、保存せず終了しますか？');
               }
             }
