@@ -1070,10 +1070,6 @@
                     formatter_count(value) {
                         return Math.floor(value);
                     },
-                    formatter_not_nan(value) {
-                        if (value) return value;
-                        else return 0;
-                    },
                     //明細欄　原価
                     costTotal: function (data) {
                         return data.item.cost * data.item.count;
