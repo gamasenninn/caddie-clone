@@ -41,7 +41,7 @@
                                 <b-col sm>
                                     <b-input-group>
                                         <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm"
-                                            placeholder="🔍　顧客名 or 顧客カナ">
+                                            placeholder="🔍　得意先名 or 得意先カナ">
                                         </b-form-input>
                                         <b-input-group-append>
                                             <b-button variant="primary" size="sm" @click="searchCustomer">検索</b-button>
@@ -519,11 +519,11 @@
                     formatMemo(data) {
                         if (data && data.length > 20) return data.substr(0, 20) + '...';
                         return data;
-                    },                   
-                    isDiffObject: function(){
-                        if (this.oldCustomer.length==0 || this.customer.length==0 ) return false;
+                    },
+                    isDiffObject: function () {
+                        if (this.oldCustomer.length == 0 || this.customer.length == 0) return false;
                         if (JSON.stringify(this.oldCustomer) === JSON.stringify(this.customer)) return false;
-                        else return true;  
+                        else return true;
                     },
                     checkChange: async function () {
                         isUpdate = false;

@@ -83,7 +83,7 @@
                                 <b-col sm>
                                     <b-input-group>
                                         <b-form-input v-model="searchInvoiceWord" id="searchInvoiceWord" size="sm"
-                                            placeholder="🔍　日付 or 顧客名">
+                                            placeholder="🔍　日付 or 得意先名">
                                         </b-form-input>
                                         <b-input-group-append>
                                             <b-button variant="primary" size="sm" @click="searchInvoice">検索
@@ -143,7 +143,7 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客ID"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先ID"
                                         label-for="customerId" label-align="right">
                                         <p class="text-left pl-2" id="customerId">{{invoice.customerId}}</p>
                                     </b-form-group>
@@ -171,7 +171,7 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="顧客名"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先名"
                                         label-for="customer" class="customer" label-align="right">
                                         <p class="text-left pl-2" id="customerName">{{invoice.customerName}}</p>
                                     </b-form-group>

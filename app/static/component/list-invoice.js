@@ -3,7 +3,7 @@ var search = Vue.component('search', {
     template: `
     <b-input-group>
         <b-form-input v-model="search.searchInvoiceWord" id="searchInvoiceWord" size="sm"
-            placeholder="🔍　日付 or 顧客名">
+            placeholder="🔍　日付 or 得意先名">
         </b-form-input>
         <b-input-group-append>
             <b-button variant="primary" size="sm" @click="this.searchInvoice">検索
@@ -114,7 +114,7 @@ Vue.component('invoice-list', {
         {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
         {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
         {  key: 'applyDate', label: '日付', thClass: 'text-center', tdClass: 'text-center' },
-        {  key: 'customerName', label: '顧客名', thClass: 'text-center', },
+        {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
         {  key: 'title', label: '件名', thClass: 'text-center', },
         {  key: 'totalAmount', label: '請求金額', thClass: 'text-center', tdClass: 'text-right' },
         {  key: 'numberOfAttachments', label: '', tdClass: 'text-center' },
@@ -173,7 +173,7 @@ Vue.component('invoice-list-payment', {
         {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
         {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
         {  key: 'applyDate', label: '日付', thClass: 'text-center', tdClass: 'text-center' },
-        {  key: 'customerName', label: '顧客名', thClass: 'text-center', },
+        {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
         {  key: 'title', label: '件名', thClass: 'text-center', },
         {  key: 'unpaidAmount', label: '未入金額', thClass: 'text-center', tdClass: 'text-right' },
         {  key: 'numberOfAttachments', label: '', tdClass: 'text-center' },
