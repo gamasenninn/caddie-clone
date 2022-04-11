@@ -901,6 +901,10 @@ def invoice_payment_update(id):
         db.session.query(Invoice_Payment).filter(Invoice_Payment.id.in_(
             delete_in_list)).delete(synchronize_session='fetch')
 
+    else:
+        db.session.query(Invoice_Payment).filter(
+            Invoice_Payment.invoiceId == id).delete()
+
     # 入金合計額が上回れば入金済みに
     if invoice.isPaid == False and paymentSum >= priceIncludingTax:
         invoice.isPaid = True
