@@ -170,10 +170,6 @@
                     <b-col class="text-right">
                         <b-button pill variant="primary" @click="bulkUpsert(memo);showConfirmModal();">保存
                         </b-button>
-                        <b-button pill size="lg" variant="primary" @click="alert('印刷しました。')"
-                            v-b-tooltip.hover.top="'印刷'">
-                            <i class="fas fa-print"></i>
-                        </b-button>
                         <b-button pill size="lg" variant="danger" @click="modalShow(memo,'deleteModal');"
                             v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>

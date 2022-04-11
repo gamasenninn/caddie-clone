@@ -306,9 +306,6 @@
                     </b-col>
                     <b-col class="text-right">
                         <b-button pill variant="primary" @click="apply();">保存</b-button>
-                        <b-button pill size="lg" variant="primary" @click="pdfOut" v-b-tooltip.hover.top="'印刷'"><i
-                                class="fas fa-print"></i>
-                        </b-button>
                         <b-button pill size="lg" variant="danger" @click="modalShow(customer,'deleteModal');"
                             v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
@@ -507,13 +504,6 @@
                         else
                             this.$set(this.customer, 'isFavorite', true);
                     },
-                    pdfOut: function () {
-                        alert("PDFを表示します");
-                        window.parent.postMessage({
-                            action: 'pdfOut',
-                            message: 'this is message'
-                        }, "*");
-                    },
                     //整数意外禁止
                     formatterNumberAll(value) {
                         return value.replace(/\D/g, '');
@@ -585,14 +575,6 @@
                 },
             })
 
-            function sendMessage() {
-                alert(window.parent);
-                window.parent.postMessage({
-                    action: 'pdfOut',
-                    message: 'this is message'
-                }, "*");
-
-            }
 
         </script>
         <% endblock %>
