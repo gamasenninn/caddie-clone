@@ -129,7 +129,7 @@
                                 <b-col sm>
                                     <b-input-group>
                                         <b-form-input v-model="searchQuotationWord" id="searchQuotationWord" size="sm"
-                                            placeholder="🔍　日付 or 顧客名">
+                                            placeholder="🔍　日付 or 得意先名">
                                         </b-form-input>
                                         <b-input-group-append>
                                             <b-button variant="primary" size="sm" @click="searchQuotation">検索
@@ -161,7 +161,7 @@
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyNumber', label: '見積番号', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'applyDate', label: '日付', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'customerName', label: '顧客名', thClass: 'text-center', },
+                          {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
                           {  key: 'title', label: '件名', thClass: 'text-center', },
                           {  key: 'totalAmount', label: '見積金額', thClass: 'text-center', tdClass: 'text-right' },
                           {  key: 'numberOfAttachments', label: '', tdClass: 'text-center' },
@@ -208,7 +208,7 @@
                         <b-card border-variant="white" class="text-center" header="見積書入力" header-border-variant="light">
                             <b-row>
                                 <b-col xl>
-                                    <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="顧客名"
+                                    <b-form-group label-cols="2" label-cols-xl="2" label-size="sm" label="得意先名"
                                         label-for="customer" class="customer" label-align="right">
                                         <b-container class="text-left" style="padding: 0;">
                                             <b-button @click="$bvModal.show('customer-modal')" size="sm"
@@ -217,7 +217,7 @@
                                         </b-container>
                                         <!-- 得意先一覧モーダル -->
                                         <b-modal size="xl" id="customer-modal">
-                                            <p>顧客を選択してください</p>
+                                            <p>得意先を選択してください</p>
                                             <b-form-group label-cols="2" label-size="sm" label-align="center" label="検索"
                                                 label-for="searchCustomerWord">
                                                 <b-form-input v-model="searchCustomerWord" id="searchCustomerWord"
@@ -234,7 +234,7 @@
                                                 :items="searchCustomers" @row-clicked="customerSelect"
                                                 label="Table Options" :fields="[
                                   {  key: 'id', label: 'No.' },
-                                  {  key: 'customerName', label: '顧客名' },
+                                  {  key: 'customerName', label: '得意先名' },
                                 ]"></b-table>
                                         </b-modal>
                                     </b-form-group>
@@ -752,7 +752,7 @@
                         //self.countChanged = 0;
                         app.title = '新規作成';
                         app.message = '保存しました。';
-                        self.oldQuotation = {...self.quotation};
+                        self.oldQuotation = { ...self.quotation };
                     },
                     updateQuotation: async function (item) {
                         self = this;
@@ -762,7 +762,7 @@
                             });
                         await self.getQuotation(self.quotation);
                         localStorage.setItem('quotation', JSON.stringify(self.quotation));
-                        self.oldQuotation = {...self.quotation};
+                        self.oldQuotation = { ...self.quotation };
                         //self.countChanged = 0;
                         app.title = '更新';
                         app.message = '保存しました。'
@@ -819,7 +819,7 @@
                     selectQuotation: function (item) {
                         this.quotation = item;
                         this.quotation.quotation_items = this.quotation.quotation_items.map(quotationItem => ({ ...quotationItem, isDelete: false }));
-                        this.oldQuotation = {...item};
+                        this.oldQuotation = { ...item };
                         this.getCustomer(this.quotation);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.quotation);
                         localStorage.setItem('quotation', JSON.stringify(item));
@@ -953,7 +953,7 @@
                             this.convertQuotation(this.quotation);
                         }
                     },
-                    // 顧客名モーダル選択時
+                    // 得意先名モーダル選択時
                     customerSelect(record) {
                         Vue.set(self.quotation, 'customerId', record.id);
                         Vue.set(self.quotation, 'customerName', record.customerName);
@@ -1029,11 +1029,11 @@
                             self.getFileListDZ();
                         });
                     }, //-- end upload functions
-                    isDiffObject: function(){
-                        if (this.oldQuotation.length==0 || this.quotation.length==0 ) return false;
+                    isDiffObject: function () {
+                        if (this.oldQuotation.length == 0 || this.quotation.length == 0) return false;
                         if (JSON.stringify(this.oldQuotation) === JSON.stringify(this.quotation)) return false;
-                        else return true;  
-                    },                    
+                        else return true;
+                    },
                     checkChange: async function () {
                         isUpdate = false;
                         if (this.isDiffObject()) {

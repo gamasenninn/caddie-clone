@@ -173,7 +173,7 @@
                         <b-card border-variant="white" class="text-center" header="請求書入力" header-border-variant="light">
                             <b-row>
                                 <b-col xl>
-                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="顧客名"
+                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="得意先名"
                                         label-for="customer" class="customer" label-align="right">
                                         <b-container class="text-left" style="padding: 0;">
                                             <b-button @click="$bvModal.show('customer-modal')" size="sm"
@@ -182,7 +182,7 @@
                                         </b-container>
                                         <!-- 得意先一覧モーダル -->
                                         <b-modal size="xl" id="customer-modal">
-                                            <p>顧客を選択してください</p>
+                                            <p>得意先を選択してください</p>
                                             <b-form-group label-cols="2" label-size="sm" label-align="center" label="検索"
                                                 label-for="searchCustomerWord">
                                                 <b-form-input v-model="searchCustomerWord" id="searchCustomerWord"
@@ -199,7 +199,7 @@
                                                 :items="searchCustomers" @row-clicked="customerSelect"
                                                 label="Table Options" :fields="[
                                                       {  key: 'id', label: 'No.' },
-                                                      {  key: 'customerName', label: '顧客名' },
+                                                      {  key: 'customerName', label: '得意先名' },
                                                 ]">
                                             </b-table>
 
@@ -988,7 +988,7 @@
                             this.convertInvoice(this.invoice);
                         }
                     },
-                    // 顧客名モーダル選択時
+                    // 得意先名モーダル選択時
                     customerSelect(record) {
                         Vue.set(self.invoice, 'customerId', record.id);
                         Vue.set(self.invoice, 'customerName', record.customerName);
