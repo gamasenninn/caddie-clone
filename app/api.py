@@ -881,6 +881,8 @@ def invoice_payment_update(id):
             if item.get('paymentDate'):
                 item['paymentDate'] = datetime.strptime(
                     item.get('paymentDate'), "%Y-%m-%d")
+            if not item.get('paymentAmount'):
+                item['paymentAmount'] = None
 
             if item.get('id'):
                 update_list.append(item)

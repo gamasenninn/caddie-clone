@@ -646,13 +646,22 @@
                             </b-button>
                         </template>
                     </b-table>
-                    <b-row class="d-flex justify-content-end" id="item_add">
+                    <b-row class="d-flex justify-content-end mb-3" id="item_add">
                         <b-col cols="16" md="auto">
                             <b-button pill variant="primary" @click="addRowInvoicePayment();">✙</b-button>
                         </b-col>
                     </b-row>
+                    <b-row class="d-flex justify-content-end" style="border-top: 1px solid #DEE2E6;">
+                        <b-col cols="1"></b-col>
+                        <b-col md="auto">
+                            <p></p>
+                            <p>入金合計額：{{paymentSum|nf}}</p>
+                        </b-col>
+                        <b-col cols="1"></b-col>
+                    </b-row>
                     <template #modal-footer>
-                        <button v-b-modal.modal-close_visit class="btn btn-secondary m-1">Cancel</button>
+                        <button v-b-modal.modal-close_visit class="btn btn-secondary m-1"
+                            @click="$bvModal.hide('payment-modal')">Cancel</button>
                         <button v-b-modal.modal-close_visit class="btn btn-primary m-1"
                             @click="upsertInvoicePayments(invoice)">Save</button>
                     </template>
@@ -760,7 +769,7 @@
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         app.title = '新規作成';
                         app.message = '保存しました。';
-                        self.oldInvoice = {...self.invoice};
+                        self.oldInvoice = { ...self.invoice };
                     },
                     updateInvoice: async function (item) {
                         self = this;
@@ -772,13 +781,16 @@
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         app.title = '更新';
                         app.message = '保存しました。';
-                        self.oldInvoice = {...self.invoice};
+                        self.oldInvoice = { ...self.invoice };
                     },
                     upsertInvoicePayments: async function (item) {
                         self = this;
                         await axios.put("/invoice_payment/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
+                                app.title = "保存";
+                                app.message = "保存しました。";
+                                app.$bvModal.show('confirmModal');
                             });
                         await self.getInvoice(self.invoice);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
@@ -832,7 +844,7 @@
                     selectInvoice: function (item) {
                         this.invoice = item;
                         this.invoice.invoice_items = this.invoice.invoice_items.map(invoiceItem => ({ ...invoiceItem, isDelete: false }));
-                        this.oldInvoice = {...item};
+                        this.oldInvoice = { ...item };
                         this.getCustomer(this.invoice);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.invoice);
                         localStorage.setItem('invoice', JSON.stringify(item));
@@ -1051,6 +1063,10 @@
                     formatter_count(value) {
                         return Math.floor(value);
                     },
+                    formatter_not_nan(value) {
+                        if (value) return value;
+                        else return 0;
+                    },
                     //明細欄　原価
                     costTotal: function (data) {
                         return data.item.cost * data.item.count;
@@ -1096,10 +1112,10 @@
 
                         });
                     }, //-- end upload functions
-                    isDiffObject: function(){
-                        if (this.oldInvoice.length==0 || this.invoice.length==0 ) return false;
+                    isDiffObject: function () {
+                        if (this.oldInvoice.length == 0 || this.invoice.length == 0) return false;
                         if (JSON.stringify(this.oldInvoice) === JSON.stringify(this.invoice)) return false;
-                        else return true;  
+                        else return true;
                     },
                     checkChange: async function () {
                         isUpdate = false;
@@ -1213,6 +1229,10 @@
                     sum: function () {
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * Math.round(invoice_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                    },
+                    // 入金合計額
+                    paymentSum: function () {
+                        return this.invoice.invoice_payments.map(invoice_payment => parseInt(invoice_payment.paymentAmount)).reduce((a, b) => a + (isNaN(b) ? 0 : b), 0);
                     },
                     //消費税総額
                     taxAmount: function () {
