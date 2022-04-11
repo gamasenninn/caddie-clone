@@ -8,10 +8,10 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     const h = {};
     const sum = {};
     if (mode == 'delivery') {
-        h.category = '納品書';
+        h.category = '納品書AA';
         h.baseImagePath = "./static/asset/delivery_base.png";
     } else {
-        h.category = '請求書';
+        h.category = '請求書AA';
         h.baseImagePath = "./static/asset/invoice_base.png";
     }
     h.mode = mode;
