@@ -861,6 +861,9 @@ def invoice_payment_create():
 @app.route('/invoice_payment/<id>', methods=['PUT'])
 def invoice_payment_update(id):
     data = request.json
+    req = request.args
+    priceIncludingTax = req.get('priceIncludingTax')
+    paymentSum = req.get('paymentSum')
     invoice = Invoice.query.filter(Invoice.id == id).one()
     invoicePaymentIds = db.session.query(Invoice_Payment.id).filter(
         Invoice_Payment.invoiceId == id).all()
@@ -881,6 +884,8 @@ def invoice_payment_update(id):
             if item.get('paymentDate'):
                 item['paymentDate'] = datetime.strptime(
                     item.get('paymentDate'), "%Y-%m-%d")
+            if not item.get('paymentAmount'):
+                item['paymentAmount'] = None
 
             if item.get('id'):
                 update_list.append(item)
@@ -896,6 +901,17 @@ def invoice_payment_update(id):
         db.session.query(Invoice_Payment).filter(Invoice_Payment.id.in_(
             delete_in_list)).delete(synchronize_session='fetch')
 
+    # 入金合計額が上回れば入金済みに
+    if invoice.isPaid == False and paymentSum >= priceIncludingTax:
+        invoice.isPaid = True
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='InvoicePayments',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": data})
 
