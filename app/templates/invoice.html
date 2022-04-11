@@ -423,17 +423,11 @@
 
                         <b-row class="mb-3">
                             <b-col cols="auto">
-                                <!-- 請求書発行前に請求書＿入金テーブルにINSERTするとFKが迷子になるので -->
+                                <!-- 請求書発行前に請求書＿入金テーブルにINSERTするとFKが迷子になるので、発行前はDisable -->
                                 <b-button v-if="invoice.id" variant="primary"
                                     @click="modalShow(invoice,'payment-modal');">入金処理</b-button>
                                 <b-button v-else variant="primary" disabled>入金処理</b-button>
-                                <!-- <b-form-checkbox class="mr-3" v-model="invoice.isPaid">入金済み</b-form-checkbox> -->
                             </b-col>
-                            <!-- <b-col>
-                                <b-form-input v-model="invoice.paymentDate" id="paymentDate" size="sm" type="date"
-                                    style="width: 150px;">
-                                </b-form-input>
-                            </b-col> -->
                         </b-row>
 
                         <b-row>
@@ -657,6 +651,10 @@
                             <p></p>
                             <p>入金合計額：{{paymentSum|nf}}</p>
                         </b-col>
+                        <b-col md="auto">
+                            <p></p>
+                            <p>請求残金：{{balance|nf}}</p>
+                        </b-col>
                         <b-col cols="1"></b-col>
                     </b-row>
                     <template #modal-footer>
@@ -785,11 +783,20 @@
                     },
                     upsertInvoicePayments: async function (item) {
                         self = this;
-                        await axios.put("/invoice_payment/" + item.id, item)
+                        await axios.put("/invoice_payment/" + item.id, item, {
+                            params: {
+                                priceIncludingTax: this.priceIncludingTax,
+                                paymentSum: this.paymentSum,
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
                                 app.title = "保存";
                                 app.message = "保存しました。";
+                                if (app.invoice.isPaid == false && app.paymentSum > app.priceIncludingTax) {
+                                    app.title = "保存（警告）";
+                                    app.message = "保存しました。（過入金です）";
+                                }
                                 app.$bvModal.show('confirmModal');
                             });
                         await self.getInvoice(self.invoice);
@@ -1232,7 +1239,14 @@
                     },
                     // 入金合計額
                     paymentSum: function () {
+                        if (typeof (this.invoice.invoice_payments) == 'undefined') { return 0 }
                         return this.invoice.invoice_payments.map(invoice_payment => parseInt(invoice_payment.paymentAmount)).reduce((a, b) => a + (isNaN(b) ? 0 : b), 0);
+                    },
+                    // 請求残高 
+                    balance: function () {
+                        let balance = this.priceIncludingTax - this.paymentSum
+                        if (balance < 0) return 0;
+                        return balance;
                     },
                     //消費税総額
                     taxAmount: function () {
