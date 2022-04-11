@@ -48,31 +48,6 @@
                 display: flex;
                 flex-wrap: wrap;
             }
-
-            /* tingle で使用するCSS 
-            .tingle-modal {
-                background: rgba(0, 0, 0, .5);
-            }
-
-            .tingle-modal-box__content {
-                padding: 0 ;
-            }
-
-            .iframe-wrapper {
-                position: relative;
-                padding-bottom: 150%;
-                height: 0;
-                overflow: hidden;
-            }
-
-            .iframe-wrapper iframe {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
-            */
         </style>
 
         <div id="app" v-cloak>
@@ -353,8 +328,6 @@
                     <b-col></b-col>
 
                 </b-row>
-                <!-- iframe用コミュニケーション変数-->
-                <input type="hidden" v-model="countChanged" id="countChanged">
 
             </div>
             <!-- 空行 -->
@@ -420,10 +393,10 @@
                     itemsIndicateCount: 0,
                     items: [],               //全件item
                     item: [],                //選択中のitem
+                    oldItem: [],                //選択中のitem
                     units: [],
                     categories: [],
                     makers: [],
-                    countChanged: 0,
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -452,7 +425,6 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.items = response.data;
-                                self.countChanged = 0;
                             });
                     },
                     bulkUpsert: async function (item) {
@@ -474,33 +446,36 @@
                                 app.title = '新規作成';
                                 app.message = '保存しました。';
                                 app.$bvModal.show('confirmModal');
-                                self.countChanged = 0;
                             })
                             .catch(function (error) {
                                 app.title = 'エラー';
                                 app.message = error.response.data.message;
                                 app.$bvModal.show('confirmModalDanger');
                                 console.log(error);
+                                return;
                             });
+                        self.oldItem = { ...self.item };
+
                     },
                     updateItem: async function (item) {
                         self = this;
                         await axios.put("/v1/item/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
-                                self.getItem(self.item);
-                                localStorage.setItem('item', JSON.stringify(self.item));
                                 app.title = '更新';
                                 app.message = '保存しました。'
                                 app.$bvModal.show('confirmModal');
-                                self.countChanged = 0;
                             })
                             .catch(function (error) {
                                 app.title = 'エラー';
                                 app.message = error.response.data.message;
                                 app.$bvModal.show('confirmModalDanger');
                                 console.log(error);
+                                return;
                             });
+                        await self.getItem(self.item);
+                        localStorage.setItem('item', JSON.stringify(self.item));
+                        self.oldItem = { ...self.item };
                     },
                     deleteItem: async function (item) {
                         self = this;
@@ -518,15 +493,14 @@
                         });
                         self.item = self.items.slice(-1)[0];
                         localStorage.setItem('item', JSON.stringify(self.item))
-                        this.countChanged = 0;
                         this.clearFileList();
                     },
                     selectItem: function (item) {
                         this.item = item;
+                        this.oldItem = {...item};
                         console.log(this.item);
                         localStorage.setItem('item', JSON.stringify(item))
                         this.getFileListDZ();
-                        this.countChanged = 0;
                     },
                     getItem: async function (item) {
                         self = this;
@@ -643,10 +617,14 @@
                         });
                     },
                     //---------変更があったかどうかをチェク。アラート ---------
-
+                    isDiffObject: function(){
+                        if (this.oldItem.length==0 || this.item.length==0 ) return false;
+                        if (JSON.stringify(this.oldItem) === JSON.stringify(this.item)) return false;
+                        else return true;
+                    },
                     checkChange: async function () {
                         isUpdate = false;
-                        if (this.countChanged) {
+                        if (this.isDiffObject()) {
                             await this.$bvModal.msgBoxConfirm('未更新のデータがあります。', {
                                 okVariant: 'primary',
                                 okTitle: '保存して戻る',
@@ -733,14 +711,6 @@
                     },
                 },
                 watch: {
-                    item: {
-                        handler: function (val, oldval) {
-                            if (this.pageName == 'show' || this.pageName == 'store') {
-                                this.countChanged += 1;
-                            }
-                        },
-                        deep: true
-                    },
                     $route(to, from) { // パラメータの変更でドロップゾーンを初期化するため
                         this.routeFrom = from.query.page;
                         this.routeTo = to.query.page;
