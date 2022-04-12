@@ -545,6 +545,7 @@ def invoice_create():
                     price=item.get('price'),
                     count=item.get('count'),
                     unit=item.get('unit'),
+                    remarks=item.get('remarks'),
                 )
             )
 
@@ -738,6 +739,7 @@ def invoice_item_create():
         cost=data.get('cost'),
         count=data.get('count'),
         unit=data.get('unit'),
+        remarks=data.get('remarks'),
     )
     db.session.add(newInvoiceItem)
     db.session.commit()
@@ -763,6 +765,7 @@ def invoice_item_update(id):
     invoiceItem.cost = data.get('cost')
     invoiceItem.count = data.get('count')
     invoiceItem.unit = data.get('unit')
+    invoiceItem.remarks = data.get('remarks')
 
     newHistory = History(
         userName=current_user.id,
@@ -1072,6 +1075,7 @@ def quotation_create():
                     price=item.get('price'),
                     count=item.get('count'),
                     unit=item.get('unit'),
+                    remarks=item.get('remarks'),
                 )
             )
 
@@ -1252,6 +1256,7 @@ def quotation_item_create():
         cost=data.get('cost'),
         count=data.get('count'),
         unit=data.get('unit'),
+        remarks=data.get('remarks'),
     )
     db.session.add(newQuotationItem)
     db.session.commit()
@@ -1278,6 +1283,7 @@ def quotation_item_update(id):
     quotationItem.cost = data.get('cost')
     quotationItem.count = data.get('count')
     quotationItem.unit = data.get('unit')
+    quotationItem.remarks = data.get('remarks')
 
     newHistory = History(
         userName=current_user.id,

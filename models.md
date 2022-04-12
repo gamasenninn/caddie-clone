@@ -106,6 +106,7 @@
 | cost       | 原価     | integer  |  Itemsテーブルを参照可能             |
 | count      | 個数     | integer  |                         | 
 | unit       | 単位     | string   |  Unitテーブルを参照      | 
+| remarks    | 備考     | string   |                         | 
 | createdAt  | 作成日時 | datetime |                         | 
 | updatedAt  | 更新日時 | datetime |                         | 
 
@@ -168,6 +169,7 @@
 | cost        | 原価     | integer  |  Itemsテーブルを参照可能             |
 | count       | 個数     | integer  |                         | 
 | unit        | 単位     | string   |  Unitテーブルを参照      | 
+| remarks     | 備考     | string   |                         | 
 | createdAt   | 作成日時 | datetime |                         | 
 | updatedAt   | 更新日時 | datetime |                         | 
 
