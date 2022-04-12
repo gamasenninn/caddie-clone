@@ -152,13 +152,13 @@ def seeder():
         Quotation_Item(id=1, quotationId=1, itemId=1, any='01',
                        itemName='りんご', price=100, cost=50, count=5, unit="個", remarks='明細備考1'),
         Quotation_Item(id=2, quotationId=1, itemId=2, any='02',
-                       itemName='鉛筆', price=20, cost=5, count=10, unit="本", remarks='明細備考1'),
+                       itemName='鉛筆', price=20, cost=5, count=10, unit="本", remarks='明細備考2'),
         Quotation_Item(id=3, quotationId=2, itemId=2, any='01',
-                       itemName='鉛筆', price=30, cost=5, count=15, unit="本", remarks='明細備考1'),
+                       itemName='鉛筆', price=30, cost=5, count=15, unit="本", remarks='明細備考3'),
         Quotation_Item(id=4, quotationId=2, itemId=3, any='02',
-                       itemName='ラジオ', price=1100, cost=300, count=2, unit="台", remarks='明細備考1'),
+                       itemName='ラジオ', price=1100, cost=300, count=2, unit="台", remarks='明細備考4'),
         Quotation_Item(id=5, quotationId=3, itemId=1, any='01',
-                       itemName='りんご', price=120, cost=50, count=30, unit="個", remarks='明細備考1'),
+                       itemName='りんご', price=120, cost=50, count=30, unit="個", remarks='明細備考5'),
     ]
     db.session.add_all(quotation_items)
     db.session.commit()
