@@ -167,12 +167,13 @@ Vue.component('invoice-list', {
 Vue.component('invoice-list-payment', {
     template: `
     <div>
-        <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
+        <b-table responsive hover small id="invoicetable" label="Table Options"
             :items=invoicesIndicateIndex :fields="[
         {  key: 'update', label: '' },
         {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
         {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
         {  key: 'applyDate', label: '日付', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'customerAnyNumber', label: '任意番号', thClass: 'text-center', tdClass: 'text-center', },
         {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
         {  key: 'title', label: '件名', thClass: 'text-center', },
         {  key: 'unpaidAmount', label: '未入金額', thClass: 'text-center', tdClass: 'text-right' },
