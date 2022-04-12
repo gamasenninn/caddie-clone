@@ -658,6 +658,16 @@
 
         <script src="static/component/def-pdf.js"></script>
         <script>
+            //カスタマイズファイルの動的読み込み
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            const files = ['def-pdf.js'];
+            for (file of files) {
+                script.src = "static/component/customize/" + file;
+                var firstScript = document.getElementsByTagName('script')[0];
+                firstScript.parentNode.insertBefore(script, firstScript);
+            }
+
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
                 return val.toLocaleString();
