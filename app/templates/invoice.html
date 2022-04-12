@@ -145,6 +145,7 @@
                                 <invoice-list v-if="procName=='normal'" :select-invoice="selectInvoice"
                                     :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles">
                                 </invoice-list>
+                                <!-- 未入金 -->
                                 <invoice-list-payment v-else :select-invoice="selectInvoice"
                                     :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles">
                                     </invoice-list>
@@ -1274,6 +1275,12 @@
                         });
                         this.invoicesIndicateCount = invoices.length;
                         this.invoicesIndicateAmount = amount;
+                        // コンポーネント内でソート出来ないのでここでソート。通常の請求書一覧画面には任意番号表示が無いので、混乱防止の為に未入金一覧のみ
+                        if (this.procName === 'payment') {
+                            invoices.sort(function (a, b) {
+                                return a.customerAnyNumber - b.customerAnyNumber;
+                            });
+                        }
                         return invoices;
                     },
                     // 得意先選択モーダルの検索機能
