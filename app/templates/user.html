@@ -112,16 +112,9 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="パスワード"
                                         label-for="password" label-align="right">
-                                        <b-input-group>
-                                            <b-form-input v-model="user.password" id="password" size="sm"
-                                                type="password" :formatter="formatter_delete_space">
-                                            </b-form-input>
-                                            <b-input-group-append>
-                                                <b-button variant="outline-secondary" size="sm" @click="pushHideButton">
-                                                    <i class="fa fa-eye" id="buttonEye"></i>
-                                                </b-button>
-                                            </b-input-group-append>
-                                        </b-input-group>
+                                        <b-form-input v-model="user.password" id="password" size="sm" type="password"
+                                            :formatter="formatter_delete_space">
+                                        </b-form-input>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -340,19 +333,11 @@
                         let hideWord = '';
                         for (let i = 0; i < password.length; i++) {
                             hideWord = hideWord + '●';
+                            if (i >= 7) {
+                                break;
+                            }
                         }
                         return hideWord;
-                    },
-                    pushHideButton() {
-                        var txtPass = document.getElementById("password");
-                        var btnEye = document.getElementById("buttonEye");
-                        if (txtPass.type === "text") {
-                            txtPass.type = "password";
-                            btnEye.className = "fa fa-eye";
-                        } else {
-                            txtPass.type = "text";
-                            btnEye.className = "fa fa-eye-slash";
-                        }
                     },
                 },
                 mounted: function () {
