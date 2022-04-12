@@ -212,8 +212,20 @@ Vue.component('invoice-list-payment', {
         formatDate(date) {
             if (!!date) return moment(date).format("YYYY/MM/DD");
         },
-        // TODO：計算ロジックを作成？
-        unpaidCalculation(data) {
+        //請求金額カラム
+        amountCalculation(invoice) {
+            if (!invoice.invoice_items.length) return 0;
+            let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
+            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
+            return amount;
+        },
+        // 未入金額
+        unpaidCalculation(invoice) {
+            if (!invoice.invoice_payments.length) return this.amountCalculation(invoice);
+            let paidAmount = invoice.invoice_payments.map(payment => payment.paymentAmount).reduce((a, b) => a + b);
+            let balance = this.amountCalculation(invoice) - paidAmount;
+            if (balance < 0) return 0;
+            return balance;
         },
     },
 })
