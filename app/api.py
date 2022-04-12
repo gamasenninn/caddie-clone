@@ -563,6 +563,7 @@ def invoice_create():
     newInvoice = Invoice(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
+        customerAnyNumber=data.get('customerAnyNumber'),
         honorificTitle=data.get('honorificTitle'),
         department=data.get('department'),
         manager=data.get('manager'),
@@ -607,6 +608,7 @@ def invoice_update(id):
 
     invoice.customerId = data.get('customerId')
     invoice.customerName = data.get('customerName')
+    invoice.customerAnyNumber = data.get('customerAnyNumber')
     invoice.honorificTitle = data.get('honorificTitle')
     invoice.department = data.get('department')
     invoice.manager = data.get('manager')
