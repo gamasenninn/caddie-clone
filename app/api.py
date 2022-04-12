@@ -905,9 +905,11 @@ def invoice_payment_update(id):
         db.session.query(Invoice_Payment).filter(
             Invoice_Payment.invoiceId == id).delete()
 
-    # 入金合計額が上回れば入金済みに
-    if invoice.isPaid == False and paymentSum >= priceIncludingTax:
+    # 入金合計額が上回れば入金済みに（変動）
+    if paymentSum >= priceIncludingTax:
         invoice.isPaid = True
+    else:
+        invoice.isPaid = False
 
     newHistory = History(
         userName=current_user.id,
