@@ -71,6 +71,7 @@
 | id          | id             | integer  |                                                           | 
 | customerId  | 得意先ID       | integer  |  フォーリンキー。                                         | 
 | customerName| 得意先名       | string   |  紐づいたものor入力 両対応できるように                      | 
+| customerAnyNumber|得意先任意番号|integer |  得意先が選択された際に自動挿入。一覧でのソート用。          | 
 | honorificTitle| 敬称         | text     |                                                          | 
 | department  | 部署           | string   |                                                          | 
 | manager     | 担当者         | string   |                                                          | 
