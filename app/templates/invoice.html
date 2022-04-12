@@ -683,7 +683,7 @@
             script.type = 'text/javascript';
             const files = ['def-pdf.js'];
             for (file of files) {
-                script.src = "static/component/customize/"+file;
+                script.src = "static/component/customize/" + file;
                 var firstScript = document.getElementsByTagName('script')[0];
                 firstScript.parentNode.insertBefore(script, firstScript);
             }
@@ -1007,6 +1007,7 @@
                         Vue.set(self.invoice, 'customerId', record.id);
                         Vue.set(self.invoice, 'customerName', record.customerName);
                         Vue.set(self.invoice, 'honorificTitle', record.honorificTitle);
+                        this.invoice.customerAnyNumber = record.anyNumber;
                         this.$bvModal.hide("customer-modal");
                     },
                     // 商品名モーダル選択時
