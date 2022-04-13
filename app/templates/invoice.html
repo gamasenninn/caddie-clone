@@ -134,10 +134,10 @@
                                     <b-col sm>
                                     </b-col>
                                     <b-col sm>
-                                        <is-show v-if="procName=='normal'" @emit-show-all="updateIsInvoicesShowAll">
-                                        </is-show>
-                                        <day-search v-else @emit-day-start="updateDayStart"
-                                            @emit-day-end="updateDayEnd"></day-search>
+                                        <!-- <is-show v-if="procName=='normal'" @emit-show-all="updateIsInvoicesShowAll">
+                                        </is-show> -->
+                                        <day-search @emit-day-start="updateDayStart" @emit-day-end="updateDayEnd">
+                                        </day-search>
                                     </b-col>
                                 </b-row>
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
@@ -1161,9 +1161,6 @@
                     updateInvoices(invoices) {
                         this.invoices = invoices;
                     },
-                    updateIsInvoicesShowAll(isShow) {
-                        this.isInvoicesShowAll = isShow;
-                    },
                     updateDayStart(start) {
                         this.searchDayStart = start;
                     },
@@ -1185,6 +1182,9 @@
                     if (this.pageName == 'show') {
                         //this.getFileList(self.invoice.applyNumber);
                         this.getFileListDZ();
+                    }
+                    if (this.procName == 'normal') {
+                        this.isInvoicesShowAll = true;
                     }
                     this.modal = new tingle.modal({
                         footer: false,
@@ -1213,7 +1213,7 @@
                         return this.$route.query.page;
                     },
                     headerName() {
-                        if (this.procName == "normal") return "請求書入力";
+                        if (this.procName == "normal") return "請求書一覧";
                         else return "未入金一覧";
                     },
                     procName() {

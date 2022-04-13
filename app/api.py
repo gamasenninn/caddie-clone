@@ -867,8 +867,8 @@ def invoice_payment_create():
 def invoice_payment_update(id):
     data = request.json
     req = request.args
-    priceIncludingTax = req.get('priceIncludingTax')
-    paymentSum = req.get('paymentSum')
+    priceIncludingTax = int(req.get('priceIncludingTax'))
+    paymentSum = int(req.get('paymentSum'))
     invoice = Invoice.query.filter(Invoice.id == id).one()
     invoicePaymentIds = db.session.query(Invoice_Payment.id).filter(
         Invoice_Payment.invoiceId == id).all()
