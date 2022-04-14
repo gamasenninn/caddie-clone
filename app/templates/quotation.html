@@ -451,9 +451,10 @@
 
                             <template #row-details="data">
                                 <b-row>
-                                    <b-col cols>
+                                    <div style="width: 55px;"></div>
+                                    <b-col cols="3">
                                         <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="原価単価:"
-                                            label-for="cost">
+                                            label-for="cost" label-align="right">
                                             <b-form-input v-model="data.item.cost" id="cost" size="sm" type="number">
                                             </b-form-input>
                                         </b-form-group>
@@ -466,6 +467,13 @@
                                     </b-col>
                                     <b-col>
                                         <p class="mt-1">粗利金額: {{profit(data)}}</p>
+                                    </b-col>
+                                    <b-col cols="4">
+                                        <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="備考:"
+                                            label-for="remarks" label-align="right">
+                                            <b-form-input v-model="data.item.remarks" id="remarks" size="sm">
+                                            </b-form-input>
+                                        </b-form-group>
                                     </b-col>
                                 </b-row>
                             </template>
