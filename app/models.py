@@ -197,6 +197,7 @@ class Quotation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'))
     customerName = db.Column(db.String)
+    customerAnyNumber = db.Column(db.Integer)
     honorificTitle = db.Column(db.String)
     department = db.Column(db.String)
     manager = db.Column(db.String)

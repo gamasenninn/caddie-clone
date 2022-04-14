@@ -1082,6 +1082,7 @@ def quotation_create():
     newQuotation = Quotation(
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
+        customerAnyNumber=data.get('customerAnyNumber'),
         honorificTitle=data.get('honorificTitle'),
         department=data.get('department'),
         manager=data.get('manager'),
@@ -1125,6 +1126,7 @@ def quotation_update(id):
 
     quotation.customerId = data.get('customerId')
     quotation.customerName = data.get('customerName')
+    quotation.customerAnyNumber = data.get('customerAnyNumber')
     quotation.honorificTitle = data.get('honorificTitle')
     quotation.department = data.get('department')
     quotation.manager = data.get('manager')
