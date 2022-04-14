@@ -116,11 +116,11 @@ def make_row(detail,bdata):
             k = f['key']
             val = b_row.get(k) #値の取得
             #print("row val:", val,type(val))
+            if 'eval' in f:
+                val = eval(str(f.get('eval')))
             if not val:
                 val='&nbsp;'  #空行対応
             else:
-                if 'eval' in f:
-                    val = eval(str(f.get('eval')))
                 if 'format' in f:
                     if val:
                         fmt = f.get('format')
@@ -199,12 +199,13 @@ def on_page(canvas, doc):
                             
     if defPdf.get('footer'):
         if defPdf['footer'].get('pos_xy') : x,y =cv(defPdf['footer']['pos_xy'])
-        for table_info in defPdf['footer'].get('table_infos'):
-            if not table_info: continue
-            if table_info.get('pos_xy'): x,y =cv(table_info.get('pos_xy'))
-            ft = make_table(table_info)
-            ft.wrapOn(canvas, x, y)
-            ft.drawOn(canvas, x, y)
+        if defPdf['footer'].get('table_infos'):
+            for table_info in defPdf['footer'].get('table_infos'):
+                if not table_info: continue
+                if table_info.get('pos_xy'): x,y =cv(table_info.get('pos_xy'))
+                ft = make_table(table_info)
+                ft.wrapOn(canvas, x, y)
+                ft.drawOn(canvas, x, y)
 
     #print("_pageNumber:",canvas._pageNumber)
     if canvas._pageNumber == 1:
