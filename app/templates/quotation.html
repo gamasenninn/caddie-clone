@@ -976,6 +976,7 @@
                         Vue.set(self.quotation, 'customerId', record.id);
                         Vue.set(self.quotation, 'customerName', record.customerName);
                         Vue.set(self.quotation, 'honorificTitle', record.honorificTitle);
+                        this.quotation.customerAnyNumber = record.anyNumber;
                         this.$bvModal.hide("customer-modal");
                     },
                     // 商品名モーダル選択時
