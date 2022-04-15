@@ -6,6 +6,14 @@
                 font-size: 18px;
             }
 
+            #customertable>thead>tr>th {
+                pointer-events: none;
+            }
+
+            .th-any-number {
+                pointer-events: auto !important;
+            }
+
             #customertable td {
                 vertical-align: middle;
             }
@@ -70,7 +78,7 @@
                                 :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
                       {  key: 'update', label: '' },
                       {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
-                      {  key: 'anyNumber', label: 'No.', sortable: true, },
+                      {  key: 'anyNumber', label: 'No.', sortable: true, thClass:'th-any-number' },
                       {  key: 'customerName', label: '得意先名', tdClass:'td-customerName', thClass: 'text-center', },
                       {  key: 'postNumber', label: '郵便番号', tdClass:'td-postNumber', thClass: 'text-center', },
                       {  key: 'addressCombine', label: '住所', thClass: 'text-center', },
