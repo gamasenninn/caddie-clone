@@ -14,6 +14,14 @@
                 font-size: 18px;
             }
 
+            #quotationtable>thead>tr>th {
+                pointer-events: none;
+            }
+
+            .th-customer-any-number {
+                pointer-events: auto !important;
+            }
+
             #quotationtable td,
             #quotation_items_table td {
                 vertical-align: middle;
@@ -155,6 +163,7 @@
                             <b-row align-h="end">
                                 <p class="mr-3">表示件数 {{ quotationsIndicateCount }}件</p>
                             </b-row>
+                            <!-- ヘッダーをクリックするとソートが解除されるバグ解消のために、ソート可能なth以外はクリック無効にしているので注意 -->
                             <b-table responsive hover small id="quotationtable" label="Table Options"
                                 :items=quotationsIndicateIndex :sort-by.sync="this.sortByQuotations"
                                 :sort-desc.sync="this.sortDesc" :fields="[
@@ -162,7 +171,7 @@
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyNumber', label: '見積番号', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'applyDate', label: '日付', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'customerAnyNumber', label: 'No.', thClass: 'text-center', tdClass: 'text-center', sortable: true },
+                          {  key: 'customerAnyNumber', label: 'No.', thClass: 'th-customer-any-number text-center', tdClass: 'text-center', sortable: true },
                           {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
                           {  key: 'title', label: '件名', thClass: 'text-center', },
                           {  key: 'totalAmount', label: '見積金額', thClass: 'text-center', tdClass: 'text-right' },

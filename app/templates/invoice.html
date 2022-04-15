@@ -17,6 +17,14 @@
                 font-size: 18px;
             }
 
+            #invoicetable>thead>tr>th {
+                pointer-events: none;
+            }
+
+            .th-customer-any-number {
+                pointer-events: auto !important;
+            }
+
             #invoicetable td,
             #invoice_items_table td {
                 vertical-align: middle;
@@ -141,6 +149,7 @@
                                     </b-col>
                                 </b-row>
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
+                                <!-- ヘッダーをクリックするとソートが解除されるバグ解消のために、ソート可能なth以外はクリック無効にしているので注意 -->
                                 <!-- 一覧 -->
                                 <invoice-list v-if="procName=='normal'" :select-invoice="selectInvoice"
                                     :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles"
