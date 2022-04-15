@@ -586,7 +586,7 @@
                             <b-dropdown-item @click="pdfout('invoice','copy')">請求書控え</b-dropdown-item>
                             <b-dropdown-item @click="pdfout('invoice','nodate')">日付なし請求書</b-dropdown-item>
                             <b-dropdown-item @click="pdfout('delivery')">納品書</b-dropdown-item>
-                            <b-dropdown-item @click="pdfoutRcpt">領収書</b-dropdown-item>
+                            <b-dropdown-item @click="pdfout('receipt')">領収書</b-dropdown-item>
                         </b-dropdown>
                         <b-button pill size="lg" variant="danger" @click="modalShow(invoice,'deleteModal');"
                             v-b-tooltip.hover.top="'削除'">
@@ -1048,19 +1048,6 @@
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data);
-                            });
-                    },
-                    pdfoutRcpt: async function () {
-                        self = this;
-                        const sumInvoice = {
-                            sum: this.sum,
-                            taxAmount: this.taxAmount,
-                            priceIncludingTax: this.priceIncludingTax
-                        }
-                        const pdfData = getPdfDataRcpt(self.invoice, self.setting, sumInvoice);
-                        await axios.post("/pdfmaker", pdfData)
-                            .then(function (response) {
-                                self.printPdf('/pdf/' + response.data)
                             });
                     },
                     printPdf(url) {
