@@ -8,6 +8,9 @@
         <script src="../static//library/tingle.min.js"></script>
         <link rel="stylesheet" href="../static/library/tingle.css" type="text/css" />
 
+        <!-- コンポーネント -->
+        <script src="../static/component/btn-pdf.js"></script>
+
         <style>
             .card-header {
                 background-color: #ccecf1;
@@ -641,9 +644,12 @@
                         <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
                             @click="modalShow(quotation,'convertModal');" v-b-tooltip.hover.top="'請求書へ変換'"><i
                                 class="fa-solid fa-shuffle"></i></b-button>
+                        <!--
                         <b-button pill size="lg" variant="primary" @click="pdfout" id="pdfout"
                             v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
                         </b-button>
+                        -->
+                        <btn-pdf-quotation :func="pdfout"></btn-pdf-quotation>
                         <b-button pill size="lg" variant="danger" @click="modalShow(quotation,'deleteModal');"
                             v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
