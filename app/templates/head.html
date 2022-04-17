@@ -54,6 +54,27 @@
     <script src="static/component/select-modal.js"></script>
     <script src="static/component/confirm-modal.js"></script>
     <script src="static/component/menu-header.js"></script>
+    <script>
+        //カスタマイズファイルの動的読み込み
+        //なければ通常のコンポーネントを読む関数
+        //本体プログラムで必要なコンポーネントを指定する
+        function loadScript(files) {
+            for (file of files) {
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = "static/component/customize/" + file; //カスタマイズ領域
+                const xhr = new XMLHttpRequest();
+                xhr.open("HEAD", script.src, false);
+                xhr.send(null);
+                if (xhr.status == 200) {
+                    document.body.appendChild(script);
+                } else {
+                    script.src = "static/component/" + file;
+                    document.body.appendChild(script);
+                }
+            }
+        }
+    </script>
 
     <style>
         [v-cloak] {
