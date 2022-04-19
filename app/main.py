@@ -1,3 +1,4 @@
+import sqlite3
 from sqlalchemy import insert, true, exc
 from sqlalchemy.dialects.sqlite import insert
 from api import app
@@ -382,14 +383,27 @@ def CsvUpload():
         upsert_csv()
     except UnicodeDecodeError as e:
         print(e)
-        return jsonify({"result": "error", "message": "UTF-8のみ利用可能です。", "e_message": str(e)}), 500
-    except exc.IntegrityError as e:
+        return jsonify({"result": "error", "message": "UTF-8のみ利用可能です。UTF-8に変換されたCSVをインポートしてください。", "e_message": str(e)}), 500
+    except (exc.IntegrityError, sqlite3.IntegrityError) as e:
         print(e)
-        return jsonify({"result": "error", "message": "UNIQUEです。", "e_message": str(e)}), 500
+        return jsonify({"result": "error", "message": "UNIQUEが重複しています。重複しない値を指定してください。", "e_message": str(e)}), 500
     except ValueError as e:
         print(e)
         return jsonify({"result": "error", "message": "不正な値があります。CSVに規格外または不要な空欄が無いか確認してください。", "e_message": str(e)}), 500
-    return jsonify({"result": "ok", "message": "更新に成功しました"})
+    except IndexError as e:
+        print(e)
+        return jsonify({"result": "error", "message": "インデックス数が不正です。CSVのヘッダーインデックスと値のインデックスを再確認してください。", "e_message": str(e)}), 500
+    except exc.StatementError as e:
+        # TODO:CSVの値は全てStrになってしまうので、後でDateへの変換処理を入れる事。
+        print(e)
+        return jsonify({"result": "error", "message": "値のデータ型エラーです。（Date型の入力は未対応）", "e_message": str(e)}), 500
+    except Exception as e:
+        print(e)
+        return jsonify({"result": "error", "message": "予期せぬエラーが発生しました。", "e_message": str(e)}), 500
+    else:
+        return jsonify({"result": "ok", "message": "更新に成功しました"})
+    finally:
+        os.remove('csv/import/'+target+'.csv')
 
 
 def upsert_csv():
@@ -407,25 +421,18 @@ def upsert_csv():
             for row in reader:
                 columnDic = {}
                 for i in range(len(header)):
-                    columnDic[header[i]] = row[i]
+                    # CSVの値は全てStrになってしまうので、boolへ変換
+                    if row[i] == 'True':
+                        row[i] = True
+                    if row[i] == 'False':
+                        row[i] = False
+                    else:
+                        columnDic[header[i]] = row[i]
                 insert_stmt = insert(model_class).values(columnDic)
                 do_update_stmt = insert_stmt.on_conflict_do_update(
                     index_elements=['id'], set_=columnDic)
-                try:
-                    db.session.execute(do_update_stmt)
-                except:
-                    db.session.rollback()
-                    db.session.close()
-                    csv_file.close()
-                    os.remove(fixtures_dir+file_name)
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback()
-                db.session.close()
-            finally:
-                csv_file.close()
-                os.remove(fixtures_dir+file_name)
+                db.session.execute(do_update_stmt)
+            db.session.commit()
 
 # ----- csv_export -----
 
