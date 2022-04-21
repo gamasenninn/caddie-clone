@@ -91,7 +91,7 @@ def logout():
     logout_user()
     # flash("ログアウトしました")
 
-    return redirect('/')
+    return redirect('/login')
 
 # ------　ユーザー認証ここまで -------
 
@@ -153,6 +153,7 @@ def homePage():
 
 
 @app.route('/check-page')
+@login_required
 def checkPage():
     return render_template('check.html')
 
@@ -182,6 +183,7 @@ def itemPage():
 
 
 @app.route('/memo-page')
+@login_required
 def memoPage():
     return render_template('memo.html')
 
