@@ -1,4 +1,5 @@
-from sqlalchemy import insert, true
+import sqlite3
+from sqlalchemy import insert, true, exc
 from sqlalchemy.dialects.sqlite import insert
 from api import app
 import sys
@@ -14,7 +15,7 @@ import csv
 
 # sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
-from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist,get_dir_info
+from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist, get_dir_info
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # ------　ユーザー認証 -------
@@ -46,19 +47,20 @@ def get_login():
     return render_template('login.html')
 
 
-def checkPassword(user_id,password):
+def checkPassword(user_id, password):
     user = User.query.filter_by(name=user_id).first()
     if user:
         if user.password == password:
             return True
         pw_hash = user.password
-        return check_password_hash(pw_hash,password)
+        return check_password_hash(pw_hash, password)
+
 
 @app.route('/login', methods=['POST'])
 def login_post():
     user_id = request.form["userId"]
     password = request.form["password"]
-    if checkPassword(user_id,password):
+    if checkPassword(user_id, password):
         user = LoginUser(user_id)
         login_user(user)
         newHistory = History(
@@ -346,12 +348,13 @@ def get_files_list(base, dir_path):
     # return f" {fid} / {up_base_dir}{dir_path}"
     return jsonify(get_flist(check_base_dir(base), dir_path))
 
+
 @app.route("/count-files/<base>/<path:dir_path>", methods=['GET'])
 def get_files_count(base, dir_path):
-    d_dict={}
-    for d in get_dir_info(check_base_dir(base),dir_path):
+    d_dict = {}
+    for d in get_dir_info(check_base_dir(base), dir_path):
         d_dict[d['key']] = d['count_files']
-    #print (d_dict)    
+    #print (d_dict)
     return jsonify(d_dict)
 
 
@@ -378,10 +381,29 @@ def CsvUpload():
     file.save('csv/import/'+target + '.csv')
     try:
         upsert_csv()
+    except UnicodeDecodeError as e:
+        print(e)
+        return jsonify({"result": "error", "message": "UTF-8のみ利用可能です。UTF-8に変換されたCSVをインポートしてください。", "e_message": str(e)}), 500
+    except (exc.IntegrityError, sqlite3.IntegrityError) as e:
+        print(e)
+        return jsonify({"result": "error", "message": "UNIQUEが重複しています。重複しない値を指定してください。", "e_message": str(e)}), 500
+    except ValueError as e:
+        print(e)
+        return jsonify({"result": "error", "message": "不正な値があります。CSVに規格外または不要な空欄が無いか確認してください。", "e_message": str(e)}), 500
+    except IndexError as e:
+        print(e)
+        return jsonify({"result": "error", "message": "インデックス数が不正です。CSVのヘッダーインデックスと値のインデックスを再確認してください。", "e_message": str(e)}), 500
+    except exc.StatementError as e:
+        # TODO:CSVの値は全てStrになってしまうので、後でDateへの変換処理を入れる事。
+        print(e)
+        return jsonify({"result": "error", "message": "値のデータ型エラーです。（Date型の入力は未対応）", "e_message": str(e)}), 500
     except Exception as e:
         print(e)
-        return jsonify({"result": "error", "message": "更新に失敗しました。CSVを正しく入力してください。", "e_message": str(e)}), 500
-    return jsonify({"result": "ok", "message": "更新に成功しました"})
+        return jsonify({"result": "error", "message": "予期せぬエラーが発生しました。", "e_message": str(e)}), 500
+    else:
+        return jsonify({"result": "ok", "message": "更新に成功しました"})
+    finally:
+        os.remove('csv/import/'+target+'.csv')
 
 
 def upsert_csv():
@@ -399,25 +421,18 @@ def upsert_csv():
             for row in reader:
                 columnDic = {}
                 for i in range(len(header)):
-                    columnDic[header[i]] = row[i]
+                    # CSVの値は全てStrになってしまうので、boolへ変換
+                    if row[i] == 'True':
+                        row[i] = True
+                    if row[i] == 'False':
+                        row[i] = False
+                    else:
+                        columnDic[header[i]] = row[i]
                 insert_stmt = insert(model_class).values(columnDic)
                 do_update_stmt = insert_stmt.on_conflict_do_update(
                     index_elements=['id'], set_=columnDic)
-                try:
-                    db.session.execute(do_update_stmt)
-                except:
-                    db.session.rollback()
-                    db.session.close()
-                    csv_file.close()
-                    os.remove(fixtures_dir+file_name)
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback()
-                db.session.close()
-            finally:
-                csv_file.close()
-                os.remove(fixtures_dir+file_name)
+                db.session.execute(do_update_stmt)
+            db.session.commit()
 
 # ----- csv_export -----
 

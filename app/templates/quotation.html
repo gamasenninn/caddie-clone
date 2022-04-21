@@ -641,9 +641,12 @@
                         <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
                             @click="modalShow(quotation,'convertModal');" v-b-tooltip.hover.top="'請求書へ変換'"><i
                                 class="fa-solid fa-shuffle"></i></b-button>
+                        <!--
                         <b-button pill size="lg" variant="primary" @click="pdfout" id="pdfout"
                             v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
                         </b-button>
+                        -->
+                        <btn-pdf-quotation :func="pdfout"></btn-pdf-quotation>
                         <b-button pill size="lg" variant="danger" @click="modalShow(quotation,'deleteModal');"
                             v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
@@ -675,17 +678,9 @@
 
         </div>
 
-        <script src="static/component/def-pdf.js"></script>
         <script>
-            //カスタマイズファイルの動的読み込み
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            const files = ['def-pdf.js'];
-            for (file of files) {
-                script.src = "static/component/customize/" + file;
-                var firstScript = document.getElementsByTagName('script')[0];
-                firstScript.parentNode.insertBefore(script, firstScript);
-            }
+            //カスタマイズと通常読み込みとが必要なものを指定する
+            loadScript(['def-pdf.js','btn-pdf.js']);
 
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null

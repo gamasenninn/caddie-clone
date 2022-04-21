@@ -10,6 +10,9 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     if (mode == 'delivery') {
         h.category = '納品書';
         h.baseImagePath = "./static/asset/delivery_base.png";
+    } else if (mode == 'receipt') {
+        h.category = '領収書';
+        h.baseImagePath = "./static/asset/receipt_base.png";
     } else {
         h.category = '請求書';
         h.baseImagePath = "./static/asset/invoice_base.png";
@@ -19,7 +22,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     h.customerName = nvl(invoice.customerName, '');
     h.honorificTitle = nvl(invoice.honorificTitle, '');
     h.applyNumber = invoice.applyNumber;
-    if ( docClass == 'nodate' ){
+    if (docClass == 'nodate') {
         h.applyDate = "&nbsp;&nbsp; 年 &nbsp;&nbsp; 月 &nbsp;&nbsp; 日";
     } else {
         h.applyDate = nvl(invoice.applyDate, '');
@@ -31,6 +34,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     h.myFax1 = nvl(setting.faxNumber, '');
     h.person = nvl(invoice.manager, '');
     h.title = nvl(invoice.title, '');
+    h.taxrate = nvl(invoice.tax, '');
     h.customerPostNumber = nvl(customer.postNumber, '');
     h.customerAddress = nvl(customer.address, '') + nvl(customer.addressSub, '');
     h.customerDepartment = nvl(invoice.department, '');
@@ -56,10 +60,10 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     const pdfData = getPdfData(h, sum);
     if (mode == 'delivery') {
         if (!setting.isDisplayDeliveryLogo) pdfData.defPdf.header.drawImages = [];
-        if (!setting.isDisplayDeliveryStamp) pdfData.defPdf.footer.drawImages = [];
+        if (!setting.isDisplayDeliveryStamp) pdfData.defPdf.first_page.drawImages = [];
     } else {
         if (!setting.isDisplayInvoiceLogo) pdfData.defPdf.header.drawImages = [];
-        if (!setting.isDisplayInvoiceStamp) pdfData.defPdf.footer.drawImages = [];
+        if (!setting.isDisplayInvoiceStamp) pdfData.defPdf.first_page.drawImages = [];
     }
     if (invoice.invoice_items.length > 0) {
         pdfData.data.bdata = invoice.invoice_items;
@@ -202,10 +206,16 @@ function getPdfData(h, sum) {
                         ]
                     },
                     // copy 
-                    h.docClass == 'copy' ? { "pos_xy": ["E", "(90*mm,230*mm)"], "table": [[["P", "(控え)", "md_l_b"]]], "col_widths": ["E", "(30*mm)"] }:{},
+                    h.docClass == 'copy' ? { "pos_xy": ["E", "(90*mm,230*mm)"], "table": [[["P", "(控え)", "md_l_b"]]], "col_widths": ["E", "(30*mm)"] } : {},
                     // total area 
-                    { "pos_xy": ["E", "(40*mm,208*mm)"], "table": [[["P", h.title, "sm_l"]]], "col_widths": ["E", "(70*mm)"] },
-                    { "pos_xy": ["E", "(45*mm,197*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] },
+                    h.mode == 'receipt' ? {} : { "pos_xy": ["E", "(40*mm,208*mm)"], "table": [[["P", h.title, "sm_l"]]], "col_widths": ["E", "(70*mm)"] },
+                    h.mode == 'receipt' ? { "pos_xy": ["E", "(45*mm,209*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] } :
+                        { "pos_xy": ["E", "(45*mm,197*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] },
+                    h.mode == 'receipt' ? { "pos_xy": ["E", "(33*mm,193*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(20*mm)"] } :{},
+                    h.mode == 'receipt' ? { "pos_xy": ["E", "(70*mm,193*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(20*mm)"] } : {},
+                    h.mode == 'receipt' ? { "pos_xy": ["E", "(100*mm,193*mm)"], "table": [[["PF", h.taxrate, "sm_r", "{:}%"]]], "col_widths": ["E", "(20*mm)"] } : {},
+
+
                     // quotes area
                     h.mode == 'quotation' ? { "pos_xy": ["E", "(145*mm,207*mm)"], "table": [[["P", h.expiry, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
                     h.mode == 'quotation' ? { "pos_xy": ["E", "(145*mm,200*mm)"], "table": [[["P", h.dayOfDelivery, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
@@ -221,9 +231,9 @@ function getPdfData(h, sum) {
                     h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,52*mm)"], "table": [[["P", h.accountHolderKana, "sm_l"]]], "col_widths": ["E", "(70*mm)"] } : {},
                     h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,46*mm)"], "table": [[["P", h.accountHolder, "sm_l"]]], "col_widths": ["E", "(70*mm)"] } : {},
                     // right side footer sum
-                    { "pos_xy": ["E", "(140*mm,73*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] },
-                    { "pos_xy": ["E", "(140*mm,64*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] },
-                    { "pos_xy": ["E", "(140*mm,57*mm)"], "table": [[["PF", sum.total, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] },
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(140*mm,73*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] } :{},
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(140*mm,64*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] } : {},
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(140*mm,57*mm)"], "table": [[["PF", sum.total, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] } : {},
                     // under side footer
                     {
                         "pos_xy": ["E", "(19*mm,13*mm)"], "table": [[["P", h.memo, "sm_l"]]],
@@ -280,164 +290,6 @@ function getPdfData(h, sum) {
                 "alignment": 0,
                 "fontName": "IPAexMincho",
                 "fontSize": 15,
-                "underlineWidth": 1,
-                "underlineGap": 1,
-                "underlineOffset": -3.0,
-                "textColor": "#000000"
-            }
-        },
-    }
-};
-/* -------  領収書　----------*/
-
-function getPdfDataRcpt(invoice, setting, sumInvoice) {
-    const hr = {};
-    const sumr = {};
-    hr.category = "領収書";
-    hr.customerName = nvl(invoice.customerName, '');
-    hr.honorificTitle = nvl(invoice.honorificTitle, '');
-    hr.numberLabel = "";
-    hr.applyNumber = nvl(invoice.applyNumber, '');
-    hr.headerTotalLabel = "領収金額",
-        hr.title = "下記の通り領収いたしました";
-    hr.dueDate = nvl(invoice.paymentDate, '');
-    hr.person = nvl(invoice.manager, '');
-    hr.myCompanyName = nvl(setting.companyName, '');
-    hr.myAddress1 = nvl(setting.address, '');
-    hr.myTel1 = nvl(setting.telNumber, '');
-    hr.myFax1 = nvl(setting.faxNumber, '');
-    hr.ceoName = nvl(setting.representative, '');
-    hr.logoPath = setting.logoFilePath;
-    hr.stampPath = setting.stampFilePath;
-    sumr.amount = sumInvoice.sum;
-    sumr.tax = sumInvoice.taxAmount;
-    sumr.total = sumInvoice.priceIncludingTax;
-    /*
-                                sum: this.sum,
-                                taxAmount: this.taxAmount,
-                                priceIncludingTax: this.priceIncludingTax
-        if (invoice.isTaxExp) {
-        } else {
-            sumr.amount = sum;
-            sumr.total = sum;
-            sumr.tax = parseInt(sum.total - sum.total / 1.1)
-        };
-    */
-    return {
-        "defPdf": {
-            "attr": {
-                "name": "def_recept",
-                "name_jp": "領収書",
-                "page_size": "A4",
-                "page_type": "portrait",
-                "top_mergin": 10,
-                "footter_size": 0
-            },
-            "file": {
-                "outDir": "./static/pdf",
-                "file_name": "test.pdf"
-            },
-            "header": {
-                "title": ["P", hr.category, "big_center"],
-                "title_after": ["E", "Spacer(0,15*mm)"],
-                "table_infos": [
-                    {
-                        "table": [
-                            [["P", hr.customerName + '&nbsp;&nbsp;' + hr.honorificTitle, "client"], "", "", "", "", ["P", "番号" + hr.applyNumber, "sm_r"]],
-                            ["", "", "", "", "", ["P", "日付: &nbsp;" + hr.dueDate, "sm_r"]],
-                            ["", "", "", "", "", ["P", hr.myCompanyName, "md_l_b"]],
-                            ["", "", "", "", "", ""],
-                            ["", "", "", "", "", ["P", hr.myAddress1, "sm_r"]],
-                            ["", ["P", hr.title, "sm_l"], "", "", "", ["P", 'TEL: ' + hr.myTel1, "sm_r"]],
-                            ["", "", "", "", "", ["P", 'FAX: ' + hr.myFax1, "sm_r"]],
-                            ["", ["P", hr.headerTotalLabel, "sm_c"], ["PF", sumr.total, "h_total", "￥{:,}-"], "", "", ""],
-                            ["", "", "", "", "", ""],
-                            ["", "", "", "", "", ["P", '担当者: ' + hr.person, "sm_r"]],
-                            ["", ["P", "内消費税", "sm_l"], ["PF", sumr.tax, "taxsm_r", "￥{:,}-"], "", "", ""],
-                            ["", ["P", "現金", "sm_l"], "", "", "", ""],
-                            ["", ["P", "小切手", "sm_l"], "", "", "", ["P", "※電子領収書につき印紙不要", "sm_l"]],
-                            ["", ["P", "お振込", "sm_l"], "", "", "", ""],
-                            ["", ["P", "その他", "sm_l"], "", "", "", ""]
-                        ],
-                        "col_widths": ["E", "[5*mm,35*mm,50*mm,20*mm,10*mm,70*mm]"],
-                        "table_style": [
-                            ["NOP", "('GRID',(0,0),(-1,-1),0.15,colors.black)"],
-                            ["E", "('VALIGN',(0,0),(-1,-1),'MIDDLE')"],
-                            ["E", "('SPAN',(0,0),(3,0))"],
-                            ["E", "('GRID',(1,7),(1,8),0.15,colors.black)"],
-                            ["E", "('SPAN',(1,5),(2,6))"],
-                            ["E", "('SPAN',(1,7),(1,8))"],
-                            ["E", "('BACKGROUND',(1,7),(1,8),colors.lightblue)"],
-                            ["E", "('BOX',(2,7),(3,8),0.15,colors.black)"],
-                            ["E", "('SPAN',(2,7),(3,8))"],
-                            ["E", "('LINEBELOW', (1, 10), (2, 10), 0.15, colors.black)"],
-                            ["E", "('LINEBELOW', (1, 11), (2, 11), 0.15, colors.black)"],
-                            ["E", "('LINEBELOW', (1, 12), (2, 12), 0.15, colors.black)"],
-                            ["E", "('LINEBELOW', (1, 13), (2, 13), 0.15, colors.black)"],
-                            ["E", "('LINEBELOW', (1, 14), (2, 14), 0.15, colors.black)"],
-
-                        ],
-                        "after": ["E", "Spacer(10*mm,5*mm)"]
-                    }
-                ],
-                "drawImages": [
-                    ["('" + hr.logoPath + "', 10,350+860/2,50,50,mask='auto')"]
-                ]
-            },
-            "footer": {
-
-                "pos_xy": ["E", "(170*mm,40*mm+860/2)"],
-                "table_infos": [
-                    {
-                        "table": [
-                            //[["P", "収入<br/>印紙", "sm_c"]]
-                            ["", ""]
-                        ],
-                        "col_widths": ["E", "(20*mm)"],
-                        "row_heights": ["E", "(20*mm)"],
-                        "table_style": [
-                            //["E", "('FONT', (0, 0), (-1, -1), 'IPAexGothic', 11)"],
-                            //["E", "('GRID', (0, 0), (0,0), 0.1, colors.black, None, (3,3,3,3))"],
-                            //["E", "('VALIGN', (0, 0), (0,0), 'CENTER')"]
-                        ]
-                    }
-                ],
-
-                "drawImages": [
-                    ["('" + hr.stampPath + "', 420,120+860/2,50,50,mask='auto')"]
-                ]
-            }
-        },
-        "data": {
-            "hdata": {}
-        },
-        "style": {
-            "sm_r": { "name": "Normal", "alignment": 2, "fontName": "IPAexGothic", "fontSize": 11 },
-            "sm_l": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 11 },
-            "sm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 11 },
-            "md_l_b": { "name": "Normal", "alignment": 0, "fontName": "IPAexGothic", "fontSize": 15 },
-            "taxsm_l": { "name": "Normal", "alignment": 2, "fontName": "IPAexGothic", "fontSize": 9 },
-            "taxsm_c": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 9 },
-            "taxsm_r": { "name": "Normal", "alignment": 2, "fontName": "IPAexGothic", "fontSize": 9 },
-            "h_total": { "name": "Normal", "alignment": 1, "fontName": "IPAexGothic", "fontSize": 15 },
-            "big_center": {
-                "name": "Normal",
-                "alignment": 1,
-                "fontName": "IPAexGothic",
-                "fontSize": 20,
-                "underlineWidth": 0.5,
-                "underlineGap": 0,
-                "underlineOffset": -5.0,
-                "strikeWidth": 0.5,
-                "strikeGap": 0,
-                "strikeOffset": -3.0,
-                "leading": 2
-            },
-            "client": {
-                "name": "Normal",
-                "alignment": 0,
-                "fontName": "IPAexGothic",
-                "fontSize": 18,
                 "underlineWidth": 1,
                 "underlineGap": 1,
                 "underlineOffset": -3.0,

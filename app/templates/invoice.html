@@ -11,6 +11,7 @@
         <!-- コンポーネント -->
         <script src="../static/component/list-invoice.js"></script>
 
+
         <style>
             .card-header {
                 background-color: #ccecf1;
@@ -587,16 +588,7 @@
                         <b-button v-if="pageName==='show'" pill size="lg" id="convert-button"
                             @click="modalShow(invoice,'convertModal');" v-b-tooltip.hover.top="'見積書に変換'"><i
                                 class="fa-solid fa-shuffle"></i></b-button>
-                        <b-dropdown split dropup id="dropdown-dropup" size="lg" @click="pdfout('invoice')" id="pdfout"
-                            v-b-tooltip.hover.top="'印刷'">
-                            <template #button-content>
-                                <i class="fas fa-print"></i>
-                            </template>
-                            <b-dropdown-item @click="pdfout('invoice','copy')">請求書控え</b-dropdown-item>
-                            <b-dropdown-item @click="pdfout('invoice','nodate')">日付なし請求書</b-dropdown-item>
-                            <b-dropdown-item @click="pdfout('delivery')">納品書</b-dropdown-item>
-                            <b-dropdown-item @click="pdfoutRcpt">領収書</b-dropdown-item>
-                        </b-dropdown>
+                        <btn-pdf-invoice :func="pdfout"></btn-pdf-invoice>
                         <b-button pill size="lg" variant="danger" @click="modalShow(invoice,'deleteModal');"
                             v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
@@ -688,26 +680,9 @@
             </div>
         </div>
 
-        <!--
-        <script src="static/component/00def-pdf.js"></script>
-        <script src="static/component/customize/00def-pdf.js"></script>
-        <script src="static/component/sc-upload.js"></script>
-        -->
-
-        <script src="static/component/def-pdf.js"></script>
-
         <script>
-
-            //カスタマイズファイルの動的読み込み
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            const files = ['def-pdf.js'];
-            for (file of files) {
-                script.src = "static/component/customize/" + file;
-                var firstScript = document.getElementsByTagName('script')[0];
-                firstScript.parentNode.insertBefore(script, firstScript);
-            }
-
+            //カスタマイズと通常読み込みとが必要なものを指定する
+            loadScript(['def-pdf.js','btn-pdf.js']);
 
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
@@ -1057,19 +1032,6 @@
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data);
-                            });
-                    },
-                    pdfoutRcpt: async function () {
-                        self = this;
-                        const sumInvoice = {
-                            sum: this.sum,
-                            taxAmount: this.taxAmount,
-                            priceIncludingTax: this.priceIncludingTax
-                        }
-                        const pdfData = getPdfDataRcpt(self.invoice, self.setting, sumInvoice);
-                        await axios.post("/pdfmaker", pdfData)
-                            .then(function (response) {
-                                self.printPdf('/pdf/' + response.data)
                             });
                     },
                     printPdf(url) {
