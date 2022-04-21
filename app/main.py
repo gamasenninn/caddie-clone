@@ -80,14 +80,18 @@ def login_post():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    newHistory = History(
-        userName=current_user.id,
-        modelName='',
-        modelId='',
-        action='logout'
-    )
-    db.session.add(newHistory)
-    db.session.commit()
+    try:
+        newHistory = History(
+            userName=current_user.id,
+            modelName='',
+            modelId='',
+            action='logout'
+        )
+        db.session.add(newHistory)
+        db.session.commit()
+    except AttributeError as e:
+        print(e)
+        pass
     logout_user()
     # flash("ログアウトしました")
 
@@ -153,6 +157,7 @@ def homePage():
 
 
 @app.route('/check-page')
+@login_required
 def checkPage():
     return render_template('check.html')
 
@@ -182,6 +187,7 @@ def itemPage():
 
 
 @app.route('/memo-page')
+@login_required
 def memoPage():
     return render_template('memo.html')
 
