@@ -80,15 +80,18 @@ def login_post():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    # セッションタイムアウト後にcurrent_user.idを参照するとエラーになるので一旦コメントアウト
-    # newHistory = History(
-    #     userName=current_user.id,
-    #     modelName='',
-    #     modelId='',
-    #     action='logout'
-    # )
-    # db.session.add(newHistory)
-    # db.session.commit()
+    try:
+        newHistory = History(
+            userName=current_user.id,
+            modelName='',
+            modelId='',
+            action='logout'
+        )
+        db.session.add(newHistory)
+        db.session.commit()
+    except AttributeError as e:
+        print(e)
+        pass
     logout_user()
     # flash("ログアウトしました")
 
