@@ -80,18 +80,19 @@ def login_post():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    newHistory = History(
-        userName=current_user.id,
-        modelName='',
-        modelId='',
-        action='logout'
-    )
-    db.session.add(newHistory)
-    db.session.commit()
+    # セッションタイムアウト後にcurrent_user.idを参照するとエラーになるので一旦コメントアウト
+    # newHistory = History(
+    #     userName=current_user.id,
+    #     modelName='',
+    #     modelId='',
+    #     action='logout'
+    # )
+    # db.session.add(newHistory)
+    # db.session.commit()
     logout_user()
     # flash("ログアウトしました")
 
-    return redirect('/login')
+    return redirect('/')
 
 # ------　ユーザー認証ここまで -------
 
