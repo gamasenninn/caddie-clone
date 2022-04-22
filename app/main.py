@@ -12,6 +12,8 @@ import importlib
 from models import *
 import os
 import csv
+import re
+import datetime
 
 # sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
@@ -400,7 +402,6 @@ def CsvUpload():
         print(e)
         return jsonify({"result": "error", "message": "インデックス数が不正です。CSVのヘッダーインデックスと値のインデックスを再確認してください。", "e_message": str(e)}), 500
     except exc.StatementError as e:
-        # TODO:CSVの値は全てStrになってしまうので、後でDateへの変換処理を入れる事。
         print(e)
         return jsonify({"result": "error", "message": "値のデータ型エラーです。（Date型の入力は未対応）", "e_message": str(e)}), 500
     except Exception as e:
@@ -427,13 +428,33 @@ def upsert_csv():
             for row in reader:
                 columnDic = {}
                 for i in range(len(header)):
+                    # TODO:請求・見積書に紐づく商品・入金テーブルが無いとフロントでエラーになるので対応
+                    patternDatetime = r'[12]\d{3}[/\-年](0?[1-9]|1[0-2])[/\-月](0?[1-9]|[12][0-9]|3[01])日?T((0?|1)[0-9]|2[0-3])[:時][0-5][0-9][:分][0-5][0-9][.秒]\d{6}$'
+                    stringDatetime = r'' + row[i]
+                    progDatetime = re.compile(patternDatetime)
+                    resultDatetime = progDatetime.match(stringDatetime)
+                    if resultDatetime:
+                        tdatetime = datetime.datetime.strptime(
+                            row[i], '%Y-%m-%dT%H:%M:%S.%f')
+                        row[i] = tdatetime
+
+                    elif not resultDatetime:
+                        pattern = r'[12]\d{3}[/\-年](0?[1-9]|1[0-2])[/\-月](0?[1-9]|[12][0-9]|3[01])日?$'
+                        string = r'' + row[i]
+                        prog = re.compile(pattern)
+                        result = prog.match(string)
+                        if result:
+                            tdatetime = datetime.datetime.strptime(
+                                row[i], '%Y-%m-%d')
+                            tdate = datetime.date(
+                                tdatetime.year, tdatetime.month, tdatetime.day)
+                            row[i] = tdate
                     # CSVの値は全てStrになってしまうので、boolへ変換
                     if row[i] == 'True':
                         row[i] = True
                     if row[i] == 'False':
                         row[i] = False
-                    else:
-                        columnDic[header[i]] = row[i]
+                    columnDic[header[i]] = row[i]
                 insert_stmt = insert(model_class).values(columnDic)
                 do_update_stmt = insert_stmt.on_conflict_do_update(
                     index_elements=['id'], set_=columnDic)
