@@ -402,7 +402,6 @@ def CsvUpload():
         print(e)
         return jsonify({"result": "error", "message": "インデックス数が不正です。CSVのヘッダーインデックスと値のインデックスを再確認してください。", "e_message": str(e)}), 500
     except exc.StatementError as e:
-        # TODO:CSVの値は全てStrになってしまうので、後でDateへの変換処理を入れる事。
         print(e)
         return jsonify({"result": "error", "message": "値のデータ型エラーです。（Date型の入力は未対応）", "e_message": str(e)}), 500
     except Exception as e:
