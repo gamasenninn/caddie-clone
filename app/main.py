@@ -438,7 +438,7 @@ def upsert_csv():
                             row[i], '%Y-%m-%dT%H:%M:%S.%f')
                         row[i] = tdatetime
 
-                    elif not resultDatetime:
+                    else:
                         pattern = r'[12]\d{3}[/\-年](0?[1-9]|1[0-2])[/\-月](0?[1-9]|[12][0-9]|3[01])日?$'
                         string = r'' + row[i]
                         prog = re.compile(pattern)
@@ -454,6 +454,8 @@ def upsert_csv():
                         row[i] = True
                     if row[i] == 'False':
                         row[i] = False
+                    if row[i] == '':
+                        row[i] = None
                     columnDic[header[i]] = row[i]
                 insert_stmt = insert(model_class).values(columnDic)
                 do_update_stmt = insert_stmt.on_conflict_do_update(
