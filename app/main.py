@@ -65,8 +65,8 @@ def login_post():
         login_user(user)
         newHistory = History(
             userName=user_id,
-            modelName='',
-            modelId='',
+            modelName=None,
+            modelId=None,
             action='login'
         )
         db.session.add(newHistory)
@@ -83,8 +83,8 @@ def logout():
     try:
         newHistory = History(
             userName=current_user.id,
-            modelName='',
-            modelId='',
+            modelName=None,
+            modelId=None,
             action='logout'
         )
         db.session.add(newHistory)
@@ -447,8 +447,8 @@ def upsert_csv():
 def CsvExport():
     fixtures_dir = 'csv/export/'
     models = importlib.import_module('models')
-    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item",
-                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting"]
+    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item", "Invoice_Payment",
+                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting", 'History']
 
     with open(fixtures_dir + "export.csv", 'w') as f:
         f.close()  # 初期化
@@ -503,15 +503,17 @@ def dbInit():
             db.session.query(Item).delete()
             db.session.query(Invoice).delete()
             db.session.query(Invoice_Item).delete()
+            db.session.query(Invoice_Payment).delete()
             db.session.query(Quotation).delete()
             db.session.query(Quotation_Item).delete()
             db.session.query(Memo).delete()
             db.session.query(Unit).delete()
             db.session.query(Category).delete()
             db.session.query(Maker).delete()
+            db.session.query(History).delete()
             db.session.commit()
             data = db.session.query(
-                Customer, Item, Invoice, Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker).all()
+                Customer, Item, Invoice, Invoice_Item, Invoice_Payment, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History).all()
             return jsonify({"status": 200, "result": "ok", "data": data, "message": "データを全削除しました。"})
     return jsonify({"status": 403, "result": "権限エラー", "message": "権限がありません"})
 
