@@ -65,8 +65,8 @@ def login_post():
         login_user(user)
         newHistory = History(
             userName=user_id,
-            modelName='',
-            modelId='',
+            modelName=None,
+            modelId=None,
             action='login'
         )
         db.session.add(newHistory)
@@ -83,8 +83,8 @@ def logout():
     try:
         newHistory = History(
             userName=current_user.id,
-            modelName='',
-            modelId='',
+            modelName=None,
+            modelId=None,
             action='logout'
         )
         db.session.add(newHistory)
@@ -447,8 +447,8 @@ def upsert_csv():
 def CsvExport():
     fixtures_dir = 'csv/export/'
     models = importlib.import_module('models')
-    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item",
-                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting"]
+    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item", "Invoice_Payment",
+                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting", 'History']
 
     with open(fixtures_dir + "export.csv", 'w') as f:
         f.close()  # 初期化

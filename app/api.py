@@ -20,7 +20,7 @@ def user_index():
     newHistory = History(
         userName=current_user.id,
         modelName='User',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -149,7 +149,7 @@ def customer_index_v1():
     newHistory = History(
         userName=current_user.id,
         modelName='Customer',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -304,7 +304,7 @@ def item_index_v1():
     newHistory = History(
         userName=current_user.id,
         modelName='Item',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -452,7 +452,7 @@ def invoice_index_v1():
     newHistory = History(
         userName=current_user.id,
         modelName='Invoice',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -499,7 +499,7 @@ def dust_invoice_index_v1():
     newHistory = History(
         userName=current_user.id,
         modelName='Invoice(dust)',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -689,7 +689,7 @@ def invoice_item_index():
     newHistory = History(
         userName=current_user.id,
         modelName='InvoiceItems',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -799,7 +799,7 @@ def invoice_payment_index():
     newHistory = History(
         userName=current_user.id,
         modelName='InvoicePayments',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -982,7 +982,7 @@ def quotation_index_v1():
     newHistory = History(
         userName=current_user.id,
         modelName='Quotation',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -1029,7 +1029,7 @@ def dust_quotation_index_v1():
     newHistory = History(
         userName=current_user.id,
         modelName='Quotation(dust)',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -1206,7 +1206,7 @@ def quotation_item_index():
     newHistory = History(
         userName=current_user.id,
         modelName='QuotationItems',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -1351,7 +1351,7 @@ def memo_index_v1():
     newHistory = History(
         userName=current_user.id,
         modelName='Memo',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -1446,7 +1446,7 @@ def unit_index():
     newHistory = History(
         userName=current_user.id,
         modelName='Unit',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -1529,7 +1529,7 @@ def category_index():
     newHistory = History(
         userName=current_user.id,
         modelName='Category',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
@@ -1614,7 +1614,7 @@ def maker_index():
     newHistory = History(
         userName=current_user.id,
         modelName='Maker',
-        modelId='',
+        modelId=None,
         action='gets'
     )
     db.session.add(newHistory)
