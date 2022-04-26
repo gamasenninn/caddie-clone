@@ -67,7 +67,7 @@
                               {  key: 'createdAt', label: '日時' },
                         ]">
                         <template v-slot:cell(createdAt)="data">
-                            {{formatDate(data.item.createdAt)}}
+                            {{formatDatetime(data.item.createdAt)}}
                         </template>
                     </b-table>
                 </b-modal>
@@ -372,6 +372,9 @@
                         return value.replace(/\D/g, '');
                     },
                     formatDate(date) {
+                        if (!!date) return moment(date).format("YYYY/MM/DD");
+                    },
+                    formatDatetime(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD HH:mm:ss");
                     },
                     hidePassword(word) {
