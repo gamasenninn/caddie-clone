@@ -64,7 +64,11 @@
                               {  key: 'id', label: 'No.' },
                               {  key: 'userName', label: 'ユーザー名' },
                               {  key: 'action', label: '行動' },
+                              {  key: 'createdAt', label: '日時' },
                         ]">
+                        <template v-slot:cell(createdAt)="data">
+                            {{formatDate(data.item.createdAt)}}
+                        </template>
                     </b-table>
                 </b-modal>
 
@@ -368,7 +372,7 @@
                         return value.replace(/\D/g, '');
                     },
                     formatDate(date) {
-                        if (!!date) return moment(date).format("YYYY/MM/DD");
+                        if (!!date) return moment(date).format("YYYY/MM/DD HH:mm:ss");
                     },
                     hidePassword(word) {
                         let password = String(word);
