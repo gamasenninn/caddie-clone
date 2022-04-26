@@ -1746,6 +1746,28 @@ def setting_update(id):
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
+# 操作履歴(Histories)
+@app.route('/histories', methods=['GET'])
+def history_index():
+    histories = History.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='History',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(HistorySchema(many=True).dump(histories))
+
+
+@app.route('/login-histories', methods=['GET'])
+def login_history_index():
+    loginHistories = History.query.filter(or_(
+        History.action == 'login', History.action == 'logout'))
+    return jsonify(HistorySchema(many=True).dump(loginHistories))
+
+
 if __name__ == '__main__':
 
     app.run(host='0.0.0.0', port=5010, debug=True)
