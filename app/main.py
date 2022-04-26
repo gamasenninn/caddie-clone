@@ -395,6 +395,9 @@ def CsvUpload():
     except (exc.IntegrityError, sqlite3.IntegrityError) as e:
         print(e)
         return jsonify({"result": "error", "message": "UNIQUEが重複しています。重複しない値を指定してください。", "e_message": str(e)}), 500
+    except exc.CompileError as e:
+        print(e)
+        return jsonify({"result": "error", "message": "存在しないカラムがあります。対象となるテーブルとCSVのカラムを確認してください。", "e_message": str(e)}), 500
     except ValueError as e:
         print(e)
         return jsonify({"result": "error", "message": "不正な値があります。CSVに規格外または不要な空欄が無いか確認してください。", "e_message": str(e)}), 500
@@ -420,7 +423,7 @@ def upsert_csv():
     dirList.remove('.gitkeep')
 
     for file_name in dirList:
-        class_name = file_name.replace(".csv", "").capitalize()
+        class_name = file_name.replace(".csv", "")
         model_class = getattr(models, class_name)
         with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
             reader = csv.reader(csv_file, delimiter=',')
