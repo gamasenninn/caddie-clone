@@ -5,6 +5,7 @@ import os
 import csv
 import re
 import datetime
+from flask import send_file
 
 
 def upsert_csv():
@@ -56,3 +57,33 @@ def upsert_csv():
                     index_elements=['id'], set_=columnDic)
                 db.session.execute(do_update_stmt)
             db.session.commit()
+
+
+def export_csv():
+    fixtures_dir = 'csv_dir/export/'
+    models = importlib.import_module('models')
+    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item", "Invoice_Payment",
+                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting", 'History']
+
+    with open(fixtures_dir + "export.csv", 'w') as f:
+        f.close()  # 初期化
+
+    for class_name in classList:
+        model_class = getattr(models, class_name)
+        model_schema = getattr(models, class_name+"Schema")
+        columnlist = model_class.__table__.columns.keys()  # カラムリスト取得
+
+        result = model_class.query.all()
+        dataList = model_schema(many=True).dump(result)  # dict型のテーブル内データ
+
+        with open(fixtures_dir+'export.csv', 'a', encoding='utf-8', newline="") as f:
+            writer = csv.writer(f)
+            f.write(class_name+'\n')
+            writer.writerow(columnlist)
+            for d in dataList:
+                sortList = []
+                for column in columnlist:
+                    sortList.append(d[column])  # 並び順整形
+                writer.writerow(sortList)
+            f.write('\n\n\n')
+            f.close()

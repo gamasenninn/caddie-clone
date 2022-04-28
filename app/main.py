@@ -17,7 +17,7 @@ import csv
 import pdfmaker.app.pdf_maker as pd
 from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist, get_dir_info
 from werkzeug.security import generate_password_hash, check_password_hash
-from csv_dir.csv_converter import upsert_csv
+from csv_dir.csv_converter import upsert_csv, export_csv
 
 # ------　ユーザー認証 -------
 app.secret_key = os.urandom(24)
@@ -420,34 +420,8 @@ def CsvUpload():
 
 @app.route('/csv-export', methods=['GET'])
 def CsvExport():
-    fixtures_dir = 'csv/export/'
-    models = importlib.import_module('models')
-    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item", "Invoice_Payment",
-                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting", 'History']
-
-    with open(fixtures_dir + "export.csv", 'w') as f:
-        f.close()  # 初期化
-
-    for class_name in classList:
-        model_class = getattr(models, class_name)
-        model_schema = getattr(models, class_name+"Schema")
-        columnlist = model_class.__table__.columns.keys()  # カラムリスト取得
-
-        result = model_class.query.all()
-        dataList = model_schema(many=True).dump(result)  # dict型のテーブル内データ
-
-        with open(fixtures_dir+'export.csv', 'a', encoding='utf-8', newline="") as f:
-            writer = csv.writer(f)
-            f.write(class_name+'\n')
-            writer.writerow(columnlist)
-            for d in dataList:
-                sortList = []
-                for column in columnlist:
-                    sortList.append(d[column])  # 並び順整形
-                writer.writerow(sortList)
-            f.write('\n\n\n')
-            f.close()
-
+    export_csv()
+    fixtures_dir = 'csv_dir/export/'
     downloadFileName = 'export.csv'
     downloadFile = fixtures_dir+'export.csv'
 
