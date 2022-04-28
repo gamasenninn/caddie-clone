@@ -1764,8 +1764,7 @@ def history_index():
 @app.route('/login-histories', methods=['GET'])
 def login_history_index():
     loginHistories = History.query.filter(or_(
-        History.action == 'login', History.action == 'logout')).order_by(desc(History.id))
-    loginHistories.limit(_LIMIT_NUM)
+        History.action == 'login', History.action == 'logout')).order_by(desc(History.id)).limit(_LIMIT_NUM)
     return jsonify(HistorySchema(many=True).dump(loginHistories))
 
 
