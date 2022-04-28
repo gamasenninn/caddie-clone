@@ -4,7 +4,7 @@ from models import *
 from flask import jsonify, request
 import json
 from datetime import date
-from sqlalchemy import or_, and_, extract
+from sqlalchemy import desc, or_, and_, extract
 from flask_login import current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -1764,7 +1764,7 @@ def history_index():
 @app.route('/login-histories', methods=['GET'])
 def login_history_index():
     loginHistories = History.query.filter(or_(
-        History.action == 'login', History.action == 'logout'))
+        History.action == 'login', History.action == 'logout')).order_by(desc(History.id)).limit(_LIMIT_NUM)
     return jsonify(HistorySchema(many=True).dump(loginHistories))
 
 
