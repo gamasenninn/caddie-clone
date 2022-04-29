@@ -12,6 +12,8 @@ import importlib
 from models import *
 import os
 import csv
+import re
+import datetime
 
 # sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
@@ -65,8 +67,8 @@ def login_post():
         login_user(user)
         newHistory = History(
             userName=user_id,
-            modelName='',
-            modelId='',
+            modelName=None,
+            modelId=None,
             action='login'
         )
         db.session.add(newHistory)
@@ -83,8 +85,8 @@ def logout():
     try:
         newHistory = History(
             userName=current_user.id,
-            modelName='',
-            modelId='',
+            modelName=None,
+            modelId=None,
             action='logout'
         )
         db.session.add(newHistory)
@@ -393,6 +395,9 @@ def CsvUpload():
     except (exc.IntegrityError, sqlite3.IntegrityError) as e:
         print(e)
         return jsonify({"result": "error", "message": "UNIQUEが重複しています。重複しない値を指定してください。", "e_message": str(e)}), 500
+    except exc.CompileError as e:
+        print(e)
+        return jsonify({"result": "error", "message": "存在しないカラムがあります。対象となるテーブルとCSVのカラムを確認してください。", "e_message": str(e)}), 500
     except ValueError as e:
         print(e)
         return jsonify({"result": "error", "message": "不正な値があります。CSVに規格外または不要な空欄が無いか確認してください。", "e_message": str(e)}), 500
@@ -400,7 +405,6 @@ def CsvUpload():
         print(e)
         return jsonify({"result": "error", "message": "インデックス数が不正です。CSVのヘッダーインデックスと値のインデックスを再確認してください。", "e_message": str(e)}), 500
     except exc.StatementError as e:
-        # TODO:CSVの値は全てStrになってしまうので、後でDateへの変換処理を入れる事。
         print(e)
         return jsonify({"result": "error", "message": "値のデータ型エラーです。（Date型の入力は未対応）", "e_message": str(e)}), 500
     except Exception as e:
@@ -419,7 +423,7 @@ def upsert_csv():
     dirList.remove('.gitkeep')
 
     for file_name in dirList:
-        class_name = file_name.replace(".csv", "").capitalize()
+        class_name = file_name.replace(".csv", "")
         model_class = getattr(models, class_name)
         with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
             reader = csv.reader(csv_file, delimiter=',')
@@ -427,13 +431,35 @@ def upsert_csv():
             for row in reader:
                 columnDic = {}
                 for i in range(len(header)):
+                    # TODO:請求・見積書に紐づく商品・入金テーブルが無いとフロントでエラーになるので対応
+                    patternDatetime = r'[12]\d{3}[/\-年](0?[1-9]|1[0-2])[/\-月](0?[1-9]|[12][0-9]|3[01])日?T((0?|1)[0-9]|2[0-3])[:時][0-5][0-9][:分][0-5][0-9][.秒]\d{6}$'
+                    stringDatetime = r'' + row[i]
+                    progDatetime = re.compile(patternDatetime)
+                    resultDatetime = progDatetime.match(stringDatetime)
+                    if resultDatetime:
+                        tdatetime = datetime.datetime.strptime(
+                            row[i], '%Y-%m-%dT%H:%M:%S.%f')
+                        row[i] = tdatetime
+
+                    else:
+                        pattern = r'[12]\d{3}[/\-年](0?[1-9]|1[0-2])[/\-月](0?[1-9]|[12][0-9]|3[01])日?$'
+                        string = r'' + row[i]
+                        prog = re.compile(pattern)
+                        result = prog.match(string)
+                        if result:
+                            tdatetime = datetime.datetime.strptime(
+                                row[i], '%Y-%m-%d')
+                            tdate = datetime.date(
+                                tdatetime.year, tdatetime.month, tdatetime.day)
+                            row[i] = tdate
                     # CSVの値は全てStrになってしまうので、boolへ変換
                     if row[i] == 'True':
                         row[i] = True
                     if row[i] == 'False':
                         row[i] = False
-                    else:
-                        columnDic[header[i]] = row[i]
+                    if row[i] == '':
+                        row[i] = None
+                    columnDic[header[i]] = row[i]
                 insert_stmt = insert(model_class).values(columnDic)
                 do_update_stmt = insert_stmt.on_conflict_do_update(
                     index_elements=['id'], set_=columnDic)
@@ -447,8 +473,8 @@ def upsert_csv():
 def CsvExport():
     fixtures_dir = 'csv/export/'
     models = importlib.import_module('models')
-    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item",
-                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting"]
+    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item", "Invoice_Payment",
+                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting", 'History']
 
     with open(fixtures_dir + "export.csv", 'w') as f:
         f.close()  # 初期化
@@ -503,15 +529,17 @@ def dbInit():
             db.session.query(Item).delete()
             db.session.query(Invoice).delete()
             db.session.query(Invoice_Item).delete()
+            db.session.query(Invoice_Payment).delete()
             db.session.query(Quotation).delete()
             db.session.query(Quotation_Item).delete()
             db.session.query(Memo).delete()
             db.session.query(Unit).delete()
             db.session.query(Category).delete()
             db.session.query(Maker).delete()
+            db.session.query(History).delete()
             db.session.commit()
             data = db.session.query(
-                Customer, Item, Invoice, Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker).all()
+                Customer, Item, Invoice, Invoice_Item, Invoice_Payment, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History).all()
             return jsonify({"status": 200, "result": "ok", "data": data, "message": "データを全削除しました。"})
     return jsonify({"status": 403, "result": "権限エラー", "message": "権限がありません"})
 
