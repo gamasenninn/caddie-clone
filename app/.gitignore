@@ -3,6 +3,6 @@
 /static/pdf
 *.db
 *.db-journal
-csv/import/*
-csv/export/*
+csv_dir/import/*
+csv_dir/export/*
 !.gitkeep

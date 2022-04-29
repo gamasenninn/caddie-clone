@@ -12,13 +12,12 @@ import importlib
 from models import *
 import os
 import csv
-import re
-import datetime
 
 # sys.path.append('../')
 import pdfmaker.app.pdf_maker as pd
 from upload.upload import make_thumb, chext, save_file, remove_files2, get_flist, get_dir_info
 from werkzeug.security import generate_password_hash, check_password_hash
+from csv_dir.csv_converter import upsert_csv, export_csv
 
 # ------　ユーザー認証 -------
 app.secret_key = os.urandom(24)
@@ -386,7 +385,7 @@ def CsvTest():
 def CsvUpload():
     file = request.files['file']
     target = request.form['selected_import']
-    file.save('csv/import/'+target + '.csv')
+    file.save('csv_dir/import/'+target + '.csv')
     try:
         upsert_csv()
     except UnicodeDecodeError as e:
@@ -413,92 +412,16 @@ def CsvUpload():
     else:
         return jsonify({"result": "ok", "message": "更新に成功しました"})
     finally:
-        os.remove('csv/import/'+target+'.csv')
+        os.remove('csv_dir/import/'+target+'.csv')
 
-
-def upsert_csv():
-    fixtures_dir = 'csv/import/'
-    models = importlib.import_module('models')
-    dirList = os.listdir(fixtures_dir)
-    dirList.remove('.gitkeep')
-
-    for file_name in dirList:
-        class_name = file_name.replace(".csv", "")
-        model_class = getattr(models, class_name)
-        with open(fixtures_dir + '/' + file_name, encoding='utf-8') as csv_file:
-            reader = csv.reader(csv_file, delimiter=',')
-            header = next(reader)
-            for row in reader:
-                columnDic = {}
-                for i in range(len(header)):
-                    # TODO:請求・見積書に紐づく商品・入金テーブルが無いとフロントでエラーになるので対応
-                    patternDatetime = r'[12]\d{3}[/\-年](0?[1-9]|1[0-2])[/\-月](0?[1-9]|[12][0-9]|3[01])日?T((0?|1)[0-9]|2[0-3])[:時][0-5][0-9][:分][0-5][0-9][.秒]\d{6}$'
-                    stringDatetime = r'' + row[i]
-                    progDatetime = re.compile(patternDatetime)
-                    resultDatetime = progDatetime.match(stringDatetime)
-                    if resultDatetime:
-                        tdatetime = datetime.datetime.strptime(
-                            row[i], '%Y-%m-%dT%H:%M:%S.%f')
-                        row[i] = tdatetime
-
-                    else:
-                        pattern = r'[12]\d{3}[/\-年](0?[1-9]|1[0-2])[/\-月](0?[1-9]|[12][0-9]|3[01])日?$'
-                        string = r'' + row[i]
-                        prog = re.compile(pattern)
-                        result = prog.match(string)
-                        if result:
-                            tdatetime = datetime.datetime.strptime(
-                                row[i], '%Y-%m-%d')
-                            tdate = datetime.date(
-                                tdatetime.year, tdatetime.month, tdatetime.day)
-                            row[i] = tdate
-                    # CSVの値は全てStrになってしまうので、boolへ変換
-                    if row[i] == 'True':
-                        row[i] = True
-                    if row[i] == 'False':
-                        row[i] = False
-                    if row[i] == '':
-                        row[i] = None
-                    columnDic[header[i]] = row[i]
-                insert_stmt = insert(model_class).values(columnDic)
-                do_update_stmt = insert_stmt.on_conflict_do_update(
-                    index_elements=['id'], set_=columnDic)
-                db.session.execute(do_update_stmt)
-            db.session.commit()
 
 # ----- csv_export -----
 
 
 @app.route('/csv-export', methods=['GET'])
 def CsvExport():
-    fixtures_dir = 'csv/export/'
-    models = importlib.import_module('models')
-    classList = ["User", "Customer", "Item", "Invoice", "Invoice_Item", "Invoice_Payment",
-                 "Quotation", "Quotation_Item", "Memo", "Unit", "Category", "Maker", "Setting", 'History']
-
-    with open(fixtures_dir + "export.csv", 'w') as f:
-        f.close()  # 初期化
-
-    for class_name in classList:
-        model_class = getattr(models, class_name)
-        model_schema = getattr(models, class_name+"Schema")
-        columnlist = model_class.__table__.columns.keys()  # カラムリスト取得
-
-        result = model_class.query.all()
-        dataList = model_schema(many=True).dump(result)  # dict型のテーブル内データ
-
-        with open(fixtures_dir+'export.csv', 'a', encoding='utf-8', newline="") as f:
-            writer = csv.writer(f)
-            f.write(class_name+'\n')
-            writer.writerow(columnlist)
-            for d in dataList:
-                sortList = []
-                for column in columnlist:
-                    sortList.append(d[column])  # 並び順整形
-                writer.writerow(sortList)
-            f.write('\n\n\n')
-            f.close()
-
+    export_csv()
+    fixtures_dir = 'csv_dir/export/'
     downloadFileName = 'export.csv'
     downloadFile = fixtures_dir+'export.csv'
 

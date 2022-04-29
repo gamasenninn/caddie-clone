@@ -108,7 +108,7 @@
                     target: [
                         { value: null, text: '選択してください' }, { value: "User", text: 'ユーザー' }, { value: "Customer", text: '得意先' }, { value: "Item", text: '商品' },
                         { value: "Invoice", text: '請求書' }, { value: "Invoice_Item", text: '請求書商品' }, { value: "Invoice_Payment", text: '請求書入金' }, { value: "Quotation", text: '見積書' }, { value: "Quotation_Item", text: '見積書商品' },
-                        { value: "Memo", text: 'メモ' }, { value: "Unit", text: '単位' }, { value: "Category", text: 'カテゴリー' }, { value: "Maker", text: 'メーカー' },
+                        { value: "Memo", text: 'メモ' }, { value: "Unit", text: '単位' }, { value: "Category", text: 'カテゴリー' }, { value: "Maker", text: 'メーカー' }, { value: "History", text: '操作履歴' },
                     ],
                     message: '',
                     title: '',
@@ -140,7 +140,7 @@
             })
 
             Dropzone.options.myDropzone = { // camelized version of the `id`
-                dictDefaultMessage: 'ここにファイルをドロップ',
+                dictDefaultMessage: '+',
                 autoProcessQueue: false,
                 maxFiles: 1,
                 addRemoveLinks: true,
