@@ -138,6 +138,7 @@ def customer_index_v1():
         customers = Customer.query.filter(or_(
             Customer.customerName.like('%'+searchWord+'%'),
             Customer.customerKana.like('%'+searchWord+'%'),
+            Customer.anyNumber == searchWord,
         ))
     else:
         customers = Customer.query
