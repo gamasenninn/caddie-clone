@@ -76,6 +76,7 @@
                                     {{formatContent(data.item.content)}}
                                 </template>
                             </b-table>
+                            <b-button variant="primary" @click="showMore">さらに表示</b-button>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -203,6 +204,7 @@
                     isShowFavorite: false,
                     title: '',              //モーダルタイトル
                     message: '',            //モーダルメッセージ
+                    offset: 0,
                 },
                 methods: {
                     // ---Memos---
@@ -217,7 +219,13 @@
                         })
                             .then(function (response) {
                                 console.log(response);
-                                self.memos = response.data;
+                                if (offset == 0) {
+                                    self.offset = 0;
+                                    self.memos = response.data;
+                                }
+                                else {
+                                    response.data.map(memo => self.memos.push(memo));
+                                }
                             });
                     },
                     bulkUpsert(item) {
@@ -257,7 +265,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.memo = '';
-                                self.getMemos();
+                                self.getMemos(self.searchMemoWord);
                             });
                     },
                     MemoAddRow: function () {
@@ -290,6 +298,10 @@
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
                         if (!item.id) return "d-none";
+                    },
+                    showMore: function () {
+                        this.offset += 100;
+                        this.getMemos(this.searchMemoWord, this.offset)
                     },
                     modalShow: function (item, modalName) {
                         this.memo = item;
