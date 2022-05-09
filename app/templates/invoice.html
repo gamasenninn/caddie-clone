@@ -160,7 +160,8 @@
                                 <invoice-list-payment v-else :select-invoice="selectInvoice"
                                     :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles"
                                     :sort-by-invoices="sortByInvoices" :sort-desc="sortDesc">
-                                    </invoice-list>
+                                </invoice-list-payment>
+                                <b-button variant="primary" @click="showMore">さらに表示</b-button>
                             </b-card>
                         </b-col>
                         <b-col></b-col>
@@ -682,7 +683,7 @@
 
         <script>
             //カスタマイズと通常読み込みとが必要なものを指定する
-            loadScript(['def-pdf.js','btn-pdf.js']);
+            loadScript(['def-pdf.js', 'btn-pdf.js']);
 
             Vue.filter('nf', function (val) {
                 if (isNaN(val)) return null
@@ -699,6 +700,7 @@
                 data: {
                     sortByInvoices: 'id',
                     sortDesc: true,
+                    searchInvoiceWord: "",
                     searchDayStart: '',             //請求書検索
                     searchDayEnd: '',               //請求書検索
                     isInvoicesShowAll: false,               //請求書検索
@@ -730,6 +732,7 @@
                     uploadListMode: 'card', //list,card
                     title: '',      //モーダルタイトル
                     message: '',    //モーダルメッセージ
+                    offset: 0,
                     routeTo: '',
                     routeFrom: '',
                     countedFiles: {},
@@ -747,7 +750,13 @@
                         })
                             .then(function (response) {
                                 console.log(response);
-                                self.invoices = response.data;
+                                if (offset == 0) {
+                                    self.offset = 0;
+                                    self.invoices = response.data;
+                                }
+                                else {
+                                    response.data.map(invoice => self.invoices.push(invoice));
+                                }
                             });
                     },
                     bulkUpsert: async function (item) {
@@ -844,7 +853,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.invoice = '';
-                                self.getInvoices();
+                                self.getInvoices(self.searchInvoiceWord);
                             });
                     },
                     InvoiceAddRow: function () {
@@ -967,6 +976,10 @@
                                 console.log(response);
                                 self.setting = response.data;
                             });
+                    },
+                    showMore: function () {
+                        this.offset += 100;
+                        this.getInvoices(this.searchInvoiceWord, this.offset);
                     },
                     coutFiles: function () {
                         self = this;
@@ -1114,7 +1127,7 @@
                                 if (value) isUpdate = true;
                             });
                             if (isUpdate) await this.bulkUpsert(this.invoice);
-                            this.getInvoices();
+                            this.getInvoices(this.searchInvoiceWord);
                         }
                         if (!isUpdate || (isUpdate && this.invoice.customerId)) {
                             this.clearFileList();
@@ -1141,8 +1154,9 @@
                         return "height: " + (26 * row + interval) + "px";
                     },
                     // ----- 子コンポーネントからの値 -----
-                    updateInvoices(invoices) {
+                    updateInvoices(invoices, searchInvoiceWord) {
                         this.invoices = invoices;
+                        this.searchInvoiceWord = searchInvoiceWord;
                     },
                     updateDayStart(start) {
                         this.searchDayStart = start;

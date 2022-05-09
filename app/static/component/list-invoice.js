@@ -38,7 +38,7 @@ var search = Vue.component('search', {
             this.changeInvoices();
         },
         changeInvoices() {
-            this.$emit('emit-invoices', search.invoices);
+            this.$emit('emit-invoices', search.invoices, search.searchInvoiceWord);
         },
     },
 })
