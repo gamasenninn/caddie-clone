@@ -446,7 +446,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.customer = '';
-                                self.getCustomers();
+                                self.getCustomers(self.searchCustomerWord);
                             });
                     },
                     CustomerAddRow: function () {
@@ -558,7 +558,7 @@
                                 if (value) isUpdate = true;
                             });
                             if (isUpdate) await this.bulkUpsert(this.customer);
-                            this.getCustomers();
+                            this.getCustomers(this.searchCustomerWord);
                         }
                         router.push({ path: "?page=index" });
                     }
