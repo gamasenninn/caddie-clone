@@ -127,6 +127,7 @@
                                     {{formatDateTime(data.item.updatedAt)}}
                                 </template>
                             </b-table>
+                            <b-button variant="primary" @click="showMore">さらに表示</b-button>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -357,7 +358,8 @@
                 <b-row v-if="pageName=='show'">
                     <b-col>
                         <router-link to="?page=index">
-                            <b-button @click="getInvoices();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
+                            <b-button @click="getInvoices(searchInvoiceWord);" v-b-tooltip.hover.top="'戻る'">＜
+                            </b-button>
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
@@ -403,6 +405,7 @@
                     invoiceItem: [],                //選択中のinvoiceItem
                     customer: [],
                     setting: [],
+                    offset: 0,
                 },
                 methods: {
                     // ---Invoices---
@@ -417,7 +420,13 @@
                         })
                             .then(function (response) {
                                 console.log(response);
-                                self.invoices = response.data;
+                                if (offset == 0) {
+                                    self.offset = 0;
+                                    self.invoices = response.data;
+                                }
+                                else {
+                                    response.data.map(invoice => self.invoices.push(invoice));
+                                }
                             });
                     },
                     selectInvoice: function (item) {
@@ -439,6 +448,10 @@
                     },
                     searchInvoice: function () {
                         this.getInvoices(this.searchInvoiceWord);
+                    },
+                    showMore: function () {
+                        this.offset += 100;
+                        this.getInvoices(this.searchInvoiceWord, this.offset)
                     },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY年MM月DD日");
