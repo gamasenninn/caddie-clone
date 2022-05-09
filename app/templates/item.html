@@ -139,6 +139,7 @@
                                     </router-link>
                                 </template>
                             </b-table>
+                            <b-button variant="primary" @click="showMore">さらに表示</b-button>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -405,6 +406,7 @@
                     routeFrom: '',
                     title: '',              //モーダルタイトル
                     message: '',            //モーダルメッセージ
+                    offset: 0,
                     countedFiles: {}
                 },
                 methods: {
@@ -420,7 +422,13 @@
                         })
                             .then(function (response) {
                                 console.log(response);
-                                self.items = response.data;
+                                if (offset == 0) {
+                                    self.offset = 0;
+                                    self.items = response.data;
+                                }
+                                else {
+                                    response.data.map(item => self.items.push(item));
+                                }
                             });
                     },
                     bulkUpsert: async function (item) {
@@ -479,7 +487,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.item = '';
-                                self.getItems();
+                                self.getItems(self.searchItemWord);
                             });
                     },
                     ItemAddRow: function () {
@@ -493,7 +501,7 @@
                     },
                     selectItem: function (item) {
                         this.item = item;
-                        this.oldItem = {...item};
+                        this.oldItem = { ...item };
                         console.log(this.item);
                         localStorage.setItem('item', JSON.stringify(item))
                         this.getFileListDZ();
@@ -517,6 +525,10 @@
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
                         if (!item.id) return "d-none";
+                    },
+                    showMore: function () {
+                        this.offset += 100;
+                        this.getItems(this.searchItemWord, this.offset)
                     },
                     getUnits: async function () {
                         self = this;
@@ -613,8 +625,8 @@
                         });
                     },
                     //---------変更があったかどうかをチェク。アラート ---------
-                    isDiffObject: function(){
-                        if (this.oldItem.length==0 || this.item.length==0 ) return false;
+                    isDiffObject: function () {
+                        if (this.oldItem.length == 0 || this.item.length == 0) return false;
                         if (JSON.stringify(this.oldItem) === JSON.stringify(this.item)) return false;
                         else return true;
                     },
@@ -631,7 +643,7 @@
                                 if (value) isUpdate = true;
                             });
                             if (isUpdate) await this.bulkUpsert(this.item);
-                            this.getItems();
+                            this.getItems(this.searchItemWord);
                             this.countChanged = 0;
                         }
                         this.clearFileList();
