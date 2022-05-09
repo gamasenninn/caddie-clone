@@ -124,6 +124,7 @@
                                     {{formatDateTime(data.item.updatedAt)}}
                                 </template>
                             </b-table>
+                            <b-button variant="primary" @click="showMore">さらに表示</b-button>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -347,7 +348,8 @@
                 <b-row v-if="pageName=='show'">
                     <b-col>
                         <router-link to="?page=index">
-                            <b-button @click="getQuotations();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
+                            <b-button @click="getQuotations(searchQuotationWord);" v-b-tooltip.hover.top="'戻る'">＜
+                            </b-button>
                         </router-link>
                     </b-col>
                     <b-col class="text-right">
@@ -389,6 +391,7 @@
                     quotationItem: [],            //選択中のquotationItem
                     customer: [],
                     setting: [],
+                    offset: 0,
                 },
                 methods: {
                     // ---Quotations---
@@ -403,7 +406,13 @@
                         })
                             .then(function (response) {
                                 console.log(response);
-                                self.quotations = response.data;
+                                if (offset == 0) {
+                                    self.offset = 0;
+                                    self.quotations = response.data;
+                                }
+                                else {
+                                    response.data.map(quotation => self.quotations.push(quotation));
+                                }
                             });
                     },
                     selectQuotation: function (item) {
@@ -425,6 +434,10 @@
                     },
                     searchQuotation: function () {
                         this.getQuotations(this.searchQuotationWord);
+                    },
+                    showMore: function () {
+                        this.offset += 100;
+                        this.getQuotations(this.searchQuotationWord, this.offset)
                     },
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY年MM月DD日");
