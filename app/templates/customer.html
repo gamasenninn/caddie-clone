@@ -49,7 +49,7 @@
                                 <b-col sm>
                                     <b-input-group>
                                         <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm"
-                                            placeholder="🔍　得意先名 or 得意先カナ">
+                                            placeholder="🔍　任意番号 or 得意先名 or 得意先カナ">
                                         </b-form-input>
                                         <b-input-group-append>
                                             <b-button variant="primary" size="sm" @click="searchCustomer">検索</b-button>
@@ -100,7 +100,7 @@
                                     {{formatMemo(data.item.memo)}}
                                 </template>
                             </b-table>
-
+                            <b-button variant="primary" @click="showMore">さらに表示</b-button>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -356,6 +356,7 @@
                     selectHonorificTitle: ['', '様', '御中', '殿',],    //敬称セレクトボックス用
                     title: '',
                     message: '',
+                    offset: 0,
                 },
                 methods: {
                     // ---Customers---
@@ -370,7 +371,13 @@
                         })
                             .then(function (response) {
                                 console.log(response);
-                                self.customers = response.data;
+                                if (offset == 0) {
+                                    self.offset = 0;
+                                    self.customers = response.data;
+                                }
+                                else {
+                                    response.data.map(customer => self.customers.push(customer));
+                                }
                             });
                     },
                     //                    getCustomersSearch: async function (item) {
@@ -439,7 +446,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.customer = '';
-                                self.getCustomers();
+                                self.getCustomers(self.searchCustomerWord);
                             });
                     },
                     CustomerAddRow: function () {
@@ -474,6 +481,10 @@
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
                         if (!item.id) return "d-none";
+                    },
+                    showMore: function () {
+                        this.offset += 100;
+                        this.getCustomers(this.searchCustomerWord, this.offset)
                     },
                     apply: function () {
                         if (this.customerKanaValidate === true) {
@@ -547,7 +558,7 @@
                                 if (value) isUpdate = true;
                             });
                             if (isUpdate) await this.bulkUpsert(this.customer);
-                            this.getCustomers();
+                            this.getCustomers(this.searchCustomerWord);
                         }
                         router.push({ path: "?page=index" });
                     }

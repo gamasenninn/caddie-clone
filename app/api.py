@@ -138,6 +138,7 @@ def customer_index_v1():
         customers = Customer.query.filter(or_(
             Customer.customerName.like('%'+searchWord+'%'),
             Customer.customerKana.like('%'+searchWord+'%'),
+            Customer.anyNumber == searchWord,
         ))
     else:
         customers = Customer.query
@@ -971,7 +972,7 @@ def quotation_index_v1():
                     extract('year', Quotation.applyDate) == year, extract('month', Quotation.applyDate) == month, extract('day', Quotation.applyDate) == day))))
         else:
             quotations = Quotation.query.filter(
-                and_(Invoice.isDelete == False, Quotation.customerName.like('%'+searchWord+'%')))
+                and_(Quotation.isDelete == False, Quotation.customerName.like('%'+searchWord+'%')))
     else:
         quotations = Quotation.query.filter(Quotation.isDelete == False)
     if offset:
