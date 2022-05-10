@@ -8,6 +8,8 @@ Vue.component('btn-pdf-invoice', {
         </template>
         <b-dropdown-item @click="func('invoice','copy')">請求書控え</b-dropdown-item>
         <b-dropdown-item @click="func('invoice','nodate')">日付なし請求書</b-dropdown-item>
+        <b-dropdown-item @click="func('delivery')">納品書</b-dropdown-item>
+        <b-dropdown-item @click="func('receipt')">領収書</b-dropdown-item>
     </b-dropdown>
     `,
     props: {
@@ -17,9 +19,8 @@ Vue.component('btn-pdf-invoice', {
 
 //quotation
 Vue.component('btn-pdf-quotation', {
-    //　見積書印刷はhiddenにする
     template: `
-    <b-button hidden pill size="lg" variant="primary" @click="func()" 
+    <b-button pill size="lg" variant="primary" @click="func()" 
         v-b-tooltip.hover.top="'印刷'"><i class="fas fa-print"></i>
     </b-button>
     `,
