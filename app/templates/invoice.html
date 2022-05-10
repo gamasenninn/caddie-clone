@@ -1227,7 +1227,7 @@
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         let subTotal = this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * Math.round(invoice_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
                         if (this.invoice.isTaxExp) return subTotal;
-                        return parseInt(subTotal / 1.1);
+                        return parseInt(subTotal / (1 + this.invoice.tax / 100));
                     },
                     // 入金合計額
                     paymentSum: function () {

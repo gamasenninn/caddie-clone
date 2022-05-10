@@ -1196,7 +1196,7 @@
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         let subTotal = this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * Math.round(quotation_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
                         if (this.quotation.isTaxExp) return subTotal;
-                        return parseInt(subTotal / 1.1);
+                        return parseInt(subTotal / (1 + this.quotation.tax / 100));
                     },
                     //消費税総額
                     taxAmount: function () {
