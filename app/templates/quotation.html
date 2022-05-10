@@ -1194,19 +1194,26 @@
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
                         if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
-                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * Math.round(quotation_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                        let subTotal = this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * Math.round(quotation_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                        if (this.quotation.isTaxExp) return subTotal;
+                        return parseInt(subTotal / 1.1);
                     },
                     //消費税総額
                     taxAmount: function () {
+                        if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         if (this.quotation.isTaxExp)
                             return Math.round(this.sum * (this.quotation.tax / 100));
-                        return Math.round(this.sum - this.sum / (1 + this.quotation.tax / 100));
+                        let subTotal = this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * Math.round(quotation_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                        return subTotal - this.sum;
+                        // return Math.round(this.sum - this.sum / (1 + this.quotation.tax / 100));
                     },
                     //税込み総額
                     priceIncludingTax: function () {
+                        if (typeof (this.quotation.quotation_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
                         if (this.quotation.isTaxExp)
                             return Math.round(this.sum * (1 + this.quotation.tax / 100));
-                        return this.sum;
+                        return this.quotation.quotation_items.map(quotation_item => parseInt(quotation_item.count * Math.round(quotation_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                        // return this.sum;
                     },
                     quotationsIndicateIndex: function () {
                         let quotations = this.quotations;
