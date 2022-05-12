@@ -372,6 +372,7 @@
                     message: '',                //モーダルメッセージ
                     isHideTabletMode: false,
                     selectSize: ['', '40', '50', '60',],    //敬称セレクトボックス用
+                    isHideTabletMode: false,
                 },
                 methods: {
                     // ---Settings---
@@ -412,7 +413,7 @@
                 mounted: function () {
                     this.getSetting();
                     this.getLoginUser();
-                    this.isHideTabletMode=localStorage.getItem('isHideTabletMode');
+                    this.isHideTabletMode = localStorage.getItem('isHideTabletMode');
                     document.querySelector('title').textContent = '各種情報設定';
                 },
                 router,
