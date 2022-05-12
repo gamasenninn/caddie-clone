@@ -26,10 +26,12 @@
             <b-button id="setting" v-b-tooltip.hover.top="'各種設定'" style="width: 39%;">
                 <b-icon icon="gear-fill"></b-icon>
             </b-button>
-            <b-button v-if="modeName=='mw'" id="tb-mode" v-b-tooltip.hover.top="'タブレットモード'" style="width: 39%;">
+            <b-button v-if="modeName=='mw' && isHideTabletModeValue=='false'" id="tb-mode"
+                v-b-tooltip.hover.top="'タブレットモード'" style="width: 39%;">
                 <b-img src="../static/images/icon/tablet.png"></b-img>
             </b-button>
-            <b-button v-else id="mw-mode" v-b-tooltip.hover.topright="'マルチウィンドウモード'" style="width: 39%;">
+            <b-button v-else-if="modeName=='tb'" id="mw-mode" v-b-tooltip.hover.topright="'マルチウィンドウモード'"
+                style="width: 39%;">
                 <b-icon icon="front"></b-icon>
             </b-button>
             <b-button class="mt-2" variant="outline-primary" id="logout" style="width: 80%;">
@@ -49,6 +51,9 @@
                     modeName() {
                         //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
+                    },
+                    isHideTabletModeValue() {
+                        return localStorage.getItem('isHideTabletMode');
                     },
                 }
             })

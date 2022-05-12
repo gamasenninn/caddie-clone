@@ -78,6 +78,10 @@
         localStorage.setItem('wMode', modeCheck());
       }
 
+      if (localStorage.getItem('isHideTabletMode') === null) {
+        localStorage.setItem('isHideTabletMode', 'false');
+      }
+
       let _left = 100;
       let _top = 100;
       wins = {};
