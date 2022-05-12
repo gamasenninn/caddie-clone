@@ -278,6 +278,10 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="TBボタン非表示"
+                                        label-for="isHideTabletMode" label-align="right">
+                                        <b-form-checkbox v-model="isHideTabletMode"></b-form-checkbox>
+                                    </b-form-group>
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -367,6 +371,7 @@
                     title: '',                  //モーダルタイトル
                     message: '',                //モーダルメッセージ
                     selectSize: ['', '40', '50', '60',],    //敬称セレクトボックス用
+                    isHideTabletMode: false,
                 },
                 methods: {
                     // ---Settings---
@@ -379,6 +384,7 @@
                             .then(function (response) {
                                 self.getSetting(self.setting);
                                 console.log(response);
+                                localStorage.setItem('isHideTabletMode', String(self.isHideTabletMode));
                             });
                         app.title = '更新';
                         app.message = '保存しました。';
@@ -406,6 +412,7 @@
                 mounted: function () {
                     this.getSetting();
                     this.getLoginUser();
+                    this.isHideTabletMode = localStorage.getItem('isHideTabletMode');
                     document.querySelector('title').textContent = '各種情報設定';
                 },
                 router,
@@ -413,6 +420,9 @@
                     modeName() {
                         //return this.$route.query.mode;
                         return localStorage.getItem('wMode');
+                    },
+                    isHideTabletModeValue() {
+                        return localStorage.getItem('isHideTabletMode');
                     },
                 }
             })
