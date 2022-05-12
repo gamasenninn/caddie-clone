@@ -1,6 +1,6 @@
 # 本体
 from datetime import timedelta
-from flask import Flask, session
+from flask import Flask, session,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
@@ -8,6 +8,7 @@ from sqlalchemy import MetaData
 
 #app = Flask(__name__)
 
+SESSION_LIFE_TIME = 30
 
 class CustomFlask(Flask):
     jinja_options = Flask.jinja_options.copy()
@@ -27,10 +28,17 @@ app = CustomFlask(__name__)
 @app.before_request
 def before_request():
     # リクエストのたびにセッションの寿命を更新する
-    session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=30)
-    session.modified = True
+    if "/is-session" == request.path:
+        session.permanent = False
+        session.modified = False
+        return
 
+    if session.get('_id'):
+        session.permanent = True
+        app.permanent_session_lifetime = timedelta(minutes=SESSION_LIFE_TIME)
+        session.modified = True
+    else:
+        pass
 
 # これが無いとUNIQUE付与できん
 convention = {
@@ -43,6 +51,8 @@ convention = {
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///caddie.db"
+
+app.permanent_session_lifetime = timedelta(minutes=SESSION_LIFE_TIME)
 
 metadata = MetaData(naming_convention=convention)
 db = SQLAlchemy(app, metadata=metadata)
