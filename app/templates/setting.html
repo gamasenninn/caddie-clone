@@ -173,12 +173,16 @@
                                     <p>会社ロゴ</p>
                                     <img :src="setting.logoFilePath" :width="setting.logoWidth"
                                         :height="setting.logoHeight">
+                                    <b-button size="sm" variant="danger" style="vertical-align: top;"
+                                        @click="setting.logoFilePath='./static/asset/logo/NotImage.png'">✖</b-button>
                                 </b-col>
                                 <b-col cols="1"></b-col>
                                 <b-col sm>
                                     <p>印鑑ロゴ</p>
                                     <img :src="setting.stampFilePath" :width="setting.stampWidth"
                                         :height="setting.stampHeight">
+                                    <b-button size="sm" variant="danger" style="vertical-align: top;"
+                                        @click="setting.stampFilePath='./static/asset/stamp/NotImage.png'">✖</b-button>
                                 </b-col>
                                 <b-col cols="1"></b-col>
                             </b-row>
@@ -214,14 +218,12 @@
                                     </form>
                                     <b-form-group label-cols="4" label-size="sm" label="高さ" label-for="logoHeight"
                                         class="mt-3">
-                                        <b-form-input v-model="setting.logoHeight" id="logoHeight" size="sm"
-                                            type="number">
-                                        </b-form-input>
+                                        <b-form-select v-model="setting.logoHeight" :options="selectSize" size="sm">
+                                        </b-form-select>
                                     </b-form-group>
                                     <b-form-group label-cols="4" label-size="sm" label="幅" label-for="logoWidth">
-                                        <b-form-input v-model="setting.logoWidth" id="logoWidth" size="sm"
-                                            type="number">
-                                        </b-form-input>
+                                        <b-form-select v-model="setting.logoWidth" :options="selectSize" size="sm">
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="1"></b-col>
@@ -234,14 +236,12 @@
                                     </form>
                                     <b-form-group label-cols="4" label-size="sm" label="高さ" label-for="stampHeight"
                                         class="mt-3">
-                                        <b-form-input v-model="setting.stampHeight" id="stampHeight" size="sm"
-                                            type="number">
-                                        </b-form-input>
+                                        <b-form-select v-model="setting.stampHeight" :options="selectSize" size="sm">
+                                        </b-form-select>
                                     </b-form-group>
                                     <b-form-group label-cols="4" label-size="sm" label="幅" label-for="stampWidth">
-                                        <b-form-input v-model="setting.stampWidth" id="stampWidth" size="sm"
-                                            type="number">
-                                        </b-form-input>
+                                        <b-form-select v-model="setting.stampWidth" :options="selectSize" size="sm">
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                                 <b-col cols="1"></b-col>
@@ -371,6 +371,7 @@
                     title: '',                  //モーダルタイトル
                     message: '',                //モーダルメッセージ
                     isHideTabletMode: false,
+                    selectSize: ['', '40', '50', '60',],    //敬称セレクトボックス用
                 },
                 methods: {
                     // ---Settings---
