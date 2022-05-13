@@ -485,7 +485,8 @@
                         if (!item.id) return "d-none";
                     },
                     showMore: function () {
-                        this.offset += 100;
+                        // テスト的に300に
+                        this.offset += 300;
                         this.getCustomers(this.searchCustomerWord, this.offset)
                     },
                     apply: function () {

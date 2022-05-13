@@ -131,7 +131,8 @@ def customer_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
-    limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
+    # テスト的に300に
+    limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
     if searchWord:
@@ -420,7 +421,8 @@ def invoice_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
-    limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
+    # テスト的に300に
+    limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
     if searchWord:
@@ -467,7 +469,8 @@ def dust_invoice_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
-    limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
+    # テスト的に300に
+    limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
     if searchWord:
