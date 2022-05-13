@@ -161,7 +161,9 @@
                                     :invoices-indicate-index="invoicesIndicateIndex" :counted-files="countedFiles"
                                     :sort-by-invoices="sortByInvoices" :sort-desc="sortDesc">
                                 </invoice-list-payment>
-                                <b-button variant="primary" @click="showMore">さらに表示</b-button>
+                                <b-row align-h="end">
+                                    <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                </b-row>
                             </b-card>
                         </b-col>
                         <b-col></b-col>
@@ -978,7 +980,8 @@
                             });
                     },
                     showMore: function () {
-                        this.offset += 100;
+                        // テスト的に300に
+                        this.offset += 300;
                         this.getInvoices(this.searchInvoiceWord, this.offset);
                     },
                     coutFiles: function () {

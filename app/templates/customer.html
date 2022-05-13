@@ -49,7 +49,7 @@
                                 <b-col sm>
                                     <b-input-group>
                                         <b-form-input v-model="searchCustomerWord" id="searchCustomerWord" size="sm"
-                                            placeholder="🔍　任意番号 or 得意先名 or 得意先カナ">
+                                            placeholder="🔍　No. or 得意先名 or 得意先カナ">
                                         </b-form-input>
                                         <b-input-group-append>
                                             <b-button variant="primary" size="sm" @click="searchCustomer">検索</b-button>
@@ -100,7 +100,9 @@
                                     {{formatMemo(data.item.memo)}}
                                 </template>
                             </b-table>
-                            <b-button variant="primary" @click="showMore">さらに表示</b-button>
+                            <b-row align-h="end">
+                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                            </b-row>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -483,7 +485,8 @@
                         if (!item.id) return "d-none";
                     },
                     showMore: function () {
-                        this.offset += 100;
+                        // テスト的に300に
+                        this.offset += 300;
                         this.getCustomers(this.searchCustomerWord, this.offset)
                     },
                     apply: function () {
