@@ -452,7 +452,8 @@
                         this.getInvoices(this.searchInvoiceWord);
                     },
                     showMore: function () {
-                        this.offset += 100;
+                        // テスト的に300に
+                        this.offset += 300;
                         this.getInvoices(this.searchInvoiceWord, this.offset)
                     },
                     formatDate(date) {
