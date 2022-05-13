@@ -124,7 +124,9 @@
                                     {{formatDateTime(data.item.updatedAt)}}
                                 </template>
                             </b-table>
-                            <b-button variant="primary" @click="showMore">さらに表示</b-button>
+                            <b-row align-h="end">
+                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                            </b-row>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
