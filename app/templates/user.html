@@ -45,7 +45,7 @@
                                     </router-link>
                                 </b-col>
                                 <b-col class="text-right">
-                                    <b-button @click="$bvModal.show('login-history-modal')">ログイン履歴</b-button>
+                                    <b-button @click="$bvModal.show('login-history-modal')">ログ履歴</b-button>
                                 </b-col>
                                 <b-col cols="1" class="text-right">
                                     <sc-menu v-if="modeName!='mw'"></sc-menu>
@@ -63,6 +63,8 @@
                         label="Table Options" :fields="[
                               {  key: 'id', label: 'No.' },
                               {  key: 'userName', label: 'ユーザー名' },
+                              {  key: 'modelName', label: '対象' },
+                              {  key: 'modelId', label: '対象ID' },
                               {  key: 'action', label: '行動' },
                               {  key: 'createdAt', label: '日時' },
                         ]">
