@@ -1,0 +1,70 @@
+<% extends "head.html" %>
+  <% block content %>
+
+    <!-- chart.js -->
+    <script src="../static//library/chart.js"></script>
+
+    <style>
+
+    </style>
+
+    <div id="app" v-clock>
+      <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
+        <b-row>
+          <b-col></b-col>
+          <b-col cols="11">
+            <b-row>
+              <b-col>
+              </b-col>
+              <!-- サイドバー -->
+              <b-col class="text-right">
+                <sc-menu v-if="modeName!='mw'"></sc-menu>
+              </b-col>
+            </b-row>
+          </b-col>
+          <b-col></b-col>
+        </b-row>
+      </b-card>
+
+      <!-- 空行 -->
+      <b-row class="mb-5"></b-row>
+      <b-row class="mb-5"></b-row>
+
+
+    </div>
+
+    <script>
+      var app = new Vue({
+        el: '#app',
+        data: {
+          invoices: [],
+        },
+        methods: {
+          getInvoices: async function (searchWord = '', offset = 0) {
+            self = this;
+            url = '/v1/invoices'
+            await axios.get(url, {
+              params: {
+                search: searchWord,
+                offset: offset,
+              }
+            })
+              .then(function (response) {
+                console.log(response);
+                self.invoices = response.data;
+              });
+          },
+        },
+        mounted: function () {
+          document.querySelector('title').textContent = '請求実績';
+          this.getInvoices();
+        },
+        computed: {
+          modeName() {
+            return localStorage.getItem('wMode');
+          },
+        }
+      });
+    </script>
+
+    <% endblock %>
