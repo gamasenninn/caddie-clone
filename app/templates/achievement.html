@@ -5,37 +5,68 @@
     <script src="../static//library/chart.js"></script>
 
     <style>
-
+      .card-header {
+        background-color: #ccecf1;
+        font-size: 18px;
+      }
     </style>
 
     <div id="app" v-clock>
-      <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
-        <b-row>
-          <b-col></b-col>
-          <b-col cols="11">
-            <b-row>
-              <b-col>
-              </b-col>
-              <!-- サイドバー -->
-              <b-col class="text-right">
-                <sc-menu v-if="modeName!='mw'"></sc-menu>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col></b-col>
-        </b-row>
-      </b-card>
+      <div v-if="pageName=='index'">
+        <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
+          <b-row>
+            <b-col></b-col>
+            <b-col cols="11">
+              <b-row>
+                <b-col>
+                </b-col>
+                <!-- サイドバー -->
+                <b-col class="text-right">
+                  <sc-menu v-if="modeName!='mw'"></sc-menu>
+                </b-col>
+              </b-row>
+            </b-col>
+            <b-col></b-col>
+          </b-row>
+        </b-card>
 
-      <!-- 空行 -->
-      <b-row class="mb-5"></b-row>
-      <b-row class="mb-5"></b-row>
+        <!-- 空行 -->
+        <b-row class="mb-5"></b-row>
+        <b-row class="mb-5"></b-row>
 
+        <div>
+          <b-row class="mt-1">
+            <b-col></b-col>
+            <b-col cols="11">
+              <b-card border-variant="white" class="mb-3 text-center" header="月別売上推移表" header-border-variant="light">
+                <b-row>
+                  <p class="mr-3"> ○○○○年度 ○○月～○○月 </p>
+                </b-row>
+                <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
+                  :items=invoices :fields="[
+                          {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                          {  key: '', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: '', label: '当期累計', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: '', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: '', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
+                        ]">
+                </b-table>
+              </b-card>
+            </b-col>
+            <b-col></b-col>
+          </b-row>
+        </div>
+      </div>
 
     </div>
 
     <script>
+      const router = new VueRouter({
+      })
       var app = new Vue({
         el: '#app',
+        router,
         data: {
           invoices: [],
         },
@@ -47,6 +78,8 @@
               params: {
                 search: searchWord,
                 offset: offset,
+                // 全件取得
+                limit: 0,
               }
             })
               .then(function (response) {
@@ -60,6 +93,10 @@
           this.getInvoices();
         },
         computed: {
+          pageName() {
+            if (this.$route.query.page == undefined) return 'index';
+            return this.$route.query.page;
+          },
           modeName() {
             return localStorage.getItem('wMode');
           },
