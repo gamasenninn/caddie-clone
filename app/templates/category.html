@@ -268,7 +268,8 @@
                 },
                 mounted: function () {
                     document.querySelector('title').textContent = 'カテゴリ管理';
-                    this.category = JSON.parse(localStorage.getItem('category'));
+                    if (localStorage.getItem('category'))
+                        this.category = JSON.parse(localStorage.getItem('category'));
                     this.getCategories();
                 },
                 router,

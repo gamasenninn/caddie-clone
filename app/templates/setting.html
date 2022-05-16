@@ -413,7 +413,8 @@
                 mounted: function () {
                     this.getSetting();
                     this.getLoginUser();
-                    this.isHideTabletMode = localStorage.getItem('isHideTabletMode');
+                    if (localStorage.getItem('isHideTabletMode'))
+                        this.isHideTabletMode = localStorage.getItem('isHideTabletMode');
                     document.querySelector('title').textContent = '各種情報設定';
                 },
                 router,
