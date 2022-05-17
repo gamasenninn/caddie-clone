@@ -98,6 +98,7 @@ def logout():
 
     return redirect('/')
 
+
 @app.route('/is-session', methods=['GET'])
 def is_session():
     if session.get('_id'):
@@ -169,6 +170,12 @@ def homePage():
 @login_required
 def checkPage():
     return render_template('check.html')
+
+
+@app.route('/achievement-page')
+@login_required
+def chartPage():
+    return render_template('achievement.html')
 
 
 @app.route('/invoice-page')
