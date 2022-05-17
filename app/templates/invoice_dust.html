@@ -538,10 +538,10 @@
 
                 },
                 mounted: function () {
-                    this.invoice = JSON.parse(localStorage.getItem('invoice'));
+                    if (localStorage.getItem('invoice'))
+                        this.invoice = JSON.parse(localStorage.getItem('invoice'));
                     this.getInvoices();
                     this.getSetting();
-
                     document.querySelector('title').textContent = '削除済み請求書管理';
                 },
                 router,

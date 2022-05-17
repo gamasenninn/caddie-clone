@@ -390,7 +390,8 @@
                     },
                 },
                 mounted: function () {
-                    this.user = JSON.parse(localStorage.getItem('user'));
+                    if (localStorage.getItem('user'))
+                        this.user = JSON.parse(localStorage.getItem('user'));
                     this.getUsers();
                     this.getLoginHistories();
                     document.querySelector('title').textContent = 'ユーザー管理';

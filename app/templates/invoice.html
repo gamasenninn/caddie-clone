@@ -1169,7 +1169,8 @@
                     },
                 },
                 mounted: function () {
-                    this.invoice = JSON.parse(localStorage.getItem('invoice'));
+                    if (localStorage.getItem('invoice'))
+                        this.invoice = JSON.parse(localStorage.getItem('invoice'));
                     this.getInvoices();
                     this.getCustomers();
                     this.getItems();
