@@ -667,7 +667,8 @@
                     }
                 },
                 mounted: function () {
-                    this.item = JSON.parse(localStorage.getItem('item'));
+                    if (localStorage.getItem('item'))
+                        this.item = JSON.parse(localStorage.getItem('item'));
                     this.getItems();
                     this.getUnits();
                     this.getCategories();

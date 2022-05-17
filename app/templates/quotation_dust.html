@@ -518,7 +518,8 @@
                     },
                 },
                 mounted: function () {
-                    this.quotation = JSON.parse(localStorage.getItem('quotation'));
+                    if (localStorage.getItem('quotation'))
+                        this.quotation = JSON.parse(localStorage.getItem('quotation'));
                     this.getQuotations();
                     this.getSetting();
                     document.querySelector('title').textContent = '削除済み見積書管理';

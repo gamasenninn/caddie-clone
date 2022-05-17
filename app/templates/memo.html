@@ -334,7 +334,8 @@
                     }
                 },
                 mounted: function () {
-                    this.memo = JSON.parse(localStorage.getItem('memo'));
+                    if (localStorage.getItem('memo'))
+                        this.memo = JSON.parse(localStorage.getItem('memo'));
                     this.getMemos();
                     document.querySelector('title').textContent = 'メモ管理';
                 },

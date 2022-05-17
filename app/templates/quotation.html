@@ -1152,7 +1152,8 @@
                     },
                 },
                 mounted: function () {
-                    this.quotation = JSON.parse(localStorage.getItem('quotation'));
+                    if (localStorage.getItem('quotation'))
+                        this.quotation = JSON.parse(localStorage.getItem('quotation'));
                     this.getQuotations();
                     this.getCustomers();
                     this.getItems();
