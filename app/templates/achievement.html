@@ -3,6 +3,7 @@
 
     <!-- chart.js -->
     <script src="../static//library/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.0/lib/bundle.min.js"></script>
 
     <style>
       .card-header {
@@ -104,6 +105,14 @@
                 self.invoices = response.data;
               });
           },
+          hogeMethod: function () {
+            df = new dfd.DataFrame(this.invoices);
+            df.print();
+            glp = df.groupby(["applyDate"]);
+            glp.col(["tax"]).sum().print();
+            console.log(glp);
+            console.log(Object.keys(glp.keyToValue));
+          }
         },
         mounted: function () {
           document.querySelector('title').textContent = '請求実績';
