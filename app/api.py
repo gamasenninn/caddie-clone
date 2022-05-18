@@ -8,6 +8,8 @@ from dateutil import relativedelta
 from sqlalchemy import desc, or_, and_, extract
 from flask_login import current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import pandas as pd
+from marshmallow import pprint
 
 
 _LIMIT_NUM = 100
@@ -470,7 +472,11 @@ def invoice_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
-    return jsonify(InvoiceSchema(many=True).dump(invoices))
+    huga = InvoiceSchema(many=True).dump(invoices)
+    pprint(huga)
+    hoge = pd.DataFrame(huga)
+    pprint(hoge)
+    return jsonify(huga)
 
 
 @app.route('/v1/dust-invoices', methods=['GET'])
