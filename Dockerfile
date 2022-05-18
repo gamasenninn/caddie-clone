@@ -13,6 +13,7 @@ RUN pip install marshmallow-sqlalchemy
 RUN pip install Flask-Migrate 
 RUN pip install Pillow 
 RUN pip install flask-login
+RUN pip install python-dateutil
 
 # Setup initial Database
 #RUN rm -r migrations

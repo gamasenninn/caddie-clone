@@ -40,6 +40,19 @@
             <b-col cols="11">
               <b-card border-variant="white" class="mb-3 text-center" header="月別売上推移表" header-border-variant="light">
                 <b-row>
+                  <b-col>
+                    <b-form-input v-model="year" id="year" size="sm" placeholder="年">
+                    </b-form-input>
+                  </b-col>
+                  <b-col>
+                    <b-form-input v-model="month" id="month" size="sm" placeholder="期首">
+                    </b-form-input>
+                  </b-col>
+                  <b-col>
+                    <b-button variant="primary" size="sm" @click="getInvoices(null,null,year,month);">検索</b-button>
+                  </b-col>
+                </b-row>
+                <b-row>
                   <p class="mr-3"> ○○○○年度 ○○月～○○月 </p>
                 </b-row>
                 <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
@@ -69,9 +82,11 @@
         router,
         data: {
           invoices: [],
+          year: null,
+          month: null,
         },
         methods: {
-          getInvoices: async function (searchWord = '', offset = 0) {
+          getInvoices: async function (searchWord = '', offset = 0, year = null, month = null) {
             self = this;
             url = '/v1/invoices'
             await axios.get(url, {
@@ -80,6 +95,8 @@
                 offset: offset,
                 // 全件取得
                 limit: 0,
+                year: year,
+                month: month,
               }
             })
               .then(function (response) {
