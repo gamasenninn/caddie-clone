@@ -340,17 +340,17 @@ def item_create():
     if db.session.query(query.exists()).scalar() and data.get('itemCode') != None and data.get('itemCode') != '':
         return jsonify({"result": "error", "message": "入力した商品コードは既に存在します。存在しない値を入力してください。"}), 500
     newItem = Item(
-        itemName=data.get('itemName'),
-        itemCode=data.get('itemCode'),
-        model=data.get('model'),
-        category=data.get('category'),
-        maker=data.get('maker'),
-        supplier=data.get('supplier'),
-        unit=data.get('unit'),
-        basePrice=data.get('basePrice'),
-        baseCost=data.get('baseCost'),
+        itemName=data.get('itemName')if data.get('itemName') else None,
+        itemCode=data.get('itemCode')if data.get('itemCode') else None,
+        model=data.get('model')if data.get('model') else None,
+        category=data.get('category')if data.get('category') else None,
+        maker=data.get('maker')if data.get('maker') else None,
+        supplier=data.get('supplier')if data.get('supplier') else None,
+        unit=data.get('unit')if data.get('unit') else None,
+        basePrice=data.get('basePrice')if data.get('basePrice') else None,
+        baseCost=data.get('baseCost')if data.get('baseCost') else None,
         isHide=data.get('isHide'),
-        memo=data.get('memo'),
+        memo=data.get('memo')if data.get('memo') else None,
         numberOfAttachments=data.get('numberOfAttachments'),
     )
     db.session.add(newItem)
@@ -375,18 +375,18 @@ def item_update(id):
     if db.session.query(query.exists()).scalar() and item.itemCode != data.get('itemCode') and (data.get('itemCode') != None and data.get('itemCode') != ''):
         return jsonify({"result": "error", "message": "入力した商品コードは既に存在します。存在しない値を入力してください。"}), 500
 
-    item.itemName = data.get('itemName')
-    item.itemCode = data.get('itemCode')
-    item.model = data.get('model')
-    item.category = data.get('category')
-    item.maker = data.get('maker')
-    item.supplier = data.get('supplier')
-    item.unit = data.get('unit')
-    item.basePrice = data.get('basePrice')
-    item.baseCost = data.get('baseCost')
+    item.itemName = data.get('itemName')if data.get('itemName') else None
+    item.itemCode = data.get('itemCode')if data.get('itemCode') else None
+    item.model = data.get('model')if data.get('model') else None
+    item.category = data.get('category')if data.get('category') else None
+    item.maker = data.get('maker')if data.get('maker') else None
+    item.supplier = data.get('supplier')if data.get('supplier') else None
+    item.unit = data.get('unit')if data.get('unit') else None
+    item.basePrice = data.get('basePrice')if data.get('basePrice') else None
+    item.baseCost = data.get('baseCost')if data.get('baseCost') else None
     item.isHide = data.get('isHide')if data.get(
         'isHide') else False  # ページリロード後、更新時のエラー防止
-    item.memo = data.get('memo')
+    item.memo = data.get('memo')if data.get('memo') else None
     item.numberOfAttachments = data.get('numberOfAttachments')
 
     newHistory = History(
