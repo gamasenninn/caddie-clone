@@ -428,23 +428,23 @@ def invoice_index_v1():
     if searchWord:
         if len(searchWord) == 4:
             invoices = Invoice.query.filter(and_(Invoice.isDelete == False, or_(
-                extract('year', Invoice.applyDate) == searchWord, Invoice.customerName.like('%'+searchWord+'%'))))
+                extract('year', Invoice.applyDate) == searchWord, Invoice.customerName.like('%'+searchWord+'%'), Invoice.customerAnyNumber == searchWord,)))
         elif len(searchWord) == 6:
             year = searchWord[:4]
             month = searchWord[4:]
             invoices = Invoice.query.filter(and_(Invoice.isDelete == False, or_(
-                Invoice.customerName.like('%'+searchWord+'%'), and_(
+                Invoice.customerName.like('%'+searchWord+'%'), Invoice.customerAnyNumber == searchWord, and_(
                     extract('year', Invoice.applyDate) == year, extract('month', Invoice.applyDate) == month))))
         elif len(searchWord) == 8:
             year = searchWord[:4]
             month = searchWord[4:6]
             day = searchWord[6:]
             invoices = Invoice.query.filter(and_(Invoice.isDelete == False, or_(
-                Invoice.customerName.like('%'+searchWord+'%'), and_(
+                Invoice.customerName.like('%'+searchWord+'%'), Invoice.customerAnyNumber == searchWord, and_(
                     extract('year', Invoice.applyDate) == year, extract('month', Invoice.applyDate) == month, extract('day', Invoice.applyDate) == day))))
         else:
             invoices = Invoice.query.filter(
-                and_(Invoice.isDelete == False, Invoice.customerName.like('%'+searchWord+'%')))
+                and_(Invoice.isDelete == False, or_(Invoice.customerName.like('%'+searchWord+'%'), Invoice.customerAnyNumber == searchWord)))
     else:
         invoices = Invoice.query.filter(Invoice.isDelete == False)
     if offset:
