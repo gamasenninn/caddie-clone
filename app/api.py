@@ -3,10 +3,13 @@ from app import app
 from models import *
 from flask import jsonify, request
 import json
-from datetime import date
+from datetime import date, datetime
+from dateutil import relativedelta
 from sqlalchemy import desc, or_, and_, extract
 from flask_login import current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import pandas as pd
+from marshmallow import pprint
 
 
 _LIMIT_NUM = 100
@@ -424,6 +427,8 @@ def invoice_index_v1():
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
+    reqMonth = int(req.get('month')) if req.get('month') else None
+    reqYear = int(req.get('year')) if req.get('year') else None
     # 各種フィルタリング処理
     if searchWord:
         if len(searchWord) == 4:
@@ -445,6 +450,13 @@ def invoice_index_v1():
         else:
             invoices = Invoice.query.filter(
                 and_(Invoice.isDelete == False, Invoice.customerName.like('%'+searchWord+'%')))
+    if reqYear and reqMonth:
+        beforeDate = date(reqYear, reqMonth, 1)
+        afterDate = beforeDate + \
+            relativedelta.relativedelta(
+                years=1)-relativedelta.relativedelta(days=1)
+        invoices = Invoice.query.filter(and_(
+            Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate)))
     else:
         invoices = Invoice.query.filter(Invoice.isDelete == False)
     if offset:
@@ -460,7 +472,11 @@ def invoice_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
-    return jsonify(InvoiceSchema(many=True).dump(invoices))
+    huga = InvoiceSchema(many=True).dump(invoices)
+    pprint(huga)
+    hoge = pd.DataFrame(huga)
+    pprint(hoge)
+    return jsonify(huga)
 
 
 @app.route('/v1/dust-invoices', methods=['GET'])
