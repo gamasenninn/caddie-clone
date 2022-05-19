@@ -3,7 +3,7 @@ var search = Vue.component('search', {
     template: `
     <b-input-group>
         <b-form-input v-model="search.searchInvoiceWord" id="searchInvoiceWord" size="sm"
-            placeholder="🔍　日付 or 得意先名">
+            placeholder="🔍　No. or 日付 or 得意先名">
         </b-form-input>
         <b-input-group-append>
             <b-button variant="primary" size="sm" @click="this.searchInvoice">検索
