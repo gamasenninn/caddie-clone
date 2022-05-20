@@ -247,7 +247,7 @@
                                             <b-table hover striped small sort-by="ID" id="customer-table"
                                                 :items="searchCustomers" @row-clicked="customerSelect"
                                                 label="Table Options" :fields="[
-                                  {  key: 'id', label: 'No.' },
+                                  {  key: 'anyNumber', label: 'No.' },
                                   {  key: 'customerName', label: '得意先名' },
                                 ]"></b-table>
                                         </b-modal>
@@ -933,6 +933,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.units = response.data.map(item => item['unitName']);
+                                self.units.unshift('');
                             });
                     },
                     getCategories: async function () {

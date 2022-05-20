@@ -60,11 +60,11 @@ def user_create():
         return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
     newUser = User(
         anyNumber=data.get('anyNumber'),
-        anyName=data.get('anyName'),
-        name=data.get('name'),
+        anyName=data.get('anyName')if data.get('anyName') else None,
+        name=data.get('name')if data.get('name') else None,
         password=generate_password_hash(data.get('password')),
-        group=data.get('group'),
-        role=data.get('role'),
+        group=data.get('group')if data.get('group') else None,
+        role=data.get('role')if data.get('role') else None,
     )
     db.session.add(newUser)
     db.session.commit()
@@ -94,11 +94,11 @@ def user_update(id):
         return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
 
     user.anyNumber = data.get('anyNumber')
-    user.anyName = data.get('anyName')
-    user.name = data.get('name')
+    user.anyName = data.get('anyName')if data.get('anyName') else None
+    user.name = data.get('name')if data.get('name') else None
     user.password = generate_password_hash(data.get('password'))
-    user.group = data.get('group')
-    user.role = data.get('role')
+    user.group = data.get('group')if data.get('group') else None
+    user.role = data.get('role')if data.get('role') else None
 
     newHistory = History(
         userName=current_user.id,
@@ -572,12 +572,14 @@ def invoice_create():
                 Invoice_Item(
                     invoiceId=item.get('invoiceId'),
                     itemId=item.get('itemId'),
-                    any=item.get('any'),
-                    itemName=item.get('itemName'),
-                    price=item.get('price'),
-                    count=item.get('count'),
-                    unit=item.get('unit'),
-                    remarks=item.get('remarks'),
+                    any=item.get('any')if item.get('any') else None,
+                    itemName=item.get('itemName')if item.get(
+                        'itemName') else None,
+                    price=item.get('price')if item.get('price') else None,
+                    count=item.get('count')if item.get('count') else None,
+                    unit=item.get('unit')if item.get('unit') else None,
+                    remarks=item.get('remarks')if item.get(
+                        'remarks') else None,
                 )
             )
 
@@ -597,10 +599,12 @@ def invoice_create():
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
         customerAnyNumber=data.get('customerAnyNumber'),
-        honorificTitle=data.get('honorificTitle'),
-        department=data.get('department'),
-        manager=data.get('manager'),
-        otherPartyManager=data.get('otherPartyManager'),
+        honorificTitle=data.get('honorificTitle')if data.get(
+            'honorificTitle') else None,
+        department=data.get('department')if data.get('department') else None,
+        manager=data.get('manager')if data.get('manager') else None,
+        otherPartyManager=data.get('otherPartyManager')if data.get(
+            'otherPartyManager') else None,
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         deadLine=datetime.strptime(
@@ -608,9 +612,9 @@ def invoice_create():
         paymentDate=datetime.strptime(
             data.get('paymentDate'), "%Y-%m-%d") if data.get('paymentDate') else None,
         isPaid=data.get('isPaid'),
-        title=data.get('title'),
-        memo=data.get('memo'),
-        remarks=data.get('remarks'),
+        title=data.get('title')if data.get('title') else None,
+        memo=data.get('memo')if data.get('memo') else None,
+        remarks=data.get('remarks')if data.get('remarks') else None,
         tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
@@ -642,10 +646,13 @@ def invoice_update(id):
     invoice.customerId = data.get('customerId')
     invoice.customerName = data.get('customerName')
     invoice.customerAnyNumber = data.get('customerAnyNumber')
-    invoice.honorificTitle = data.get('honorificTitle')
-    invoice.department = data.get('department')
-    invoice.manager = data.get('manager')
-    invoice.otherPartyManager = data.get('otherPartyManager')
+    invoice.honorificTitle = data.get(
+        'honorificTitle')if data.get('honorificTitle') else None
+    invoice.department = data.get(
+        'department')if data.get('department') else None
+    invoice.manager = data.get('manager')if data.get('manager') else None
+    invoice.otherPartyManager = data.get(
+        'otherPartyManager')if data.get('otherPartyManager') else None
     invoice.applyNumber = data.get('applyNumber')
     invoice.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
@@ -654,9 +661,9 @@ def invoice_update(id):
     invoice.paymentDate = datetime.strptime(
         data.get('paymentDate'), "%Y-%m-%d") if data.get('paymentDate') else None
     invoice.isPaid = data.get('isPaid')
-    invoice.title = data.get('title')
-    invoice.memo = data.get('memo')
-    invoice.remarks = data.get('remarks')
+    invoice.title = data.get('title')if data.get('title') else None
+    invoice.memo = data.get('memo')if data.get('memo') else None
+    invoice.remarks = data.get('remarks')if data.get('remarks') else None
     invoice.tax = data.get('tax')
     invoice.isTaxExp = data.get('isTaxExp')
     invoice.numberOfAttachments = data.get('numberOfAttachments')
@@ -670,6 +677,9 @@ def invoice_update(id):
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
+            for columnName in item.keys():
+                if item[columnName] == '':
+                    item[columnName] = None
 
             if item.get('id'):
                 if item.get('isDelete'):
@@ -918,11 +928,12 @@ def invoice_payment_update(id):
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
-            if item.get('paymentDate'):
-                item['paymentDate'] = datetime.strptime(
-                    item.get('paymentDate'), "%Y-%m-%d")
-            if not item.get('paymentAmount'):
-                item['paymentAmount'] = None
+
+            item['paymentDate'] = datetime.strptime(
+                item.get('paymentDate'), "%Y-%m-%d") if item.get('paymentDate') else None
+            for columnName in item.keys():
+                if item[columnName] == '':
+                    item[columnName] = None
 
             if item.get('id'):
                 update_list.append(item)
@@ -1102,12 +1113,14 @@ def quotation_create():
                 Quotation_Item(
                     quotationId=item.get('quotationId'),
                     itemId=item.get('itemId'),
-                    any=item.get('any'),
-                    itemName=item.get('itemName'),
-                    price=item.get('price'),
-                    count=item.get('count'),
-                    unit=item.get('unit'),
-                    remarks=item.get('remarks'),
+                    any=item.get('any')if item.get('any') else None,
+                    itemName=item.get('itemName')if item.get(
+                        'itemName') else None,
+                    price=item.get('price')if item.get('price') else None,
+                    count=item.get('count')if item.get('count') else None,
+                    unit=item.get('unit')if item.get('unit') else None,
+                    remarks=item.get('remarks')if item.get(
+                        'remarks') else None,
                 )
             )
 
@@ -1115,19 +1128,21 @@ def quotation_create():
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
         customerAnyNumber=data.get('customerAnyNumber'),
-        honorificTitle=data.get('honorificTitle'),
-        department=data.get('department'),
-        manager=data.get('manager'),
-        otherPartyManager=data.get('otherPartyManager'),
+        honorificTitle=data.get('honorificTitle')if data.get(
+            'honorificTitle') else None,
+        department=data.get('department')if data.get('department') else None,
+        manager=data.get('manager')if data.get('manager') else None,
+        otherPartyManager=data.get('otherPartyManager')if data.get(
+            'otherPartyManager') else None,
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         expiry=data.get('expiry'),
         dayOfDelivery=data.get('dayOfDelivery'),
         termOfSale=data.get('termOfSale'),
         isConvert=data.get('isConvert') if data.get('isConvert') else False,
-        title=data.get('title'),
-        memo=data.get('memo'),
-        remarks=data.get('remarks'),
+        title=data.get('title')if data.get('title') else None,
+        memo=data.get('memo')if data.get('memo') else None,
+        remarks=data.get('remarks')if data.get('remarks') else None,
         tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
@@ -1159,10 +1174,13 @@ def quotation_update(id):
     quotation.customerId = data.get('customerId')
     quotation.customerName = data.get('customerName')
     quotation.customerAnyNumber = data.get('customerAnyNumber')
-    quotation.honorificTitle = data.get('honorificTitle')
-    quotation.department = data.get('department')
-    quotation.manager = data.get('manager')
-    quotation.otherPartyManager = data.get('otherPartyManager')
+    quotation.honorificTitle = data.get(
+        'honorificTitle')if data.get('honorificTitle') else None
+    quotation.department = data.get(
+        'department')if data.get('department') else None
+    quotation.manager = data.get('manager')if data.get('manager') else None
+    quotation.otherPartyManager = data.get(
+        'otherPartyManager')if data.get('otherPartyManager') else None
     quotation.applyNumber = data.get('applyNumber')
     quotation.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
@@ -1171,9 +1189,9 @@ def quotation_update(id):
     quotation.termOfSale = data.get('termOfSale')
     quotation.isConvert = data.get(
         'isConvert') if data.get('isConvert') else False
-    quotation.title = data.get('title')
-    quotation.memo = data.get('memo')
-    quotation.remarks = data.get('remarks')
+    quotation.title = data.get('title')if data.get('title') else None
+    quotation.memo = data.get('memo')if data.get('memo') else None
+    quotation.remarks = data.get('remarks')if data.get('remarks') else None
     quotation.tax = data.get('tax')
     quotation.isTaxExp = data.get('isTaxExp')
     quotation.numberOfAttachments = data.get('numberOfAttachments')
@@ -1187,6 +1205,9 @@ def quotation_update(id):
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
+            for columnName in item.keys():
+                if item[columnName] == '':
+                    item[columnName] = None
 
             if item.get('id'):
                 if item.get('isDelete'):
@@ -1414,10 +1435,10 @@ def memo_show(id):
 def memo_create():
     data = request.json
     newMemo = Memo(
-        title=data.get('title'),
-        manager=data.get('manager'),
+        title=data.get('title')if data.get('title') else None,
+        manager=data.get('manager')if data.get('manager') else None,
         isFavorite=data.get('isFavorite'),
-        content=data.get('content'),
+        content=data.get('content')if data.get('content') else None,
     )
     db.session.add(newMemo)
     db.session.commit()
@@ -1439,11 +1460,11 @@ def memo_update(id):
     data = request.json
     memo = Memo.query.filter(Memo.id == id).one()
 
-    memo.title = data.get('title')
-    memo.manager = data.get('manager')
+    memo.title = data.get('title')if data.get('title') else None
+    memo.manager = data.get('manager')if data.get('manager') else None
     memo.isFavorite = data.get('isFavorite') if data.get(
         'isFavorite') else False  # ページリロード後、更新時のエラー防止
-    memo.content = data.get('content')
+    memo.content = data.get('content')if data.get('content') else None
 
     newHistory = History(
         userName=current_user.id,
@@ -1507,7 +1528,7 @@ def unit_show(id):
 def unit_create():
     data = request.json
     newUnit = Unit(
-        unitName=data.get('unitName'),
+        unitName=data.get('unitName')if data.get('unitName') else None,
     )
     db.session.add(newUnit)
     db.session.commit()
@@ -1528,7 +1549,7 @@ def unit_update(id):
     data = request.json
     unit = Unit.query.filter(Unit.id == id).one()
 
-    unit.unitName = data.get('unitName')
+    unit.unitName = data.get('unitName')if data.get('unitName') else None
     newHistory = History(
         userName=current_user.id,
         modelName='Unit',
@@ -1590,7 +1611,8 @@ def category_show(id):
 def category_create():
     data = request.json
     newCategory = Category(
-        categoryName=data.get('categoryName'),
+        categoryName=data.get('categoryName')if data.get(
+            'categoryName') else None,
     )
     db.session.add(newCategory)
     db.session.commit()
@@ -1612,7 +1634,8 @@ def category_update(id):
     data = request.json
     category = Category.query.filter(Category.id == id).one()
 
-    category.categoryName = data.get('categoryName')
+    category.categoryName = data.get(
+        'categoryName')if data.get('categoryName') else None
 
     newHistory = History(
         userName=current_user.id,
@@ -1675,7 +1698,7 @@ def maker_show(id):
 def maker_create():
     data = request.json
     newMaker = Maker(
-        makerName=data.get('makerName'),
+        makerName=data.get('makerName')if data.get('makerName') else None,
     )
     db.session.add(newMaker)
     db.session.commit()
@@ -1697,7 +1720,7 @@ def maker_update(id):
     data = request.json
     maker = Maker.query.filter(Maker.id == id).one()
 
-    maker.makerName = data.get('makerName')
+    maker.makerName = data.get('makerName')if data.get('makerName') else None
 
     newHistory = History(
         userName=current_user.id,
@@ -1742,30 +1765,41 @@ def setting_update(id):
     data = request.json
     setting = Setting.query.filter(Setting.id == id).one()
 
-    setting.companyName = data.get('companyName')
-    setting.representative = data.get('representative')
-    setting.postNumber = data.get('postNumber')
-    setting.address = data.get('address')
-    setting.telNumber = data.get('telNumber')
-    setting.faxNumber = data.get('faxNumber')
-    setting.url = data.get('url')
-    setting.email = data.get('email')
-    setting.payee = data.get('payee')
-    setting.accountHolder = data.get('accountHolder')
-    setting.accountHolderKana = data.get('accountHolderKana')
-    setting.logoFilePath = data.get('logoFilePath')
-    setting.logoHeight = data.get('logoHeight')
-    setting.logoWidth = data.get('logoWidth')
-    setting.stampFilePath = data.get('stampFilePath')
-    setting.stampHeight = data.get('stampHeight')
-    setting.stampWidth = data.get('stampWidth')
+    setting.companyName = data.get(
+        'companyName')if data.get('companyName') else None
+    setting.representative = data.get(
+        'representative')if data.get('representative') else None
+    setting.postNumber = data.get(
+        'postNumber')if data.get('postNumber') else None
+    setting.address = data.get('address')if data.get('address') else None
+    setting.telNumber = data.get('telNumber')if data.get('telNumber') else None
+    setting.faxNumber = data.get('faxNumber')if data.get('faxNumber') else None
+    setting.url = data.get('url')if data.get('url') else None
+    setting.email = data.get('email')if data.get('email') else None
+    setting.payee = data.get('payee')if data.get('payee') else None
+    setting.accountHolder = data.get(
+        'accountHolder')if data.get('accountHolder') else None
+    setting.accountHolderKana = data.get(
+        'accountHolderKana')if data.get('accountHolderKana') else None
+    setting.logoFilePath = data.get(
+        'logoFilePath')if data.get('logoFilePath') else None
+    setting.logoHeight = data.get(
+        'logoHeight')if data.get('logoHeight') else None
+    setting.logoWidth = data.get('logoWidth')if data.get('logoWidth') else None
+    setting.stampFilePath = data.get(
+        'stampFilePath')if data.get('stampFilePath') else None
+    setting.stampHeight = data.get(
+        'stampHeight')if data.get('stampHeight') else None
+    setting.stampWidth = data.get(
+        'stampWidth')if data.get('stampWidth') else None
     setting.isDisplayQuotationLogo = data.get('isDisplayQuotationLogo')
     setting.isDisplayInvoiceLogo = data.get('isDisplayInvoiceLogo')
     setting.isDisplayDeliveryLogo = data.get('isDisplayDeliveryLogo')
     setting.isDisplayQuotationStamp = data.get('isDisplayQuotationStamp')
     setting.isDisplayInvoiceStamp = data.get('isDisplayInvoiceStamp')
     setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
-    setting.defaultTax = data.get('defaultTax')
+    setting.defaultTax = data.get(
+        'defaultTax')if data.get('defaultTax') else None
 
     newHistory = History(
         userName=current_user.id,
