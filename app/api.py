@@ -189,23 +189,28 @@ def customer_create():
         return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
     newCustomer = Customer(
         anyNumber=data.get('anyNumber'),
-        customerName=data.get('customerName'),
-        customerKana=data.get('customerKana'),
-        honorificTitle=data.get('honorificTitle'),
-        department=data.get('department'),
-        postNumber=data.get('postNumber'),
-        address=data.get('address'),
-        addressSub=data.get('addressSub'),
-        telNumber=data.get('telNumber'),
-        faxNumber=data.get('faxNumber'),
-        url=data.get('url'),
-        email=data.get('email'),
-        manager=data.get('manager'),
-        representative=data.get('representative'),
-        customerCategory=data.get('customerCategory'),
+        customerName=data.get('customerName')if data.get(
+            'customerName') else None,
+        customerKana=data.get('customerKana')if data.get(
+            'customerKana') else None,
+        honorificTitle=data.get('honorificTitle')if data.get(
+            'honorificTitle') else None,
+        department=data.get('department')if data.get('department') else None,
+        postNumber=data.get('postNumber')if data.get('postNumber') else None,
+        address=data.get('address')if data.get('address') else None,
+        addressSub=data.get('addressSub')if data.get('addressSub') else None,
+        telNumber=data.get('telNumber')if data.get('telNumber') else None,
+        faxNumber=data.get('faxNumber')if data.get('faxNumber') else None,
+        url=data.get('url')if data.get('url') else None,
+        email=data.get('email')if data.get('email') else None,
+        manager=data.get('manager')if data.get('manager') else None,
+        representative=data.get('representative')if data.get(
+            'representative') else None,
+        customerCategory=data.get('customerCategory')if data.get(
+            'customerCategory') else None,
         isHide=data.get('isHide'),
         isFavorite=data.get('isFavorite'),
-        memo=data.get('memo'),
+        memo=data.get('memo')if data.get('memo') else None,
     )
     db.session.add(newCustomer)
     db.session.commit()
@@ -233,26 +238,35 @@ def customer_update(id):
         return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
 
     customer.anyNumber = data.get('anyNumber')
-    customer.customerName = data.get('customerName')
-    customer.customerKana = data.get('customerKana')
-    customer.honorificTitle = data.get('honorificTitle')
-    customer.department = data.get('department')
-    customer.postNumber = data.get('postNumber')
-    customer.address = data.get('address')
-    customer.addressSub = data.get('addressSub')
-    customer.telNumber = data.get('telNumber')
-    customer.faxNumber = data.get('faxNumber')
-    customer.url = data.get('url')
-    customer.email = data.get('email')
-    customer.manager = data.get('manager')
-    customer.representative = data.get('representative')
+    customer.customerName = data.get(
+        'customerName')if data.get('customerName') else None
+    customer.customerKana = data.get(
+        'customerKana')if data.get('customerKana') else None
+    customer.honorificTitle = data.get(
+        'honorificTitle')if data.get('honorificTitle') else None
+    customer.department = data.get(
+        'department')if data.get('department') else None
+    customer.postNumber = data.get(
+        'postNumber')if data.get('postNumber') else None
+    customer.address = data.get('address')if data.get('address') else None
+    customer.addressSub = data.get(
+        'addressSub')if data.get('addressSub') else None
+    customer.telNumber = data.get(
+        'telNumber')if data.get('telNumber') else None
+    customer.faxNumber = data.get(
+        'faxNumber')if data.get('faxNumber') else None
+    customer.url = data.get('url')if data.get('url') else None
+    customer.email = data.get('email')if data.get('email') else None
+    customer.manager = data.get('manager')if data.get('manager') else None
+    customer.representative = data.get(
+        'representative')if data.get('representative') else None
     customer.customerCategory = data.get('customerCategory')if data.get(
         'customerCategory') else 'corporation'  # ページリロード後、更新時のエラー防止
     customer.isHide = data.get('isHide')if data.get(
         'isHide') else False  # ページリロード後、更新時のエラー防止
     customer.isFavorite = data.get('isFavorite')if data.get(
         'isFavorite') else False  # ページリロード後、更新時のエラー防止
-    customer.memo = data.get('memo')
+    customer.memo = data.get('memo')if data.get('memo') else None
 
     newHistory = History(
         userName=current_user.id,
@@ -340,17 +354,17 @@ def item_create():
     if db.session.query(query.exists()).scalar() and data.get('itemCode') != None and data.get('itemCode') != '':
         return jsonify({"result": "error", "message": "入力した商品コードは既に存在します。存在しない値を入力してください。"}), 500
     newItem = Item(
-        itemName=data.get('itemName'),
-        itemCode=data.get('itemCode'),
-        model=data.get('model'),
-        category=data.get('category'),
-        maker=data.get('maker'),
-        supplier=data.get('supplier'),
-        unit=data.get('unit'),
-        basePrice=data.get('basePrice'),
-        baseCost=data.get('baseCost'),
+        itemName=data.get('itemName')if data.get('itemName') else None,
+        itemCode=data.get('itemCode')if data.get('itemCode') else None,
+        model=data.get('model')if data.get('model') else None,
+        category=data.get('category')if data.get('category') else None,
+        maker=data.get('maker')if data.get('maker') else None,
+        supplier=data.get('supplier')if data.get('supplier') else None,
+        unit=data.get('unit')if data.get('unit') else None,
+        basePrice=data.get('basePrice')if data.get('basePrice') else None,
+        baseCost=data.get('baseCost')if data.get('baseCost') else None,
         isHide=data.get('isHide'),
-        memo=data.get('memo'),
+        memo=data.get('memo')if data.get('memo') else None,
         numberOfAttachments=data.get('numberOfAttachments'),
     )
     db.session.add(newItem)
@@ -375,18 +389,18 @@ def item_update(id):
     if db.session.query(query.exists()).scalar() and item.itemCode != data.get('itemCode') and (data.get('itemCode') != None and data.get('itemCode') != ''):
         return jsonify({"result": "error", "message": "入力した商品コードは既に存在します。存在しない値を入力してください。"}), 500
 
-    item.itemName = data.get('itemName')
-    item.itemCode = data.get('itemCode')
-    item.model = data.get('model')
-    item.category = data.get('category')
-    item.maker = data.get('maker')
-    item.supplier = data.get('supplier')
-    item.unit = data.get('unit')
-    item.basePrice = data.get('basePrice')
-    item.baseCost = data.get('baseCost')
+    item.itemName = data.get('itemName')if data.get('itemName') else None
+    item.itemCode = data.get('itemCode')if data.get('itemCode') else None
+    item.model = data.get('model')if data.get('model') else None
+    item.category = data.get('category')if data.get('category') else None
+    item.maker = data.get('maker')if data.get('maker') else None
+    item.supplier = data.get('supplier')if data.get('supplier') else None
+    item.unit = data.get('unit')if data.get('unit') else None
+    item.basePrice = data.get('basePrice')if data.get('basePrice') else None
+    item.baseCost = data.get('baseCost')if data.get('baseCost') else None
     item.isHide = data.get('isHide')if data.get(
         'isHide') else False  # ページリロード後、更新時のエラー防止
-    item.memo = data.get('memo')
+    item.memo = data.get('memo')if data.get('memo') else None
     item.numberOfAttachments = data.get('numberOfAttachments')
 
     newHistory = History(
