@@ -558,12 +558,14 @@ def invoice_create():
                 Invoice_Item(
                     invoiceId=item.get('invoiceId'),
                     itemId=item.get('itemId'),
-                    any=item.get('any'),
-                    itemName=item.get('itemName'),
-                    price=item.get('price'),
-                    count=item.get('count'),
-                    unit=item.get('unit'),
-                    remarks=item.get('remarks'),
+                    any=item.get('any')if item.get('any') else None,
+                    itemName=item.get('itemName')if item.get(
+                        'itemName') else None,
+                    price=item.get('price')if item.get('price') else None,
+                    count=item.get('count')if item.get('count') else None,
+                    unit=item.get('unit')if item.get('unit') else None,
+                    remarks=item.get('remarks')if item.get(
+                        'remarks') else None,
                 )
             )
 
@@ -583,10 +585,12 @@ def invoice_create():
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
         customerAnyNumber=data.get('customerAnyNumber'),
-        honorificTitle=data.get('honorificTitle'),
-        department=data.get('department'),
-        manager=data.get('manager'),
-        otherPartyManager=data.get('otherPartyManager'),
+        honorificTitle=data.get('honorificTitle')if data.get(
+            'honorificTitle') else None,
+        department=data.get('department')if data.get('department') else None,
+        manager=data.get('manager')if data.get('manager') else None,
+        otherPartyManager=data.get('otherPartyManager')if data.get(
+            'otherPartyManager') else None,
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         deadLine=datetime.strptime(
@@ -594,9 +598,9 @@ def invoice_create():
         paymentDate=datetime.strptime(
             data.get('paymentDate'), "%Y-%m-%d") if data.get('paymentDate') else None,
         isPaid=data.get('isPaid'),
-        title=data.get('title'),
-        memo=data.get('memo'),
-        remarks=data.get('remarks'),
+        title=data.get('title')if data.get('title') else None,
+        memo=data.get('memo')if data.get('memo') else None,
+        remarks=data.get('remarks')if data.get('remarks') else None,
         tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
@@ -628,10 +632,13 @@ def invoice_update(id):
     invoice.customerId = data.get('customerId')
     invoice.customerName = data.get('customerName')
     invoice.customerAnyNumber = data.get('customerAnyNumber')
-    invoice.honorificTitle = data.get('honorificTitle')
-    invoice.department = data.get('department')
-    invoice.manager = data.get('manager')
-    invoice.otherPartyManager = data.get('otherPartyManager')
+    invoice.honorificTitle = data.get(
+        'honorificTitle')if data.get('honorificTitle') else None
+    invoice.department = data.get(
+        'department')if data.get('department') else None
+    invoice.manager = data.get('manager')if data.get('manager') else None
+    invoice.otherPartyManager = data.get(
+        'otherPartyManager')if data.get('otherPartyManager') else None
     invoice.applyNumber = data.get('applyNumber')
     invoice.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
@@ -640,9 +647,9 @@ def invoice_update(id):
     invoice.paymentDate = datetime.strptime(
         data.get('paymentDate'), "%Y-%m-%d") if data.get('paymentDate') else None
     invoice.isPaid = data.get('isPaid')
-    invoice.title = data.get('title')
-    invoice.memo = data.get('memo')
-    invoice.remarks = data.get('remarks')
+    invoice.title = data.get('title')if data.get('title') else None
+    invoice.memo = data.get('memo')if data.get('memo') else None
+    invoice.remarks = data.get('remarks')if data.get('remarks') else None
     invoice.tax = data.get('tax')
     invoice.isTaxExp = data.get('isTaxExp')
     invoice.numberOfAttachments = data.get('numberOfAttachments')
@@ -656,6 +663,9 @@ def invoice_update(id):
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
+            for columnName in item.keys():
+                if item[columnName] == '':
+                    item[columnName] = None
 
             if item.get('id'):
                 if item.get('isDelete'):
@@ -904,11 +914,12 @@ def invoice_payment_update(id):
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
-            if item.get('paymentDate'):
-                item['paymentDate'] = datetime.strptime(
-                    item.get('paymentDate'), "%Y-%m-%d")
-            if not item.get('paymentAmount'):
-                item['paymentAmount'] = None
+
+            item['paymentDate'] = datetime.strptime(
+                item.get('paymentDate'), "%Y-%m-%d") if item.get('paymentDate') else None
+            for columnName in item.keys():
+                if item[columnName] == '':
+                    item[columnName] = None
 
             if item.get('id'):
                 update_list.append(item)
