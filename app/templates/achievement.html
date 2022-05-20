@@ -105,14 +105,6 @@
                 self.invoices = response.data;
               });
           },
-          hogeMethod: function () {
-            df = new dfd.DataFrame(this.invoices);
-            df.print();
-            glp = df.groupby(["applyDate"]);
-            glp.col(["tax"]).sum().print();
-            console.log(glp);
-            console.log(Object.keys(glp.keyToValue));
-          }
         },
         mounted: function () {
           document.querySelector('title').textContent = '請求実績';
