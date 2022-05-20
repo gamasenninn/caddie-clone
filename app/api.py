@@ -462,6 +462,7 @@ def invoice_index_v1():
         else:
             invoices = Invoice.query.filter(
                 and_(Invoice.isDelete == False, or_(Invoice.customerName.like('%'+searchWord+'%'), Invoice.customerAnyNumber == searchWord)))
+         
 
     if reqYear and reqMonth:
         beforeDate = date(reqYear, reqMonth, 1)
@@ -470,6 +471,7 @@ def invoice_index_v1():
                 years=1)-relativedelta.relativedelta(days=1)
         invoices = Invoice.query.filter(and_(
             Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate)))
+
 
     else:
         invoices = Invoice.query.filter(Invoice.isDelete == False)
