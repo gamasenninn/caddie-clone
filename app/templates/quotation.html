@@ -933,6 +933,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.units = response.data.map(item => item['unitName']);
+                                self.units.unshift('');
                             });
                     },
                     getCategories: async function () {
