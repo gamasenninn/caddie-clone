@@ -59,11 +59,11 @@ def user_create():
         return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
     newUser = User(
         anyNumber=data.get('anyNumber'),
-        anyName=data.get('anyName'),
-        name=data.get('name'),
+        anyName=data.get('anyName')if data.get('anyName') else None,
+        name=data.get('name')if data.get('name') else None,
         password=generate_password_hash(data.get('password')),
-        group=data.get('group'),
-        role=data.get('role'),
+        group=data.get('group')if data.get('group') else None,
+        role=data.get('role')if data.get('role') else None,
     )
     db.session.add(newUser)
     db.session.commit()
@@ -93,11 +93,11 @@ def user_update(id):
         return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
 
     user.anyNumber = data.get('anyNumber')
-    user.anyName = data.get('anyName')
-    user.name = data.get('name')
+    user.anyName = data.get('anyName')if data.get('anyName') else None
+    user.name = data.get('name')if data.get('name') else None
     user.password = generate_password_hash(data.get('password'))
-    user.group = data.get('group')
-    user.role = data.get('role')
+    user.group = data.get('group')if data.get('group') else None
+    user.role = data.get('role')if data.get('role') else None
 
     newHistory = History(
         userName=current_user.id,
@@ -1514,7 +1514,7 @@ def unit_show(id):
 def unit_create():
     data = request.json
     newUnit = Unit(
-        unitName=data.get('unitName'),
+        unitName=data.get('unitName')if data.get('unitName') else None,
     )
     db.session.add(newUnit)
     db.session.commit()
@@ -1535,7 +1535,7 @@ def unit_update(id):
     data = request.json
     unit = Unit.query.filter(Unit.id == id).one()
 
-    unit.unitName = data.get('unitName')
+    unit.unitName = data.get('unitName')if data.get('unitName') else None
     newHistory = History(
         userName=current_user.id,
         modelName='Unit',
@@ -1597,7 +1597,8 @@ def category_show(id):
 def category_create():
     data = request.json
     newCategory = Category(
-        categoryName=data.get('categoryName'),
+        categoryName=data.get('categoryName')if data.get(
+            'categoryName') else None,
     )
     db.session.add(newCategory)
     db.session.commit()
@@ -1619,7 +1620,8 @@ def category_update(id):
     data = request.json
     category = Category.query.filter(Category.id == id).one()
 
-    category.categoryName = data.get('categoryName')
+    category.categoryName = data.get(
+        'categoryName')if data.get('categoryName') else None
 
     newHistory = History(
         userName=current_user.id,
@@ -1682,7 +1684,7 @@ def maker_show(id):
 def maker_create():
     data = request.json
     newMaker = Maker(
-        makerName=data.get('makerName'),
+        makerName=data.get('makerName')if data.get('makerName') else None,
     )
     db.session.add(newMaker)
     db.session.commit()
@@ -1704,7 +1706,7 @@ def maker_update(id):
     data = request.json
     maker = Maker.query.filter(Maker.id == id).one()
 
-    maker.makerName = data.get('makerName')
+    maker.makerName = data.get('makerName')if data.get('makerName') else None
 
     newHistory = History(
         userName=current_user.id,
@@ -1749,30 +1751,41 @@ def setting_update(id):
     data = request.json
     setting = Setting.query.filter(Setting.id == id).one()
 
-    setting.companyName = data.get('companyName')
-    setting.representative = data.get('representative')
-    setting.postNumber = data.get('postNumber')
-    setting.address = data.get('address')
-    setting.telNumber = data.get('telNumber')
-    setting.faxNumber = data.get('faxNumber')
-    setting.url = data.get('url')
-    setting.email = data.get('email')
-    setting.payee = data.get('payee')
-    setting.accountHolder = data.get('accountHolder')
-    setting.accountHolderKana = data.get('accountHolderKana')
-    setting.logoFilePath = data.get('logoFilePath')
-    setting.logoHeight = data.get('logoHeight')
-    setting.logoWidth = data.get('logoWidth')
-    setting.stampFilePath = data.get('stampFilePath')
-    setting.stampHeight = data.get('stampHeight')
-    setting.stampWidth = data.get('stampWidth')
+    setting.companyName = data.get(
+        'companyName')if data.get('companyName') else None
+    setting.representative = data.get(
+        'representative')if data.get('representative') else None
+    setting.postNumber = data.get(
+        'postNumber')if data.get('postNumber') else None
+    setting.address = data.get('address')if data.get('address') else None
+    setting.telNumber = data.get('telNumber')if data.get('telNumber') else None
+    setting.faxNumber = data.get('faxNumber')if data.get('faxNumber') else None
+    setting.url = data.get('url')if data.get('url') else None
+    setting.email = data.get('email')if data.get('email') else None
+    setting.payee = data.get('payee')if data.get('payee') else None
+    setting.accountHolder = data.get(
+        'accountHolder')if data.get('accountHolder') else None
+    setting.accountHolderKana = data.get(
+        'accountHolderKana')if data.get('accountHolderKana') else None
+    setting.logoFilePath = data.get(
+        'logoFilePath')if data.get('logoFilePath') else None
+    setting.logoHeight = data.get(
+        'logoHeight')if data.get('logoHeight') else None
+    setting.logoWidth = data.get('logoWidth')if data.get('logoWidth') else None
+    setting.stampFilePath = data.get(
+        'stampFilePath')if data.get('stampFilePath') else None
+    setting.stampHeight = data.get(
+        'stampHeight')if data.get('stampHeight') else None
+    setting.stampWidth = data.get(
+        'stampWidth')if data.get('stampWidth') else None
     setting.isDisplayQuotationLogo = data.get('isDisplayQuotationLogo')
     setting.isDisplayInvoiceLogo = data.get('isDisplayInvoiceLogo')
     setting.isDisplayDeliveryLogo = data.get('isDisplayDeliveryLogo')
     setting.isDisplayQuotationStamp = data.get('isDisplayQuotationStamp')
     setting.isDisplayInvoiceStamp = data.get('isDisplayInvoiceStamp')
     setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
-    setting.defaultTax = data.get('defaultTax')
+    setting.defaultTax = data.get(
+        'defaultTax')if data.get('defaultTax') else None
 
     newHistory = History(
         userName=current_user.id,
