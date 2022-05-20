@@ -439,8 +439,6 @@ def invoice_index_v1():
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
-    # reqMonth = int(req.get('month')) if req.get('month') else None
-    # reqYear = int(req.get('year')) if req.get('year') else None
     # 各種フィルタリング処理
     if searchWord:
         if len(searchWord) == 4:
