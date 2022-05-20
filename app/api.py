@@ -1099,12 +1099,14 @@ def quotation_create():
                 Quotation_Item(
                     quotationId=item.get('quotationId'),
                     itemId=item.get('itemId'),
-                    any=item.get('any'),
-                    itemName=item.get('itemName'),
-                    price=item.get('price'),
-                    count=item.get('count'),
-                    unit=item.get('unit'),
-                    remarks=item.get('remarks'),
+                    any=item.get('any')if item.get('any') else None,
+                    itemName=item.get('itemName')if item.get(
+                        'itemName') else None,
+                    price=item.get('price')if item.get('price') else None,
+                    count=item.get('count')if item.get('count') else None,
+                    unit=item.get('unit')if item.get('unit') else None,
+                    remarks=item.get('remarks')if item.get(
+                        'remarks') else None,
                 )
             )
 
@@ -1112,19 +1114,21 @@ def quotation_create():
         customerId=data.get('customerId'),
         customerName=data.get('customerName'),
         customerAnyNumber=data.get('customerAnyNumber'),
-        honorificTitle=data.get('honorificTitle'),
-        department=data.get('department'),
-        manager=data.get('manager'),
-        otherPartyManager=data.get('otherPartyManager'),
+        honorificTitle=data.get('honorificTitle')if data.get(
+            'honorificTitle') else None,
+        department=data.get('department')if data.get('department') else None,
+        manager=data.get('manager')if data.get('manager') else None,
+        otherPartyManager=data.get('otherPartyManager')if data.get(
+            'otherPartyManager') else None,
         applyDate=datetime.strptime(
             data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None,
         expiry=data.get('expiry'),
         dayOfDelivery=data.get('dayOfDelivery'),
         termOfSale=data.get('termOfSale'),
         isConvert=data.get('isConvert') if data.get('isConvert') else False,
-        title=data.get('title'),
-        memo=data.get('memo'),
-        remarks=data.get('remarks'),
+        title=data.get('title')if data.get('title') else None,
+        memo=data.get('memo')if data.get('memo') else None,
+        remarks=data.get('remarks')if data.get('remarks') else None,
         tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
@@ -1156,10 +1160,13 @@ def quotation_update(id):
     quotation.customerId = data.get('customerId')
     quotation.customerName = data.get('customerName')
     quotation.customerAnyNumber = data.get('customerAnyNumber')
-    quotation.honorificTitle = data.get('honorificTitle')
-    quotation.department = data.get('department')
-    quotation.manager = data.get('manager')
-    quotation.otherPartyManager = data.get('otherPartyManager')
+    quotation.honorificTitle = data.get(
+        'honorificTitle')if data.get('honorificTitle') else None
+    quotation.department = data.get(
+        'department')if data.get('department') else None
+    quotation.manager = data.get('manager')if data.get('manager') else None
+    quotation.otherPartyManager = data.get(
+        'otherPartyManager')if data.get('otherPartyManager') else None
     quotation.applyNumber = data.get('applyNumber')
     quotation.applyDate = datetime.strptime(
         data.get('applyDate'), "%Y-%m-%d") if data.get('applyDate') else None
@@ -1168,9 +1175,9 @@ def quotation_update(id):
     quotation.termOfSale = data.get('termOfSale')
     quotation.isConvert = data.get(
         'isConvert') if data.get('isConvert') else False
-    quotation.title = data.get('title')
-    quotation.memo = data.get('memo')
-    quotation.remarks = data.get('remarks')
+    quotation.title = data.get('title')if data.get('title') else None
+    quotation.memo = data.get('memo')if data.get('memo') else None
+    quotation.remarks = data.get('remarks')if data.get('remarks') else None
     quotation.tax = data.get('tax')
     quotation.isTaxExp = data.get('isTaxExp')
     quotation.numberOfAttachments = data.get('numberOfAttachments')
@@ -1184,6 +1191,9 @@ def quotation_update(id):
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
+            for columnName in item.keys():
+                if item[columnName] == '':
+                    item[columnName] = None
 
             if item.get('id'):
                 if item.get('isDelete'):
@@ -1411,10 +1421,10 @@ def memo_show(id):
 def memo_create():
     data = request.json
     newMemo = Memo(
-        title=data.get('title'),
-        manager=data.get('manager'),
+        title=data.get('title')if data.get('title') else None,
+        manager=data.get('manager')if data.get('manager') else None,
         isFavorite=data.get('isFavorite'),
-        content=data.get('content'),
+        content=data.get('content')if data.get('content') else None,
     )
     db.session.add(newMemo)
     db.session.commit()
@@ -1436,11 +1446,11 @@ def memo_update(id):
     data = request.json
     memo = Memo.query.filter(Memo.id == id).one()
 
-    memo.title = data.get('title')
-    memo.manager = data.get('manager')
+    memo.title = data.get('title')if data.get('title') else None
+    memo.manager = data.get('manager')if data.get('manager') else None
     memo.isFavorite = data.get('isFavorite') if data.get(
         'isFavorite') else False  # ページリロード後、更新時のエラー防止
-    memo.content = data.get('content')
+    memo.content = data.get('content')if data.get('content') else None
 
     newHistory = History(
         userName=current_user.id,
