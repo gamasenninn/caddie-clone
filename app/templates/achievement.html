@@ -104,7 +104,11 @@
         },
         mounted: function () {
           document.querySelector('title').textContent = '請求実績';
-          this.getAchievements();
+          // 今月を含めた１年分のデータ取得のため
+          let today = new Date();
+          this.year = today.getFullYear() - 1;
+          this.month = today.getMonth() + 2;
+          this.getAchievements(this.year, this.month);
         },
         computed: {
           pageName() {
