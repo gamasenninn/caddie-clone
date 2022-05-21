@@ -50,14 +50,14 @@
                     </b-form-input>
                   </b-col>
                   <b-col>
-                    <b-button variant="primary" size="sm" @click="getInvoices(null,null,year,month);">検索</b-button>
+                    <b-button variant="primary" size="sm" @click="getAchievements(year,month);">検索</b-button>
                   </b-col>
                 </b-row>
                 <b-row>
                   <p class="mr-3"> ○○○○年度 ○○月～○○月 </p>
                 </b-row>
                 <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
-                  :items=invoices :fields="[
+                  :items=achievements :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: '', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
@@ -82,33 +82,33 @@
         el: '#app',
         router,
         data: {
-          invoices: [],
+          achievements: [],
           year: null,
           month: null,
         },
         methods: {
-          getInvoices: async function (searchWord = '', offset = 0, year = null, month = null) {
+          getAchievements: async function (year = null, month = null) {
             self = this;
-            url = '/v1/invoices'
+            url = '/v1/achievements'
             await axios.get(url, {
               params: {
-                search: searchWord,
-                offset: offset,
-                // 全件取得
-                limit: 0,
                 year: year,
                 month: month,
               }
             })
               .then(function (response) {
                 console.log(response);
-                self.invoices = response.data;
+                self.achievements = response.data;
               });
           },
         },
         mounted: function () {
           document.querySelector('title').textContent = '請求実績';
-          this.getInvoices();
+          // 今月を含めた１年分のデータ取得のため
+          let today = new Date();
+          this.year = today.getFullYear() - 1;
+          this.month = today.getMonth() + 2;
+          this.getAchievements(this.year, this.month);
         },
         computed: {
           pageName() {

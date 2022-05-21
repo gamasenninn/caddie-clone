@@ -439,8 +439,6 @@ def invoice_index_v1():
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
-    reqMonth = int(req.get('month')) if req.get('month') else None
-    reqYear = int(req.get('year')) if req.get('year') else None
     # 各種フィルタリング処理
     if searchWord:
         if len(searchWord) == 4:
@@ -462,7 +460,32 @@ def invoice_index_v1():
         else:
             invoices = Invoice.query.filter(
                 and_(Invoice.isDelete == False, or_(Invoice.customerName.like('%'+searchWord+'%'), Invoice.customerAnyNumber == searchWord)))
-         
+
+    else:
+        invoices = Invoice.query.filter(Invoice.isDelete == False)
+    if offset:
+        invoices = invoices.offset(offset)
+    if limit:
+        invoices = invoices.limit(limit)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Invoice',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(InvoiceSchema(many=True).dump(invoices))
+
+
+@app.route('/v1/achievements', methods=['GET'])
+@app.route('/achievements', methods=['GET'])
+def invoice_achievement_v1():
+    # パラメータを準備
+    req = request.args
+    reqMonth = int(req.get('month')) if req.get('month') else None
+    reqYear = int(req.get('year')) if req.get('year') else None
 
     if reqYear and reqMonth:
         beforeDate = date(reqYear, reqMonth, 1)
@@ -471,14 +494,8 @@ def invoice_index_v1():
                 years=1)-relativedelta.relativedelta(days=1)
         invoices = Invoice.query.filter(and_(
             Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate)))
-
-
     else:
         invoices = Invoice.query.filter(Invoice.isDelete == False)
-    if offset:
-        invoices = invoices.offset(offset)
-    if limit:
-        invoices = invoices.limit(limit)
 
     newHistory = History(
         userName=current_user.id,
