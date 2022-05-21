@@ -89,7 +89,8 @@
         methods: {
           getAchievements: async function (year = null, month = null) {
             self = this;
-            url = '/v1/achievements'
+            url = '/v1/achievements-group'
+            // url = '/v1/achievements'
             await axios.get(url, {
               params: {
                 year: year,
