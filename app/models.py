@@ -4,6 +4,7 @@ from datetime import date
 from sqlalchemy.sql import func
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql import Insert
+from marshmallow import Schema, fields
 
 
 class User(db.Model):
@@ -426,3 +427,10 @@ class HistorySchema(ma.SQLAlchemyAutoSchema):
 class SettingSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Setting
+
+
+# 独自定義
+class AchievementSchema(Schema):
+    applyDate = fields.Date()
+    applyNumber = fields.Int()
+    total_tax = fields.Int()

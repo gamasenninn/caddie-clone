@@ -5,7 +5,7 @@ from flask import jsonify, request
 import json
 from datetime import date, datetime
 from dateutil import relativedelta
-from sqlalchemy import desc, or_, and_, extract
+from sqlalchemy import desc, or_, and_, extract, func
 from flask_login import current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -506,6 +506,43 @@ def invoice_achievement_v1():
     db.session.add(newHistory)
     db.session.commit()
     return jsonify(InvoiceSchema(many=True).dump(invoices))
+
+
+@app.route('/v1/achievements-group', methods=['GET'])
+@app.route('/achievements-group', methods=['GET'])
+def invoice_achievement_group_v1():
+    # パラメータを準備
+    req = request.args
+    reqMonth = int(req.get('month')) if req.get('month') else None
+    reqYear = int(req.get('year')) if req.get('year') else None
+
+    if reqYear and reqMonth:
+        beforeDate = date(reqYear, reqMonth, 1)
+        afterDate = beforeDate + \
+            relativedelta.relativedelta(
+                years=1)-relativedelta.relativedelta(days=1)
+        invoices = db.session.query(Invoice.applyDate, Invoice.applyNumber, func.sum(
+            Invoice.tax).label('total_tax')).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+        # invoices = Invoice.query.filter(and_(
+        #     Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate)))
+        # invoices = invoices.group_by(Invoice.applyDate)
+
+        # invoices = InvoiceSchema(many=True).dump(invoices)
+        # print(invoices)
+        # return jsonify(invoices)
+
+    else:
+        invoices = Invoice.query.filter(Invoice.isDelete == False)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Invoice',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(AchievementSchema(many=True).dump(invoices))
 
 
 @app.route('/v1/dust-invoices', methods=['GET'])
