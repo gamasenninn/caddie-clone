@@ -509,7 +509,7 @@ def invoice_achievement_v1():
 
 
 # 実績データに使用
-def multiply(price=0, count=0):
+def multiply(price, count):
     return price*count
 
 
