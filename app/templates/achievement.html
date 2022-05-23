@@ -59,9 +59,8 @@
                 <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
                   :items=achievements :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
-                          {  key: '', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: '', label: '当期累計', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'applyDate', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlySales', label: '当期累計', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: '', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: '', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
                         ]">
