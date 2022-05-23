@@ -509,8 +509,12 @@ def invoice_achievement_v1():
 
 
 # 実績データに使用
-def multiply(price, count):
+def multiply(price=0, count=0):
     return price*count
+
+
+def profit(price, count, cost):
+    return multiply(price, count)-(cost*count)
 
 
 @app.route('/v1/achievements-group', methods=['GET'])
@@ -527,9 +531,10 @@ def invoice_achievement_group_v1():
             relativedelta.relativedelta(
                 years=1)-relativedelta.relativedelta(days=1)
         achievements = db.session.query(func.strftime(
-            "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count))
-            .filter(and_(Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate)))
-            .label("monthlySales")).join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+            "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count)).label("monthlySales"),
+            func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit")) \
+            .filter(and_(Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate))) \
+            .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
 
     else:
         achievements = Invoice.query.filter(Invoice.isDelete == False)
@@ -630,6 +635,7 @@ def invoice_create():
                     itemName=item.get('itemName')if item.get(
                         'itemName') else None,
                     price=item.get('price')if item.get('price') else None,
+                    cost=item.get('cost')if item.get('cost') else 0,
                     count=item.get('count')if item.get('count') else None,
                     unit=item.get('unit')if item.get('unit') else None,
                     remarks=item.get('remarks')if item.get(
@@ -732,7 +738,9 @@ def invoice_update(id):
             if 'updatedAt' in item:
                 del(item['updatedAt'])
             for columnName in item.keys():
-                if item[columnName] == '':
+                if item['cost'] == '' or item['cost'] == None:
+                    item['cost'] = 0
+                elif item[columnName] == '':
                     item[columnName] = None
 
             if item.get('id'):
@@ -1171,6 +1179,7 @@ def quotation_create():
                     itemName=item.get('itemName')if item.get(
                         'itemName') else None,
                     price=item.get('price')if item.get('price') else None,
+                    cost=item.get('cost')if item.get('cost') else 0,
                     count=item.get('count')if item.get('count') else None,
                     unit=item.get('unit')if item.get('unit') else None,
                     remarks=item.get('remarks')if item.get(
@@ -1260,7 +1269,9 @@ def quotation_update(id):
             if 'updatedAt' in item:
                 del(item['updatedAt'])
             for columnName in item.keys():
-                if item[columnName] == '':
+                if item['cost'] == '' or item['cost'] == None:
+                    item['cost'] = 0
+                elif item[columnName] == '':
                     item[columnName] = None
 
             if item.get('id'):

@@ -433,3 +433,4 @@ class SettingSchema(ma.SQLAlchemyAutoSchema):
 class AchievementSchema(Schema):
     applyDate = fields.Str()
     monthlySales = fields.Int()
+    monthlyProfit = fields.Int()
