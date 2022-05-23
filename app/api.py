@@ -508,6 +508,11 @@ def invoice_achievement_v1():
     return jsonify(InvoiceSchema(many=True).dump(invoices))
 
 
+# 実績データに使用
+def multiply(price, count):
+    return price*count
+
+
 @app.route('/v1/achievements-group', methods=['GET'])
 @app.route('/achievements-group', methods=['GET'])
 def invoice_achievement_group_v1():
@@ -521,18 +526,13 @@ def invoice_achievement_group_v1():
         afterDate = beforeDate + \
             relativedelta.relativedelta(
                 years=1)-relativedelta.relativedelta(days=1)
-        invoices = db.session.query(Invoice.applyDate, Invoice.applyNumber, func.sum(
-            Invoice.tax).label('total_tax')).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
-        # invoices = Invoice.query.filter(and_(
-        #     Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate)))
-        # invoices = invoices.group_by(Invoice.applyDate)
-
-        # invoices = InvoiceSchema(many=True).dump(invoices)
-        # print(invoices)
-        # return jsonify(invoices)
+        achievements = db.session.query(func.strftime(
+            "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count))
+            .filter(and_(Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate)))
+            .label("monthlySales")).join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
 
     else:
-        invoices = Invoice.query.filter(Invoice.isDelete == False)
+        achievements = Invoice.query.filter(Invoice.isDelete == False)
 
     newHistory = History(
         userName=current_user.id,
@@ -542,7 +542,7 @@ def invoice_achievement_group_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
-    return jsonify(AchievementSchema(many=True).dump(invoices))
+    return jsonify(AchievementSchema(many=True).dump(achievements))
 
 
 @app.route('/v1/dust-invoices', methods=['GET'])

@@ -431,6 +431,5 @@ class SettingSchema(ma.SQLAlchemyAutoSchema):
 
 # 独自定義
 class AchievementSchema(Schema):
-    applyDate = fields.Date()
-    applyNumber = fields.Int()
-    total_tax = fields.Int()
+    applyDate = fields.Str()
+    monthlySales = fields.Int()
