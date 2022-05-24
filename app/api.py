@@ -508,13 +508,22 @@ def invoice_achievement_v1():
     return jsonify(InvoiceSchema(many=True).dump(invoices))
 
 
-# 実績データに使用
-def multiply(price, count):
-    return price*count
+# 実績データに使用(粗利率のみフロントでの計算)
+# def multiply(price, count):
+#     return price*count
 
 
-def profit(price, count, cost):
-    return multiply(price, count)-(cost*count)
+def multiply(price, count, isTax, tax):
+    isTax_ = bool(isTax)
+    if isTax_ == True:
+        # 単純な数値は認識されない？
+        return price*count*(1+tax/100)
+    else:
+        return price*count
+
+
+def profit(price, count, isTax, tax, cost):
+    return multiply(price, count, isTax, tax)-(cost*count)
 
 
 @app.route('/v1/achievements-group', methods=['GET'])
@@ -531,8 +540,8 @@ def invoice_achievement_group_v1():
             relativedelta.relativedelta(
                 years=1)-relativedelta.relativedelta(days=1)
         achievements = db.session.query(func.strftime(
-            "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count)).label("monthlySales"),
-            func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit")) \
+            "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count, Invoice.isTaxExp, Invoice.tax)).label("monthlySales"),
+            func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice.isTaxExp, Invoice.tax, Invoice_Item.cost)).label("monthlyProfit")) \
             .filter(and_(Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate))) \
             .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
 
