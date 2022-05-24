@@ -508,7 +508,7 @@ def invoice_achievement_v1():
     return jsonify(InvoiceSchema(many=True).dump(invoices))
 
 
-# 実績データに使用
+# 実績データに使用(粗利率のみフロントでの計算)
 def multiply(price, count):
     return price*count
 

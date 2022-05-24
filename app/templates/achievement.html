@@ -62,8 +62,12 @@
                           {  key: 'applyDate', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlySales', label: '当期累計', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlyProfit', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: '', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlyCostRate', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
                         ]">
+                  <template v-slot:cell(monthlyCostRate)="data">
+                    {{monthlyCostRate(data.item.monthlyProfit,data.item.monthlySales)}}%
+                    <!-- {{data.item.monthlyCostRate}}% -->
+                  </template>
                 </b-table>
               </b-card>
             </b-col>
@@ -99,7 +103,16 @@
               .then(function (response) {
                 console.log(response);
                 self.achievements = response.data;
+                // 原価率計算
+                // let achievements = self.achievements;
+                // achievements.map(achieve => {
+                //   achieve['monthlyCostRate'] = Math.round(achieve['monthlyProfit'] / achieve['monthlySales'] * 100);
+                // });
+                // self.achievements = achievements;
               });
+          },
+          monthlyCostRate: function (monthlyProfit, monthlySales) {
+            return Math.round(monthlyProfit / monthlySales * 100);
           },
         },
         mounted: function () {
