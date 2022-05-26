@@ -517,7 +517,7 @@ def multiply(price, count, isTax, tax):
     isTax_ = bool(isTax)
     if isTax_ == True:
         # 単純な数値は認識されない？
-        return price*count*(1+tax/100)
+        return price*count*(1+tax/100.0)
     else:
         return price*count
 
