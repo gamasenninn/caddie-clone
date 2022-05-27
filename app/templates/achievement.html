@@ -39,6 +39,7 @@
           <b-row class="mt-1">
             <b-col></b-col>
             <b-col cols="11">
+              <div id="achievement-chart"></div>
               <b-card border-variant="white" class="mb-3 text-center" header="月別売上推移表" header-border-variant="light">
                 <b-row>
                   <b-col>
@@ -103,6 +104,11 @@
               .then(function (response) {
                 console.log(response);
                 self.achievements = response.data;
+                df = new dfd.DataFrame(self.achievements,)
+                df.print();
+                df.setIndex({ index: df['applyDate'].values, inplace: true })
+                df.drop({ columns: ['applyDate'], inplace: true })
+                df.plot("achievement-chart").bar({ columns: ["monthlyProfit", "monthlySales"] })
                 // 原価率計算
                 // let achievements = self.achievements;
                 // achievements.map(achieve => {
