@@ -179,38 +179,40 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="カテゴリ"
                                         label-for="category" label-align="right">
-                                        <b-form-input list="list-category" v-model="item.category" size="sm"
+                                        <b-form-select v-model="item.category" :options="categories" size="sm">
+                                        </b-form-select>
+                                    </b-form-group>
+                                    <!-- <b-form-input list="list-category" v-model="item.category" size="sm"
                                             autocomplete="off"></b-form-input>
                                         <datalist id="list-category">
                                             <option v-for="category in categories">{{category}}</option>
-                                        </datalist>
-                                        <!-- 
-                                        <b-form-select v-model="item.category" :options="categories" size="sm">
-                                        </b-form-select>
-                                        -->
-                                    </b-form-group>
+                                        </datalist> -->
                                 </b-col>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メーカー"
                                         label-align="right">
-                                        <b-form-input list="list-maker" v-model="item.maker" size="sm"
+                                        <b-form-select v-model="item.maker" :options="makers" size="sm">
+                                        </b-form-select>
+                                    </b-form-group>
+                                    <!-- <b-form-input list="list-maker" v-model="item.maker" size="sm"
                                             autocomplete="off"></b-form-input>
                                         <datalist id="list-maker">
                                             <option v-for="maker in makers">{{maker}}</option>
-                                        </datalist>
-                                    </b-form-group>
+                                        </datalist> -->
                                 </b-col>
                             </b-row>
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                         label-for="unit" label-align="right">
-                                        <b-form-input list="list-unit" v-model="item.unit" size="sm" autocomplete="off">
+                                        <b-form-select v-model="item.unit" :options="units" size="sm">
+                                        </b-form-select>
+                                    </b-form-group>
+                                    <!-- <b-form-input list="list-unit" v-model="item.unit" size="sm" autocomplete="off">
                                         </b-form-input>
                                         <datalist id="list-unit">
                                             <option v-for="unit in units">{{unit}}</option>
-                                        </datalist>
-                                    </b-form-group>
+                                        </datalist> -->
                                     <!--
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="単位"
                                         label-for="unit">
@@ -538,6 +540,7 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.units = response.data.map(item => item['unitName']);
+                                self.units.unshift('');
                             });
                     },
                     getCategories: async function () {
