@@ -54,7 +54,8 @@
                   </b-col>
                 </b-row>
                 <b-row>
-                  <p class="mr-3"> ○○○○年度 ○○月～○○月 </p>
+                  <p class="mr-3"> {{this.year}}年度
+                    {{this.year}}年{{this.month}}月～{{this.afterYear}}年{{this.afterMonth}}月</p>
                 </b-row>
                 <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
                   :items=achievements :fields="[
@@ -105,9 +106,12 @@
                 self.achievements = response.data;
                 df = new dfd.DataFrame(self.achievements,)
                 df.print();
-                df.setIndex({ index: df['applyDate'].values, inplace: true })
-                df.drop({ columns: ['applyDate'], inplace: true })
-                df.plot("achievement-chart").bar({ columns: ["monthlyProfit", "monthlySales"] })
+                if (df['applyDate'] !== undefined) {
+                  df.setIndex({ index: df['applyDate'].values, inplace: true })
+                  df.drop({ columns: ['applyDate'], inplace: true })
+                  df.plot("achievement-chart").bar({ columns: ["monthlyProfit", "monthlySales"] })
+                }
+                else df.plot("achievement-chart").bar({ columns: ["monthlyProfit", "monthlySales"] })
                 // 原価率計算
                 // let achievements = self.achievements;
                 // achievements.map(achieve => {
@@ -124,8 +128,15 @@
           document.querySelector('title').textContent = '請求実績';
           // 今月を含めた１年分のデータ取得のため
           let today = new Date();
-          this.year = today.getFullYear() - 1;
-          this.month = today.getMonth() + 2;
+          // 月はインデックス
+          if (today.getMonth() !== 12 - 1) {
+            this.year = today.getFullYear() - 1;
+            this.month = today.getMonth() + 2;
+          }
+          else {
+            this.year = today.getFullYear();
+            this.month = 1
+          }
           this.getAchievements(this.year, this.month);
         },
         computed: {
@@ -136,6 +147,16 @@
           modeName() {
             return localStorage.getItem('wMode');
           },
+          afterYear() {
+            if (this.year === undefined) return null;
+            if (this.month == 1) return this.year;
+            return Number(this.year) + 1;
+          },
+          afterMonth() {
+            if (this.month === '') return null;
+            if (this.month == 1) return 12;
+            return Number(this.month) + 11 - 12;
+          }
         }
       });
     </script>
