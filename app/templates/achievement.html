@@ -61,13 +61,12 @@
                   :items=achievements :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyDate', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'monthlySales', label: '当期累計', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'monthlyProfit', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlySales_sum', label: '当期累計', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlyProfit_sum', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlyCostRate', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
                         ]">
                   <template v-slot:cell(monthlyCostRate)="data">
-                    {{monthlyCostRate(data.item.monthlyProfit,data.item.monthlySales)}}%
-                    <!-- {{data.item.monthlyCostRate}}% -->
+                    {{monthlyCostRate(data.item.monthlyProfit_sum,data.item.monthlySales_sum)}}%
                   </template>
                 </b-table>
               </b-card>
@@ -94,24 +93,17 @@
           getAchievements: async function (year = null, month = null) {
             self = this;
             url = '/v1/achievements-group'
-            // url = '/v1/achievements'
+            let mergedJson;
             await axios.get(url, {
               params: {
                 year: year,
                 month: month,
+                isTax: 1,
               }
             })
               .then(function (response) {
                 console.log(response);
-                self.achievements = response.data;
-                df = new dfd.DataFrame(self.achievements,)
-                df.print();
-                if (df['applyDate'] !== undefined) {
-                  df.setIndex({ index: df['applyDate'].values, inplace: true })
-                  df.drop({ columns: ['applyDate'], inplace: true })
-                  df.plot("achievement-chart").bar({ columns: ["monthlyProfit", "monthlySales"] })
-                }
-                else df.plot("achievement-chart").bar({ columns: ["monthlyProfit", "monthlySales"] })
+                mergedJson = response.data;
                 // 原価率計算
                 // let achievements = self.achievements;
                 // achievements.map(achieve => {
@@ -119,6 +111,26 @@
                 // });
                 // self.achievements = achievements;
               });
+            await axios.get(url, {
+              params: {
+                year: year,
+                month: month,
+                isTax: 0,
+              }
+            })
+              .then(function (response) {
+                console.log(response);
+                response.data.map(d => mergedJson.push(d));
+                console.log(mergedJson);
+              });
+            df = new dfd.DataFrame(mergedJson).groupby(['applyDate']).sum();
+            df.print();
+            if (df['applyDate'] !== undefined) {
+              df.setIndex({ index: df['applyDate'].values, inplace: true })
+              df.drop({ columns: ['applyDate'], inplace: true })
+            }
+            df.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] })
+            self.achievements = dfd.toJSON(df);
           },
           monthlyCostRate: function (monthlyProfit, monthlySales) {
             return Math.round(monthlyProfit / monthlySales * 100);
