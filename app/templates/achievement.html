@@ -54,19 +54,19 @@
                   </b-col>
                 </b-row>
                 <b-row>
-                  <p class="mr-3"> ○○○○年度 ○○月～○○月 </p>
+                  <p class="mr-3"> {{this.year}}年度
+                    {{this.year}}年{{this.month}}月～{{this.afterYear}}年{{this.afterMonth}}月</p>
                 </b-row>
                 <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
                   :items=achievements :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyDate', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'monthlySales', label: '当期累計', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'monthlyProfit', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlySales_sum', label: '当期累計', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlyProfit_sum', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlyCostRate', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
                         ]">
                   <template v-slot:cell(monthlyCostRate)="data">
-                    {{monthlyCostRate(data.item.monthlyProfit,data.item.monthlySales)}}%
-                    <!-- {{data.item.monthlyCostRate}}% -->
+                    {{monthlyCostRate(data.item.monthlyProfit_sum,data.item.monthlySales_sum)}}%
                   </template>
                 </b-table>
               </b-card>
@@ -93,21 +93,17 @@
           getAchievements: async function (year = null, month = null) {
             self = this;
             url = '/v1/achievements-group'
-            // url = '/v1/achievements'
+            let mergedJson;
             await axios.get(url, {
               params: {
                 year: year,
                 month: month,
+                isTax: 1,
               }
             })
               .then(function (response) {
                 console.log(response);
-                self.achievements = response.data;
-                df = new dfd.DataFrame(self.achievements,)
-                df.print();
-                df.setIndex({ index: df['applyDate'].values, inplace: true })
-                df.drop({ columns: ['applyDate'], inplace: true })
-                df.plot("achievement-chart").bar({ columns: ["monthlyProfit", "monthlySales"] })
+                mergedJson = response.data;
                 // 原価率計算
                 // let achievements = self.achievements;
                 // achievements.map(achieve => {
@@ -115,6 +111,26 @@
                 // });
                 // self.achievements = achievements;
               });
+            await axios.get(url, {
+              params: {
+                year: year,
+                month: month,
+                isTax: 0,
+              }
+            })
+              .then(function (response) {
+                console.log(response);
+                response.data.map(d => mergedJson.push(d));
+                console.log(mergedJson);
+              });
+            df = new dfd.DataFrame(mergedJson).groupby(['applyDate']).sum();
+            self.achievements = dfd.toJSON(df);
+            df.print();
+            if (df['applyDate'] !== undefined) {
+              df.setIndex({ index: df['applyDate'].values, inplace: true })
+              df.drop({ columns: ['applyDate'], inplace: true })
+            }
+            df.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] })
           },
           monthlyCostRate: function (monthlyProfit, monthlySales) {
             return Math.round(monthlyProfit / monthlySales * 100);
@@ -124,8 +140,15 @@
           document.querySelector('title').textContent = '請求実績';
           // 今月を含めた１年分のデータ取得のため
           let today = new Date();
-          this.year = today.getFullYear() - 1;
-          this.month = today.getMonth() + 2;
+          // 月はインデックス
+          if (today.getMonth() !== 12 - 1) {
+            this.year = today.getFullYear() - 1;
+            this.month = today.getMonth() + 2;
+          }
+          else {
+            this.year = today.getFullYear();
+            this.month = 1
+          }
           this.getAchievements(this.year, this.month);
         },
         computed: {
@@ -136,6 +159,16 @@
           modeName() {
             return localStorage.getItem('wMode');
           },
+          afterYear() {
+            if (this.year === undefined) return null;
+            if (this.month == 1) return this.year;
+            return Number(this.year) + 1;
+          },
+          afterMonth() {
+            if (this.month === '') return null;
+            if (this.month == 1) return 12;
+            return Number(this.month) + 11 - 12;
+          }
         }
       });
     </script>
