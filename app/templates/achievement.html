@@ -124,13 +124,13 @@
                 console.log(mergedJson);
               });
             df = new dfd.DataFrame(mergedJson).groupby(['applyDate']).sum();
+            self.achievements = dfd.toJSON(df);
             df.print();
             if (df['applyDate'] !== undefined) {
               df.setIndex({ index: df['applyDate'].values, inplace: true })
               df.drop({ columns: ['applyDate'], inplace: true })
             }
             df.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] })
-            self.achievements = dfd.toJSON(df);
           },
           monthlyCostRate: function (monthlyProfit, monthlySales) {
             return Math.round(monthlyProfit / monthlySales * 100);
