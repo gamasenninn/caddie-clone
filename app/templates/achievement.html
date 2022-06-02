@@ -124,9 +124,8 @@
                 console.log(mergedJson);
               });
             df = new dfd.DataFrame(mergedJson)
-            if (mergedJson.length !== 0) {
+            if (mergedJson.length !== 0)
               df = df.groupby(['applyDate']).sum();
-            }
             self.achievements = dfd.toJSON(df);
             df.print();
             if (df['applyDate'] !== undefined) {
