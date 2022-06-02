@@ -51,10 +51,10 @@ class Customer(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoices = db.relationship(
-        'Invoice', backref='customer', uselist=True, cascade='all, delete',)
-    quotations = db.relationship(
-        'Quotation', backref='customer', uselist=True, cascade='all, delete',)
+    # invoices = db.relationship(
+    #     'Invoice', backref='customer', uselist=True, cascade='all, delete',)
+    # quotations = db.relationship(
+    #     'Quotation', backref='customer', uselist=True, cascade='all, delete',)
 
 
 class Item(db.Model):
