@@ -65,6 +65,12 @@
                           {  key: 'monthlyProfit_sum', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlyCostRate', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
                         ]">
+                  <template v-slot:cell(monthlySales_sum)="data">
+                    {{data.item.monthlySales_sum|nf}}
+                  </template>
+                  <template v-slot:cell(monthlyProfit_sum)="data">
+                    {{data.item.monthlyProfit_sum|nf}}
+                  </template>
                   <template v-slot:cell(monthlyCostRate)="data">
                     {{monthlyCostRate(data.item.monthlyProfit_sum,data.item.monthlySales_sum)}}%
                   </template>
@@ -79,6 +85,11 @@
     </div>
 
     <script>
+      Vue.filter('nf', function (val) {
+        if (isNaN(val)) return null
+        return val.toLocaleString();
+      });
+
       const router = new VueRouter({
       })
       var app = new Vue({
