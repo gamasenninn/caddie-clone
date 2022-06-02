@@ -55,4 +55,7 @@
    - jspanel.css:v4.12.0
 
 - chart.js
- - chart.js:v3.7.1
+   - chart.js:v3.7.1
+
+- danfo.js
+   - danfojs@1.1.0
