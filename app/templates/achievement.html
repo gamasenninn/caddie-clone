@@ -75,6 +75,10 @@
                   </template>
                 </b-table>
               </b-card>
+              <b-button variant="primary" size="sm" @click="barPlot();">棒グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="linePlot();">折れ線グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="histPlot();">ヒストグラフ</b-button>
+              <b-button variant="primary" size="sm" @click="scatterPlot();">点グラフ</b-button>
               <div id="achievement-chart"></div>
             </b-col>
             <b-col></b-col>
@@ -110,6 +114,7 @@
                 year: year,
                 month: month,
                 isTax: 1,
+                achievementDF: null,
               }
             })
               .then(function (response) {
@@ -143,7 +148,22 @@
               df.setIndex({ index: df['applyDate'].values, inplace: true })
               df.drop({ columns: ['applyDate'], inplace: true })
             }
+            df.rename({ "monthlyProfit_sum": "粗利額" }, { inplace: true });
+            df.rename({ "monthlySales_sum": "当期累計" }, { inplace: true });
+            this.achievementDF = df;
             df.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] })
+          },
+          barPlot: function () {
+            this.achievementDF.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
+          },
+          linePlot: function () {
+            this.achievementDF.plot("achievement-chart").line({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
+          },
+          histPlot: function () {
+            this.achievementDF.plot("achievement-chart").hist({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
+          },
+          scatterPlot: function () {
+            this.achievementDF.plot("achievement-chart").scatter({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
           },
           monthlyCostRate: function (monthlyProfit, monthlySales) {
             return Math.round(monthlyProfit / monthlySales * 100);
