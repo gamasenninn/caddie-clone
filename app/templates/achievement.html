@@ -1,4 +1,4 @@
-<% extends "head.html" %>
+<% extends "head_min.html" %>
   <% block content %>
 
     <!-- danfo.js -->
@@ -38,7 +38,6 @@
           <b-row class="mt-1">
             <b-col></b-col>
             <b-col cols="11">
-              <div id="achievement-chart"></div>
               <b-card border-variant="white" class="mb-3 text-center" header="月別売上推移表" header-border-variant="light">
                 <b-row>
                   <b-col>
@@ -70,6 +69,7 @@
                   </template>
                 </b-table>
               </b-card>
+              <div id="achievement-chart"></div>
             </b-col>
             <b-col></b-col>
           </b-row>
@@ -123,7 +123,10 @@
                 response.data.map(d => mergedJson.push(d));
                 console.log(mergedJson);
               });
-            df = new dfd.DataFrame(mergedJson).groupby(['applyDate']).sum();
+            df = new dfd.DataFrame(mergedJson)
+            if (mergedJson.length !== 0) {
+              df = df.groupby(['applyDate']).sum();
+            }
             self.achievements = dfd.toJSON(df);
             df.print();
             if (df['applyDate'] !== undefined) {
