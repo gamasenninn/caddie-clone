@@ -122,7 +122,7 @@
 
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="任意番号"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="任意番号(必須)"
                                         label-for="anyNumber" label-align="right">
                                         <b-form-input v-model="user.anyNumber" id="anyNumber" size="sm"
                                             :formatter="formatterNumberAll">
@@ -130,7 +130,7 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="任意名"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="任意名(必須)"
                                         label-for="anyName" label-align="right">
                                         <b-form-input v-model="user.anyName" id="anyName" size="sm"
                                             :formatter="formatter_delete_space">
@@ -140,14 +140,14 @@
                             </b-row>
                             <b-row>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ユーザー名"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ユーザー名(必須)"
                                         label-for="name" label-align="right">
                                         <b-form-input v-model="user.name" id="name" size="sm"
                                             :formatter="formatter_delete_space"></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="パスワード"
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="パスワード(必須)"
                                         label-for="password" label-align="right">
                                         <b-form-input v-model="user.password" id="password" size="sm" type="password"
                                             :formatter="formatter_delete_space">
