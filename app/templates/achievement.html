@@ -167,7 +167,11 @@
             this.achievementDF.plot("achievement-chart").scatter({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
           },
           monthlyCostRate: function (monthlyProfit, monthlySales) {
-            return Math.round(monthlyProfit / monthlySales * 100);
+            if (monthlyProfit === null) monthlyProfit = 0;
+            if (monthlySales === null) monthlySales = 0;
+            let monthlyCostRate = Math.round(monthlyProfit / monthlySales * 100);
+            if (isNaN(monthlyCostRate)) monthlyCostRate = 0;
+            return monthlyCostRate;
           },
         },
         mounted: function () {
