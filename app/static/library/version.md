@@ -57,5 +57,3 @@
 - chart.js
    - chart.js:v3.7.1
 
-- danfo.js
-   - danfojs@1.1.0

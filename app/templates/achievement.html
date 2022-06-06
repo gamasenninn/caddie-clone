@@ -1,8 +1,11 @@
 <% extends "head_min.html" %>
   <% block content %>
 
-    <!-- danfo.js -->
-    <script src="../static/library/bundle.min.js"></script>
+    <!-- lodash -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <!-- chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+    <!-- <script src="../static/library/chart.js"></script> -->
 
     <style>
       .card-header {
@@ -75,11 +78,11 @@
                   </template>
                 </b-table>
               </b-card>
-              <b-button variant="primary" size="sm" @click="barPlot();">棒グラフ</b-button>
-              <b-button variant="primary" size="sm" @click="linePlot();">折れ線グラフ</b-button>
-              <b-button variant="primary" size="sm" @click="histPlot();">ヒストグラフ</b-button>
-              <b-button variant="primary" size="sm" @click="scatterPlot();">点グラフ</b-button>
-              <div id="achievement-chart"></div>
+              <b-button variant="primary" size="sm" @click="">グラフ1</b-button>
+              <b-button variant="primary" size="sm" @click="">グラフ2</b-button>
+              <b-button variant="primary" size="sm" @click="">グラフ3</b-button>
+              <b-button variant="primary" size="sm" @click="">グラフ4</b-button>
+              <canvas id="achievement-chart" width="400" height="150"></canvas>
             </b-col>
             <b-col></b-col>
           </b-row>
@@ -115,7 +118,6 @@
                 year: year,
                 month: month,
                 isTax: 1,
-                achievementDF: null,
               }
             })
               .then(function (response) {
@@ -140,31 +142,59 @@
                 response.data.map(d => mergedJson.push(d));
                 console.log(mergedJson);
               });
-            df = new dfd.DataFrame(mergedJson)
-            if (mergedJson.length !== 0)
-              df = df.groupby(['applyDate']).sum();
-            self.achievements = dfd.toJSON(df);
-            df.print();
-            if (df['applyDate'] !== undefined) {
-              df.setIndex({ index: df['applyDate'].values, inplace: true })
-              df.drop({ columns: ['applyDate'], inplace: true })
-            }
-            df.rename({ "monthlyProfit_sum": "粗利額" }, { inplace: true });
-            df.rename({ "monthlySales_sum": "当期累計" }, { inplace: true });
-            this.achievementDF = df;
-            df.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] })
-          },
-          barPlot: function () {
-            this.achievementDF.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
-          },
-          linePlot: function () {
-            this.achievementDF.plot("achievement-chart").line({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
-          },
-          histPlot: function () {
-            this.achievementDF.plot("achievement-chart").hist({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
-          },
-          scatterPlot: function () {
-            this.achievementDF.plot("achievement-chart").scatter({ columns: ["monthlyProfit_sum", "monthlySales_sum"] });
+            self.achievements = _(mergedJson).groupBy('applyDate').map((value, key) => {
+              return {
+                'applyDate': key,
+                'monthlyProfit_sum': _.sumBy(value, 'monthlyProfit'),
+                'monthlySales_sum': _.sumBy(value, 'monthlySales'),
+              };
+            }).value();
+            console.log(self.achievements);
+
+            const applyDateList = [], monthlyProfitList = [], monthlySalesList = [];
+            self.achievements.forEach(achieve => {
+              applyDateList.push(achieve.applyDate);
+              monthlyProfitList.push(achieve.monthlyProfit_sum);
+              monthlySalesList.push(achieve.monthlySales_sum);
+            });
+            console.log(applyDateList, monthlyProfitList, monthlySalesList);
+
+            var ctx = document.getElementById("achievement-chart");
+            var myLineChart = new Chart(ctx, {
+              data: {
+                labels: applyDateList,
+                datasets: [
+                  {
+                    type: 'bar',
+                    label: '当期累計',
+                    data: monthlySalesList,
+                    borderColor: "rgba(254,97,132,0.8)",
+                    backgroundColor: "rgba(254,97,132,0.5)",
+                  },
+                  {
+                    type: 'line',
+                    label: '粗利額',
+                    data: monthlyProfitList,
+                    borderColor: "rgba(54,164,235,0.8)",
+                    backgroundColor: "rgba(54,164,235,0.5)",
+                  },
+                ]
+              }
+            });
+            // ----- danfo.js -----
+            // df = new dfd.DataFrame(mergedJson)
+            // if (mergedJson.length !== 0)
+            //   df = df.groupby(['applyDate']).sum();
+            // self.achievements = dfd.toJSON(df);
+            // df.print();
+            // if (df['applyDate'] !== undefined) {
+            //   df.setIndex({ index: df['applyDate'].values, inplace: true })
+            //   df.drop({ columns: ['applyDate'], inplace: true })
+            // }
+            // df.rename({ "monthlyProfit_sum": "粗利額" }, { inplace: true });
+            // df.rename({ "monthlySales_sum": "当期累計" }, { inplace: true });
+            // this.achievementDF = df;
+            // df.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] })
           },
           monthlyCostRate: function (monthlyProfit, monthlySales) {
             if (monthlyProfit === null) monthlyProfit = 0;
