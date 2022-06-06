@@ -20,6 +20,7 @@
 | --------------- | --------------- | -------    |  -------------------------------- | 
 | id              | id              | integer    |                                   | 
 | anyNumber       | 任意番号         | integer    | ソート用。重複禁止。Null禁止。     | 
+| closingMonth    | 決算月           | integer    |                                  | 
 | customerName    | 得意先名         | text       |                                   | 
 | customerKana    | ふりがな         | text       |  ジャンル分けするためのもの         | 
 | honorificTitle  | 敬称            | text       |                                   | 

@@ -189,6 +189,8 @@ def customer_create():
         return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
     newCustomer = Customer(
         anyNumber=data.get('anyNumber'),
+        closingMonth=data.get('closingMonth') if data.get(
+            'closingMonth') else None,
         customerName=data.get('customerName')if data.get(
             'customerName') else None,
         customerKana=data.get('customerKana')if data.get(
@@ -238,6 +240,8 @@ def customer_update(id):
         return jsonify({"result": "error", "message": "必須項目に空欄があります。値を入力してください。"}), 500
 
     customer.anyNumber = data.get('anyNumber')
+    customer.closingMonth = data.get(
+        'closingMonth')if data.get('closingMonth') else None
     customer.customerName = data.get(
         'customerName')if data.get('customerName') else None
     customer.customerKana = data.get(
