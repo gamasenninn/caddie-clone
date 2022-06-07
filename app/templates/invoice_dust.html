@@ -53,22 +53,7 @@
         <div id="app" v-cloak>
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">
-                <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
-                    <b-row>
-                        <b-col></b-col>
-                        <b-col cols="11">
-                            <b-row>
-                                <b-col>
-                                </b-col>
-                                <!-- サイドバー -->
-                                <b-col cols="1" class="text-right">
-                                    <sc-menu v-if="modeName!='mw'"></sc-menu>
-                                </b-col>
-                            </b-row>
-                        </b-col>
-                        <b-col></b-col>
-                    </b-row>
-                </b-card>
+                <setting-header :mode-name="modeName"></setting-header>
 
                 <!-- 空行 -->
                 <b-row class="mb-5"></b-row>
@@ -356,8 +341,9 @@
             <b-row class="mb-5"></b-row>
 
             <!-- 更新・取消ボタンのフッター -->
-            <b-card text-variant="white" class="fixed-bottom footer" style="background: rgba(52,58,64,0.9);">
-                <b-row v-if="pageName=='show'">
+            <b-card v-if="pageName=='show'" text-variant="white" class="fixed-bottom footer"
+                style="background: rgba(52,58,64,0.9);">
+                <b-row>
                     <b-col>
                         <router-link to="?page=index">
                             <b-button @click="getInvoices(searchInvoiceWord);" v-b-tooltip.hover.top="'戻る'">＜
@@ -372,16 +358,6 @@
                             </template>
                             <b-dropdown-item @click="pdfout('delivery')">納品書</b-dropdown-item>
                         </b-dropdown>
-                    </b-col>
-                </b-row>
-                <b-row v-else>
-                    <b-col class="pc-mode">
-                        <b-button href="/dust-select-page">＜</b-button>
-                    </b-col>
-                    <b-col class="sm-mode">
-                        <b-button href="/dust-select-page">
-                            <b-icon icon="chevron-left"></b-icon>
-                        </b-button>
                     </b-col>
                 </b-row>
             </b-card>
