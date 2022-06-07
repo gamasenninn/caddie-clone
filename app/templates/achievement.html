@@ -154,37 +154,14 @@
             }).value();
             console.log(self.achievements);
 
-            self.applyDateList, self.monthlySalesList, self.monthlyProfitList = []
+            self.applyDateList = [], self.monthlySalesList = [], self.monthlyProfitList = []
             self.achievements.forEach(achieve => {
               self.applyDateList.push(achieve.applyDate);
               self.monthlySalesList.push(achieve.monthlySales_sum);
               self.monthlyProfitList.push(achieve.monthlyProfit_sum);
             });
             console.log(self.applyDateList, self.monthlyProfitList, self.monthlySalesList);
-
-            // グラフ表示
-            let ctx = document.getElementById("achievement-chart");
-            self.myChart = new Chart(ctx, {
-              data: {
-                labels: self.applyDateList,
-                datasets: [
-                  {
-                    type: 'bar',
-                    label: '当期累計',
-                    data: self.monthlySalesList,
-                    borderColor: "rgba(254,97,132,0.8)",
-                    backgroundColor: "rgba(254,97,132,0.5)",
-                  },
-                  {
-                    type: 'line',
-                    label: '粗利額',
-                    data: self.monthlyProfitList,
-                    borderColor: "rgba(54,164,235,0.8)",
-                    backgroundColor: "rgba(54,164,235,0.5)",
-                  },
-                ]
-              }
-            });
+            this.plot();
 
             // ----- danfo.js -----
             // df = new dfd.DataFrame(mergedJson)
@@ -208,33 +185,33 @@
             if (isNaN(monthlyCostRate)) monthlyCostRate = 0;
             return monthlyCostRate;
           },
-          // plot(type1, type2) {
-          //   if (self.myChart) {
-          //     self.myChart.destroy();
-          //   }
-          //   let ctx = document.getElementById("achievement-chart");
-          //   self.myChart = new Chart(ctx, {
-          //     data: {
-          //       labels: self.applyDateList,
-          //       datasets: [
-          //         {
-          //           type: type1,
-          //           label: '当期累計',
-          //           data: self.monthlySalesList,
-          //           borderColor: "rgba(254,97,132,0.8)",
-          //           backgroundColor: "rgba(254,97,132,0.5)",
-          //         },
-          //         {
-          //           type: type2,
-          //           label: '粗利額',
-          //           data: self.monthlyProfitList,
-          //           borderColor: "rgba(54,164,235,0.8)",
-          //           backgroundColor: "rgba(54,164,235,0.5)",
-          //         },
-          //       ]
-          //     }
-          //   });
-          // },
+          plot() {
+            if (self.myChart) {
+              self.myChart.destroy();
+            }
+            let ctx = document.getElementById("achievement-chart");
+            self.myChart = new Chart(ctx, {
+              data: {
+                labels: self.applyDateList,
+                datasets: [
+                  {
+                    type: 'bar',
+                    label: '当期累計',
+                    data: self.monthlySalesList,
+                    borderColor: "rgba(254,97,132,0.8)",
+                    backgroundColor: "rgba(254,97,132,0.5)",
+                  },
+                  {
+                    type: 'line',
+                    label: '粗利額',
+                    data: self.monthlyProfitList,
+                    borderColor: "rgba(54,164,235,0.8)",
+                    backgroundColor: "rgba(54,164,235,0.5)",
+                  },
+                ]
+              }
+            });
+          },
         },
         mounted: function () {
           document.querySelector('title').textContent = '売上実績';
