@@ -38,12 +38,7 @@
                         <b-col></b-col>
                         <b-col cols="11">
                             <b-row>
-                                <b-col>
-                                    <router-link to="?page=store">
-                                        <b-button pill variant="success" class="mr-3" @click="UserAddRow();">＋新規作成
-                                        </b-button>
-                                    </router-link>
-                                </b-col>
+                                <b-col></b-col>
                                 <b-col class="text-right">
                                     <b-button @click="$bvModal.show('login-history-modal')">ログ履歴</b-button>
                                 </b-col>
@@ -81,6 +76,12 @@
                 <b-row class="mt-1">
                     <b-col></b-col>
                     <b-col cols="11">
+                        <b-row align-h="start">
+                            <router-link to="?page=store">
+                                <b-button pill variant="success" class="mb-3 ml-3" @click="UserAddRow();">＋新規
+                                </b-button>
+                            </router-link>
+                        </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="ユーザー一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="usertable" sort-by="ID" small label="Table Options"
