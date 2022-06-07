@@ -27,22 +27,7 @@
 
 
         <div id="app" v-cloak>
-            <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
-                <b-row>
-                    <b-col></b-col>
-                    <b-col cols="11">
-                        <b-row>
-                            <b-col>
-                            </b-col>
-                            <!-- サイドバー -->
-                            <b-col class="text-right">
-                                <sc-menu v-if="modeName!='mw'"></sc-menu>
-                            </b-col>
-                        </b-row>
-                    </b-col>
-                    <b-col></b-col>
-                </b-row>
-            </b-card>
+            <setting-header :mode-name="modeName"></setting-header>
 
             <!-- 空行 -->
             <b-row class="mb-5"></b-row>
@@ -297,39 +282,8 @@
             <!-- 更新・取消ボタンのフッター -->
             <b-card text-variant="white" class="fixed-bottom footer" style="background: rgba(52,58,64,0.9);">
                 <b-row>
-                    <b-col class="pc-mode">
-                        <b-button href="/setting-page">会社情報</b-button>
-                        <b-button href="/user-page">ユーザー</b-button>
-                        <b-button href="/category-page">カテゴリ</b-button>
-                        <b-button href="/maker-page">メーカー</b-button>
-                        <b-button href="/unit-page">単位</b-button>
-                        <b-button href="/dust-select-page">削除済み</b-button>
-                        <b-button href="https://mail-form.site/contact/soho-caddie" target="_blank">お問合わせ</b-button>
-                    </b-col>
-                    <b-col class="sm-mode">
-                        <b-button href="/setting-page" v-b-tooltip.hover.top="'会社情報'">
-                            <b-icon icon="building"></b-icon>
-                        </b-button>
-                        <b-button href="/user-page" v-b-tooltip.hover.top="'ユーザー登録'">
-                            <b-icon icon="person-plus-fill"></b-icon>
-                        </b-button>
-                        <b-button href="/category-page" v-b-tooltip.hover.top="'カテゴリ登録'">
-                            <b-icon icon="folder2"></b-icon>
-                        </b-button>
-                        <b-button href="/maker-page" v-b-tooltip.hover.top="'メーカー登録'">
-                            <b-icon icon="shop"></b-icon>
-                        </b-button>
-                        <b-button href="/unit-page" v-b-tooltip.hover.top="'単位登録'">
-                            <b-icon icon="hammer"></i>
-                        </b-button>
-                        <b-button href="/dust-select-page" v-b-tooltip.hover.top="'削除済み参照'">
-                            <b-icon icon="file-earmark-x"></b-icon>
-                        </b-button>
-                        <b-button href="https://mail-form.site/contact/soho-caddie" target="_blank"
-                            v-b-tooltip.hover.top="'お問い合わせ'">
-                            <b-img src="../static/images/icon/contact.png" style="width: 20px;"></b-img>
-                        </b-button>
-                    </b-col>
+                    <b-col></b-col>
+                    <b-col></b-col>
                     <b-col cols="4" class="text-right">
                         <b-button variant="primary" class="mr-3" @click="bulkUpsert(setting);showConfirmModal();">保存
                         </b-button>
