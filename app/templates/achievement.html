@@ -77,10 +77,10 @@
                   </template>
                 </b-table>
               </b-card>
-              <b-button variant="primary" size="sm" @click="plot('bar','line')">棒＋線グラフ</b-button>
+              <!-- <b-button variant="primary" size="sm" @click="plot('bar','line')">棒＋線グラフ</b-button>
               <b-button variant="primary" size="sm" @click="plot('bar','bar')">棒グラフ</b-button>
               <b-button variant="primary" size="sm" @click="plot('line','line')">線グラフ</b-button>
-              <b-button variant="primary" size="sm" @click="plot('doughnut','doughnut')">円グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="plot('doughnut','doughnut')">円グラフ</b-button> -->
             </b-col>
             <b-col></b-col>
           </b-row>
@@ -154,13 +154,14 @@
             }).value();
             console.log(self.achievements);
 
-            self.applyDateList, self.monthlySalesList, self.monthlyProfitList = []
+            self.applyDateList = [], self.monthlySalesList = [], self.monthlyProfitList = []
             self.achievements.forEach(achieve => {
               self.applyDateList.push(achieve.applyDate);
               self.monthlySalesList.push(achieve.monthlySales_sum);
               self.monthlyProfitList.push(achieve.monthlyProfit_sum);
             });
             console.log(self.applyDateList, self.monthlyProfitList, self.monthlySalesList);
+            this.plot();
 
             // ----- danfo.js -----
             // df = new dfd.DataFrame(mergedJson)
@@ -184,8 +185,7 @@
             if (isNaN(monthlyCostRate)) monthlyCostRate = 0;
             return monthlyCostRate;
           },
-          // type1,type2:グラフの形式
-          plot(type1, type2) {
+          plot() {
             if (self.myChart) {
               self.myChart.destroy();
             }
@@ -195,14 +195,14 @@
                 labels: self.applyDateList,
                 datasets: [
                   {
-                    type: type1,
+                    type: 'bar',
                     label: '当期累計',
                     data: self.monthlySalesList,
                     borderColor: "rgba(254,97,132,0.8)",
                     backgroundColor: "rgba(254,97,132,0.5)",
                   },
                   {
-                    type: type2,
+                    type: 'line',
                     label: '粗利額',
                     data: self.monthlyProfitList,
                     borderColor: "rgba(54,164,235,0.8)",
