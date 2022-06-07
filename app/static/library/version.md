@@ -57,3 +57,5 @@
 - chart.js
    - chart.js:v3.7.1
 
+- lodash
+   - lodash:4.17.21

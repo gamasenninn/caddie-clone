@@ -2,10 +2,9 @@
   <% block content %>
 
     <!-- lodash -->
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script src="../static/library/lodash.min.js"></script>
     <!-- chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
-    <!-- <script src="../static/library/chart.js"></script> -->
+    <script src="../static/library/chart.js"></script>
 
     <style>
       .card-header {
@@ -78,14 +77,14 @@
                   </template>
                 </b-table>
               </b-card>
-              <b-button variant="primary" size="sm" @click="">グラフ1</b-button>
-              <b-button variant="primary" size="sm" @click="">グラフ2</b-button>
-              <b-button variant="primary" size="sm" @click="">グラフ3</b-button>
-              <b-button variant="primary" size="sm" @click="">グラフ4</b-button>
-              <canvas id="achievement-chart" width="400" height="150"></canvas>
+              <b-button variant="primary" size="sm" @click="plot('bar','line')">棒＋線グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="plot('bar','bar')">棒グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="plot('line','line')">線グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="plot('doughnut','doughnut')">円グラフ</b-button>
             </b-col>
             <b-col></b-col>
           </b-row>
+          <canvas id="achievement-chart" width="400" height="150"></canvas>
         </div>
       </div>
 
@@ -107,6 +106,10 @@
           achievements: [],
           year: null,
           month: null,
+          applyDateList: [],
+          monthlySalesList: [],
+          monthlyProfitList: [],
+          myChart: null,
         },
         methods: {
           getAchievements: async function (year = null, month = null) {
@@ -151,36 +154,14 @@
             }).value();
             console.log(self.achievements);
 
-            const applyDateList = [], monthlyProfitList = [], monthlySalesList = [];
+            self.applyDateList, self.monthlySalesList, self.monthlyProfitList = []
             self.achievements.forEach(achieve => {
-              applyDateList.push(achieve.applyDate);
-              monthlyProfitList.push(achieve.monthlyProfit_sum);
-              monthlySalesList.push(achieve.monthlySales_sum);
+              self.applyDateList.push(achieve.applyDate);
+              self.monthlySalesList.push(achieve.monthlySales_sum);
+              self.monthlyProfitList.push(achieve.monthlyProfit_sum);
             });
-            console.log(applyDateList, monthlyProfitList, monthlySalesList);
+            console.log(self.applyDateList, self.monthlyProfitList, self.monthlySalesList);
 
-            var ctx = document.getElementById("achievement-chart");
-            var myLineChart = new Chart(ctx, {
-              data: {
-                labels: applyDateList,
-                datasets: [
-                  {
-                    type: 'bar',
-                    label: '当期累計',
-                    data: monthlySalesList,
-                    borderColor: "rgba(254,97,132,0.8)",
-                    backgroundColor: "rgba(254,97,132,0.5)",
-                  },
-                  {
-                    type: 'line',
-                    label: '粗利額',
-                    data: monthlyProfitList,
-                    borderColor: "rgba(54,164,235,0.8)",
-                    backgroundColor: "rgba(54,164,235,0.5)",
-                  },
-                ]
-              }
-            });
             // ----- danfo.js -----
             // df = new dfd.DataFrame(mergedJson)
             // if (mergedJson.length !== 0)
@@ -202,6 +183,34 @@
             let monthlyCostRate = Math.round(monthlyProfit / monthlySales * 100);
             if (isNaN(monthlyCostRate)) monthlyCostRate = 0;
             return monthlyCostRate;
+          },
+          // type1,type2:グラフの形式
+          plot(type1, type2) {
+            if (self.myChart) {
+              self.myChart.destroy();
+            }
+            let ctx = document.getElementById("achievement-chart");
+            self.myChart = new Chart(ctx, {
+              data: {
+                labels: self.applyDateList,
+                datasets: [
+                  {
+                    type: type1,
+                    label: '当期累計',
+                    data: self.monthlySalesList,
+                    borderColor: "rgba(254,97,132,0.8)",
+                    backgroundColor: "rgba(254,97,132,0.5)",
+                  },
+                  {
+                    type: type2,
+                    label: '粗利額',
+                    data: self.monthlyProfitList,
+                    borderColor: "rgba(54,164,235,0.8)",
+                    backgroundColor: "rgba(54,164,235,0.5)",
+                  },
+                ]
+              }
+            });
           },
         },
         mounted: function () {
