@@ -1111,21 +1111,6 @@
                             priceIncludingTax: this.priceIncludingTax
                         }
                         const pdfData = getPdfDataQuotation(this.quotation, this.setting, sumQuotation, this.customer);
-                        if (!this.setting.isDisplayQuotationLogo) pdfData.defPdf.header.drawImages = [];
-                        if (!this.setting.isDisplayQuotationStamp) pdfData.defPdf.footer.drawImages = [];
-
-                        if (self.quotation.quotation_items.length > 0) {
-                            pdfData.data.bdata = self.quotation.quotation_items;
-                            pdfData.data.bdata = pdfData.data.bdata.map(i => ({
-                                ...i,
-                                price: parseInt(i.price),
-                                count: parseInt(i.count),
-                                calcPrice: i.price * i.count,
-                                itemName: (i.itemName ? i.itemName.replace(/\n/g, '<br />') : '')
-                            }));
-                        } else {
-                            pdfData.data.bdata = [{}];
-                        }
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data)
