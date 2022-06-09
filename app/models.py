@@ -29,6 +29,7 @@ class Customer(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     anyNumber = db.Column(db.Integer, unique=True)
+    closingMonth = db.Column(db.Integer)
     customerName = db.Column(db.String)
     customerKana = db.Column(db.String)
     honorificTitle = db.Column(db.String)
