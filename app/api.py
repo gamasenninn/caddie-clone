@@ -668,8 +668,11 @@ def invoice_update(id):
             if 'updatedAt' in item:
                 del(item['updatedAt'])
             for columnName in item.keys():
-                if item[columnName] == '':
-                    item[columnName] = None
+                if columnName == 'cost':
+                    if item['cost'] == '' or item['cost'] == None:
+                        item['cost'] = 0
+                    elif item[columnName] == '':
+                        item[columnName] = None
 
             if item.get('id'):
                 if item.get('isDelete'):
