@@ -671,8 +671,8 @@ def invoice_update(id):
                 if columnName == 'cost':
                     if item['cost'] == '' or item['cost'] == None:
                         item['cost'] = 0
-                    elif item[columnName] == '':
-                        item[columnName] = None
+                elif item[columnName] == '':
+                    item[columnName] = None
 
             if item.get('id'):
                 if item.get('isDelete'):
