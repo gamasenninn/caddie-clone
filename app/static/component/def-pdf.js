@@ -120,7 +120,24 @@ function getPdfDataQuotation(quotation, setting, sumQuotation, customer) {
     h.stampWidth = setting.stampWidth ? setting.stampWidth : 50;
     h.stampHeight = setting.stampHeight ? setting.stampHeight : 50;
 
-    return getPdfData(h, sum);
+    const pdfData = getPdfData(h, sum);
+    if (!setting.isDisplayQuotationLogo) pdfData.defPdf.header.drawImages = [];
+    if (!setting.isDisplayQuotationStamp) pdfData.defPdf.first_page.drawImages = [];
+    if (self.quotation.quotation_items.length > 0) {
+        pdfData.data.bdata = self.quotation.quotation_items;
+        pdfData.data.bdata = pdfData.data.bdata.map(i => ({
+            ...i,
+            price: parseInt(i.price),
+            count: parseInt(i.count),
+            calcPrice: i.price * i.count,
+            itemName: (i.itemName ? i.itemName.replace(/\n/g, '<br />') : '')
+        }));
+    } else {
+        pdfData.data.bdata = [{}];
+    }
+
+    return pdfData;
+
 }
 function getPdfData(h, sum) {
     return {
