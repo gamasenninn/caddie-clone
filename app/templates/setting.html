@@ -66,9 +66,9 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
-                                        label-for="representative" label-align="right">
-                                        <b-form-input v-model="setting.representative" id="representative" size="sm">
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="登録番号"
+                                        label-for="registerNumber" label-align="right">
+                                        <b-form-input v-model="setting.registerNumber" id="registerNumber" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -116,6 +116,22 @@
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
                                         label-for="email" label-align="right">
                                         <b-form-input v-model="setting.email" id="email" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
+                                        label-for="representative" label-align="right">
+                                        <b-form-input v-model="setting.representative" id="representative" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="管理者"
+                                        label-for="administrator" label-align="right">
+                                        <b-form-input v-model="setting.administrator" id="administrator" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
