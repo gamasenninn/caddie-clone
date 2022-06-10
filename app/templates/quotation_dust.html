@@ -418,7 +418,7 @@
                         this.getQuotations(this.searchQuotationWord, this.offset)
                     },
                     formatDate(date) {
-                        if (!!date) return moment(date).format("YYYY年MM月DD日");
+                        if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
                     formatDateTime(datetime) {
                         if (!!datetime) return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss")
