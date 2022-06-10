@@ -18,7 +18,8 @@
                 pointer-events: none;
             }
 
-            .th-customer-any-number {
+            .th-customer-any-number,
+            .th-apply-date {
                 pointer-events: auto !important;
             }
 
@@ -170,7 +171,7 @@
                           {  key: 'update', label: '' },
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyNumber', label: '見積番号', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'applyDate', label: '日付', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'applyDate', label: '日付', thClass: 'th-apply-date text-center', tdClass: 'text-center', sortable: true },
                           {  key: 'customerAnyNumber', label: 'No.', thClass: 'th-customer-any-number text-center', tdClass: 'text-center', sortable: true },
                           {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
                           {  key: 'title', label: '件名', thClass: 'text-center', },
