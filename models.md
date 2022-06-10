@@ -243,7 +243,9 @@
 | 項目名                   | 和名             | タイプ       | 備考                     | 
 | ----------------------- | ---------------- | --------    | ------------------------ | 
 | companyName             | 会社名           | text        |                          | 
+| registerNumber          | 登録番号         | integer(13) |                          | 
 | representative          | 代表者名         | text        |                          | 
+| administrator           | 管理者           | text        |                          | 
 | postNumber              | 郵便番号         | string(20)  |                          | 
 | address                 | 住所             | text        |                          | 
 | telNumber               | 電話番号         | string(30)  |                          | 
