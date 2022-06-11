@@ -1760,8 +1760,12 @@ def setting_update(id):
 
     setting.companyName = data.get(
         'companyName')if data.get('companyName') else None
+    setting.registerNumber = data.get(
+        'registerNumber')if data.get('registerNumber') else None
     setting.representative = data.get(
         'representative')if data.get('representative') else None
+    setting.administrator = data.get(
+        'administrator')if data.get('administrator') else None
     setting.postNumber = data.get(
         'postNumber')if data.get('postNumber') else None
     setting.address = data.get('address')if data.get('address') else None
