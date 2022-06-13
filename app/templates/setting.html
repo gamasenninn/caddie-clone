@@ -51,9 +51,10 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
-                                        label-for="representative" label-align="right">
-                                        <b-form-input v-model="setting.representative" id="representative" size="sm">
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="登録番号"
+                                        label-for="registerNumber" label-align="right">
+                                        <b-form-input v-model="setting.registerNumber" id="registerNumber" size="sm"
+                                            type="number" placeholder="インボイスNo.">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -101,6 +102,22 @@
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
                                         label-for="email" label-align="right">
                                         <b-form-input v-model="setting.email" id="email" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
+                                        label-for="representative" label-align="right">
+                                        <b-form-input v-model="setting.representative" id="representative" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="管理者"
+                                        label-for="administrator" label-align="right">
+                                        <b-form-input v-model="setting.administrator" id="administrator" size="sm">
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -285,7 +302,7 @@
                     <b-col></b-col>
                     <b-col></b-col>
                     <b-col cols="4" class="text-right">
-                        <b-button variant="primary" class="mr-3" @click="bulkUpsert(setting);showConfirmModal();">保存
+                        <b-button variant="primary" class="mr-3" @click="bulkUpsert(setting);">保存
                         </b-button>
                     </b-col>
                 </b-row>
@@ -293,6 +310,9 @@
 
             <!-- 確認モーダル -->
             <confirm-modal :title="title" :message="message"></confirm-modal>
+
+            <!-- エラーモーダル -->
+            <confirm-modal-danger :title="title" :message="message"></confirm-modal-danger>
 
             <!-- バージョンモーダル -->
             <div>
@@ -336,7 +356,15 @@
                 methods: {
                     // ---Settings---
                     bulkUpsert(item) {
-                        this.updateSetting(item);
+                        if (item.registerNumber.length > 13) {
+                            this.title = 'エラー';
+                            this.message = '登録番号は１３桁以下で入力してください';
+                            this.$bvModal.show('confirmModalDanger');
+                            return
+                        }
+                        else {
+                            this.updateSetting(item);
+                        }
                     },
                     updateSetting: async function (item) {
                         self = this;
@@ -345,9 +373,10 @@
                                 self.getSetting(self.setting);
                                 console.log(response);
                                 localStorage.setItem('isHideTabletMode', String(self.isHideTabletMode));
+                                app.title = '更新';
+                                app.message = '保存しました。';
+                                app.$bvModal.show('confirmModal');
                             });
-                        app.title = '更新';
-                        app.message = '保存しました。';
                     },
                     getSetting: async function () {
                         self = this;
@@ -364,9 +393,6 @@
                                 console.log(response);
                                 self.myUser = response.data;
                             });
-                    },
-                    showConfirmModal: function () {
-                        this.$bvModal.show('confirmModal');
                     },
                 },
                 mounted: function () {

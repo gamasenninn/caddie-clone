@@ -440,6 +440,7 @@ def invoice_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
@@ -467,6 +468,7 @@ def invoice_index_v1():
 
     else:
         invoices = Invoice.query.filter(Invoice.isDelete == False)
+    invoices_tmp = invoices
     if offset:
         invoices = invoices.offset(offset)
     if limit:
@@ -480,6 +482,13 @@ def invoice_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = invoices_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'invoices': InvoiceSchema(many=True).dump(invoices), 'isMore': isMore})
+
     return jsonify(InvoiceSchema(many=True).dump(invoices))
 
 
@@ -1854,8 +1863,12 @@ def setting_update(id):
 
     setting.companyName = data.get(
         'companyName')if data.get('companyName') else None
+    setting.registerNumber = data.get(
+        'registerNumber')if data.get('registerNumber') else None
     setting.representative = data.get(
         'representative')if data.get('representative') else None
+    setting.administrator = data.get(
+        'administrator')if data.get('administrator') else None
     setting.postNumber = data.get(
         'postNumber')if data.get('postNumber') else None
     setting.address = data.get('address')if data.get('address') else None

@@ -313,7 +313,9 @@ class Setting(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # 会社情報
     companyName = db.Column(db.String)
+    registerNumber = db.Column(db.Integer)
     representative = db.Column(db.String)
+    administrator = db.Column(db.String)
     postNumber = db.Column(db.String(20))
     address = db.Column(db.String)
     telNumber = db.Column(db.String(30))
