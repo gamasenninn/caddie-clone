@@ -13,6 +13,7 @@ var search = Vue.component('search', {
     `,
     data: {
         searchInvoiceWord: '',
+        isMore: false,
     },
     props: {
         invoices: Array,
@@ -28,17 +29,19 @@ var search = Vue.component('search', {
                 params: {
                     search: searchWord,
                     offset: offset,
+                    moreCheck: true,
                 }
             })
                 .then(function (response) {
                     console.log(response);
-                    search.invoices = response.data;
+                    search.invoices = response.data.invoices;
                     self.countChanged = 0;
+                    search.isMore = response.data.isMore;
                 });
             this.changeInvoices();
         },
         changeInvoices() {
-            this.$emit('emit-invoices', search.invoices, search.searchInvoiceWord);
+            this.$emit('emit-invoices', search.invoices, search.searchInvoiceWord, search.isMore);
         },
     },
 })

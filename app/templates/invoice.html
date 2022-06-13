@@ -163,7 +163,8 @@
                                     :sort-by-invoices="sortByInvoices" :sort-desc="sortDesc">
                                 </invoice-list-payment>
                                 <b-row align-h="end">
-                                    <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                    <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示
+                                    </b-button>
                                 </b-row>
                             </b-card>
                         </b-col>
@@ -726,6 +727,7 @@
                     setting: [],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
+                    isMore: false,
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -749,16 +751,19 @@
                             params: {
                                 search: searchWord,
                                 offset: offset,
+                                moreCheck: true,
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
-                                    self.invoices = response.data;
+                                    self.invoices = response.data.invoices;
+                                    self.isMore = response.data.isMore;
                                 }
                                 else {
-                                    response.data.map(invoice => self.invoices.push(invoice));
+                                    response.data.invoices.map(invoice => self.invoices.push(invoice));
+                                    self.isMore = response.data.isMore;
                                 }
                             });
                     },
@@ -1159,9 +1164,10 @@
                         return "height: " + (26 * row + interval) + "px";
                     },
                     // ----- 子コンポーネントからの値 -----
-                    updateInvoices(invoices, searchInvoiceWord) {
+                    updateInvoices(invoices, searchInvoiceWord, isMore) {
                         this.invoices = invoices;
                         this.searchInvoiceWord = searchInvoiceWord;
+                        this.isMore = isMore;
                     },
                     updateDayStart(start) {
                         this.searchDayStart = start;
