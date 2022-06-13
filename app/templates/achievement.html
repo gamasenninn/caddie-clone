@@ -31,13 +31,18 @@
               <b-card border-variant="white" class="mb-3 text-center" header="月別売上推移表" header-border-variant="light">
                 <b-row>
                   <b-col>
-                    <b-form-input v-model="year" id="year" size="sm" placeholder="年">
-                    </b-form-input>
+                    <b-row>
+                      <b-col>
+                        <b-form-input v-model="year" id="year" size="sm" placeholder="年">
+                        </b-form-input>
+                      </b-col>
+                      <b-col>
+                        <b-form-input v-model="month" id="month" size="sm" placeholder="期首">
+                        </b-form-input>
+                      </b-col>
+                    </b-row>
                   </b-col>
-                  <b-col>
-                    <b-form-input v-model="month" id="month" size="sm" placeholder="期首">
-                    </b-form-input>
-                  </b-col>
+                  <b-col></b-col>
                   <b-col>
                     <b-button variant="primary" size="sm" @click="getAchievements(year,month);">検索</b-button>
                   </b-col>
