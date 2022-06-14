@@ -131,6 +131,7 @@ def customer_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
@@ -143,6 +144,7 @@ def customer_index_v1():
         ))
     else:
         customers = Customer.query
+    customers_tmp = customers
     if offset:
         customers = customers.offset(offset)
     if limit:
@@ -156,6 +158,12 @@ def customer_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = customers_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'customers': CustomerSchema(many=True).dump(customers), 'isMore': isMore})
 
     return jsonify(CustomerSchema(many=True).dump(customers))
 
@@ -305,6 +313,7 @@ def item_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
@@ -316,6 +325,7 @@ def item_index_v1():
         ))
     else:
         items = Item.query
+    items_tmp = items
     if offset:
         items = items.offset(offset)
     if limit:
@@ -329,6 +339,12 @@ def item_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = items_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'items': ItemSchema(many=True).dump(items), 'isMore': isMore})
 
     return jsonify(ItemSchema(many=True).dump(items))
 
@@ -496,6 +512,7 @@ def dust_invoice_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
@@ -522,6 +539,7 @@ def dust_invoice_index_v1():
                 and_(Invoice.isDelete == True, Invoice.customerName.like('%'+searchWord+'%')))
     else:
         invoices = Invoice.query.filter(Invoice.isDelete == True)
+    invoices_tmp = invoices
     if offset:
         invoices = invoices.offset(offset)
     if limit:
@@ -535,6 +553,12 @@ def dust_invoice_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = invoices_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'invoices': InvoiceSchema(many=True).dump(invoices), 'isMore': isMore})
 
     return jsonify(InvoiceSchema(many=True).dump(invoices))
 
@@ -994,6 +1018,7 @@ def quotation_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
@@ -1019,6 +1044,7 @@ def quotation_index_v1():
                 and_(Quotation.isDelete == False, Quotation.customerName.like('%'+searchWord+'%')))
     else:
         quotations = Quotation.query.filter(Quotation.isDelete == False)
+    quotations_tmp = quotations
     if offset:
         quotations = quotations.offset(offset)
     if limit:
@@ -1032,6 +1058,13 @@ def quotation_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = quotations_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'quotations': QuotationSchema(many=True).dump(quotations), 'isMore': isMore})
+
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
@@ -1041,6 +1074,7 @@ def dust_quotation_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
@@ -1066,6 +1100,7 @@ def dust_quotation_index_v1():
                 and_(Quotation.isDelete == True, Quotation.customerName.like('%'+searchWord+'%')))
     else:
         quotations = Quotation.query.filter(Quotation.isDelete == True)
+    quotations_tmp = quotations
     if offset:
         quotations = quotations.offset(offset)
     if limit:
@@ -1079,6 +1114,13 @@ def dust_quotation_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = quotations_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'quotations': QuotationSchema(many=True).dump(quotations), 'isMore': isMore})
+
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
@@ -1375,6 +1417,7 @@ def memo_index_v1():
    # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
@@ -1398,6 +1441,7 @@ def memo_index_v1():
                 Memo.manager.like('%'+searchWord+'%'))
     else:
         memos = Memo.query
+    memos_tmp = memos
     if offset:
         memos = memos.offset(offset)
     if limit:
@@ -1411,6 +1455,13 @@ def memo_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = memos_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'memos': MemoSchema(many=True).dump(memos), 'isMore': isMore})
+
     return jsonify(MemoSchema(many=True).dump(memos))
 
 

@@ -197,7 +197,7 @@
                                 </template>
                             </b-table>
                             <b-row align-h="end">
-                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button>
                             </b-row>
                         </b-card>
                     </b-col>
@@ -721,6 +721,7 @@
                     termOfSaleOptions: ['御社決済条件にて', '代金引換', '納品後2週間以内に決済', '納品後翌月末までに決済', '応相談',],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
+                    isMore: false,
                     //countChanged: 0,
                     fileId: '', //upload用ID
                     dicFiles: [],
@@ -746,16 +747,19 @@
                             params: {
                                 search: searchWord,
                                 offset: offset,
+                                moreCheck: true,
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
-                                    self.quotations = response.data;
+                                    self.quotations = response.data.quotations;
+                                    self.isMore = response.data.isMore;
                                 }
                                 else {
-                                    response.data.map(quotation => self.quotations.push(quotation));
+                                    response.data.quotations.map(quotation => self.quotations.push(quotation));
+                                    self.isMore = response.data.isMore;
                                 }
                             });
                     },

@@ -77,7 +77,7 @@
                                 </template>
                             </b-table>
                             <b-row align-h="end">
-                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button>
                             </b-row>
                         </b-card>
                     </b-col>
@@ -207,6 +207,7 @@
                     title: '',              //モーダルタイトル
                     message: '',            //モーダルメッセージ
                     offset: 0,
+                    isMore: false,
                 },
                 methods: {
                     // ---Memos---
@@ -217,16 +218,19 @@
                             params: {
                                 search: searchWord,
                                 offset: offset,
+                                moreCheck: true,
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
-                                    self.memos = response.data;
+                                    self.memos = response.data.memos;
+                                    self.isMore = response.data.isMore;
                                 }
                                 else {
-                                    response.data.map(memo => self.memos.push(memo));
+                                    response.data.memos.map(memo => self.memos.push(memo));
+                                    self.isMore = response.data.isMore;
                                 }
                             });
                     },
