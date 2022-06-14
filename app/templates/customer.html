@@ -114,7 +114,7 @@
                                 </template>
                             </b-table>
                             <b-row align-h="end">
-                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button>
                             </b-row>
                         </b-card>
                     </b-col>
@@ -378,6 +378,7 @@
                     title: '',
                     message: '',
                     offset: 0,
+                    isMore: false,
                 },
                 methods: {
                     // ---Customers---
@@ -387,17 +388,20 @@
                         await axios.get(url, {
                             params: {
                                 search: searchWord,
-                                offset: offset
+                                offset: offset,
+                                moreCheck: true,
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
-                                    self.customers = response.data;
+                                    self.customers = response.data.customers;
+                                    self.isMore = response.data.isMore;
                                 }
                                 else {
-                                    response.data.map(customer => self.customers.push(customer));
+                                    response.data.customers.map(customer => self.customers.push(customer));
+                                    self.isMore = response.data.isMore;
                                 }
                             });
                     },

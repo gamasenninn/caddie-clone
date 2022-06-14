@@ -113,7 +113,7 @@
                                 </template>
                             </b-table>
                             <b-row align-h="end">
-                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button>
                             </b-row>
                         </b-card>
                     </b-col>
@@ -229,10 +229,10 @@
                             label="Table Options" :items=invoice.invoice_items :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemId', label: '商品ID', tdClass:'td-item-id' ,sortable: true},
-                          {  key: 'itemName', label: '商品名' ,sortable: true},
-                          {  key: 'count',   label: '個数' },
+                          {  key: 'itemName', label: '内容' ,sortable: true},
+                          {  key: 'count',   label: '数量' },
                           {  key: 'unit',   label: '単位' },
-                          {  key: 'price', label: '値段' },
+                          {  key: 'price', label: '単価' },
                           {  key: 'amount', label: '金額',class:'text-right' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
                         ]">
@@ -384,6 +384,7 @@
                     customer: [],
                     setting: [],
                     offset: 0,
+                    isMore: false,
                 },
                 methods: {
                     // ---Invoices---
@@ -394,16 +395,19 @@
                             params: {
                                 search: searchWord,
                                 offset: offset,
+                                moreCheck: true,
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
-                                    self.invoices = response.data;
+                                    self.invoices = response.data.invoices;
+                                    self.isMore = response.data.isMore;
                                 }
                                 else {
-                                    response.data.map(invoice => self.invoices.push(invoice));
+                                    response.data.invoices.map(invoice => self.invoices.push(invoice));
+                                    self.isMore = response.data.isMore;
                                 }
                             });
                     },

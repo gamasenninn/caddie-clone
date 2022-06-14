@@ -148,7 +148,7 @@
                                 </template>
                             </b-table>
                             <b-row align-h="end">
-                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button>
                             </b-row>
                         </b-card>
                     </b-col>
@@ -414,6 +414,7 @@
                     },
                     uploadListMode: 'card', //list,card
                     isShowAll: false,
+                    isMore: false,
                     routeTo: '',
                     routeFrom: '',
                     title: '',              //モーダルタイトル
@@ -430,16 +431,19 @@
                             params: {
                                 search: searchWord,
                                 offset: offset,
+                                moreCheck: true,
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
-                                    self.items = response.data;
+                                    self.items = response.data.items;
+                                    self.isMore = response.data.isMore;
                                 }
                                 else {
-                                    response.data.map(item => self.items.push(item));
+                                    response.data.items.map(item => self.items.push(item));
+                                    self.isMore = response.data.isMore;
                                 }
                             });
                     },

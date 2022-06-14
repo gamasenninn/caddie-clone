@@ -205,7 +205,7 @@
                                 </template>
                             </b-table>
                             <b-row align-h="end">
-                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button>
                             </b-row>
                         </b-card>
                     </b-col>
@@ -377,10 +377,10 @@
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemId', thClass: 'd-none', tdClass:'d-none' },
                           {  key: 'any', label: '', tdClass:'td-any' },
-                          {  key: 'itemName', label: '商品名' ,sortable: true},
-                          {  key: 'count',   label: '個数', tdClass:'td-count' },
+                          {  key: 'itemName', label: '内容' ,sortable: true},
+                          {  key: 'count',   label: '数量', tdClass:'td-count' },
                           {  key: 'unit',   label: '単位', tdClass:'td-unit' },
-                          {  key: 'price', label: '値段', tdClass:'td-price' },
+                          {  key: 'price', label: '単価', tdClass:'td-price' },
                           {  key: 'amount', label: '金額' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
                           {  key: 'isDelete', label: '削除',class:'text-center' },
@@ -729,6 +729,7 @@
                     termOfSaleOptions: ['御社決済条件にて', '代金引換', '納品後2週間以内に決済', '納品後翌月末までに決済', '応相談',],
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
+                    isMore: false,
                     //countChanged: 0,
                     fileId: '', //upload用ID
                     dicFiles: [],
@@ -754,16 +755,19 @@
                             params: {
                                 search: searchWord,
                                 offset: offset,
+                                moreCheck: true,
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
-                                    self.quotations = response.data;
+                                    self.quotations = response.data.quotations;
+                                    self.isMore = response.data.isMore;
                                 }
                                 else {
-                                    response.data.map(quotation => self.quotations.push(quotation));
+                                    response.data.quotations.map(quotation => self.quotations.push(quotation));
+                                    self.isMore = response.data.isMore;
                                 }
                             });
                     },
