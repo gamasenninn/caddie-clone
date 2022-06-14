@@ -496,6 +496,7 @@ def dust_invoice_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
@@ -522,6 +523,7 @@ def dust_invoice_index_v1():
                 and_(Invoice.isDelete == True, Invoice.customerName.like('%'+searchWord+'%')))
     else:
         invoices = Invoice.query.filter(Invoice.isDelete == True)
+    invoices_tmp = invoices
     if offset:
         invoices = invoices.offset(offset)
     if limit:
@@ -535,6 +537,12 @@ def dust_invoice_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = invoices_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'invoices': InvoiceSchema(many=True).dump(invoices), 'isMore': isMore})
 
     return jsonify(InvoiceSchema(many=True).dump(invoices))
 
@@ -994,6 +1002,7 @@ def quotation_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
@@ -1019,6 +1028,7 @@ def quotation_index_v1():
                 and_(Quotation.isDelete == False, Quotation.customerName.like('%'+searchWord+'%')))
     else:
         quotations = Quotation.query.filter(Quotation.isDelete == False)
+    quotations_tmp = quotations
     if offset:
         quotations = quotations.offset(offset)
     if limit:
@@ -1032,6 +1042,13 @@ def quotation_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = quotations_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'quotations': QuotationSchema(many=True).dump(quotations), 'isMore': isMore})
+
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 
@@ -1041,6 +1058,7 @@ def dust_quotation_index_v1():
     # パラメータを準備
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
     limit = int(req.get('limit')) if req.get('limit') else _LIMIT_NUM
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
@@ -1066,6 +1084,7 @@ def dust_quotation_index_v1():
                 and_(Quotation.isDelete == True, Quotation.customerName.like('%'+searchWord+'%')))
     else:
         quotations = Quotation.query.filter(Quotation.isDelete == True)
+    quotations_tmp = quotations
     if offset:
         quotations = quotations.offset(offset)
     if limit:
@@ -1079,6 +1098,13 @@ def dust_quotation_index_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = quotations_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'quotations': QuotationSchema(many=True).dump(quotations), 'isMore': isMore})
+
     return jsonify(QuotationSchema(many=True).dump(quotations))
 
 

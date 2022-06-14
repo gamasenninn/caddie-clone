@@ -125,7 +125,7 @@
                                 </template>
                             </b-table>
                             <b-row align-h="end">
-                                <b-button variant="primary" size="sm" @click="showMore">さらに表示</b-button>
+                                <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button>
                             </b-row>
                         </b-card>
                     </b-col>
@@ -394,6 +394,7 @@
                     customer: [],
                     setting: [],
                     offset: 0,
+                    isMore: false,
                 },
                 methods: {
                     // ---Quotations---
@@ -404,16 +405,19 @@
                             params: {
                                 search: searchWord,
                                 offset: offset,
+                                moreCheck: true,
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
-                                    self.quotations = response.data;
+                                    self.quotations = response.data.quotations;
+                                    self.isMore = response.data.isMore;
                                 }
                                 else {
-                                    response.data.map(quotation => self.quotations.push(quotation));
+                                    response.data.quotations.map(quotation => self.quotations.push(quotation));
+                                    self.isMore = response.data.isMore;
                                 }
                             });
                     },
