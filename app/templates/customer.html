@@ -138,9 +138,9 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="決算月"
                                         label-for="closingMonth" label-align="right">
-                                        <b-form-input v-model="customer.closingMonth" id="closingMonth" size="sm"
-                                            :formatter="formatterNumberAll" autocomplete="off" type="number">
-                                        </b-form-input>
+                                        <b-form-select v-model="customer.closingMonth" :options="closingMonth"
+                                            size="sm">
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -367,6 +367,7 @@
                     customer: [],                //選択中のcustomer
                     oldCustomer: [],                //選択中の元customer
                     selectHonorificTitle: ['', '様', '御中', '殿',],    //敬称セレクトボックス用
+                    closingMonth: [{ value: null, text: "" }, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     title: '',
                     message: '',
                     offset: 0,
