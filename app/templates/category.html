@@ -47,8 +47,8 @@
                             <b-table responsive hover small id="categorytable" sort-by="ID" small label="Table Options"
                                 :items=categories :fields="[
                           {  key: 'update', label: '' },
-                          {  key: 'id', label: 'No.', thClass: 'text-center', },
-                          {  key: 'categoryName', label: 'カテゴリ名', thClass: 'text-center', },
+                          {  key: 'id', label: 'No.', thClass: 'text-center', tdClass: 'text-center', },
+                          {  key: 'categoryName', label: 'カテゴリ名', thClass: 'text-center', tdClass: 'text-center', },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">

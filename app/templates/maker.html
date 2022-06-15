@@ -46,8 +46,8 @@
                             <b-table responsive hover small id="makertable" sort-by="ID" small label="Table Options"
                                 :items=makers :fields="[
                           {  key: 'update', label: '' },
-                          {  key: 'id', label: 'No.', thClass: 'text-center', },
-                          {  key: 'makerName', label: 'メーカー名', thClass: 'text-center', },
+                          {  key: 'id', label: 'No.', thClass: 'text-center', tdClass: 'text-center', },
+                          {  key: 'makerName', label: 'メーカー名', thClass: 'text-center', tdClass: 'text-center', },
                         ]" :tbody-tr-class="rowClass">
                                 <template v-slot:cell(update)="data">
                                     <router-link to="?page=show">
