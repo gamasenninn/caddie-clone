@@ -124,17 +124,19 @@
         <div id="app" v-cloak>
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">
-                <!-- ヘッダー -->
-                <menu-header :main-add-row="InvoiceAddRow" :mode-name="modeName"></menu-header>
-
                 <!-- 空行 -->
-                <b-row class="mb-5"></b-row>
-                <b-row class="mb-5"></b-row>
+                <b-row class="mb-3"></b-row>
 
                 <div>
                     <b-row class="mt-1">
                         <b-col></b-col>
                         <b-col cols="11">
+                            <b-row>
+                                <b-col></b-col>
+                                <b-col class="text-right">
+                                    <sc-menu class="mb-3" v-if="modeName!='mw'"></sc-menu>
+                                </b-col>
+                            </b-row>
                             <b-card border-variant="white" class="mb-3 text-center" :header="headerName"
                                 header-border-variant="light">
                                 <b-row>
@@ -151,6 +153,14 @@
                                     </b-col>
                                 </b-row>
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
+                                <b-row align-h="start">
+                                    <router-link to="?page=store">
+                                        <b-button v-if="procName=='normal'" pill variant="success" class="mb-3 ml-3"
+                                            @click="InvoiceAddRow();">
+                                            ＋新規
+                                        </b-button>
+                                    </router-link>
+                                </b-row>
                                 <!-- ヘッダーをクリックするとソートが解除されるバグ解消のために、ソート可能なth以外はクリック無効にしているので注意 -->
                                 <!-- 一覧 -->
                                 <invoice-list v-if="procName=='normal'" :select-invoice="selectInvoice"

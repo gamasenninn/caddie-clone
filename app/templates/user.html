@@ -38,16 +38,38 @@
                         <b-col></b-col>
                         <b-col cols="11">
                             <b-row>
-                                <b-col>
-                                    <router-link to="?page=store">
-                                        <b-button pill variant="success" class="mr-3" @click="UserAddRow();">＋新規作成
-                                        </b-button>
-                                    </router-link>
+                                <b-col class="pc-mode">
+                                    <b-button href="/setting-page">会社情報</b-button>
+                                    <b-button href="/user-page">ユーザー</b-button>
+                                    <b-button href="/category-page">カテゴリ</b-button>
+                                    <b-button href="/maker-page">メーカー</b-button>
+                                    <b-button href="/unit-page">単位</b-button>
+                                    <b-button href="/dust-select-page">削除済み</b-button>
                                 </b-col>
-                                <b-col class="text-right">
-                                    <b-button @click="$bvModal.show('login-history-modal')">ログイン履歴</b-button>
+                                <b-col class="sm-mode">
+                                    <b-button href="/setting-page" v-b-tooltip.hover.top="'会社情報'">
+                                        <b-icon icon="building"></b-icon>
+                                    </b-button>
+                                    <b-button href="/user-page" v-b-tooltip.hover.top="'ユーザー登録'">
+                                        <b-icon icon="person-plus-fill"></b-icon>
+                                    </b-button>
+                                    <b-button href="/category-page" v-b-tooltip.hover.top="'カテゴリ登録'">
+                                        <b-icon icon="folder2"></b-icon>
+                                    </b-button>
+                                    <b-button href="/maker-page" v-b-tooltip.hover.top="'メーカー登録'">
+                                        <b-icon icon="shop"></b-icon>
+                                    </b-button>
+                                    <b-button href="/unit-page" v-b-tooltip.hover.top="'単位登録'">
+                                        <b-icon icon="hammer"></i>
+                                    </b-button>
+                                    <b-button href="/dust-select-page" v-b-tooltip.hover.top="'削除済み参照'">
+                                        <b-icon icon="file-earmark-x"></b-icon>
+                                    </b-button>
                                 </b-col>
-                                <b-col cols="1" class="text-right">
+                                <b-col cols="3" class="text-right">
+                                    <b-button @click="$bvModal.show('login-history-modal')">ログ履歴</b-button>
+                                </b-col>
+                                <b-col cols="2" class="text-right">
                                     <sc-menu v-if="modeName!='mw'"></sc-menu>
                                 </b-col>
                             </b-row>
@@ -63,6 +85,8 @@
                         label="Table Options" :fields="[
                               {  key: 'id', label: 'No.' },
                               {  key: 'userName', label: 'ユーザー名' },
+                              {  key: 'modelName', label: '対象' },
+                              {  key: 'modelId', label: '対象ID' },
                               {  key: 'action', label: '行動' },
                               {  key: 'createdAt', label: '日時' },
                         ]">
@@ -79,6 +103,12 @@
                 <b-row class="mt-1">
                     <b-col></b-col>
                     <b-col cols="11">
+                        <b-row align-h="start">
+                            <router-link to="?page=store">
+                                <b-button pill variant="success" class="mb-3 ml-3" @click="UserAddRow();">＋新規
+                                </b-button>
+                            </router-link>
+                        </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="ユーザー一覧"
                             header-border-variant="light">
                             <b-table responsive hover small id="usertable" sort-by="ID" small label="Table Options"
@@ -188,8 +218,9 @@
             <b-row class="mb-5"></b-row>
 
             <!-- 更新・取消ボタンのフッター -->
-            <b-card text-variant="white" class="fixed-bottom footer" style="background: rgba(52,58,64,0.9);">
-                <b-row v-if="pageName=='show' || pageName=='store'">
+            <b-card v-if="pageName=='show' || pageName=='store'" text-variant="white" class="fixed-bottom footer"
+                style="background: rgba(52,58,64,0.9);">
+                <b-row>
                     <b-col>
                         <router-link to="?page=index">
                             <b-button @click="getUsers();" v-b-tooltip.hover.top="'戻る'">＜</b-button>
@@ -201,36 +232,6 @@
                         <b-button pill size="lg" variant="danger" @click="modalShow(user,'deleteModal');"
                             v-b-tooltip.hover.top="'削除'">
                             <i class="fas fa-trash-alt"></i>
-                        </b-button>
-                    </b-col>
-                </b-row>
-                <b-row v-else>
-                    <b-col class="pc-mode">
-                        <b-button href="/setting-page">会社情報</b-button>
-                        <b-button href="/user-page">ユーザー</b-button>
-                        <b-button href="/category-page">カテゴリ</b-button>
-                        <b-button href="/maker-page">メーカー</b-button>
-                        <b-button href="/unit-page">単位</b-button>
-                        <b-button href="/dust-select-page">削除済み</b-button>
-                    </b-col>
-                    <b-col class="sm-mode">
-                        <b-button href="/setting-page" v-b-tooltip.hover.top="'会社情報'">
-                            <b-icon icon="building"></b-icon>
-                        </b-button>
-                        <b-button href="/user-page" v-b-tooltip.hover.top="'ユーザー登録'">
-                            <b-icon icon="person-plus-fill"></b-icon>
-                        </b-button>
-                        <b-button href="/category-page" v-b-tooltip.hover.top="'カテゴリ登録'">
-                            <b-icon icon="folder2"></b-icon>
-                        </b-button>
-                        <b-button href="/maker-page" v-b-tooltip.hover.top="'メーカー登録'">
-                            <b-icon icon="shop"></b-icon>
-                        </b-button>
-                        <b-button href="/unit-page" v-b-tooltip.hover.top="'単位登録'">
-                            <b-icon icon="hammer"></i>
-                        </b-button>
-                        <b-button href="/dust-select-page" v-b-tooltip.hover.top="'削除済み参照'">
-                            <b-icon icon="file-earmark-x"></b-icon>
                         </b-button>
                     </b-col>
                 </b-row>

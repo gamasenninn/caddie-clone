@@ -1,0 +1,246 @@
+<% extends "head_min.html" %>
+  <% block content %>
+
+    <!-- lodash -->
+    <script src="../static/library/lodash.min.js"></script>
+    <!-- chart.js -->
+    <script src="../static/library/chart.js"></script>
+
+    <style>
+      .card-header {
+        background-color: #ccecf1;
+        font-size: 18px;
+      }
+    </style>
+
+    <div id="app" v-clock>
+      <div v-if="pageName=='index'">
+        <!-- 空行 -->
+        <b-row class="mb-3"></b-row>
+
+        <div>
+          <b-row class="mt-1">
+            <b-col></b-col>
+            <b-col cols="11">
+              <b-row>
+                <b-col></b-col>
+                <b-col class="text-right">
+                  <sc-menu class="mb-3" v-if="modeName!='mw'"></sc-menu>
+                </b-col>
+              </b-row>
+              <b-card border-variant="white" class="mb-3 text-center" header="月別売上推移表" header-border-variant="light">
+                <b-row>
+                  <b-col>
+                    <b-row>
+                      <b-col>
+                        <b-form-input v-model="year" id="year" size="sm" placeholder="年">
+                        </b-form-input>
+                      </b-col>
+                      <b-col>
+                        <b-form-input v-model="month" id="month" size="sm" placeholder="期首">
+                        </b-form-input>
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                  <b-col></b-col>
+                  <b-col>
+                    <b-button variant="primary" size="sm" @click="getAchievements(year,month);">検索</b-button>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <p class="mr-3"> {{this.year}}年度
+                    {{this.year}}年{{this.month}}月～{{this.afterYear}}年{{this.afterMonth}}月</p>
+                </b-row>
+                <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
+                  :items=achievements :fields="[
+                          {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                          {  key: 'applyDate', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlySales_sum', label: '月次累計', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlyProfit_sum', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlyCostRate', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
+                        ]">
+                  <template v-slot:cell(monthlySales_sum)="data">
+                    {{data.item.monthlySales_sum|nf}}
+                  </template>
+                  <template v-slot:cell(monthlyProfit_sum)="data">
+                    {{data.item.monthlyProfit_sum|nf}}
+                  </template>
+                  <template v-slot:cell(monthlyCostRate)="data">
+                    {{monthlyCostRate(data.item.monthlyProfit_sum,data.item.monthlySales_sum)}}%
+                  </template>
+                </b-table>
+              </b-card>
+              <!-- <b-button variant="primary" size="sm" @click="plot('bar','line')">棒＋線グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="plot('bar','bar')">棒グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="plot('line','line')">線グラフ</b-button>
+              <b-button variant="primary" size="sm" @click="plot('doughnut','doughnut')">円グラフ</b-button> -->
+              <canvas id="achievement-chart" width="400" height="150"></canvas>
+            </b-col>
+            <b-col></b-col>
+          </b-row>
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+      Vue.filter('nf', function (val) {
+        if (isNaN(val)) return null
+        if (val === null) return 0;
+        return val.toLocaleString();
+      });
+
+      const router = new VueRouter({
+      })
+      var app = new Vue({
+        el: '#app',
+        router,
+        data: {
+          achievements: [],
+          year: null,
+          month: null,
+          applyDateList: [],
+          monthlySalesList: [],
+          monthlyProfitList: [],
+          myChart: null,
+        },
+        methods: {
+          getAchievements: async function (year = null, month = null) {
+            self = this;
+            url = '/v1/achievements-group'
+            let mergedJson;
+            await axios.get(url, {
+              params: {
+                year: year,
+                month: month,
+                isTax: 1,
+              }
+            })
+              .then(function (response) {
+                console.log(response);
+                mergedJson = response.data;
+                // 原価率計算
+                // let achievements = self.achievements;
+                // achievements.map(achieve => {
+                //   achieve['monthlyCostRate'] = Math.round(achieve['monthlyProfit'] / achieve['monthlySales'] * 100);
+                // });
+                // self.achievements = achievements;
+              });
+            await axios.get(url, {
+              params: {
+                year: year,
+                month: month,
+                isTax: 0,
+              }
+            })
+              .then(function (response) {
+                console.log(response);
+                response.data.map(d => mergedJson.push(d));
+                console.log(mergedJson);
+              });
+            self.achievements = _(mergedJson).groupBy('applyDate').map((value, key) => {
+              return {
+                'applyDate': key,
+                'monthlyProfit_sum': _.sumBy(value, 'monthlyProfit'),
+                'monthlySales_sum': _.sumBy(value, 'monthlySales'),
+              };
+            }).value();
+            console.log(self.achievements);
+
+            self.applyDateList = [], self.monthlySalesList = [], self.monthlyProfitList = []
+            self.achievements.forEach(achieve => {
+              self.applyDateList.push(achieve.applyDate);
+              self.monthlySalesList.push(achieve.monthlySales_sum);
+              self.monthlyProfitList.push(achieve.monthlyProfit_sum);
+            });
+            console.log(self.applyDateList, self.monthlyProfitList, self.monthlySalesList);
+            this.plot();
+
+            // ----- danfo.js -----
+            // df = new dfd.DataFrame(mergedJson)
+            // if (mergedJson.length !== 0)
+            //   df = df.groupby(['applyDate']).sum();
+            // self.achievements = dfd.toJSON(df);
+            // df.print();
+            // if (df['applyDate'] !== undefined) {
+            //   df.setIndex({ index: df['applyDate'].values, inplace: true })
+            //   df.drop({ columns: ['applyDate'], inplace: true })
+            // }
+            // df.rename({ "monthlyProfit_sum": "粗利額" }, { inplace: true });
+            // df.rename({ "monthlySales_sum": "当期累計" }, { inplace: true });
+            // this.achievementDF = df;
+            // df.plot("achievement-chart").bar({ columns: ["monthlyProfit_sum", "monthlySales_sum"] })
+          },
+          monthlyCostRate: function (monthlyProfit, monthlySales) {
+            if (monthlyProfit === null) monthlyProfit = 0;
+            if (monthlySales === null) monthlySales = 0;
+            let monthlyCostRate = Math.round(monthlyProfit / monthlySales * 100);
+            if (isNaN(monthlyCostRate)) monthlyCostRate = 0;
+            return monthlyCostRate;
+          },
+          plot() {
+            if (self.myChart) {
+              self.myChart.destroy();
+            }
+            let ctx = document.getElementById("achievement-chart");
+            self.myChart = new Chart(ctx, {
+              data: {
+                labels: self.applyDateList,
+                datasets: [
+                  {
+                    type: 'bar',
+                    label: '当期累計',
+                    data: self.monthlySalesList,
+                    borderColor: "rgba(254,97,132,0.8)",
+                    backgroundColor: "rgba(254,97,132,0.5)",
+                  },
+                  {
+                    type: 'line',
+                    label: '粗利額',
+                    data: self.monthlyProfitList,
+                    borderColor: "rgba(54,164,235,0.8)",
+                    backgroundColor: "rgba(54,164,235,0.5)",
+                  },
+                ]
+              }
+            });
+          },
+        },
+        mounted: function () {
+          document.querySelector('title').textContent = '売上実績';
+          // 今月を含めた１年分のデータ取得のため
+          let today = new Date();
+          // 月はインデックス
+          if (today.getMonth() !== 12 - 1) {
+            this.year = today.getFullYear() - 1;
+            this.month = today.getMonth() + 2;
+          }
+          else {
+            this.year = today.getFullYear();
+            this.month = 1
+          }
+          this.getAchievements(this.year, this.month);
+        },
+        computed: {
+          pageName() {
+            if (this.$route.query.page == undefined) return 'index';
+            return this.$route.query.page;
+          },
+          modeName() {
+            return localStorage.getItem('wMode');
+          },
+          afterYear() {
+            if (this.year === undefined) return null;
+            if (this.month == 1) return this.year;
+            return Number(this.year) + 1;
+          },
+          afterMonth() {
+            if (this.month === '') return null;
+            if (this.month == 1) return 12;
+            return Number(this.month) + 11 - 12;
+          }
+        }
+      });
+    </script>
+
+    <% endblock %>

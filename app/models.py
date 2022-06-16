@@ -4,6 +4,7 @@ from datetime import date
 from sqlalchemy.sql import func
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql import Insert
+from marshmallow import Schema, fields
 
 
 class User(db.Model):
@@ -51,10 +52,10 @@ class Customer(db.Model):
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
-    invoices = db.relationship(
-        'Invoice', backref='customer', uselist=True, cascade='all, delete',)
-    quotations = db.relationship(
-        'Quotation', backref='customer', uselist=True, cascade='all, delete',)
+    # invoices = db.relationship(
+    #     'Invoice', backref='customer', uselist=True, cascade='all, delete',)
+    # quotations = db.relationship(
+    #     'Quotation', backref='customer', uselist=True, cascade='all, delete',)
 
 
 class Item(db.Model):
@@ -429,3 +430,10 @@ class HistorySchema(ma.SQLAlchemyAutoSchema):
 class SettingSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Setting
+
+
+# 独自定義
+class AchievementSchema(Schema):
+    applyDate = fields.Str()
+    monthlySales = fields.Int()
+    monthlyProfit = fields.Int()

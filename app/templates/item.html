@@ -53,16 +53,18 @@
         <div id="app" v-cloak>
             <!-- 一覧表示 -->
             <div v-if="pageName=='index'">
-                <!-- ヘッダー -->
-                <menu-header :main-add-row="ItemAddRow" :mode-name="modeName"></menu-header>
-
                 <!-- 空行 -->
-                <b-row class="mb-5"></b-row>
-                <b-row class="mb-5"></b-row>
+                <b-row class="mb-3"></b-row>
 
                 <b-row class="mt-1">
                     <b-col></b-col>
                     <b-col cols="11">
+                        <b-row>
+                            <b-col></b-col>
+                            <b-col class="text-right">
+                                <sc-menu class="mb-3" v-if="modeName!='mw'"></sc-menu>
+                            </b-col>
+                        </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="商品一覧"
                             header-border-variant="light">
                             <b-row>
@@ -108,6 +110,12 @@
                             </b-row>
                             <b-row align-h="end">
                                 <p class="mr-3">表示件数 {{itemsIndicateCount}}件</p>
+                            </b-row>
+                            <b-row align-h="start">
+                                <router-link to="?page=store">
+                                    <b-button pill variant="success" class="mb-3 ml-3" @click="ItemAddRow();">＋新規
+                                    </b-button>
+                                </router-link>
                             </b-row>
                             <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
                                 :items=itemsIndicateIndex :fields="[

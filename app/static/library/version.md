@@ -53,3 +53,9 @@
    - jspanel.contextmenu.js:v4.12.0
    - jspanel.dock.js:v4.12.0
    - jspanel.css:v4.12.0
+
+- chart.js
+   - chart.js:v3.7.1
+
+- lodash
+   - lodash:4.17.21

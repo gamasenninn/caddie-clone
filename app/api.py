@@ -3,8 +3,9 @@ from app import app
 from models import *
 from flask import jsonify, request
 import json
-from datetime import date
-from sqlalchemy import desc, or_, and_, extract
+from datetime import date, datetime
+from dateutil import relativedelta
+from sqlalchemy import desc, or_, and_, extract, func
 from flask_login import current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -480,6 +481,7 @@ def invoice_index_v1():
         else:
             invoices = Invoice.query.filter(
                 and_(Invoice.isDelete == False, or_(Invoice.customerName.like('%'+searchWord+'%'), Invoice.customerAnyNumber == searchWord)))
+
     else:
         invoices = Invoice.query.filter(Invoice.isDelete == False)
     invoices_tmp = invoices
@@ -504,6 +506,94 @@ def invoice_index_v1():
         return jsonify({'invoices': InvoiceSchema(many=True).dump(invoices), 'isMore': isMore})
 
     return jsonify(InvoiceSchema(many=True).dump(invoices))
+
+
+@app.route('/v1/achievements', methods=['GET'])
+@app.route('/achievements', methods=['GET'])
+def invoice_achievement_v1():
+    # パラメータを準備
+    req = request.args
+    reqMonth = int(req.get('month')) if req.get('month') else None
+    reqYear = int(req.get('year')) if req.get('year') else None
+
+    if reqYear and reqMonth:
+        beforeDate = date(reqYear, reqMonth, 1)
+        afterDate = beforeDate + \
+            relativedelta.relativedelta(
+                years=1)-relativedelta.relativedelta(days=1)
+        invoices = Invoice.query.filter(and_(
+            Invoice.isDelete == False, Invoice.applyDate.between(beforeDate, afterDate)))
+    else:
+        invoices = Invoice.query.filter(Invoice.isDelete == False)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Invoice',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(InvoiceSchema(many=True).dump(invoices))
+
+
+def multiply(price, count, tax):
+    # 単純な数値は認識されない？
+    return price*count*(1+tax/100.0)
+
+
+def multiplyTaxIncluded(price, count):
+    return price*count
+
+
+def profit(price, count, tax, cost):
+    return multiply(price, count, tax)-(cost*count)
+
+
+def profitTaxIncluded(price, count, cost):
+    return multiplyTaxIncluded(price, count)-(cost*count)
+
+
+@app.route('/v1/achievements-group', methods=['GET'])
+@app.route('/achievements-group', methods=['GET'])
+def invoice_achievement_group_v1():
+    # パラメータを準備
+    req = request.args
+    reqMonth = int(req.get('month')) if req.get('month') else None
+    reqYear = int(req.get('year')) if req.get('year') else None
+    isTax = bool(int(req.get('isTax')))
+
+    if reqYear and reqMonth:
+        beforeDate = date(reqYear, reqMonth, 1)
+        afterDate = beforeDate + \
+            relativedelta.relativedelta(
+                years=1)-relativedelta.relativedelta(days=1)
+        # func.sum内でInvoice.isTaxのbool値が使えないので
+        if isTax:
+            achievements = db.session.query(func.strftime(
+                "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count, Invoice.tax)).label("monthlySales"),
+                func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice.tax, Invoice_Item.cost)).label("monthlyProfit")) \
+                .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == True, Invoice.applyDate.between(beforeDate, afterDate))) \
+                .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+        else:
+            achievements = db.session.query(func.strftime(
+                "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiplyTaxIncluded(Invoice_Item.price, Invoice_Item.count,)).label("monthlySales"),
+                func.sum(profitTaxIncluded(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit")) \
+                .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == False, Invoice.applyDate.between(beforeDate, afterDate))) \
+                .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+
+    else:
+        achievements = Invoice.query.filter(Invoice.isDelete == False)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Invoice',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(AchievementSchema(many=True).dump(achievements))
 
 
 @app.route('/v1/dust-invoices', methods=['GET'])
@@ -599,6 +689,7 @@ def invoice_create():
                     itemName=item.get('itemName')if item.get(
                         'itemName') else None,
                     price=item.get('price')if item.get('price') else None,
+                    cost=item.get('cost')if item.get('cost') else 0,
                     count=item.get('count')if item.get('count') else None,
                     unit=item.get('unit')if item.get('unit') else None,
                     remarks=item.get('remarks')if item.get(
@@ -1161,6 +1252,7 @@ def quotation_create():
                     itemName=item.get('itemName')if item.get(
                         'itemName') else None,
                     price=item.get('price')if item.get('price') else None,
+                    cost=item.get('cost')if item.get('cost') else 0,
                     count=item.get('count')if item.get('count') else None,
                     unit=item.get('unit')if item.get('unit') else None,
                     remarks=item.get('remarks')if item.get(
@@ -1250,7 +1342,9 @@ def quotation_update(id):
             if 'updatedAt' in item:
                 del(item['updatedAt'])
             for columnName in item.keys():
-                if item[columnName] == '':
+                if item['cost'] == '' or item['cost'] == None:
+                    item['cost'] = 0
+                elif item[columnName] == '':
                     item[columnName] = None
 
             if item.get('id'):
@@ -1886,8 +1980,7 @@ def history_index():
 
 @app.route('/login-histories', methods=['GET'])
 def login_history_index():
-    loginHistories = History.query.filter(or_(
-        History.action == 'login', History.action == 'logout')).order_by(desc(History.id)).limit(_LIMIT_NUM)
+    loginHistories = History.query.order_by(desc(History.id)).limit(_LIMIT_NUM)
     return jsonify(HistorySchema(many=True).dump(loginHistories))
 
 
