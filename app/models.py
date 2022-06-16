@@ -235,6 +235,7 @@ class Quotation_Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quotationId = db.Column(db.Integer, db.ForeignKey('quotations.id'))
     itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
+    rowNum = db.Column(db.Integer)
     any = db.Column(db.String)
     itemName = db.Column(db.String)
     price = db.Column(db.Integer)

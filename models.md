@@ -166,6 +166,7 @@
 | id          | id       | integer  |                         | 
 | quotationId | 見積書ID | integer  |  見積書テーブルと紐づく   | 
 | itemId      | 商品ID   | integer  |  商品テーブルと紐づく     | 
+| rowNum      | 行番号   | integer  |  明細の並びを制御するため  |
 | any         | 自由項目 | string   |  ユーザーが自由に書き込む参照項目      | 
 | itemName    | 商品名   | string   |  紐づいたものor入力 両対応できるように |
 | price       | 値段     | integer  |  Itemsテーブルを参照可能             |
