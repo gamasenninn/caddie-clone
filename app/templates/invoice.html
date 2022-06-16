@@ -311,8 +311,10 @@
 
                         <!--  table list & edit -->
                         <b-table hover caption-top small id="invoice_items_table" primary-key="id" small
-                            label="Table Options" :items=invoice.invoice_items :fields="[
+                            label="Table Options" :items=invoice.invoice_items :sort-by.sync="sortByInvoice_Items"
+                            :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                          {  key: 'rowNum', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemId', thClass: 'd-none', tdClass:'d-none' },
                           {  key: 'any', label: '', tdClass:'td-any' },
                           {  key: 'itemName', label: '内容' ,sortable: true},
@@ -321,7 +323,8 @@
                           {  key: 'price', label: '単価', tdClass:'td-price' },
                           {  key: 'amount', label: '金額' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
-                          {  key: 'isDelete', label: '削除',class:'text-center' },
+                          {  key: 'addRow', label: '追加',class:'text-center' },
+                          {  key: 'delete', label: '削除',class:'text-center' },
                         ]">
 
                             <template v-slot:cell(any)="data">
@@ -442,18 +445,21 @@
                                 </b-row>
                             </template>
 
-                            <template v-slot:cell(isDelete)="data">
-                                <b-form-checkbox v-model="data.item.isDelete"></b-form-checkbox>
+                            <template v-slot:cell(addRow)="data">
+                                <b-button size="sm" @click="addRowInvoiceItem(data);">✙</b-button>
+                            </template>
+                            <template v-slot:cell(delete)="data">
+                                <b-button size="sm" @click="removeRowInvoiceItem(data)">－</b-button>
                             </template>
 
                         </b-table>
 
                         <!-- 商品項目を追加するプラスボタン -->
-                        <b-row class="d-flex justify-content-end" id="item_add">
+                        <!-- <b-row class="d-flex justify-content-end" id="item_add">
                             <b-col cols="16" md="auto">
                                 <b-button pill variant="primary" @click="addRowInvoiceItem();">✙</b-button>
                             </b-col>
-                        </b-row>
+                        </b-row> -->
 
                         <div class="mt-5"></div>
 
@@ -713,6 +719,7 @@
                 el: '#app',
                 data: {
                     sortByInvoices: 'id',
+                    sortByInvoice_Items: 'rowNum',
                     sortDesc: true,
                     searchInvoiceWord: "",
                     searchDayStart: '',             //請求書検索
@@ -784,6 +791,9 @@
                             this.$bvModal.show('confirmModalDanger');
                             return
                         }
+                        item.invoice_items.map((item, index) => {
+                            item.rowNum = index;
+                        });
                         if (!item.id) {
                             await this.insertInvoice(item);
                             this.$bvModal.show('confirmModal');
@@ -910,14 +920,34 @@
                                 }
                             });
                     },
-                    addRowInvoiceItem: function () {
+                    addRowInvoiceItem: function (data) {
                         if (this.invoice.length === 0) {
                             alert('請求書を選択してください');
                             return;
                         }
-                        this.invoice.invoice_items.push({
-                            invoiceId: this.invoice.id
-                        })
+                        this.invoice.invoice_items.splice(data.index + 1, 0, { invoiceId: this.invoice.id, })
+                        // item.invoice_items.map((item, index) => {
+                        //     item.rowNum = index;
+                        // });
+                        this.invoice.invoice_items.map((item, index) => {
+                            item.rowNum = index;
+                        }).sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
+                    },
+                    removeRowInvoiceItem: function (data) {
+                        if (this.invoice.length === 0) {
+                            alert('請求書を選択してください');
+                            return;
+                        }
+                        console.log('index');
+                        console.log(data.index);
+                        this.invoice.invoice_items.splice(data.index, 1)
+                        this.invoice.invoice_items.map((item, index) => {
+                            item.rowNum = index;
+                        }).sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
                     },
                     addRowInvoicePayment: function () {
                         if (this.invoice.length === 0) {
