@@ -791,9 +791,6 @@
                             this.$bvModal.show('confirmModalDanger');
                             return
                         }
-                        item.invoice_items.map((item, index) => {
-                            item.rowNum = index;
-                        });
                         if (!item.id) {
                             await this.insertInvoice(item);
                             this.$bvModal.show('confirmModal');
@@ -801,6 +798,11 @@
                         else {
                             await this.updateInvoice(item);
                             this.$bvModal.show('confirmModal');
+                            item.invoice_items.map((item, index) => {
+                                item.rowNum = index;
+                            }).sort(function (a, b) {
+                                return (a.rowNum < b.rowNum) ? -1 : 1;
+                            });
                         }
                     },
                     insertInvoice: async function (item) {
@@ -926,14 +928,14 @@
                             return;
                         }
                         this.invoice.invoice_items.splice(data.index + 1, 0, { invoiceId: this.invoice.id, })
-                        this.invoice.invoice_items.map((item, index) => {
-                            item.rowNum = index;
-                        });
                         // this.invoice.invoice_items.map((item, index) => {
                         //     item.rowNum = index;
-                        // }).sort(function (a, b) {
-                        //     return (a.rowNum < b.rowNum) ? -1 : 1;
                         // });
+                        this.invoice.invoice_items.map((item, index) => {
+                            item.rowNum = index;
+                        }).sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
                     },
                     removeRowInvoiceItem: function (data) {
                         if (this.invoice.length === 0) {
@@ -1240,9 +1242,12 @@
                         closeMethods: ['overlay', 'button', 'escape'],
                         closeLabel: "Close",
                     });
-                    this.invoice.invoice_items.map((item, index) => {
-                        item.rowNum = index;
-                    }).sort(function (a, b) {
+                    // this.invoice.invoice_items.map((item, index) => {
+                    //     item.rowNum = index;
+                    // }).sort(function (a, b) {
+                    //     return (a.rowNum < b.rowNum) ? -1 : 1;
+                    // });
+                    this.invoice.invoice_items.sort(function (a, b) {
                         return (a.rowNum < b.rowNum) ? -1 : 1;
                     });
                 },
