@@ -562,26 +562,45 @@ def invoice_achievement_group_v1():
     reqMonth = int(req.get('month')) if req.get('month') else None
     reqYear = int(req.get('year')) if req.get('year') else None
     isTax = bool(int(req.get('isTax')))
+    isPreviousYear = req.get('isPreviousYear') if req.get(
+        'isPreviousYear') else False
 
     if reqYear and reqMonth:
         beforeDate = date(reqYear, reqMonth, 1)
         afterDate = beforeDate + \
             relativedelta.relativedelta(
                 years=1)-relativedelta.relativedelta(days=1)
-        # func.sum内でInvoice.isTaxのbool値が使えないので
-        if isTax:
-            achievements = db.session.query(func.strftime(
-                "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count, Invoice.tax)).label("monthlySales"),
-                func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice.tax, Invoice_Item.cost)).label("monthlyProfit")) \
-                .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == True, Invoice.applyDate.between(beforeDate, afterDate))) \
-                .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+        beforeDate_previousYear = beforeDate + \
+            relativedelta.relativedelta(years=-1)
+        afterDate_previousYear = afterDate + \
+            relativedelta.relativedelta(years=-1)
+        if isPreviousYear:
+            # func.sum内でInvoice.isTaxのbool値が使えないので
+            if isTax:
+                achievements = db.session.query(func.strftime(
+                    "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count, Invoice.tax)).label("monthlySales_previousYear"),
+                    func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice.tax, Invoice_Item.cost)).label("monthlyProfit_previousYear")) \
+                    .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == True, Invoice.applyDate.between(beforeDate_previousYear, afterDate_previousYear))) \
+                    .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+            else:
+                achievements = db.session.query(func.strftime(
+                    "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiplyTaxIncluded(Invoice_Item.price, Invoice_Item.count,)).label("monthlySales_previousYear"),
+                    func.sum(profitTaxIncluded(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit_previousYear")) \
+                    .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == False, Invoice.applyDate.between(beforeDate_previousYear, afterDate_previousYear))) \
+                    .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
         else:
-            achievements = db.session.query(func.strftime(
-                "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiplyTaxIncluded(Invoice_Item.price, Invoice_Item.count,)).label("monthlySales"),
-                func.sum(profitTaxIncluded(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit")) \
-                .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == False, Invoice.applyDate.between(beforeDate, afterDate))) \
-                .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
-
+            if isTax:
+                achievements = db.session.query(func.strftime(
+                    "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count, Invoice.tax)).label("monthlySales"),
+                    func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice.tax, Invoice_Item.cost)).label("monthlyProfit")) \
+                    .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == True, Invoice.applyDate.between(beforeDate, afterDate))) \
+                    .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+            else:
+                achievements = db.session.query(func.strftime(
+                    "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiplyTaxIncluded(Invoice_Item.price, Invoice_Item.count,)).label("monthlySales"),
+                    func.sum(profitTaxIncluded(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit")) \
+                    .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == False, Invoice.applyDate.between(beforeDate, afterDate))) \
+                    .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
     else:
         achievements = Invoice.query.filter(Invoice.isDelete == False)
 
@@ -593,7 +612,10 @@ def invoice_achievement_group_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
-    return jsonify(AchievementSchema(many=True).dump(achievements))
+    if isPreviousYear:
+        return jsonify(AchievementPreviousYearSchema(many=True).dump(achievements))
+    else:
+        return jsonify(AchievementSchema(many=True).dump(achievements))
 
 
 @app.route('/v1/dust-invoices', methods=['GET'])
