@@ -70,6 +70,9 @@
                   <template v-slot:cell(monthlyCostRate)="data">
                     {{monthlyCostRate(data.item.monthlyProfit_sum,data.item.monthlySales_sum)}}%
                   </template>
+                  <template v-slot:cell(monthlySales_previousYear_sum)="data">
+                    {{data.item.monthlySales_previousYear_sum|nf}}
+                  </template>
                 </b-table>
               </b-card>
               <!-- <b-button variant="primary" size="sm" @click="plot('bar','line')">棒＋線グラフ</b-button>
