@@ -926,23 +926,22 @@
                             return;
                         }
                         this.invoice.invoice_items.splice(data.index + 1, 0, { invoiceId: this.invoice.id, })
-                        // item.invoice_items.map((item, index) => {
-                        //     item.rowNum = index;
-                        // });
                         this.invoice.invoice_items.map((item, index) => {
                             item.rowNum = index;
-                        }).sort(function (a, b) {
-                            return (a.rowNum < b.rowNum) ? -1 : 1;
                         });
+                        // this.invoice.invoice_items.map((item, index) => {
+                        //     item.rowNum = index;
+                        // }).sort(function (a, b) {
+                        //     return (a.rowNum < b.rowNum) ? -1 : 1;
+                        // });
                     },
                     removeRowInvoiceItem: function (data) {
                         if (this.invoice.length === 0) {
                             alert('請求書を選択してください');
                             return;
                         }
-                        console.log('index');
-                        console.log(data.index);
-                        this.invoice.invoice_items.splice(data.index, 1)
+                        let index = this.invoice.invoice_items.findIndex((item) => item.rowNum === data.item.rowNum);
+                        this.invoice.invoice_items.splice(index, 1)
                         this.invoice.invoice_items.map((item, index) => {
                             item.rowNum = index;
                         }).sort(function (a, b) {
@@ -1240,6 +1239,11 @@
                         stickyFooter: false,
                         closeMethods: ['overlay', 'button', 'escape'],
                         closeLabel: "Close",
+                    });
+                    this.invoice.invoice_items.map((item, index) => {
+                        item.rowNum = index;
+                    }).sort(function (a, b) {
+                        return (a.rowNum < b.rowNum) ? -1 : 1;
                     });
                 },
                 updated: function () {
