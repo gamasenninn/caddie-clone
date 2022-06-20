@@ -4,9 +4,8 @@ from models import *
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-
 def seeder():
-    
+
     models = [User, Customer, Item, Invoice,
               Invoice_Item, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
 
@@ -17,7 +16,7 @@ def seeder():
     # -----Users-----
     print('----Users----')
     users = [
-        User(id=1, anyNumber=9999, name='caddie', password=generate_password_hash('567vzu2022') ,
+        User(id=1, anyNumber=9999, name='caddie', password=generate_password_hash('567vzu2022'),
              group='operator', role='crescom_support'),
     ]
     db.session.add_all(users)
@@ -45,7 +44,7 @@ def seeder():
     # -----Setting-----
     print('----Setting----')
     setting = [
-        Setting(id=1, logoFilePath='./static/asset/logo/logo2.jpg', logoHeight=60, logoWidth=60, stampFilePath='./static/asset/stamp/inkan.png', stampHeight=60, stampWidth=60,
+        Setting(id=1, logoFilePath='./static/asset/logo/logo.png', logoHeight=60, logoWidth=60, stampFilePath='./static/asset/stamp/inkan.png', stampHeight=60, stampWidth=60,
                 isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True, isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True, defaultTax=10)
     ]
     db.session.add_all(setting)
