@@ -6,6 +6,7 @@ app/static/upload/
 app/pdfmaker/app/static/pdf/
 app/upload/static/upload/
 app/static/asset/logo/*
+!logo.png
 !NotImage.png
 app/static/asset/stamp/*
 !NotImage.png
