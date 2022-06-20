@@ -171,7 +171,7 @@
               .then(function (response) {
                 console.log(response);
                 response.data.map(d => mergedJsonPrevious.push(d));
-                console.log(mergedJson);
+                console.log(mergedJsonPrevious);
               });
             self.achievements = _(mergedJson).groupBy('applyDate').map((value, key) => {
               return {
@@ -191,16 +191,24 @@
             console.log(self.achievementsPrevious);
 
             self.applyDateList = [], self.monthlySalesList = [], self.monthlyProfitList = []
+            self.applyDateListPrevious = [], self.monthlySalesListPrevious = [], self.monthlyProfitListPrevious = []
             self.achievements.forEach(achieve => {
               self.applyDateList.push(achieve.applyDate);
               self.monthlySalesList.push(achieve.monthlySales_sum);
               self.monthlyProfitList.push(achieve.monthlyProfit_sum);
-            });
-            self.applyDateListPrevious = [], self.monthlySalesListPrevious = [], self.monthlyProfitListPrevious = []
-            self.achievementsPrevious.forEach(achieve => {
-              self.applyDateListPrevious.push(achieve.applyDate);
-              self.monthlySalesListPrevious.push(achieve.monthlySales_previousYear_sum);
-              self.monthlyProfitListPrevious.push(achieve.monthlyProfit_previousYear_sum);
+              const findPreAchieve = self.achievementsPrevious.find((preAchieve) =>
+                preAchieve.applyDate.slice(-2) === achieve.applyDate.slice(-2)
+              );
+              if (findPreAchieve) {
+                self.applyDateListPrevious.push(findPreAchieve.applyDate);
+                self.monthlySalesListPrevious.push(findPreAchieve.monthlySales_previousYear_sum);
+                self.monthlyProfitListPrevious.push(findPreAchieve.monthlyProfit_previousYear_sum);
+              }
+              else {
+                self.applyDateListPrevious.push(null);
+                self.monthlySalesListPrevious.push(null);
+                self.monthlyProfitListPrevious.push(null);
+              }
             });
             console.log(self.applyDateList, self.monthlyProfitList, self.monthlySalesList);
             console.log(self.applyDateListPrevious, self.monthlyProfitListPrevious, self.monthlySalesListPrevious);
@@ -239,17 +247,31 @@
                 datasets: [
                   {
                     type: 'bar',
-                    label: '当期累計',
+                    label: '前期累計',
+                    data: self.monthlySalesListPrevious,
+                    borderColor: "rgba(112,97,132,0.8)",
+                    backgroundColor: "rgba(62,112,200,0.5)",
+                  },
+                  {
+                    type: 'bar',
+                    label: '月次累計',
                     data: self.monthlySalesList,
                     borderColor: "rgba(254,97,132,0.8)",
                     backgroundColor: "rgba(254,97,132,0.5)",
                   },
                   {
                     type: 'line',
-                    label: '粗利額',
-                    data: self.monthlyProfitList,
+                    label: '前期粗利額',
+                    data: self.monthlyProfitListPrevious,
                     borderColor: "rgba(54,164,235,0.8)",
                     backgroundColor: "rgba(54,164,235,0.5)",
+                  },
+                  {
+                    type: 'line',
+                    label: '粗利額',
+                    data: self.monthlyProfitList,
+                    borderColor: "rgba(222,164,235,0.8)",
+                    backgroundColor: "rgba(222,164,235,0.5)",
                   },
                 ]
               }

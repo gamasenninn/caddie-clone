@@ -444,4 +444,4 @@ class AchievementSchema(Schema):
 class AchievementPreviousYearSchema(Schema):
     applyDate = fields.Str()
     monthlySales_previousYear = fields.Int()
-    monthlySales_previousYear = fields.Int()
+    monthlyProfit_previousYear = fields.Int()
