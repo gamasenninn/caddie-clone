@@ -155,9 +155,9 @@
                                 <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
                                 <b-row align-h="start">
                                     <router-link to="?page=store">
-                                        <b-button v-if="procName=='normal'" pill variant="success" class="mb-3 ml-3"
-                                            @click="InvoiceAddRow();">
-                                            ＋新規
+                                        <b-button v-if="procName=='normal'" variant="primary" id="new-button"
+                                            class="mb-3 ml-3" @click="InvoiceAddRow();">
+                                            ＋新規追加
                                         </b-button>
                                     </router-link>
                                 </b-row>
