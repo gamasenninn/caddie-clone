@@ -356,6 +356,7 @@
                 methods: {
                     // ---Settings---
                     bulkUpsert(item) {
+                        if (!item.registerNumber) item.registerNumber = '';
                         if (item.registerNumber.length > 13) {
                             this.title = 'エラー';
                             this.message = '登録番号は１３桁以下で入力してください';
