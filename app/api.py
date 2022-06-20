@@ -776,6 +776,8 @@ def invoice_update(id):
     data = request.json
 
     invoice = Invoice.query.filter(Invoice.id == id).one()
+    invoiceItemsIds = db.session.query(Invoice_Item.id).filter(
+        Invoice_Item.invoiceId == id).all()
     if not invoice:
         return jsonify({"result": "No Data", "id": id, "data": data})
 
@@ -808,6 +810,8 @@ def invoice_update(id):
         update_list = []
         insert_list = []
         delete_in_list = []
+        for i in invoiceItemsIds:
+            delete_in_list.append(i.id)
         for item in data['invoice_items']:
             if 'createdAt' in item:
                 del(item['createdAt'])
@@ -821,15 +825,13 @@ def invoice_update(id):
                     item[columnName] = None
 
             if item.get('id'):
-                if item.get('isDelete'):
-                    delete_in_list.append(item['id'])
-                else:
-                    update_list.append(item)
+                update_list.append(item)
+                index = next((i for i, x in enumerate(
+                    delete_in_list) if x == item['id']), None)
+                if index != None:
+                    delete_in_list.pop(index)
             else:
-                if item.get('isDelete'):
-                    pass
-                else:
-                    insert_list.append(item)
+                insert_list.append(item)
 
         db.session.bulk_update_mappings(Invoice_Item, update_list)
         db.session.bulk_insert_mappings(Invoice_Item, insert_list)
