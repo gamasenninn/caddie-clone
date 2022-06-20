@@ -311,8 +311,7 @@
 
                         <!--  table list & edit -->
                         <b-table hover caption-top small id="invoice_items_table" primary-key="id" small
-                            label="Table Options" :items=invoice.invoice_items :sort-by.sync="sortByInvoice_Items"
-                            :fields="[
+                            label="Table Options" :items=invoice.invoice_items :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'rowNum', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemId', thClass: 'd-none', tdClass:'d-none' },
@@ -719,7 +718,6 @@
                 el: '#app',
                 data: {
                     sortByInvoices: 'id',
-                    sortByInvoice_Items: 'rowNum',
                     sortDesc: true,
                     searchInvoiceWord: "",
                     searchDayStart: '',             //請求書検索
@@ -930,9 +928,6 @@
                             return;
                         }
                         this.invoice.invoice_items.splice(data.index + 1, 0, { invoiceId: this.invoice.id, })
-                        // this.invoice.invoice_items.map((item, index) => {
-                        //     item.rowNum = index;
-                        // });
                         this.invoice.invoice_items.map((item, index) => {
                             item.rowNum = index;
                         }).sort(function (a, b) {
@@ -1244,11 +1239,6 @@
                         closeMethods: ['overlay', 'button', 'escape'],
                         closeLabel: "Close",
                     });
-                    // this.invoice.invoice_items.map((item, index) => {
-                    //     item.rowNum = index;
-                    // }).sort(function (a, b) {
-                    //     return (a.rowNum < b.rowNum) ? -1 : 1;
-                    // });
                     this.invoice.invoice_items.sort(function (a, b) {
                         return (a.rowNum < b.rowNum) ? -1 : 1;
                     });
