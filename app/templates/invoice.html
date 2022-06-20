@@ -798,11 +798,10 @@
                         else {
                             await this.updateInvoice(item);
                             this.$bvModal.show('confirmModal');
-                            item.invoice_items.map((item, index) => {
-                                item.rowNum = index;
-                            }).sort(function (a, b) {
+                            item.invoice_items.sort(function (a, b) {
                                 return (a.rowNum < b.rowNum) ? -1 : 1;
                             });
+                            console.log(item.invoice_items);
                         }
                     },
                     insertInvoice: async function (item) {
@@ -826,6 +825,9 @@
                                 console.log(response);
                             });
                         await self.getInvoice(self.invoice);
+                        self.invoice.invoice_items.sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
                         app.title = '更新';
                         app.message = '保存しました。';
