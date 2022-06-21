@@ -297,12 +297,13 @@
             <b-row class="mb-5"></b-row>
 
             <!-- 更新・取消ボタンのフッター -->
-            <b-card text-variant="white" class="fixed-bottom footer" style="background: rgba(52,58,64,0.9);">
+            <b-card class="fixed-bottom footer" style="background: rgba(52,58,64,0);pointer-events:none;border: 0px;">
                 <b-row>
                     <b-col></b-col>
                     <b-col></b-col>
                     <b-col cols="4" class="text-right">
-                        <b-button variant="primary" class="mr-3" @click="bulkUpsert(setting);">保存
+                        <b-button variant="primary" class="mr-3" @click="bulkUpsert(setting);"
+                            style="box-shadow: 0 10px 25px 0 rgba(0,0,0,0.5); pointer-events:auto;">保存
                         </b-button>
                     </b-col>
                 </b-row>
