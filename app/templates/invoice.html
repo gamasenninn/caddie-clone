@@ -904,7 +904,10 @@
                         this.oldInvoice = { ...item };
                         this.getCustomer(this.invoice);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.invoice);
-                        localStorage.setItem('invoice', JSON.stringify(item));
+                        this.invoice.invoice_items.sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
+                        localStorage.setItem('invoice', JSON.stringify(this.invoice));
                         this.getFileListDZ();
                     },
                     selectInvoiceItem: function (item) {

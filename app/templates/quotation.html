@@ -883,7 +883,10 @@
                         this.oldQuotation = { ...item };
                         this.getCustomer(this.quotation);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.quotation);
-                        localStorage.setItem('quotation', JSON.stringify(item));
+                        this.quotation.quotation_items.sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
+                        localStorage.setItem('quotation', JSON.stringify(this.quotation));
                         this.getFileListDZ();
                         //this.countChanged = 0;
                     },
