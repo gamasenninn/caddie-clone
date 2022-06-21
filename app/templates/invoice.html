@@ -48,6 +48,20 @@
                 max-width: 100px;
             }
 
+            #detail-add-button,
+            #detail-del-button {
+                border-color: #e9ecf0;
+                background-color: #e9ecf0;
+                color: #686e72;
+            }
+
+            #detail-add-button:hover,
+            #detail-del-button:hover {
+                border-color: #686e72;
+                background-color: #686e72;
+                color: #e9ecf0;
+            }
+
             #tdAmount {
                 background-color: #ccecf180;
             }
@@ -445,10 +459,12 @@
                             </template>
 
                             <template v-slot:cell(addRow)="data">
-                                <b-button size="sm" @click="addRowInvoiceItem(data);">✙</b-button>
+                                <b-button size="sm" id="detail-add-button" @click="addRowInvoiceItem(data);">✚
+                                </b-button>
                             </template>
                             <template v-slot:cell(delete)="data">
-                                <b-button size="sm" @click="removeRowInvoiceItem(data)">－</b-button>
+                                <b-button size="sm" id="detail-del-button" @click="removeRowInvoiceItem(data)">－
+                                </b-button>
                             </template>
 
                         </b-table>
@@ -904,7 +920,10 @@
                         this.oldInvoice = { ...item };
                         this.getCustomer(this.invoice);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.invoice);
-                        localStorage.setItem('invoice', JSON.stringify(item));
+                        this.invoice.invoice_items.sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
+                        localStorage.setItem('invoice', JSON.stringify(this.invoice));
                         this.getFileListDZ();
                     },
                     selectInvoiceItem: function (item) {

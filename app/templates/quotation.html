@@ -44,6 +44,20 @@
                 max-width: 100px;
             }
 
+            #detail-add-button,
+            #detail-del-button {
+                border-color: #e9ecf0;
+                background-color: #e9ecf0;
+                color: #686e72;
+            }
+
+            #detail-add-button:hover,
+            #detail-del-button:hover {
+                border-color: #686e72;
+                background-color: #686e72;
+                color: #e9ecf0;
+            }
+
             #tdAmount {
                 background-color: #ccecf180;
             }
@@ -376,6 +390,7 @@
                         <b-table hover caption-top small id="quotation_items_table" primary-key="id" small
                             label="Table Options" :items=quotation.quotation_items :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                          {  key: 'rowNum', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemId', thClass: 'd-none', tdClass:'d-none' },
                           {  key: 'any', label: '', tdClass:'td-any' },
                           {  key: 'itemName', label: '内容' ,sortable: true},
@@ -384,7 +399,8 @@
                           {  key: 'price', label: '単価', tdClass:'td-price' },
                           {  key: 'amount', label: '金額' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
-                          {  key: 'isDelete', label: '削除',class:'text-center' },
+                          {  key: 'addRow', label: '追加',class:'text-center' },
+                          {  key: 'delete', label: '削除',class:'text-center' },
                         ]">
 
                             <template v-slot:cell(any)="data">
@@ -502,18 +518,23 @@
                                 </b-row>
                             </template>
 
-                            <template v-slot:cell(isDelete)="data">
-                                <b-form-checkbox v-model="data.item.isDelete"></b-form-checkbox>
+                            <template v-slot:cell(addRow)="data">
+                                <b-button size="sm" id="detail-add-button" @click="addRowQuotationItem(data)">✚
+                                </b-button>
+                            </template>
+                            <template v-slot:cell(delete)="data">
+                                <b-button size="sm" id="detail-del-button" @click="removeRowQuotationItem(data)">－
+                                </b-button>
                             </template>
 
                         </b-table>
 
                         <!-- 商品項目を追加するプラスボタン -->
-                        <b-row class="d-flex justify-content-end" id="item_add">
+                        <!-- <b-row class="d-flex justify-content-end" id="item_add">
                             <b-col cols="16" md="auto">
                                 <b-button pill variant="primary" @click="addRowQuotationItem();">✙</b-button>
                             </b-col>
-                        </b-row>
+                        </b-row> -->
 
                         <div class="mt-5"></div>
 
@@ -786,6 +807,10 @@
                         else {
                             await this.updateQuotation(item);
                             this.$bvModal.show('confirmModal');
+                            item.quotation_items.sort(function (a, b) {
+                                return (a.rowNum < b.rowNum) ? -1 : 1;
+                            });
+                            console.log(item.quotation_items);
                         }
                     },
                     insertQuotation: async function (item) {
@@ -810,6 +835,9 @@
                                 console.log(response);
                             });
                         await self.getQuotation(self.quotation);
+                        self.quotation.quotation_items.sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
                         localStorage.setItem('quotation', JSON.stringify(self.quotation));
                         self.oldQuotation = { ...self.quotation };
                         //self.countChanged = 0;
@@ -871,7 +899,10 @@
                         this.oldQuotation = { ...item };
                         this.getCustomer(this.quotation);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.quotation);
-                        localStorage.setItem('quotation', JSON.stringify(item));
+                        this.quotation.quotation_items.sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
+                        localStorage.setItem('quotation', JSON.stringify(this.quotation));
                         this.getFileListDZ();
                         //this.countChanged = 0;
                     },
@@ -891,14 +922,30 @@
                                 //this.countChanged = 0;
                             });
                     },
-                    addRowQuotationItem: function () {
+                    addRowQuotationItem: function (data) {
                         if (this.quotation.length === 0) {
                             alert('見積書を選択してください');
                             return;
                         }
-                        this.quotation.quotation_items.push({
-                            quotationId: this.quotation.id
-                        })
+                        this.quotation.quotation_items.splice(data.index + 1, 0, { quotationId: this.quotation.id, })
+                        this.quotation.quotation_items.map((item, index) => {
+                            item.rowNum = index;
+                        }).sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
+                    },
+                    removeRowQuotationItem: function (data) {
+                        if (this.quotation.length === 0) {
+                            alert('請求書を選択してください');
+                            return;
+                        }
+                        let index = this.quotation.quotation_items.findIndex((item) => item.rowNum === data.item.rowNum);
+                        this.quotation.quotation_items.splice(index, 1)
+                        this.quotation.quotation_items.map((item, index) => {
+                            item.rowNum = index;
+                        }).sort(function (a, b) {
+                            return (a.rowNum < b.rowNum) ? -1 : 1;
+                        });
                     },
                     insertInvoice: async function (item) {
                         self = this;
@@ -1171,6 +1218,9 @@
                         stickyFooter: false,
                         closeMethods: ['overlay', 'button', 'escape'],
                         closeLabel: "Close",
+                    });
+                    this.quotation.quotation_items.sort(function (a, b) {
+                        return (a.rowNum < b.rowNum) ? -1 : 1;
                     });
                 },
                 updated: function () {
