@@ -1328,6 +1328,8 @@ def quotation_update(id):
     data = request.json
 
     quotation = Quotation.query.filter(Quotation.id == id).one()
+    quotationItemsIds = db.session.query(Quotation_Item.id).filter(
+        Quotation_Item.quotationId == id).all()
     if not quotation:
         return jsonify({"result": "No Data", "id": id, "data": data})
 
@@ -1360,27 +1362,29 @@ def quotation_update(id):
         update_list = []
         insert_list = []
         delete_in_list = []
+        for i in quotationItemsIds:
+            delete_in_list.append(i.id)
         for item in data['quotation_items']:
+            print(item)
             if 'createdAt' in item:
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
             for columnName in item.keys():
-                if item['cost'] == '' or item['cost'] == None:
-                    item['cost'] = 0
+                if columnName == 'cost':
+                    if item['cost'] == '' or item['cost'] == None:
+                        item['cost'] = 0
                 elif item[columnName] == '':
                     item[columnName] = None
 
             if item.get('id'):
-                if item.get('isDelete'):
-                    delete_in_list.append(item['id'])
-                else:
-                    update_list.append(item)
+                update_list.append(item)
+                index = next((i for i, x in enumerate(
+                    delete_in_list) if x == item['id']), None)
+                if index != None:
+                    delete_in_list.pop(index)
             else:
-                if item.get('isDelete'):
-                    pass
-                else:
-                    insert_list.append(item)
+                insert_list.append(item)
 
         db.session.bulk_update_mappings(Quotation_Item, update_list)
         db.session.bulk_insert_mappings(Quotation_Item, insert_list)
