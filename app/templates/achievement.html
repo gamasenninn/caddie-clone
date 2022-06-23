@@ -58,6 +58,7 @@
                           {  key: 'monthlySales_sum', label: '月次累計', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlyProfit_sum', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlyCostRate', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlyComparison', label: '単月対比', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'applyDate_previousYear', label: '前年度', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlySales_previousYear_sum', label: '前期累計', thClass: 'text-center', tdClass: 'text-center' },
                         ]">
@@ -72,6 +73,9 @@
                   </template>
                   <template v-slot:cell(monthlySales_previousYear_sum)="data">
                     {{data.item.monthlySales_previousYear_sum|nf}}
+                  </template>
+                  <template v-slot:cell(monthlyComparison)="data">
+                    {{monthlyComparison(data.item.monthlySales_sum,data.item.monthlySales_previousYear_sum)}}%
                   </template>
                 </b-table>
               </b-card>
@@ -235,6 +239,13 @@
             let monthlyCostRate = Math.round(monthlyProfit / monthlySales * 100);
             if (isNaN(monthlyCostRate)) monthlyCostRate = 0;
             return monthlyCostRate;
+          },
+          monthlyComparison: function (salesSum, prevSalesSum) {
+            if (salesSum === null) salesSum = 0;
+            if (prevSalesSum === null) prevSalesSum = 0;
+            let monthlyComparison = (salesSum > prevSalesSum) ? Math.round(100 + ((salesSum - prevSalesSum) / prevSalesSum * 100)) : Math.round(100 - ((prevSalesSum - salesSum) / prevSalesSum * 100));
+            if (isNaN(monthlyComparison)) monthlyComparison = 0;
+            return monthlyComparison;
           },
           plot() {
             if (self.myChart) {
