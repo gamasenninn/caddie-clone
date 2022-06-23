@@ -136,7 +136,7 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先情報"
                             header-border-variant="light">
                             <b-row>
-                                <b-col sm>
+                                <b-col lg>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="No.(必須)"
                                         label-for="anyNumber" label-align="right">
                                         <b-form-input v-model="customer.anyNumber" id="anyNumber" size="sm"
@@ -262,9 +262,9 @@
                                         </b-form-textarea>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm>
+                                <b-col lg>
                                     <b-table responsive hover small id="invoicetable" label="Table Options"
-                                        :items=invoices :fields="[
+                                        :items=invoices sticky-header style="max-height: 500px;" :fields="[
                                             {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                                             {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
                                             {  key: 'applyDate', label: '日付', thClass: 'th-apply-date text-center', tdClass: 'text-center', sortable: true },
