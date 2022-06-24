@@ -145,6 +145,7 @@ class Invoice_Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     invoiceId = db.Column(db.Integer, db.ForeignKey('invoices.id'))
     itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
+    rowNum = db.Column(db.Integer)
     any = db.Column(db.String)
     itemName = db.Column(db.String)
     price = db.Column(db.Integer)
@@ -234,6 +235,7 @@ class Quotation_Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quotationId = db.Column(db.Integer, db.ForeignKey('quotations.id'))
     itemId = db.Column(db.Integer, db.ForeignKey('items.id'))
+    rowNum = db.Column(db.Integer)
     any = db.Column(db.String)
     itemName = db.Column(db.String)
     price = db.Column(db.Integer)
@@ -437,3 +439,9 @@ class AchievementSchema(Schema):
     applyDate = fields.Str()
     monthlySales = fields.Int()
     monthlyProfit = fields.Int()
+
+
+class AchievementPreviousYearSchema(Schema):
+    applyDate = fields.Str()
+    monthlySales_previousYear = fields.Int()
+    monthlyProfit_previousYear = fields.Int()

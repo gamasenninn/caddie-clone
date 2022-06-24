@@ -83,7 +83,8 @@
                             </b-row>
                             <b-row align-h="start">
                                 <router-link to="?page=store">
-                                    <b-button pill variant="success" class="mb-3 ml-3" @click="CustomerAddRow();">＋新規
+                                    <b-button variant="primary" id="new-button" class="mb-3 ml-3"
+                                        @click="CustomerAddRow();">＋新規追加
                                     </b-button>
                                 </router-link>
                             </b-row>
@@ -136,43 +137,31 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="得意先情報"
                             header-border-variant="light">
                             <b-row>
-                                <b-col sm>
+                                <b-col lg>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="No.(必須)"
                                         label-for="anyNumber" label-align="right">
                                         <b-form-input v-model="customer.anyNumber" id="anyNumber" size="sm"
                                             :formatter="formatterNumberAll" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="決算月"
                                         label-for="closingMonth" label-align="right">
                                         <b-form-select v-model="customer.closingMonth" :options="closingMonth"
                                             size="sm">
                                         </b-form-select>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先名"
                                         label-for="customerName" label-align="right">
                                         <b-form-input v-model="customer.customerName" id="customerName" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="敬称"
                                         label-for="honorificTitle" label-align="right">
                                         <b-form-select v-model="customer.honorificTitle" :options="selectHonorificTitle"
                                             size="sm"></b-form-select>
                                         </b-form-select>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="フリガナ"
                                         label-for="customerKana" label-align="right">
                                         <b-form-input id="input-live" v-model="customer.customerKana"
@@ -183,101 +172,64 @@
                                         </b-form-invalid-feedback>
                                         <b-form-text id="input-live-help">※全角カナ・英数字で入力(例)jマート1</b-form-text>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
                                         label-for="department" label-align="right">
                                         <b-form-input v-model="customer.department" id="department" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
                                         label-for="postNumber" label-align="right">
                                         <b-form-input v-model="customer.postNumber" id="postNumber" size="sm"
                                             autocomplete="off" :formatter="formatter_postNum">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
-
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所1"
                                         label-for="address" label-align="right">
                                         <b-form-input v-model="customer.address" id="address" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="住所2"
                                         label-for="address" label-align="right">
                                         <b-form-input v-model="customer.addressSub" id="address" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="電話番号"
                                         label-for="telNumber" label-align="right">
                                         <b-form-input v-model="customer.telNumber" id="telNumber" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="FAX番号"
                                         label-for="faxNumber" label-align="right">
                                         <b-form-input v-model="customer.faxNumber" id="faxNumber" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="サイトURL"
                                         label-for="url" label-align="right">
                                         <b-form-input v-model="customer.url" id="url" size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
                                         label-for="email" label-align="right">
                                         <b-form-input v-model="customer.email" id="email" size="sm" autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
                                         label-for="representative" label-align="right">
                                         <b-form-input v-model="customer.representative" id="representative" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
                                         label-for="manager" label-align="right">
                                         <b-form-input v-model="customer.manager" id="manager" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お客様区分"
                                         label-for="customerCategory" label-align="right">
                                         <b-form-radio-group required v-if="" v-model="customer.customerCategory"
@@ -305,13 +257,34 @@
                                             </a>
                                         </div>
                                     </b-form-group>
-                                </b-col>
-                                <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="memo" label-align="right">
                                         <b-form-textarea v-model="customer.memo" size="sm" rows="4">
                                         </b-form-textarea>
                                     </b-form-group>
+                                </b-col>
+                                <b-col lg>
+                                    <b-table responsive hover small id="invoicetable" label="Table Options"
+                                        :items=invoices sticky-header style="max-height: 500px;" :fields="[
+                                            {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                                            {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
+                                            {  key: 'applyDate', label: '日付', thClass: 'th-apply-date text-center', tdClass: 'text-center', sortable: true },
+                                            {  key: 'customerAnyNumber', label: 'No.', thClass: 'th-customer-any-number text-center', tdClass: 'text-center', sortable: true },
+                                            {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
+                                            {  key: 'title', label: '件名', thClass: 'text-center', },
+                                            {  key: 'totalAmount', label: '請求金額', thClass: 'text-center', tdClass: 'text-right' },
+                                            ]" :tbody-tr-class="rowClass">
+                                        <template v-slot:cell(applyDate)="data">
+                                            {{formatDate(data.item.applyDate)}}
+                                        </template>
+                                        <template v-slot:cell(totalAmount)="data">
+                                            {{amountCalculation(data.item)|nf}}
+                                        </template>
+                                    </b-table>
+                                    <b-row align-h="end">
+                                        <b-button v-if="isMoreInvoices" variant="primary" size="sm"
+                                            @click="showMoreInvoices">さらに表示</b-button>
+                                    </b-row>
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -365,6 +338,11 @@
             const router = new VueRouter({
             })
 
+            Vue.filter('nf', function (val) {
+                if (isNaN(val)) return null
+                return val.toLocaleString();
+            });
+
             var app = new Vue({
                 el: '#app',
                 data: {
@@ -375,12 +353,15 @@
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
                     oldCustomer: [],                //選択中の元customer
+                    invoices: [],
                     selectHonorificTitle: ['', '様', '御中', '殿',],    //敬称セレクトボックス用
                     closingMonth: [{ value: null, text: "" }, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     title: '',
                     message: '',
                     offset: 0,
                     isMore: false,
+                    offsetInvoices: 0,          //編集画面横の請求一覧用
+                    isMoreInvoices: false,      //編集画面横の請求一覧用
                 },
                 methods: {
                     // ---Customers---
@@ -505,6 +486,29 @@
                     searchCustomer: function () {
                         this.getCustomers(this.searchCustomerWord);
                     },
+                    getInvoices: async function (searchWord = '', offset = 0) {
+                        self = this;
+                        url = '/v1/invoices'
+                        await axios.get(url, {
+                            params: {
+                                search: searchWord,
+                                offset: offset,
+                                moreCheck: true,
+                            }
+                        })
+                            .then(function (response) {
+                                console.log(response);
+                                if (offset == 0) {
+                                    self.offset = 0;
+                                    self.invoices = response.data.invoices;
+                                    self.isMoreInvoices = response.data.isMore;
+                                }
+                                else {
+                                    response.data.invoices.map(invoice => self.invoices.push(invoice));
+                                    self.isMoreInvoices = response.data.isMore;
+                                }
+                            });
+                    },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
                         if (!item.id) return "d-none";
@@ -513,6 +517,11 @@
                         // テスト的に300に
                         this.offset += 300;
                         this.getCustomers(this.searchCustomerWord, this.offset)
+                    },
+                    showMoreInvoices: function () {
+                        // テスト的に300に
+                        this.offsetInvoices += 300;
+                        this.getInvoices('', this.offsetInvoices);
                     },
                     apply: function () {
                         if (this.customerKanaValidate === true) {
@@ -537,6 +546,12 @@
                         if (result === true) {
                             this.deleteCustomer(this.customer);
                         }
+                    },
+                    amountCalculation(invoice) {
+                        if (!invoice.invoice_items.length) return 0;
+                        let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
+                        if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
+                        return amount;
                     },
                     formatter_postNum(value) {
                         if (value.length === 7 && !value.includes('-')) {
@@ -595,6 +610,7 @@
                     if (localStorage.getItem('customer'))
                         this.customer = JSON.parse(localStorage.getItem('customer'));
                     this.getCustomers();
+                    this.getInvoices();
                     document.querySelector('title').textContent = '得意先管理';
                 },
                 router,

@@ -97,6 +97,17 @@
             border-color: #10afc5;
         }
 
+        #new-button {
+            background-color: #ffffff;
+            color: #10afc5;
+        }
+
+        #new-button:hover {
+            border-color: #009fb5;
+            background-color: #009fb5;
+            color: #ffffff;
+        }
+
         .btn-outline-primary:hover {
             border-color: #009fb5;
             background-color: #009fb5;
@@ -180,29 +191,29 @@
 
     <% block content %>
         <!--- contents here -->
-    <% endblock %>
+        <% endblock %>
 
-    <script>
-        function polling_session() {
-            if (localStorage.getItem('wMode') !== 'tb') return 
-            url = "/is-session"
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", url, false);
-            xhr.send(null);
-            if (xhr.status == 200) {
-                response = JSON.parse(xhr.responseText);
-                console.log("tb session:", response.session)
-                if (!response.session) {
-                    if(location.pathname !== '/login')
-                    window.location.href = '/login';
+            <script>
+                function polling_session() {
+                    if (localStorage.getItem('wMode') !== 'tb') return
+                    url = "/is-session"
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("GET", url, false);
+                    xhr.send(null);
+                    if (xhr.status == 200) {
+                        response = JSON.parse(xhr.responseText);
+                        console.log("tb session:", response.session)
+                        if (!response.session) {
+                            if (location.pathname !== '/login')
+                                window.location.href = '/login';
+                        }
+                    } else {
+                        console.log("any error");
+                    }
+
                 }
-            } else {
-                console.log("any error");
-            }
-
-        }
-        setInterval(polling_session, 30000)
-    </script>
+                setInterval(polling_session, 30000)
+            </script>
 
 </body>
 

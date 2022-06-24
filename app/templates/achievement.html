@@ -52,12 +52,15 @@
                     {{this.year}}年{{this.month}}月～{{this.afterYear}}年{{this.afterMonth}}月</p>
                 </b-row>
                 <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
-                  :items=achievements :fields="[
+                  :items=mergeAchievements :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyDate', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
-                          {  key: 'monthlySales_sum', label: '月次累計', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlySales_sum', label: '当期月次', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlyProfit_sum', label: '粗利額', thClass: 'text-center', tdClass: 'text-center' },
                           {  key: 'monthlyCostRate', label: '粗利率', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlyComparison', label: '単月対比', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'applyDate_previousYear', label: '前期', thClass: 'text-center', tdClass: 'text-center' },
+                          {  key: 'monthlySales_previousYear_sum', label: '前期月次', thClass: 'text-center', tdClass: 'text-center' },
                         ]">
                   <template v-slot:cell(monthlySales_sum)="data">
                     {{data.item.monthlySales_sum|nf}}
@@ -67,6 +70,12 @@
                   </template>
                   <template v-slot:cell(monthlyCostRate)="data">
                     {{monthlyCostRate(data.item.monthlyProfit_sum,data.item.monthlySales_sum)}}%
+                  </template>
+                  <template v-slot:cell(monthlySales_previousYear_sum)="data">
+                    {{data.item.monthlySales_previousYear_sum|nf}}
+                  </template>
+                  <template v-slot:cell(monthlyComparison)="data">
+                    {{monthlyComparison(data.item.monthlySales_sum,data.item.monthlySales_previousYear_sum)}}%
                   </template>
                 </b-table>
               </b-card>
@@ -97,11 +106,15 @@
         router,
         data: {
           achievements: [],
+          achievementsPrevious: [],
           year: null,
           month: null,
           applyDateList: [],
           monthlySalesList: [],
           monthlyProfitList: [],
+          applyDateListPrevious: [],
+          monthlySalesListPrevious: [],
+          monthlyProfitListPrevious: [],
           myChart: null,
         },
         methods: {
@@ -109,6 +122,7 @@
             self = this;
             url = '/v1/achievements-group'
             let mergedJson;
+            let mergedJsonPrevious;
             await axios.get(url, {
               params: {
                 year: year,
@@ -138,6 +152,31 @@
                 response.data.map(d => mergedJson.push(d));
                 console.log(mergedJson);
               });
+            await axios.get(url, {
+              params: {
+                year: year,
+                month: month,
+                isTax: 1,
+                isPreviousYear: true,
+              }
+            })
+              .then(function (response) {
+                console.log(response);
+                mergedJsonPrevious = response.data;
+              });
+            await axios.get(url, {
+              params: {
+                year: year,
+                month: month,
+                isTax: 0,
+                isPreviousYear: true,
+              }
+            })
+              .then(function (response) {
+                console.log(response);
+                response.data.map(d => mergedJsonPrevious.push(d));
+                console.log(mergedJsonPrevious);
+              });
             self.achievements = _(mergedJson).groupBy('applyDate').map((value, key) => {
               return {
                 'applyDate': key,
@@ -145,15 +184,38 @@
                 'monthlySales_sum': _.sumBy(value, 'monthlySales'),
               };
             }).value();
+            self.achievementsPrevious = _(mergedJsonPrevious).groupBy('applyDate').map((value, key) => {
+              return {
+                'applyDate': key,
+                'monthlyProfit_previousYear_sum': _.sumBy(value, 'monthlyProfit_previousYear'),
+                'monthlySales_previousYear_sum': _.sumBy(value, 'monthlySales_previousYear'),
+              };
+            }).value();
             console.log(self.achievements);
+            console.log(self.achievementsPrevious);
 
             self.applyDateList = [], self.monthlySalesList = [], self.monthlyProfitList = []
+            self.applyDateListPrevious = [], self.monthlySalesListPrevious = [], self.monthlyProfitListPrevious = []
             self.achievements.forEach(achieve => {
               self.applyDateList.push(achieve.applyDate);
               self.monthlySalesList.push(achieve.monthlySales_sum);
               self.monthlyProfitList.push(achieve.monthlyProfit_sum);
+              const findPreAchieve = self.achievementsPrevious.find((preAchieve) =>
+                preAchieve.applyDate.slice(-2) === achieve.applyDate.slice(-2)
+              );
+              if (findPreAchieve) {
+                self.applyDateListPrevious.push(findPreAchieve.applyDate);
+                self.monthlySalesListPrevious.push(findPreAchieve.monthlySales_previousYear_sum);
+                self.monthlyProfitListPrevious.push(findPreAchieve.monthlyProfit_previousYear_sum);
+              }
+              else {
+                self.applyDateListPrevious.push(null);
+                self.monthlySalesListPrevious.push(null);
+                self.monthlyProfitListPrevious.push(null);
+              }
             });
             console.log(self.applyDateList, self.monthlyProfitList, self.monthlySalesList);
+            console.log(self.applyDateListPrevious, self.monthlyProfitListPrevious, self.monthlySalesListPrevious);
             this.plot();
 
             // ----- danfo.js -----
@@ -178,6 +240,13 @@
             if (isNaN(monthlyCostRate)) monthlyCostRate = 0;
             return monthlyCostRate;
           },
+          monthlyComparison: function (salesSum, prevSalesSum) {
+            if (salesSum === null) salesSum = 0;
+            if (prevSalesSum === null) prevSalesSum = 0;
+            let monthlyComparison = (salesSum > prevSalesSum) ? Math.round(100 + ((salesSum - prevSalesSum) / prevSalesSum * 100)) : Math.round(100 - ((prevSalesSum - salesSum) / prevSalesSum * 100));
+            if (isNaN(monthlyComparison)) monthlyComparison = 0;
+            return monthlyComparison;
+          },
           plot() {
             if (self.myChart) {
               self.myChart.destroy();
@@ -189,17 +258,31 @@
                 datasets: [
                   {
                     type: 'bar',
-                    label: '当期累計',
+                    label: '前期累計',
+                    data: self.monthlySalesListPrevious,
+                    borderColor: "rgba(112,97,132,0.8)",
+                    backgroundColor: "rgba(62,112,200,0.5)",
+                  },
+                  {
+                    type: 'bar',
+                    label: '月次累計',
                     data: self.monthlySalesList,
                     borderColor: "rgba(254,97,132,0.8)",
                     backgroundColor: "rgba(254,97,132,0.5)",
                   },
                   {
                     type: 'line',
-                    label: '粗利額',
-                    data: self.monthlyProfitList,
+                    label: '前期粗利額',
+                    data: self.monthlyProfitListPrevious,
                     borderColor: "rgba(54,164,235,0.8)",
                     backgroundColor: "rgba(54,164,235,0.5)",
+                  },
+                  {
+                    type: 'line',
+                    label: '粗利額',
+                    data: self.monthlyProfitList,
+                    borderColor: "rgba(222,164,235,0.8)",
+                    backgroundColor: "rgba(222,164,235,0.5)",
                   },
                 ]
               }
@@ -238,6 +321,25 @@
             if (this.month === '') return null;
             if (this.month == 1) return 12;
             return Number(this.month) + 11 - 12;
+          },
+          // 今年度と前年度の実績を合わせたもの。テーブル表示のため。
+          mergeAchievements() {
+            let mergeAchievements = [];
+            this.achievements.map((d) => {
+              let obj = {}
+              let date = d.applyDate.slice(-2);
+              let prev = this.achievementsPrevious.find(el => el.applyDate.slice(-2) === date)
+              obj.applyDate = d.applyDate;
+              obj.monthlyProfit_sum = d.monthlyProfit_sum;
+              obj.monthlySales_sum = d.monthlySales_sum;
+              if (prev !== undefined) {
+                obj.applyDate_previousYear = prev.applyDate;
+                obj.monthlyProfit_previousYear_sum = prev.monthlyProfit_previousYear_sum;
+                obj.monthlySales_previousYear_sum = prev.monthlySales_previousYear_sum;
+              }
+              mergeAchievements.push(obj);
+            });
+            return mergeAchievements;
           }
         }
       });

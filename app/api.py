@@ -562,26 +562,45 @@ def invoice_achievement_group_v1():
     reqMonth = int(req.get('month')) if req.get('month') else None
     reqYear = int(req.get('year')) if req.get('year') else None
     isTax = bool(int(req.get('isTax')))
+    isPreviousYear = req.get('isPreviousYear') if req.get(
+        'isPreviousYear') else False
 
     if reqYear and reqMonth:
         beforeDate = date(reqYear, reqMonth, 1)
         afterDate = beforeDate + \
             relativedelta.relativedelta(
                 years=1)-relativedelta.relativedelta(days=1)
-        # func.sum内でInvoice.isTaxのbool値が使えないので
-        if isTax:
-            achievements = db.session.query(func.strftime(
-                "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count, Invoice.tax)).label("monthlySales"),
-                func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice.tax, Invoice_Item.cost)).label("monthlyProfit")) \
-                .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == True, Invoice.applyDate.between(beforeDate, afterDate))) \
-                .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+        beforeDate_previousYear = beforeDate + \
+            relativedelta.relativedelta(years=-1)
+        afterDate_previousYear = afterDate + \
+            relativedelta.relativedelta(years=-1)
+        if isPreviousYear:
+            # func.sum内でInvoice.isTaxのbool値が使えないので
+            if isTax:
+                achievements = db.session.query(func.strftime(
+                    "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count, Invoice.tax)).label("monthlySales_previousYear"),
+                    func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice.tax, Invoice_Item.cost)).label("monthlyProfit_previousYear")) \
+                    .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == True, Invoice.applyDate.between(beforeDate_previousYear, afterDate_previousYear))) \
+                    .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+            else:
+                achievements = db.session.query(func.strftime(
+                    "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiplyTaxIncluded(Invoice_Item.price, Invoice_Item.count,)).label("monthlySales_previousYear"),
+                    func.sum(profitTaxIncluded(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit_previousYear")) \
+                    .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == False, Invoice.applyDate.between(beforeDate_previousYear, afterDate_previousYear))) \
+                    .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
         else:
-            achievements = db.session.query(func.strftime(
-                "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiplyTaxIncluded(Invoice_Item.price, Invoice_Item.count,)).label("monthlySales"),
-                func.sum(profitTaxIncluded(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit")) \
-                .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == False, Invoice.applyDate.between(beforeDate, afterDate))) \
-                .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
-
+            if isTax:
+                achievements = db.session.query(func.strftime(
+                    "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiply(Invoice_Item.price, Invoice_Item.count, Invoice.tax)).label("monthlySales"),
+                    func.sum(profit(Invoice_Item.price, Invoice_Item.count, Invoice.tax, Invoice_Item.cost)).label("monthlyProfit")) \
+                    .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == True, Invoice.applyDate.between(beforeDate, afterDate))) \
+                    .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
+            else:
+                achievements = db.session.query(func.strftime(
+                    "%Y-%m", Invoice.applyDate).label("applyDate"), func.sum(multiplyTaxIncluded(Invoice_Item.price, Invoice_Item.count,)).label("monthlySales"),
+                    func.sum(profitTaxIncluded(Invoice_Item.price, Invoice_Item.count, Invoice_Item.cost)).label("monthlyProfit")) \
+                    .filter(and_(Invoice.isDelete == False, Invoice.isTaxExp == False, Invoice.applyDate.between(beforeDate, afterDate))) \
+                    .join(Invoice_Item).group_by(func.strftime("%Y-%m", Invoice.applyDate)).all()
     else:
         achievements = Invoice.query.filter(Invoice.isDelete == False)
 
@@ -593,7 +612,10 @@ def invoice_achievement_group_v1():
     )
     db.session.add(newHistory)
     db.session.commit()
-    return jsonify(AchievementSchema(many=True).dump(achievements))
+    if isPreviousYear:
+        return jsonify(AchievementPreviousYearSchema(many=True).dump(achievements))
+    else:
+        return jsonify(AchievementSchema(many=True).dump(achievements))
 
 
 @app.route('/v1/dust-invoices', methods=['GET'])
@@ -754,6 +776,8 @@ def invoice_update(id):
     data = request.json
 
     invoice = Invoice.query.filter(Invoice.id == id).one()
+    invoiceItemsIds = db.session.query(Invoice_Item.id).filter(
+        Invoice_Item.invoiceId == id).all()
     if not invoice:
         return jsonify({"result": "No Data", "id": id, "data": data})
 
@@ -786,6 +810,8 @@ def invoice_update(id):
         update_list = []
         insert_list = []
         delete_in_list = []
+        for i in invoiceItemsIds:
+            delete_in_list.append(i.id)
         for item in data['invoice_items']:
             if 'createdAt' in item:
                 del(item['createdAt'])
@@ -799,15 +825,13 @@ def invoice_update(id):
                     item[columnName] = None
 
             if item.get('id'):
-                if item.get('isDelete'):
-                    delete_in_list.append(item['id'])
-                else:
-                    update_list.append(item)
+                update_list.append(item)
+                index = next((i for i, x in enumerate(
+                    delete_in_list) if x == item['id']), None)
+                if index != None:
+                    delete_in_list.pop(index)
             else:
-                if item.get('isDelete'):
-                    pass
-                else:
-                    insert_list.append(item)
+                insert_list.append(item)
 
         db.session.bulk_update_mappings(Invoice_Item, update_list)
         db.session.bulk_insert_mappings(Invoice_Item, insert_list)
@@ -1304,6 +1328,8 @@ def quotation_update(id):
     data = request.json
 
     quotation = Quotation.query.filter(Quotation.id == id).one()
+    quotationItemsIds = db.session.query(Quotation_Item.id).filter(
+        Quotation_Item.quotationId == id).all()
     if not quotation:
         return jsonify({"result": "No Data", "id": id, "data": data})
 
@@ -1336,27 +1362,29 @@ def quotation_update(id):
         update_list = []
         insert_list = []
         delete_in_list = []
+        for i in quotationItemsIds:
+            delete_in_list.append(i.id)
         for item in data['quotation_items']:
+            print(item)
             if 'createdAt' in item:
                 del(item['createdAt'])
             if 'updatedAt' in item:
                 del(item['updatedAt'])
             for columnName in item.keys():
-                if item['cost'] == '' or item['cost'] == None:
-                    item['cost'] = 0
+                if columnName == 'cost':
+                    if item['cost'] == '' or item['cost'] == None:
+                        item['cost'] = 0
                 elif item[columnName] == '':
                     item[columnName] = None
 
             if item.get('id'):
-                if item.get('isDelete'):
-                    delete_in_list.append(item['id'])
-                else:
-                    update_list.append(item)
+                update_list.append(item)
+                index = next((i for i, x in enumerate(
+                    delete_in_list) if x == item['id']), None)
+                if index != None:
+                    delete_in_list.pop(index)
             else:
-                if item.get('isDelete'):
-                    pass
-                else:
-                    insert_list.append(item)
+                insert_list.append(item)
 
         db.session.bulk_update_mappings(Quotation_Item, update_list)
         db.session.bulk_insert_mappings(Quotation_Item, insert_list)
