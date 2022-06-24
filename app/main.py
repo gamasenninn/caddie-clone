@@ -107,6 +107,11 @@ def is_session():
         return jsonify({"session": False})
 
 
+@app.route('/on-click', methods=['GET'])
+def onClick():
+    return jsonify({"result": "UpdateSession", })
+
+
 # ------　ユーザー認証ここまで -------
 
 

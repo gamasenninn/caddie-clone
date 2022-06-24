@@ -213,6 +213,22 @@
 
                 }
                 setInterval(polling_session, 30000)
+
+                // 画面クリック毎にセッションのライフタイム回復
+                $(function () {
+                    document.body.onclick = function (event) {
+                        url = "/on-click"
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("GET", url, false);
+                        xhr.send(null);
+                        if (xhr.status == 200) {
+                            response = JSON.parse(xhr.responseText);
+                            console.log("response:", response)
+                        } else {
+                            console.log("any error");
+                        }
+                    }
+                });
             </script>
 
 </body>
