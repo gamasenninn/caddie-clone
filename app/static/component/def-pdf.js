@@ -47,7 +47,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     sum.tax = sumInvoice.taxAmount;
     sum.total = sumInvoice.priceIncludingTax
     h.memo = nvl(invoice.memo, '');
-    h.deadLine = nvl(invoice.deadLine, '');
+    h.deadLine = moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日");
     h.payee = nvl(setting.payee, '');
     h.accountHolderKana = nvl(setting.accountHolderKana);
     h.accountHolder = nvl(setting.accountHolder);
@@ -89,7 +89,7 @@ function getPdfDataQuotation(quotation, setting, sumQuotation, customer) {
     h.customerName = nvl(quotation.customerName, '');
     h.honorificTitle = nvl(quotation.honorificTitle, '');
     h.applyNumber = quotation.applyNumber;
-    h.applyDate = nvl(quotation.applyDate, ' / / ');
+    h.applyDate = nvl( quotation.applyDate, ' / / ');
     h.myPostNumber = nvl(setting.postNumber, '');
     h.myCompanyName = nvl(setting.companyName, '');
     h.myAddress1 = nvl(setting.address, '');
@@ -170,8 +170,8 @@ function getPdfData(h, sum) {
                     "row_max": 10,
                     "label_style": "sm_c_color",
                     "fields": [
-                        { "key": "any", "label": "#", "width": 15, "p_style": "sm_l" },
-                        { "key": "itemName", "label": "内容", "width": 75, "p_style": "sm_l" },
+                        //{ "key": "any", "label": "#", "width": 15, "p_style": "sm_l" },
+                        { "key": "itemName", "label": "内容", "width": 85, "p_style": "sm_l" },
                         { "key": "count", "label": "数量", "width": 20, "p_style": "sm_r", "format": "{:,}" },
                         { "key": "unit", "label": "単位", "width": 15, "p_style": "sm_r" },
                         { "key": "price", "label": "単価", "width": 25, "p_style": "sm_r", "format": "{:,}" },
@@ -185,7 +185,7 @@ function getPdfData(h, sum) {
                         ["E", "('LINEAFTER', (0, 0), (-1,-1), 0.25, colors.white)"],
                         ["E", "('ALIGN', (0, 0), (-1, 0), 'CENTER')"],
                         ["E", "('BACKGROUND', (0, 0), (6, 0), '#EBF5FF')"],
-                        ["E", "('TEXTCOLOR', (0, 0), (-1, -1), colors.red)"],
+                        //["E", "('TEXTCOLOR', (0, 0), (-1, -1), colors.red)"],
                         ["E", "('BOX', (0, 0), (6, 0), 0.25,'#10AFC5')"],
                     ],
                     "stripe_backgrounds": ["'#EBF5FF'", "colors.white"]
@@ -211,7 +211,7 @@ function getPdfData(h, sum) {
                     { "pos_xy": ["E", "(175*mm,277*mm)"], "table": [[["PF", h.applyNumber, "sm_l", "{:}"]]], "col_widths": ["E", "(30*mm)"] },
                     { "pos_xy": ["E", "(175*mm,271*mm)"], "table": [[["P", h.applyDate, "sm_l"]]], "col_widths": ["E", "(30*mm)"] },
                     {
-                        "pos_xy": ["E", "(120*mm,227*mm)"],
+                        "pos_xy": ["E", "(120*mm,235*mm)"],
                         "table": [
                             [["P", h.myCompanyName, "my_company"]],
                             [["P", '〒' + h.myPostNumber + '<br/>' + h.myAddress1 + '<br/>TEL:' + h.myTel1 + '&nbsp; FAX:' + h.myFax1, "sm_l"]],
@@ -223,34 +223,34 @@ function getPdfData(h, sum) {
                         ]
                     },
                     // copy 
-                    h.docClass == 'copy' ? { "pos_xy": ["E", "(90*mm,230*mm)"], "table": [[["P", "(控え)", "md_l_b"]]], "col_widths": ["E", "(30*mm)"] } : {},
+                    h.docClass == 'copy' ? { "pos_xy": ["E", "(95*mm,220*mm)"], "table": [[["P", "(控え)", "md_l_b"]]], "col_widths": ["E", "(30*mm)"] } : {},
                     // total area 
-                    h.mode == 'receipt' ? {} : { "pos_xy": ["E", "(40*mm,208*mm)"], "table": [[["P", h.title, "sm_l"]]], "col_widths": ["E", "(70*mm)"] },
+                    h.mode == 'receipt' ? {} : { "pos_xy": ["E", "(40*mm,218*mm)"], "table": [[["P", h.title, "sm_l"]]], "col_widths": ["E", "(70*mm)"] },
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(45*mm,209*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] } :
-                        { "pos_xy": ["E", "(45*mm,197*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] },
+                        { "pos_xy": ["E", "(45*mm,208*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] },
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(33*mm,193*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(20*mm)"] } :{},
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(70*mm,193*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(20*mm)"] } : {},
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(100*mm,193*mm)"], "table": [[["PF", h.taxrate, "sm_r", "{:}%"]]], "col_widths": ["E", "(20*mm)"] } : {},
 
 
                     // quotes area
-                    h.mode == 'quotation' ? { "pos_xy": ["E", "(145*mm,207*mm)"], "table": [[["P", h.expiry, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
-                    h.mode == 'quotation' ? { "pos_xy": ["E", "(145*mm,200*mm)"], "table": [[["P", h.dayOfDelivery, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
-                    h.mode == 'quotation' ? { "pos_xy": ["E", "(145*mm,194*mm)"], "table": [[["P", h.termOfSale, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
+                    h.mode == 'quotation' ? { "pos_xy": ["E", "(145*mm,217*mm)"], "table": [[["P", h.expiry, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
+                    h.mode == 'quotation' ? { "pos_xy": ["E", "(145*mm,211*mm)"], "table": [[["P", h.dayOfDelivery, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
+                    h.mode == 'quotation' ? { "pos_xy": ["E", "(145*mm,204*mm)"], "table": [[["P", h.termOfSale, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
 
                     // left side footer
-                    h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,71*mm)"], "table": [[["P", h.deadLine, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
+                    h.mode == 'invoice' ? { "pos_xy": ["E", "(145*mm,47*mm)"], "table": [[["P", h.deadLine, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
                     h.mode == 'invoice' ? {
-                        "pos_xy": ["E", "(40*mm,59*mm)"], "table": [[["P", h.payee, "sm_l"]]], "col_widths": ["E", "(70*mm)"], "row_heights": ["E", "(11*mm)"],
+                        "pos_xy": ["E", "(40*mm,53*mm)"], "table": [[["P", h.payee, "sm_l"]]], "col_widths": ["E", "(70*mm)"], "row_heights": ["E", "(11*mm)"],
                         "table_style": [["E", "('VALIGN', (0, 0), (-1, -1), 'TOP')"], ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
                         ]
                     } : {},
                     h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,52*mm)"], "table": [[["P", h.accountHolderKana, "sm_l"]]], "col_widths": ["E", "(70*mm)"] } : {},
-                    h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,46*mm)"], "table": [[["P", h.accountHolder, "sm_l"]]], "col_widths": ["E", "(70*mm)"] } : {},
+                    h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,47*mm)"], "table": [[["P", h.accountHolder, "sm_l"]]], "col_widths": ["E", "(70*mm)"] } : {},
                     // right side footer sum
-                    h.mode != 'receipt' ? { "pos_xy": ["E", "(140*mm,73*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] } :{},
-                    h.mode != 'receipt' ? { "pos_xy": ["E", "(140*mm,64*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] } : {},
-                    h.mode != 'receipt' ? { "pos_xy": ["E", "(140*mm,57*mm)"], "table": [[["PF", sum.total, "sm_r", "{:,}"]]], "col_widths": ["E", "(50*mm)"] } : {},
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(27*mm,194*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } :{},
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(67*mm,194*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(24*mm)"] } : {},
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(105*mm,194*mm)"], "table": [[["PF", sum.total, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } : {},
                     // under side footer
                     {
                         "pos_xy": ["E", "(19*mm,13*mm)"], "table": [[["P", h.memo, "sm_l"]]],
