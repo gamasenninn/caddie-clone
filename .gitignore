@@ -2,6 +2,7 @@ __pycache__
 /migrations
 *.db
 *.db-journal
+app/seeder_init.py
 app/static/upload/
 app/pdfmaker/app/static/pdf/
 app/upload/static/upload/

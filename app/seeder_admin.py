@@ -16,8 +16,8 @@ def seeder():
     # -----Users-----
     print('----Users----')
     users = [
-        User(id=1, anyNumber=9999, name='caddie', password=generate_password_hash('567vzu2022'),
-             group='operator', role='crescom_support'),
+        User(id=1, anyNumber=9999, name='admin', password=generate_password_hash('password'),
+             group='operator', role='admin'),
     ]
     db.session.add_all(users)
     db.session.commit()
