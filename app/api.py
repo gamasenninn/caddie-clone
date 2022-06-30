@@ -133,18 +133,25 @@ def customer_index_v1():
     req = request.args
     searchWord = req.get('search')
     moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
+    isInvoicesQuotations = req.get('isInvoicesQuotations') if req.get(
+        'isInvoicesQuotations') else False
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
+    # Booleanで渡ってこないので
+    if isInvoicesQuotations == 'true':
+        customers = Customer.query
+    else:
+        customers = db.session.query(Customer.id, Customer.anyNumber, Customer.closingMonth, Customer.customerName, Customer.customerKana, Customer.honorificTitle,
+                                     Customer.department, Customer.postNumber, Customer.address, Customer.addressSub, Customer.telNumber, Customer.faxNumber, Customer.url, Customer.email,
+                                     Customer.manager, Customer.representative, Customer.customerCategory, Customer.isHide, Customer.isFavorite, Customer.memo, Customer.createdAt, Customer.updatedAt,)
     if searchWord:
-        customers = Customer.query.filter(or_(
+        customers = customers.filter(or_(
             Customer.customerName.like('%'+searchWord+'%'),
             Customer.customerKana.like('%'+searchWord+'%'),
-            Customer.anyNumber == searchWord,
-        ))
-    else:
-        customers = Customer.query
+            Customer.anyNumber == searchWord,))
+
     customers_tmp = customers
     if offset:
         customers = customers.offset(offset)
@@ -172,9 +179,19 @@ def customer_index_v1():
 @app.route('/v1/customer/<id>', methods=['GET'])
 @app.route('/customer/<id>', methods=['GET'])
 def customer_show(id):
+    req = request.args
+    isInvoicesQuotations = req.get('isInvoicesQuotations') if req.get(
+        'isInvoicesQuotations') else False
     customerCount = Customer.query.filter(Customer.id == id).count()
     if customerCount:
-        customer = Customer.query.filter(Customer.id == id).first()
+        # Booleanで渡ってこないので
+        if isInvoicesQuotations == 'true':
+            customer = Customer.query
+        else:
+            customer = db.session.query(Customer.id, Customer.anyNumber, Customer.closingMonth, Customer.customerName, Customer.customerKana, Customer.honorificTitle,
+                                        Customer.department, Customer.postNumber, Customer.address, Customer.addressSub, Customer.telNumber, Customer.faxNumber, Customer.url, Customer.email,
+                                        Customer.manager, Customer.representative, Customer.customerCategory, Customer.isHide, Customer.isFavorite, Customer.memo, Customer.createdAt, Customer.updatedAt,)
+        customer = customer.filter(Customer.id == id).first()
         newHistory = History(
             userName=current_user.id,
             modelName='Customer',
