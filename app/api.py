@@ -139,19 +139,14 @@ def customer_index_v1():
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
     # 各種フィルタリング処理
-    # Booleanで渡ってこないので
-    if isInvoicesQuotations == 'true':
-        customers = Customer.query
-    else:
-        customers = db.session.query(Customer.id, Customer.anyNumber, Customer.closingMonth, Customer.customerName, Customer.customerKana, Customer.honorificTitle,
-                                     Customer.department, Customer.postNumber, Customer.address, Customer.addressSub, Customer.telNumber, Customer.faxNumber, Customer.url, Customer.email,
-                                     Customer.manager, Customer.representative, Customer.customerCategory, Customer.isHide, Customer.isFavorite, Customer.memo, Customer.createdAt, Customer.updatedAt,)
     if searchWord:
-        customers = customers.filter(or_(
+        customers = Customer.query.filter(or_(
             Customer.customerName.like('%'+searchWord+'%'),
             Customer.customerKana.like('%'+searchWord+'%'),
-            Customer.anyNumber == searchWord,))
-
+            Customer.anyNumber == searchWord,
+        ))
+    else:
+        customers = Customer.query
     customers_tmp = customers
     if offset:
         customers = customers.offset(offset)
@@ -173,7 +168,10 @@ def customer_index_v1():
         isMore = True if nowRecordCount < totalRecordCount else False
         return jsonify({'customers': CustomerSchema(many=True).dump(customers), 'isMore': isMore})
 
-    return jsonify(CustomerSchema(many=True).dump(customers))
+    if isInvoicesQuotations == 'true':
+        return jsonify(CustomerSchemaNestedInvoicesAndQuotations(many=True).dump(customers))
+    else:
+        return jsonify(CustomerSchema(many=True).dump(customers))
 
 
 @app.route('/v1/customer/<id>', methods=['GET'])
@@ -184,14 +182,7 @@ def customer_show(id):
         'isInvoicesQuotations') else False
     customerCount = Customer.query.filter(Customer.id == id).count()
     if customerCount:
-        # Booleanで渡ってこないので
-        if isInvoicesQuotations == 'true':
-            customer = Customer.query
-        else:
-            customer = db.session.query(Customer.id, Customer.anyNumber, Customer.closingMonth, Customer.customerName, Customer.customerKana, Customer.honorificTitle,
-                                        Customer.department, Customer.postNumber, Customer.address, Customer.addressSub, Customer.telNumber, Customer.faxNumber, Customer.url, Customer.email,
-                                        Customer.manager, Customer.representative, Customer.customerCategory, Customer.isHide, Customer.isFavorite, Customer.memo, Customer.createdAt, Customer.updatedAt,)
-        customer = customer.filter(Customer.id == id).first()
+        customer = Customer.query.filter(Customer.id == id).first()
         newHistory = History(
             userName=current_user.id,
             modelName='Customer',
@@ -199,7 +190,10 @@ def customer_show(id):
             action='get')
         db.session.add(newHistory)
         db.session.commit()
-        return jsonify(CustomerSchema().dump(customer))
+        if isInvoicesQuotations == 'true':
+            return jsonify(CustomerSchemaNestedInvoicesAndQuotations().dump(customer))
+        else:
+            return jsonify(CustomerSchema().dump(customer))
     else:
         return jsonify([])
 

@@ -400,6 +400,12 @@ class CustomerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Customer
         include_fk = True
+
+
+class CustomerSchemaNestedInvoicesAndQuotations(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Customer
+        include_fk = True
     invoices = ma.Nested(InvoiceSchema, many=True)
     quotations = ma.Nested(QuotationSchema, many=True)
 
