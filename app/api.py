@@ -133,6 +133,8 @@ def customer_index_v1():
     req = request.args
     searchWord = req.get('search')
     moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
+    isInvoicesQuotations = req.get('isInvoicesQuotations') if req.get(
+        'isInvoicesQuotations') else False
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
@@ -166,12 +168,18 @@ def customer_index_v1():
         isMore = True if nowRecordCount < totalRecordCount else False
         return jsonify({'customers': CustomerSchema(many=True).dump(customers), 'isMore': isMore})
 
-    return jsonify(CustomerSchema(many=True).dump(customers))
+    if isInvoicesQuotations == 'true':
+        return jsonify(CustomerSchemaNestedInvoicesAndQuotations(many=True).dump(customers))
+    else:
+        return jsonify(CustomerSchema(many=True).dump(customers))
 
 
 @app.route('/v1/customer/<id>', methods=['GET'])
 @app.route('/customer/<id>', methods=['GET'])
 def customer_show(id):
+    req = request.args
+    isInvoicesQuotations = req.get('isInvoicesQuotations') if req.get(
+        'isInvoicesQuotations') else False
     customerCount = Customer.query.filter(Customer.id == id).count()
     if customerCount:
         customer = Customer.query.filter(Customer.id == id).first()
@@ -182,7 +190,10 @@ def customer_show(id):
             action='get')
         db.session.add(newHistory)
         db.session.commit()
-        return jsonify(CustomerSchema().dump(customer))
+        if isInvoicesQuotations == 'true':
+            return jsonify(CustomerSchemaNestedInvoicesAndQuotations().dump(customer))
+        else:
+            return jsonify(CustomerSchema().dump(customer))
     else:
         return jsonify([])
 
