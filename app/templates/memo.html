@@ -29,38 +29,33 @@
                             header-border-variant="light">
                             <b-row>
                                 <b-col sm>
-                                    <b-row>
-                                        <b-col>
-                                            <b-input-group>
-                                                <b-form-input v-model="searchMemoWord" id="searchMemoWord" size="sm"
-                                                    placeholder="🔍　作成日 or 担当者">
-                                                </b-form-input>
-                                                <b-input-group-append>
-                                                    <b-button variant="primary" size="sm" @click="searchMemo">検索
-                                                    </b-button>
-                                                </b-input-group-append>
-                                            </b-input-group>
-                                        </b-col>
-                                    </b-row>
-                                </b-col>
-                                <div class="ml-5"></div>
-                                <b-col sm>
+                                    <b-input-group>
+                                        <b-form-input v-model="searchMemoWord" id="searchMemoWord" size="sm"
+                                            placeholder="🔍　作成日 or 担当者">
+                                        </b-form-input>
+                                        <b-input-group-append>
+                                            <b-button variant="primary" size="sm" @click="searchMemo">検索
+                                            </b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
                                 </b-col>
                                 <b-col sm>
-                                    <b-row align-h="end">
-                                        <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り</b-form-checkbox>
-                                    </b-row>
+                                </b-col>
+                                <b-col sm class="text-right">
+                                    <b-form-checkbox class="mr-3" v-model="isShowFavorite">お気に入り</b-form-checkbox>
                                 </b-col>
                             </b-row>
-                            <b-row align-h="end">
-                                <p class="mr-3">表示件数 {{ memosIndicateCount }}件</p>
-                            </b-row>
-                            <b-row align-h="start">
-                                <router-link to="?page=store">
-                                    <b-button variant="primary" id="new-button" class="mb-3 ml-3"
-                                        @click="MemoAddRow();">＋新規追加
-                                    </b-button>
-                                </router-link>
+                            <b-row class="mt-3">
+                                <b-col class="text-left">
+                                    <router-link to="?page=store">
+                                        <b-button variant="primary" id="new-button" class="mb-3 ml-3"
+                                            style="margin-left: 0 !important ;" @click="MemoAddRow();">＋新規追加
+                                        </b-button>
+                                    </router-link>
+                                </b-col>
+                                <b-col class="text-right">
+                                    <p class="mr-3">表示件数 {{ memosIndicateCount }}件</p>
+                                </b-col>
                             </b-row>
                             <b-table responsive hover small id="memotable" sort-by="ID" small label="Table Options"
                                 :items=memosIndicateIndex :fields="[

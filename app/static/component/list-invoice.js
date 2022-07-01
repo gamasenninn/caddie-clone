@@ -98,9 +98,9 @@ let daySearch = Vue.component('day-search', {
 // 表示件数コンポーネント
 var indicateCount = Vue.component('indicate-count', {
     template: `
-    <b-row align-h="end">
+    <div>
         <p class="mr-3">表示件数 {{ this.indicateCount }}件</p>
-    </b-row>
+    <div>
     `,
     props: {
         indicateCount: Number,

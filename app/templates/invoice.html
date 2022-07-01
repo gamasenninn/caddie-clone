@@ -166,14 +166,19 @@
                                         </day-search>
                                     </b-col>
                                 </b-row>
-                                <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
-                                <b-row align-h="start">
-                                    <router-link to="?page=store">
-                                        <b-button v-if="procName=='normal'" variant="primary" id="new-button"
-                                            class="mb-3 ml-3" @click="InvoiceAddRow();">
-                                            ＋新規追加
-                                        </b-button>
-                                    </router-link>
+                                <b-row>
+                                    <b-col class="text-left">
+                                        <router-link to="?page=store">
+                                            <b-button v-if="procName=='normal'" variant="primary" id="new-button"
+                                                style="margin-left: 0 !important ;" class="mb-3 ml-3"
+                                                @click="InvoiceAddRow();">
+                                                ＋新規追加
+                                            </b-button>
+                                        </router-link>
+                                    </b-col>
+                                    <b-col class="text-right">
+                                        <indicate-count :indicate-count="invoicesIndicateCount"></indicate-count>
+                                    </b-col>
                                 </b-row>
                                 <!-- ヘッダーをクリックするとソートが解除されるバグ解消のために、ソート可能なth以外はクリック無効にしているので注意 -->
                                 <!-- 一覧 -->
