@@ -265,7 +265,7 @@
                                 </b-col>
                                 <b-col lg>
                                     <b-table responsive hover small id="invoicetable" label="Table Options"
-                                        :items=invoices sticky-header style="max-height: 500px;" :fields="[
+                                        :items=customer.invoices sticky-header style="max-height: 500px;" :fields="[
                                             {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                                             {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
                                             {  key: 'applyDate', label: '日付', thClass: 'th-apply-date text-center', tdClass: 'text-center', sortable: true },
@@ -281,10 +281,6 @@
                                             {{amountCalculation(data.item)|nf}}
                                         </template>
                                     </b-table>
-                                    <b-row align-h="end">
-                                        <b-button v-if="isMoreInvoices" variant="primary" size="sm"
-                                            @click="showMoreInvoices">さらに表示</b-button>
-                                    </b-row>
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -353,15 +349,12 @@
                     customers: [],               //全件customer
                     customer: [],                //選択中のcustomer
                     oldCustomer: [],                //選択中の元customer
-                    invoices: [],
                     selectHonorificTitle: ['', '様', '御中', '殿',],    //敬称セレクトボックス用
                     closingMonth: [{ value: null, text: "" }, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     title: '',
                     message: '',
                     offset: 0,
                     isMore: false,
-                    offsetInvoices: 0,          //編集画面横の請求一覧用
-                    isMoreInvoices: false,      //編集画面横の請求一覧用
                 },
                 methods: {
                     // ---Customers---
@@ -466,15 +459,19 @@
                         self.customer = self.customers.slice(-1)[0];
                         localStorage.setItem('customer', JSON.stringify(self.customer))
                     },
-                    selectCustomer: function (item) {
-                        this.customer = item;
-                        this.oldCustomer = { ...item };
+                    selectCustomer: async function (item) {
+                        await this.getCustomer(item, isInvoicesQuotations = true);
+                        this.oldCustomer = { ...this.customer };
                         console.log(this.customer);
-                        localStorage.setItem('customer', JSON.stringify(item))
+                        localStorage.setItem('customer', JSON.stringify(this.customer))
                     },
-                    getCustomer: async function (item) {
+                    getCustomer: async function (item, isInvoicesQuotations = false) {
                         self = this;
-                        await axios.get("/v1/customer/" + item.id)
+                        await axios.get("/v1/customer/" + item.id, {
+                            params: {
+                                isInvoicesQuotations: isInvoicesQuotations,
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
                                 for (const [key, value] of Object.entries(response.data)) {
@@ -486,29 +483,6 @@
                     searchCustomer: function () {
                         this.getCustomers(this.searchCustomerWord);
                     },
-                    getInvoices: async function (searchWord = '', offset = 0) {
-                        self = this;
-                        url = '/v1/invoices'
-                        await axios.get(url, {
-                            params: {
-                                search: searchWord,
-                                offset: offset,
-                                moreCheck: true,
-                            }
-                        })
-                            .then(function (response) {
-                                console.log(response);
-                                if (offset == 0) {
-                                    self.offset = 0;
-                                    self.invoices = response.data.invoices;
-                                    self.isMoreInvoices = response.data.isMore;
-                                }
-                                else {
-                                    response.data.invoices.map(invoice => self.invoices.push(invoice));
-                                    self.isMoreInvoices = response.data.isMore;
-                                }
-                            });
-                    },
                     rowClass: function (item, type) {
                         if (!item || type !== 'row') return
                         if (!item.id) return "d-none";
@@ -517,11 +491,6 @@
                         // テスト的に300に
                         this.offset += 300;
                         this.getCustomers(this.searchCustomerWord, this.offset)
-                    },
-                    showMoreInvoices: function () {
-                        // テスト的に300に
-                        this.offsetInvoices += 300;
-                        this.getInvoices('', this.offsetInvoices);
                     },
                     apply: function () {
                         if (this.customerKanaValidate === true) {
@@ -601,8 +570,8 @@
                                 if (value) isUpdate = true;
                             });
                             if (isUpdate) await this.bulkUpsert(this.customer);
-                            this.getCustomers(this.searchCustomerWord);
                         }
+                        this.getCustomers(this.searchCustomerWord);
                         router.push({ path: "?page=index" });
                     }
                 },
@@ -610,7 +579,6 @@
                     if (localStorage.getItem('customer'))
                         this.customer = JSON.parse(localStorage.getItem('customer'));
                     this.getCustomers();
-                    this.getInvoices();
                     document.querySelector('title').textContent = '得意先管理';
                 },
                 router,
