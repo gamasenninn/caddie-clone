@@ -265,7 +265,7 @@
                                 </b-col>
                                 <b-col lg>
                                     <b-table responsive hover small id="invoicetable" label="Table Options"
-                                        :items=customer.invoices sticky-header style="max-height: 500px;" :fields="[
+                                        :items=customer_invoicesFilter sticky-header style="max-height: 500px;" :fields="[
                                             {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                                             {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
                                             {  key: 'applyDate', label: '日付', thClass: 'th-apply-date text-center', tdClass: 'text-center', sortable: true },
@@ -598,6 +598,18 @@
                             customers = customers.filter(customer => customer.isFavorite === true);
                         this.customersIndicateCount = customers.length;
                         return customers;
+                    },
+                    customer_invoicesFilter: function () {
+                        const customer = this.customer;
+                        let existCustomerInvoices = [];
+                        if (customer.invoices == undefined)
+                            return [];
+                        customer.invoices.map(invoice => {
+                            if (invoice.isDelete === false) {
+                                existCustomerInvoices.push(invoice);
+                            }
+                        });
+                        return existCustomerInvoices;
                     },
                     // バリデーション
                     customerKanaValidate() {
