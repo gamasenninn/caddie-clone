@@ -103,15 +103,16 @@
                 <b-row class="mt-1">
                     <b-col></b-col>
                     <b-col cols="11">
-                        <b-row align-h="start">
-                            <router-link to="?page=store">
-                                <b-button variant="primary" id="new-button" class="mb-3 ml-3" @click="UserAddRow();">
-                                    ＋新規追加
-                                </b-button>
-                            </router-link>
-                        </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="ユーザー一覧"
                             header-border-variant="light">
+                            <b-row align-h="start">
+                                <router-link to="?page=store">
+                                    <b-button variant="primary" id="new-button" class="mb-3 ml-3"
+                                        @click="UserAddRow();">
+                                        ＋新規追加
+                                    </b-button>
+                                </router-link>
+                            </b-row>
                             <b-table responsive hover small id="usertable" sort-by="ID" small label="Table Options"
                                 :items=underAdministrator :sort-by.sync="sortByUsers" :fields="[
                           {  key: 'update', label: '' },
