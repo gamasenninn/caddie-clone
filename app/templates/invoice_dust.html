@@ -85,7 +85,7 @@
                                 <p class="mr-3">表示件数 {{ invoicesIndicateCount }}件</p>
                             </b-row>
                             <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
-                                :items=invoicesIndicateIndex :fields="[
+                                borderless :items=invoicesIndicateIndex :fields="[
                           {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.', thClass: 'text-center', },
                           {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
@@ -225,7 +225,7 @@
                         </b-card>
 
                         <!--  table list & edit -->
-                        <b-table hover caption-top small id="invoice_items_table" primary-key="id" small
+                        <b-table hover caption-top small id="invoice_items_table" primary-key="id" small borderless
                             label="Table Options" :items=invoice.invoice_items :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemId', label: '商品ID', tdClass:'td-item-id' ,sortable: true},

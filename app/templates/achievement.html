@@ -51,7 +51,7 @@
                   <p class="mr-3"> {{this.year}}年度
                     {{this.year}}年{{this.month}}月～{{this.afterYear}}年{{this.afterMonth}}月</p>
                 </b-row>
-                <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options"
+                <b-table responsive hover small id="invocestable" sort-by="ID" small label="Table Options" borderless
                   :items=mergeAchievements :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'applyDate', label: '当期', thClass: 'text-center', tdClass: 'text-center' },
