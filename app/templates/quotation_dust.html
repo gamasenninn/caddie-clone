@@ -85,7 +85,7 @@
                                 <p class="mr-3">表示件数 {{ quotationsIndicateCount }}件</p>
                             </b-row>
                             <b-table responsive hover small id="quotationtable" sort-by="ID" small label="Table Options"
-                                :items=quotationsIndicateIndex :fields="[
+                                borderless :items=quotationsIndicateIndex :fields="[
                           {  key: 'show', label: '' },
                           {  key: 'id', label: 'No.', thClass: 'text-center', },
                           {  key: 'applyNumber', label: '見積番号', thClass: 'text-center', tdClass: 'text-center' },
@@ -223,7 +223,7 @@
                         </b-card>
 
                         <!--  table list & edit -->
-                        <b-table hover caption-top small id="quotation_items_table" primary-key="id" small
+                        <b-table hover caption-top small id="quotation_items_table" primary-key="id" small borderless
                             label="Table Options" :items=quotation.quotation_items :fields="[
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemId', label: '商品ID', tdClass:'td-item-id' ,sortable: true},
