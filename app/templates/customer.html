@@ -78,19 +78,21 @@
                                     </b-col>
                                 </b-col>
                             </b-row>
-                            <b-row align-h="end">
-                                <p class="mr-3">表示件数 {{customersIndicateCount}}件</p>
-                            </b-row>
-                            <b-row align-h="start">
-                                <router-link to="?page=store">
-                                    <b-button variant="primary" id="new-button" class="mb-3 ml-3"
-                                        @click="CustomerAddRow();">＋新規追加
-                                    </b-button>
-                                </router-link>
+                            <b-row>
+                                <b-col class="text-left">
+                                    <router-link to="?page=store">
+                                        <b-button variant="primary" id="new-button" class="mb-3 ml-3"
+                                            style="margin-left: 0 !important ;" @click="CustomerAddRow();">＋新規追加
+                                        </b-button>
+                                    </router-link>
+                                </b-col>
+                                <b-col class="text-right">
+                                    <p class="mr-3">表示件数 {{customersIndicateCount}}件</p>
+                                </b-col>
                             </b-row>
                             <!-- ヘッダーをクリックするとソートが解除されるバグ解消のために、ソート可能なth以外はクリック無効にしているので注意 -->
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
-                                :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
+                                borderless :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
                       {  key: 'update', label: '' },
                       {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                       {  key: 'anyNumber', label: 'No.', sortable: true, thClass:'th-any-number' },
@@ -264,8 +266,8 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col lg>
-                                    <b-table responsive hover small id="invoicetable" label="Table Options"
-                                        :items=customer.invoices sticky-header style="max-height: 500px;" :fields="[
+                                    <b-table responsive hover small id="invoicetable" label="Table Options" borderless
+                                        :items=customer_invoicesFilter sticky-header style="max-height: 500px;" :fields="[
                                             {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                                             {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
                                             {  key: 'applyDate', label: '日付', thClass: 'th-apply-date text-center', tdClass: 'text-center', sortable: true },
@@ -598,6 +600,18 @@
                             customers = customers.filter(customer => customer.isFavorite === true);
                         this.customersIndicateCount = customers.length;
                         return customers;
+                    },
+                    customer_invoicesFilter: function () {
+                        const customer = this.customer;
+                        let existCustomerInvoices = [];
+                        if (customer.invoices == undefined)
+                            return [];
+                        customer.invoices.map(invoice => {
+                            if (invoice.isDelete === false) {
+                                existCustomerInvoices.push(invoice);
+                            }
+                        });
+                        return existCustomerInvoices;
                     },
                     // バリデーション
                     customerKanaValidate() {

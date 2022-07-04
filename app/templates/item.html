@@ -108,18 +108,20 @@
                                     </b-row>
                                 </b-col>
                             </b-row>
-                            <b-row align-h="end">
-                                <p class="mr-3">表示件数 {{itemsIndicateCount}}件</p>
-                            </b-row>
-                            <b-row align-h="start">
-                                <router-link to="?page=store">
-                                    <b-button variant="primary" id="new-button" class="mb-3 ml-3"
-                                        @click="ItemAddRow();">＋新規追加
-                                    </b-button>
-                                </router-link>
+                            <b-row class="mt-3">
+                                <b-col class="text-left">
+                                    <router-link to="?page=store">
+                                        <b-button variant="primary" id="new-button" class="mb-3 ml-3"
+                                            style="margin-left: 0 !important ;" @click="ItemAddRow();">＋新規追加
+                                        </b-button>
+                                    </router-link>
+                                </b-col>
+                                <b-col class="text-right">
+                                    <p class="mr-3">表示件数 {{itemsIndicateCount}}件</p>
+                                </b-col>
                             </b-row>
                             <b-table responsive hover small id="itemtable" sort-by="ID" small label="Table Options"
-                                :items=itemsIndicateIndex :fields="[
+                                borderless :items=itemsIndicateIndex :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                           {  key: 'itemCode', label: '商品コード', thClass: 'text-center', tdClass: 'text-right' },

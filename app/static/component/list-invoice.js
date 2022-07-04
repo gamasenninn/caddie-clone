@@ -98,9 +98,9 @@ let daySearch = Vue.component('day-search', {
 // 表示件数コンポーネント
 var indicateCount = Vue.component('indicate-count', {
     template: `
-    <b-row align-h="end">
+    <div>
         <p class="mr-3">表示件数 {{ this.indicateCount }}件</p>
-    </b-row>
+    <div>
     `,
     props: {
         indicateCount: Number,
@@ -111,7 +111,7 @@ var indicateCount = Vue.component('indicate-count', {
 Vue.component('invoice-list', {
     template: `
     <div>
-        <b-table responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
+        <b-table borderless responsive hover small id="invoicetable" sort-by="ID" small label="Table Options"
             :items=invoicesIndicateIndex :sort-by.sync="this.sortByInvoices" :sort-desc.sync="this.sortDesc" :fields="[
         {  key: 'update', label: '' },
         {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
@@ -173,7 +173,7 @@ Vue.component('invoice-list', {
 Vue.component('invoice-list-payment', {
     template: `
     <div>
-        <b-table responsive hover small id="invoicetable" label="Table Options"
+        <b-table borderless responsive hover small id="invoicetable" label="Table Options"
             :items=invoicesIndicateIndex :sort-by.sync="this.sortByInvoices" :sort-desc.sync="this.sortDesc" :fields="[
         {  key: 'update', label: '' },
         {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },

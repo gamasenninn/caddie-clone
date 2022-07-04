@@ -81,8 +81,8 @@
                 <!-- ログイン履歴一覧モーダル -->
                 <b-modal size="xl" id="login-history-modal">
                     <p>ログイン履歴</p>
-                    <b-table hover striped small sort-by="ID" id="login-history-table" :items="loginHistories"
-                        label="Table Options" :fields="[
+                    <b-table hover striped small sort-by="ID" id="login-history-table" borderless
+                        :items="loginHistories" label="Table Options" :fields="[
                               {  key: 'id', label: 'No.' },
                               {  key: 'userName', label: 'ユーザー名' },
                               {  key: 'modelName', label: '対象' },
@@ -103,17 +103,18 @@
                 <b-row class="mt-1">
                     <b-col></b-col>
                     <b-col cols="11">
-                        <b-row align-h="start">
-                            <router-link to="?page=store">
-                                <b-button variant="primary" id="new-button" class="mb-3 ml-3" @click="UserAddRow();">
-                                    ＋新規追加
-                                </b-button>
-                            </router-link>
-                        </b-row>
                         <b-card border-variant="white" class="mb-3 text-center" header="ユーザー一覧"
                             header-border-variant="light">
+                            <b-row align-h="start">
+                                <router-link to="?page=store">
+                                    <b-button variant="primary" id="new-button" class="mb-3 ml-3"
+                                        @click="UserAddRow();">
+                                        ＋新規追加
+                                    </b-button>
+                                </router-link>
+                            </b-row>
                             <b-table responsive hover small id="usertable" sort-by="ID" small label="Table Options"
-                                :items=underAdministrator :sort-by.sync="sortByUsers" :fields="[
+                                borderless :items=underAdministrator :sort-by.sync="sortByUsers" :fields="[
                           {  key: 'update', label: '' },
                           {  key: 'anyNumber', label: 'No.', thClass: 'text-center', },
                           {  key: 'name', label: 'ユーザー名', thClass: 'text-center', },
