@@ -92,7 +92,7 @@
                             </b-row>
                             <!-- ヘッダーをクリックするとソートが解除されるバグ解消のために、ソート可能なth以外はクリック無効にしているので注意 -->
                             <b-table responsive hover small id="customertable" sort-by="ID" small label="Table Options"
-                                :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
+                                borderless :items=customersIndicateIndex :sort-by.sync="sortByCustomers" :fields="[
                       {  key: 'update', label: '' },
                       {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                       {  key: 'anyNumber', label: 'No.', sortable: true, thClass:'th-any-number' },
@@ -266,7 +266,7 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col lg>
-                                    <b-table responsive hover small id="invoicetable" label="Table Options"
+                                    <b-table responsive hover small id="invoicetable" label="Table Options" borderless
                                         :items=customer_invoicesFilter sticky-header style="max-height: 500px;" :fields="[
                                             {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
                                             {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
