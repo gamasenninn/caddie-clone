@@ -270,7 +270,7 @@
                                                 <b-form-checkbox class="mr-3" v-model="isShowAll">全て表示
                                                 </b-form-checkbox>
                                             </b-row>
-                                            <b-table borderless hover striped small sort-by="ID" id="customer-table"
+                                            <b-table borderless hover small sort-by="ID" id="customer-table"
                                                 :items="searchCustomers" @row-clicked="customerSelect"
                                                 label="Table Options" :fields="[
                                   {  key: 'anyNumber', label: 'No.' },
@@ -461,8 +461,8 @@
                                             </b-row>
                                         </b-col>
                                     </b-row>
-                                    <b-table borderless hover striped small sort-by="ID" id="items-table"
-                                        :items="searchItems" @row-clicked="itemSelect" label="Table Options" :fields="[
+                                    <b-table borderless hover small sort-by="ID" id="items-table" :items="searchItems"
+                                        @row-clicked="itemSelect" label="Table Options" :fields="[
                                   {  key: 'id', label: 'No.' },
                                   {  key: 'itemName', label: '商品名' },
                                   {  key: 'unit',   label: '単位' },
