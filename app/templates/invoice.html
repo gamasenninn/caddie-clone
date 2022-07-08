@@ -157,7 +157,15 @@
                                         @click="$bvModal.show('total-invoice-modal')">合計請求書</b-button>
                                 </b-col>
                                 <b-modal size="xl" id="total-invoice-modal">
-                                    <p>得意先を選択してください</p>
+                                    <b-row>
+                                        <b-col>
+                                            <p>得意先を選択してください</p>
+                                        </b-col>
+                                        <b-col class="text-right mb-3">
+                                            <b-button @click="allCheckedInTotalInvoice">全て選択</b-button>
+                                            <b-button variant="primary" @click="totalInvoice">合計請求</b-button>
+                                        </b-col>
+                                    </b-row>
                                     <b-select v-model="searchCustomerWordInTotalInvoice"
                                         @change="selectChangeInTotalInvoiceModal" :options="customerNames">
                                     </b-select>
@@ -166,9 +174,19 @@
                                     <b-table borderless hover small id="invoice-table" :items="invoicesInTotalInvoice"
                                         :sort-by.sync="this.sortByInvoices" :fields="[
                                               {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                                              {  key: 'applyNumber', label: '請求番号' },
+                                              {  key: 'applyDate', label: '日付' },
+                                              {  key: 'customerAnyNumber', label: 'No.' },
                                               {  key: 'title', label: '件名' },
-                                              {  key: 'customerName', label: '得意先名' },
+                                              {  key: 'totalAmount', label: '請求金額' },
+                                              {  key: 'isTotalCheck', label: '' },
                                         ]">
+                                        <template v-slot:cell(isTotalCheck)="data">
+                                            <b-form-checkbox v-model="data.item.isChecked"></b-form-checkbox>
+                                        </template>
+                                        <!-- <template v-slot:cell(totalAmount)="data">
+                                            {{amountCalculation(data.item)|nf}}
+                                        </template> -->
                                     </b-table>
                                     <b-row align-h="end">
                                         <b-button v-if="isMoreInTotalInvoice" variant="primary" size="sm" class="mr-3"
@@ -1278,6 +1296,25 @@
                         interval = row > 1 ? 0 : 5;
                         return "height: " + (26 * row + interval) + "px";
                     },
+                    selectChangeInTotalInvoiceModal() {
+                        this.offsetInTotalInvoice = 0;
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true);
+                    },
+                    allCheckedInTotalInvoice() {
+                        this.invoicesInTotalInvoice.map(invoice => {
+                            this.$set(invoice, 'isChecked', true);
+                        });
+                    },
+                    totalInvoice() {
+                        let checkedInvoices = [];
+                        this.invoicesInTotalInvoice.map(invoice => {
+                            if (invoice.isChecked) {
+                                checkedInvoices.push(invoice);
+                            }
+                        });
+                        // ↓最終結果。これをPDF側に渡す？
+                        console.log(checkedInvoices);
+                    },
                     // ----- 子コンポーネントからの値 -----
                     updateInvoices(invoices, searchInvoiceWord, isMore) {
                         this.invoices = invoices;
@@ -1289,10 +1326,6 @@
                     },
                     updateDayEnd(end) {
                         this.searchDayEnd = end;
-                    },
-                    selectChangeInTotalInvoiceModal() {
-                        this.offsetInTotalInvoice = 0;
-                        this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true);
                     },
                 },
                 mounted: function () {
