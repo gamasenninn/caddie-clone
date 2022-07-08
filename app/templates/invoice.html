@@ -151,6 +151,28 @@
                                     <sc-menu class="mb-3" v-if="modeName!='mw'"></sc-menu>
                                 </b-col>
                             </b-row>
+                            <b-row>
+                                <b-col class="text-right">
+                                    <b-button size="sm" variant="primary" class="mb-3"
+                                        @click="$bvModal.show('total-invoice-modal')">合計請求書</b-button>
+                                </b-col>
+                                <b-modal size="xl" id="total-invoice-modal">
+                                    <p>得意先を選択してください</p>
+                                    <b-select v-model="searchCustomerWordInTotalInvoice"
+                                        @change="selectChangeInTotalInvoiceModal" :options="customerNames">
+                                    </b-select>
+                                    <b-row align-h="end">
+                                    </b-row>
+                                    <b-table borderless hover small id="invoice-table" :items="invoicesInTotalInvoice"
+                                        :sort-by.sync="this.sortByInvoices" :fields="[
+                                              {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+                                              {  key: 'title', label: '件名' },
+                                              {  key: 'customerName', label: '得意先名' },
+                                        ]">
+                                    </b-table>
+
+                                </b-modal>
+                            </b-row>
                             <b-card border-variant="white" class="mb-3 text-center" :header="headerName"
                                 header-border-variant="light">
                                 <b-row>
@@ -765,6 +787,10 @@
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
                     isMore: false,
+                    searchCustomerWordInTotalInvoice: '',   //合計請求書専用
+                    invoicesInTotalInvoice: [],             //合計請求書専用
+                    customerNames: [],                      //合計請求書専用 | 再利用可
+                    isMoreInTotalInvoice: false,            //合計請求書専用
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -781,7 +807,7 @@
                 },
                 methods: {
                     // ---Invoices---
-                    getInvoices: async function (searchWord = '', offset = 0) {
+                    getInvoices: async function (searchWord = '', offset = 0, isTotalInvoice = false) {
                         self = this;
                         url = '/v1/invoices'
                         await axios.get(url, {
@@ -795,10 +821,20 @@
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
+                                    if (isTotalInvoice) {
+                                        self.invoicesInTotalInvoice = response.data.invoices;
+                                        self.isMoreInTotalInvoice = response.data.isMore;
+                                        return;
+                                    }
                                     self.invoices = response.data.invoices;
                                     self.isMore = response.data.isMore;
                                 }
                                 else {
+                                    if (isTotalInvoice) {
+                                        response.data.invoices.map(invoice => self.invoicesInTotalInvoice.push(invoice));
+                                        self.isMoreInTotalInvoice = response.data.isMore;
+                                        return;
+                                    }
                                     response.data.invoices.map(invoice => self.invoices.push(invoice));
                                     self.isMore = response.data.isMore;
                                 }
@@ -997,6 +1033,11 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.customers = response.data;
+                                let customerNames = [];
+                                self.customers.map(customer => {
+                                    customerNames.push(customer.customerName);
+                                    self.customerNames = [...customerNames];
+                                })
                             });
                     },
                     getCustomer: async function (item) {
@@ -1237,6 +1278,9 @@
                     },
                     updateDayEnd(end) {
                         this.searchDayEnd = end;
+                    },
+                    selectChangeInTotalInvoiceModal() {
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true);
                     },
                 },
                 mounted: function () {
