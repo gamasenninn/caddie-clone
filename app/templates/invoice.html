@@ -170,7 +170,11 @@
                                               {  key: 'customerName', label: '得意先名' },
                                         ]">
                                     </b-table>
-
+                                    <b-row align-h="end">
+                                        <b-button v-if="isMoreInTotalInvoice" variant="primary" size="sm" class="mr-3"
+                                            @click="showMoreInTotalInvoice">さらに表示
+                                        </b-button>
+                                    </b-row>
                                 </b-modal>
                             </b-row>
                             <b-card border-variant="white" class="mb-3 text-center" :header="headerName"
@@ -791,6 +795,7 @@
                     invoicesInTotalInvoice: [],             //合計請求書専用
                     customerNames: [],                      //合計請求書専用 | 再利用可
                     isMoreInTotalInvoice: false,            //合計請求書専用
+                    offsetInTotalInvoice: 0,                //合計請求書専用
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -821,6 +826,7 @@
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
+                                    self.offsetInTotalInvoice = 0;
                                     if (isTotalInvoice) {
                                         self.invoicesInTotalInvoice = response.data.invoices;
                                         self.isMoreInTotalInvoice = response.data.isMore;
@@ -1095,6 +1101,11 @@
                         this.offset += 300;
                         this.getInvoices(this.searchInvoiceWord, this.offset);
                     },
+                    showMoreInTotalInvoice: function () {
+                        // テスト的に300に
+                        this.offsetInTotalInvoice += 300;
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true);
+                    },
                     coutFiles: function () {
                         self = this;
                         axios.get("/count-files/s/upload/invoices")
@@ -1280,6 +1291,7 @@
                         this.searchDayEnd = end;
                     },
                     selectChangeInTotalInvoiceModal() {
+                        this.offsetInTotalInvoice = 0;
                         this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true);
                     },
                 },
