@@ -162,6 +162,12 @@
                                         @emit-day-end="updateDayEndInTotalInvoice">
                                     </day-search-in-total-invoice>
                                     <b-row>
+                                        <b-col class="text-right">
+                                            <indicate-count :indicate-count="invoicesIndicateCountInTotalInvoice">
+                                            </indicate-count>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
                                         <b-col>
                                             <p>得意先を選択してください</p>
                                         </b-col>
