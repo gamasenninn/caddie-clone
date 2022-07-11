@@ -157,6 +157,10 @@
                                         @click="$bvModal.show('total-invoice-modal')">合計請求書</b-button>
                                 </b-col>
                                 <b-modal size="xl" id="total-invoice-modal">
+                                    <day-search-in-total-invoice class="mr-0"
+                                        @emit-day-start="updateDayStartInTotalInvoice"
+                                        @emit-day-end="updateDayEndInTotalInvoice">
+                                    </day-search-in-total-invoice>
                                     <b-row>
                                         <b-col>
                                             <p>得意先を選択してください</p>
@@ -171,23 +175,10 @@
                                     </b-select>
                                     <b-row align-h="end">
                                     </b-row>
-                                    <b-table borderless hover small id="invoice-table" :items="invoicesInTotalInvoice"
-                                        :sort-by.sync="this.sortByInvoices" :fields="[
-                                              {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
-                                              {  key: 'applyNumber', label: '請求番号' },
-                                              {  key: 'applyDate', label: '日付' },
-                                              {  key: 'customerAnyNumber', label: 'No.' },
-                                              {  key: 'title', label: '件名' },
-                                              {  key: 'totalAmount', label: '請求金額' },
-                                              {  key: 'isTotalCheck', label: '' },
-                                        ]">
-                                        <template v-slot:cell(isTotalCheck)="data">
-                                            <b-form-checkbox v-model="data.item.isChecked"></b-form-checkbox>
-                                        </template>
-                                        <!-- <template v-slot:cell(totalAmount)="data">
-                                            {{amountCalculation(data.item)|nf}}
-                                        </template> -->
-                                    </b-table>
+                                    <invoice-list-in-total-invoice
+                                        :invoices-indicate-index-in-total-invoice="invoicesIndicateIndexInTotalInvoice"
+                                        :sort-by-invoices="sortByInvoices" :sort-desc="sortDesc">
+                                    </invoice-list-in-total-invoice>
                                     <b-row align-h="end">
                                         <b-button v-if="isMoreInTotalInvoice" variant="primary" size="sm" class="mr-3"
                                             @click="showMoreInTotalInvoice">さらに表示
@@ -814,6 +805,10 @@
                     customerNames: [],                      //合計請求書専用 | 再利用可
                     isMoreInTotalInvoice: false,            //合計請求書専用
                     offsetInTotalInvoice: 0,                //合計請求書専用
+                    searchDayStartInTotalInvoice: '',       //合計請求書専用
+                    searchDayEndInTotalInvoice: '',         //合計請求書専用
+                    invoicesIndicateCountInTotalInvoice: 0, //合計請求書専用
+                    invoicesIndicateAmountInTotalInvoice: 0,//合計請求書専用
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -1326,6 +1321,12 @@
                     updateDayEnd(end) {
                         this.searchDayEnd = end;
                     },
+                    updateDayStartInTotalInvoice(start) {
+                        this.searchDayStartInTotalInvoice = start;
+                    },
+                    updateDayEndInTotalInvoice(end) {
+                        this.searchDayEndInTotalInvoice = end;
+                    },
                 },
                 mounted: function () {
                     if (localStorage.getItem('invoice'))
@@ -1444,6 +1445,28 @@
                         });
                         this.invoicesIndicateCount = invoices.length;
                         this.invoicesIndicateAmount = amount;
+                        return invoices;
+                    },
+                    invoicesIndicateIndexInTotalInvoice: function () {
+                        let invoices = this.invoicesInTotalInvoice;
+                        let amount = 0;
+                        if (this.searchDayStartInTotalInvoice != '' && this.searchDayEndInTotalInvoice == '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate >= this.searchDayStartInTotalInvoice);
+                        }
+                        if (this.searchDayStartInTotalInvoice == '' && this.searchDayEndInTotalInvoice != '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate <= this.searchDayEndInTotalInvoice);
+                        }
+                        if (this.searchDayStartInTotalInvoice != '' && this.searchDayEndInTotalInvoice != '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate >= this.searchDayStartInTotalInvoice && invoice.applyDate <= this.searchDayEndInTotalInvoice);
+                        }
+                        let invoiceAmounts = invoices.map(
+                            invoice => invoice.invoice_items.map(
+                                item => Math.round(item.count * Math.round(item.price) * (invoice.isTaxExp == true ? (1 + invoice.tax / 100) : 1))).reduce((a, b) => a + b));
+                        invoiceAmounts.forEach(value => {
+                            amount += value;
+                        });
+                        this.invoicesIndicateCountInTotalInvoice = invoices.length;
+                        this.invoicesIndicateAmountInTotalInvoice = amount;
                         return invoices;
                     },
                     // 得意先選択モーダルの検索機能
