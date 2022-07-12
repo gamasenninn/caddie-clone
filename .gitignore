@@ -13,3 +13,4 @@ app/static/asset/stamp/*
 !NotImage.png
 app/static/component/customize/
 *.mp4
+tests_e2e/cypress/screenshots/
