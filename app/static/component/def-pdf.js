@@ -162,7 +162,7 @@ function getPdfData(h, sum) {
                     ["('" + h.baseImagePath + "',0,0, 210*mm,295*mm,mask='auto')"]
                 ],
                 "drawImages": [
-                    ["('" + h.logoPath + "', 350,730," + h.logoWidth + "," + h.logoHeight + ",mask='auto')"]
+                    ["('" + h.logoPath + "', 350,760," + h.logoWidth + "," + h.logoHeight + ",mask='auto')"]
                 ]
             },
             "body": {
