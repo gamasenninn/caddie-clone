@@ -1,11 +1,19 @@
 describe('soho caddie basic test', () => {
-  it('passes', () => {
-    cy.visit('http://localhost:5010')
+  it('login to soho caddie', () => {
+
+    cy.visit('http://localhost:5010/login')
     cy.get('#userId').type('tanaka_taro')
     cy.get('#password').type('password')
     cy.get('.btn').click()
+
     //to invoice page
     cy.visit('http://localhost:5010/invoice-page#/')
+    // printJS を無効化する
+    let printJSStub=''
+    cy.window().then(win => {
+      printJSStub = cy.stub(win, 'printJS')
+    })
+ 
     cy.get('#new-button').click()
 
     cy.get('.text-left > .btn').click()
@@ -37,6 +45,24 @@ describe('soho caddie basic test', () => {
     cy.get('table:nth-child(1) tr ').eq(0).find('td').eq(1).should('contain','490,000')
     cy.get('table:nth-child(1) tr ').eq(1).find('td').eq(1).should('contain','49,000')
     cy.get('table:nth-child(1) tr ').eq(2).find('td').eq(1).should('contain','539,000')
+
+    // 印刷ボタン　押下
+    cy.intercept({
+      method: 'POST', 
+      url: 'http://localhost:5010/pdfmaker'
+    }).as('post_req')
+    cy.get('#dropdown-dropup__BV_button_ > .fas').click()
+    let pdfFile = ''
+    //pdfデータのレスポンス
+    cy.wait('@post_req').then((interception) => {
+      assert.isNotNull(interception.response.body, 'OK pdf OK ')
+      pdfFile = interception.response.body
+      cy.request('http://localhost:5010/pdf/'+pdfFile).then((response)=>{
+        expect(response.status).to.equal(200)
+        //expect(response.body).not.to.null
+      })
+    })
+
   //削除
     cy.get('.text-right > .btn-danger > .fas').click()
     cy.get('.router-link-active > .btn').click()
