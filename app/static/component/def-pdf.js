@@ -47,7 +47,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     sum.tax = sumInvoice.taxAmount;
     sum.total = sumInvoice.priceIncludingTax
     h.memo = nvl(invoice.memo, '');
-    h.deadLine = moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日");
+    h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
     h.payee = nvl(setting.payee, '');
     h.accountHolderKana = nvl(setting.accountHolderKana);
     h.accountHolder = nvl(setting.accountHolder);
@@ -162,7 +162,7 @@ function getPdfData(h, sum) {
                     ["('" + h.baseImagePath + "',0,0, 210*mm,295*mm,mask='auto')"]
                 ],
                 "drawImages": [
-                    ["('" + h.logoPath + "', 350,730," + h.logoWidth + "," + h.logoHeight + ",mask='auto')"]
+                    ["('" + h.logoPath + "', 350,760," + h.logoWidth + "," + h.logoHeight + ",mask='auto')"]
                 ]
             },
             "body": {
