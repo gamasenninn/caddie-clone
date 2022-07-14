@@ -1480,24 +1480,17 @@
                         let totalBillings = [];
                         invoices.map(invoice => {
                             let subTotals = [];
-                            if (invoice.isChecked && invoice.isTaxExp) {
-                                invoice.invoice_items.map(item => {
-                                    const beforeTotal = parseInt(item.count * Math.round(item.price));
-                                    const subTotal = parseInt(beforeTotal * (1 + invoice.tax / 100));
-                                    subTotals.push(subTotal);
-                                });
-                            }
-                            else if (invoice.isChecked && invoice.isTaxExp == false) {
-                                invoice.invoice_items.map(item => {
-                                    const subTotal = parseInt(item.count * Math.round(item.price));
-                                    subTotals.push(subTotal);
-                                });
-                            }
                             if (invoice.isChecked) {
+                                invoice.invoice_items.map(item => {
+                                    subTotals.push(parseInt(item.count * Math.round(item.price)));
+                                });
                                 const total = subTotals.reduce(function (sum, element) {
                                     return sum + element;
                                 }, 0);
-                                totalBillings.push(total);
+                                if (invoice.isTaxExp)
+                                    totalBillings.push(parseInt(total * (1 + invoice.tax / 100)));
+                                else
+                                    totalBillings.push(parseInt(total));
                             }
                         });
                         return totalBillings;
