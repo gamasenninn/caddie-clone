@@ -191,7 +191,9 @@
                                             @click="showMoreInTotalInvoice">さらに表示
                                         </b-button>
                                     </b-row>
-                                    {{amountInTotalInvoice}}
+                                    請求総額：{{amountInTotalInvoice}}
+                                    本体価格：{{basePriceInTotalInvoice}}
+                                    消費税額：{{taxInTotalInvoice}}
                                 </b-modal>
                             </b-row>
                             <b-card border-variant="white" class="mb-3 text-center" :header="headerName"
@@ -1494,6 +1496,48 @@
                             }
                         });
                         return totalBillings;
+                    },
+                    // 本体価格
+                    basePriceInTotalInvoice() {
+                        let invoices = [...this.invoicesInTotalInvoice];
+                        let basePrices = [];
+                        invoices.map(invoice => {
+                            let subTotals = [];
+                            if (invoice.isChecked) {
+                                invoice.invoice_items.map(item => {
+                                    subTotals.push(parseInt(item.count * Math.round(item.price)));
+                                });
+                                const total = subTotals.reduce(function (sum, element) {
+                                    return sum + element;
+                                }, 0);
+                                if (invoice.isTaxExp)
+                                    basePrices.push(parseInt(total));
+                                else
+                                    basePrices.push(parseInt(total / (1 + invoice.tax / 100)));
+                            }
+                        });
+                        return basePrices;
+                    },
+                    // 消費税額
+                    taxInTotalInvoice() {
+                        let invoices = [...this.invoicesInTotalInvoice];
+                        let taxies = [];
+                        invoices.map(invoice => {
+                            let subTotals = [];
+                            if (invoice.isChecked) {
+                                invoice.invoice_items.map(item => {
+                                    subTotals.push(parseInt(item.count * Math.round(item.price)));
+                                });
+                                const total = subTotals.reduce(function (sum, element) {
+                                    return sum + element;
+                                }, 0);
+                                if (invoice.isTaxExp)
+                                    taxies.push(parseInt(total * (1 + invoice.tax / 100) - total));
+                                else
+                                    taxies.push(parseInt(total - total / (1 + invoice.tax / 100)));
+                            }
+                        });
+                        return taxies;
                     },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {
