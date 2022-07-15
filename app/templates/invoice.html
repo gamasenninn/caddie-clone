@@ -1310,8 +1310,10 @@
                         this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true);
                     },
                     allCheckedInTotalInvoice() {
-                        this.invoicesInTotalInvoice.map(invoice => {
-                            this.$set(invoice, 'isChecked', true);
+                        const indicateInvoices = [...this.invoicesIndicateIndexInTotalInvoice];
+                        indicateInvoices.map(invoice => {
+                            const selectInvoice = this.invoicesInTotalInvoice.find(element => element.id === invoice.id);
+                            this.$set(selectInvoice, 'isChecked', true);
                         });
                     },
                     totalInvoiceOpen() {
