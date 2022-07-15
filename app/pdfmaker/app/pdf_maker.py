@@ -65,6 +65,8 @@ class NumberedCanvas(canvas.Canvas):
         canvas.Canvas.save(self)
 
     def draw_page_number(self, page_count):
+        return
+        #print page number 
         self.setFont("Helvetica", 7)
         if page_count > 1 :
             self.drawRightString(200*mm, 5*mm,
