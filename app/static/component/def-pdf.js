@@ -241,7 +241,7 @@ function getPdfData(h, sum) {
                     // left side footer
                     h.mode == 'invoice' ? { "pos_xy": ["E", "(145*mm,47*mm)"], "table": [[["P", h.deadLine, "sm_l"]]], "col_widths": ["E", "(50*mm)"] } : {},
                     h.mode == 'invoice' ? {
-                        "pos_xy": ["E", "(40*mm,53*mm)"], "table": [[["P", h.payee, "sm_l"]]], "col_widths": ["E", "(70*mm)"], "row_heights": ["E", "(11*mm)"],
+                        "pos_xy": ["E", "(40*mm,53*mm)"], "table": [[["P", h.payee, "sm_l"]]], "col_widths": ["E", "(85*mm)"], "row_heights": ["E", "(11*mm)"],
                         "table_style": [["E", "('VALIGN', (0, 0), (-1, -1), 'TOP')"], ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
                         ]
                     } : {},
