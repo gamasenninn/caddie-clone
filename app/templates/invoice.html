@@ -923,7 +923,8 @@
                     selectInvoice: function (item) {
                         this.invoice = item;
                         this.invoice.invoice_items = this.invoice.invoice_items.map(invoiceItem => ({ ...invoiceItem, isDelete: false }));
-                        this.oldInvoice = { ...item };
+                        const tmp = JSON.parse(JSON.stringify(item));   // ディープコピー
+                        this.oldInvoice = tmp;
                         this.getCustomer(this.invoice);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.invoice);
                         this.invoice.invoice_items.sort(function (a, b) {
