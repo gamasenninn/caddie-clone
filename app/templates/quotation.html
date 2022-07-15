@@ -898,7 +898,8 @@
                     selectQuotation: function (item) {
                         this.quotation = item;
                         this.quotation.quotation_items = this.quotation.quotation_items.map(quotationItem => ({ ...quotationItem, isDelete: false }));
-                        this.oldQuotation = { ...item };
+                        const tmp = JSON.parse(JSON.stringify(item));   // ディープコピー
+                        this.oldQuotation = tmp;
                         this.getCustomer(this.quotation);  //PDF遅延のためにここでasyncなしで読んでおく
                         console.log(this.quotation);
                         this.quotation.quotation_items.sort(function (a, b) {
