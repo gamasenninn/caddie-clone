@@ -157,7 +157,7 @@
                                         合計請求書
                                     </b-button>
                                 </b-col>
-                                <b-modal ref="total-invoice-modal" size="xl" id="total-invoice-modala">
+                                <b-modal ref="total-invoice-modal" size="xl" id="total-invoice-modal">
                                     <day-search-in-total-invoice class="mr-0"
                                         @emit-day-start="updateDayStartInTotalInvoice"
                                         @emit-day-end="updateDayEndInTotalInvoice">
@@ -174,7 +174,6 @@
                                         </b-col>
                                         <b-col class="text-right mb-3">
                                             <b-button @click="allCheckedInTotalInvoice">全て選択</b-button>
-                                            <b-button variant="primary" @click="totalInvoice">合計請求</b-button>
                                         </b-col>
                                     </b-row>
                                     <b-select v-model="searchCustomerWordInTotalInvoice"
@@ -194,6 +193,12 @@
                                     請求総額：{{amountInTotalInvoice}}
                                     本体価格：{{basePriceInTotalInvoice}}
                                     消費税額：{{taxInTotalInvoice}}
+                                    <template #modal-footer>
+                                        <button v-b-modal.modal-close_visit class="btn btn-secondary m-1"
+                                            @click="$bvModal.hide('total-invoice-modal')">閉じる</button>
+                                        <button v-b-modal.modal-close_visit class="btn btn-primary m-1"
+                                            @click="totalInvoice">印刷</button>
+                                    </template>
                                 </b-modal>
                             </b-row>
                             <b-card border-variant="white" class="mb-3 text-center" :header="headerName"
