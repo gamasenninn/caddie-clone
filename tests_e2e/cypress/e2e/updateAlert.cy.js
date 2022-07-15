@@ -1,5 +1,5 @@
 describe('update alert test', () => {
-    it('update invoice alert test -- invoice', () => {
+    it('update alert test -- invoice', () => {
 
         cy.visit('http://localhost:5010/login')
         cy.get('#userId').type('tanaka_taro')
@@ -30,17 +30,17 @@ describe('update alert test', () => {
         cy.get('.col > .btn').click()
         //モーダル表示、保存しないで戻るをクリック
         cy.get('.modal-footer > .btn-danger').should('have.text', '保存しないで戻る').click()
-    
+
 
     })
-    it('update invoice alert test -- quotation', () => {
+    it('update alert test -- quotation', () => {
 
         cy.visit('http://localhost:5010/login')
         cy.get('#userId').type('tanaka_taro')
         cy.get('#password').type('password')
         cy.get('.btn').click()
 
-        //to invoice page
+        //to quotation page
         cy.visit('http://localhost:5010/quotation-page#/')
 
         //一覧で最初の明細行を選択
@@ -64,6 +64,7 @@ describe('update alert test', () => {
         cy.get('.col > .btn').click()
         //モーダル表示、保存しないで戻るをクリック
         cy.get('.modal-footer > .btn-danger').should('have.text', '保存しないで戻る').click()
-    
 
-    })})
+
+    })
+})
