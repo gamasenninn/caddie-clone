@@ -48,7 +48,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     sum.total = sumInvoice.priceIncludingTax
     h.memo = nvl(invoice.memo, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
-    h.payee = nvl(setting.payee.replace(/\n/g, '<br />'), '');
+    h.payee = !!setting.payee ? setting.payee.replace(/\n/g, '<br />') : ''
     h.accountHolderKana = nvl(setting.accountHolderKana);
     h.accountHolder = nvl(setting.accountHolder);
     h.logoPath = setting.logoFilePath;
