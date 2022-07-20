@@ -177,9 +177,15 @@
                                             <b-button @click="allCheckedInTotalInvoice">全て選択</b-button>
                                         </b-col>
                                     </b-row>
-                                    <b-select v-model="searchCustomerWordInTotalInvoice"
-                                        @change="selectChangeInTotalInvoiceModal" :options="customerNames">
-                                    </b-select>
+                                    <b-input-group>
+                                        <b-form-input v-model="searchCustomerWordInTotalInvoice"
+                                            id="searchCustomerWordInTotalInvoice" placeholder="🔍　No. or 日付 or 得意先名">
+                                        </b-form-input>
+                                        <b-input-group-append>
+                                            <b-button variant="primary" size="sm" @click="searchInTotalInvoiceModal">検索
+                                            </b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
                                     <b-row align-h="end">
                                     </b-row>
                                     <invoice-list-in-total-invoice
@@ -1306,7 +1312,7 @@
                         interval = row > 1 ? 0 : 5;
                         return "height: " + (26 * row + interval) + "px";
                     },
-                    selectChangeInTotalInvoiceModal() {
+                    searchInTotalInvoiceModal() {
                         this.offsetInTotalInvoice = 0;
                         this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true);
                     },
