@@ -182,8 +182,7 @@
                                             id="searchCustomerWordInTotalInvoice" placeholder="🔍　No. or 日付 or 得意先名">
                                         </b-form-input>
                                         <b-input-group-append>
-                                            <b-button variant="primary" size="sm"
-                                                @click="selectChangeInTotalInvoiceModal">検索
+                                            <b-button variant="primary" size="sm" @click="searchInTotalInvoiceModal">検索
                                             </b-button>
                                         </b-input-group-append>
                                     </b-input-group>
@@ -1313,7 +1312,7 @@
                         interval = row > 1 ? 0 : 5;
                         return "height: " + (26 * row + interval) + "px";
                     },
-                    selectChangeInTotalInvoiceModal() {
+                    searchInTotalInvoiceModal() {
                         this.offsetInTotalInvoice = 0;
                         this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true);
                     },
