@@ -164,6 +164,12 @@
                                     </day-search-in-total-invoice>
                                     <b-row>
                                         <b-col class="text-right">
+                                            <b-form-checkbox class="mr-3 mb-2" v-model="isUnPayment">未入金のみ表示
+                                            </b-form-checkbox>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col class="text-right">
                                             <indicate-count :indicate-count="invoicesIndicateCountInTotalInvoice">
                                             </indicate-count>
                                         </b-col>
@@ -802,6 +808,7 @@
                     searchDayStart: '',             //請求書検索
                     searchDayEnd: '',               //請求書検索
                     isInvoicesShowAll: false,               //請求書検索
+                    isUnPayment: true,
                     invoicesIndicateCount: 0,       //請求書検索
                     invoicesIndicateAmount: 0,      //一覧表示中請求書の合計金額
                     searchItemWord: '',             //商品選択モーダル検索
@@ -1483,6 +1490,9 @@
                     },
                     invoicesIndicateIndexInTotalInvoice: function () {
                         let invoices = this.invoicesInTotalInvoice;
+                        if (this.isUnPayment) {
+                            invoices = invoices.filter(invoice => invoice.isPaid === false);
+                        }
                         if (this.searchDayStartInTotalInvoice != '' && this.searchDayEndInTotalInvoice == '') {
                             invoices = invoices.filter(invoice => invoice.applyDate >= this.searchDayStartInTotalInvoice);
                         }
