@@ -178,9 +178,13 @@
                                         </b-col>
                                     </b-row>
                                     <b-input-group>
-                                        <b-form-input v-model="searchCustomerWordInTotalInvoice"
-                                            id="searchCustomerWordInTotalInvoice" placeholder="🔍　No. or 日付 or 得意先名">
+                                        <b-form-input list="list-customers" v-model="searchCustomerWordInTotalInvoice"
+                                            id="searchCustomerWordInTotalInvoice" autocomplete="off"
+                                            placeholder="🔍　No. or 日付 or 得意先名">
                                         </b-form-input>
+                                        <datalist id="list-customers">
+                                            <option v-for="customer in customers">{{customer.customerName}}</option>
+                                        </datalist>
                                         <b-input-group-append>
                                             <b-button variant="primary" size="sm" @click="searchInTotalInvoiceModal">検索
                                             </b-button>
