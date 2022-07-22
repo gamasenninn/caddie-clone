@@ -8,6 +8,10 @@
         <script src="../static//library/tingle.min.js"></script>
         <link rel="stylesheet" href="../static/library/tingle.css" type="text/css" />
 
+        <!-- vue-simple-suggest -->
+        <script type="text/javascript" src="https://unpkg.com/vue-simple-suggest"></script>
+        <link rel="stylesheet" href="https://unpkg.com/vue-simple-suggest/dist/styles.css">
+
         <!-- コンポーネント -->
         <script src="../static/component/list-invoice.js"></script>
 
@@ -183,15 +187,19 @@
                                             <b-button @click="allCheckedInTotalInvoice">全て選択</b-button>
                                         </b-col>
                                     </b-row>
-                                    <b-input-group>
-                                        <b-form-input v-model="searchCustomerWordInTotalInvoice"
-                                            id="searchCustomerWordInTotalInvoice" placeholder="🔍　No. or 日付 or 得意先名">
-                                        </b-form-input>
-                                        <b-input-group-append>
-                                            <b-button variant="primary" size="sm" @click="searchInTotalInvoiceModal">検索
+                                    <b-row style="margin: auto;">
+                                        <b-col cols="11">
+                                            <vue-simple-suggest v-model="searchCustomerWordInTotalInvoice"
+                                                :list="customerNames" :filter-by-query="true"
+                                                placeholder="🔍　No. or 得意先名">
+                                            </vue-simple-suggest>
+                                        </b-col>
+                                        <b-col>
+                                            <b-button class="mt-1" variant="primary" @click="searchInTotalInvoiceModal">
+                                                検索
                                             </b-button>
-                                        </b-input-group-append>
-                                    </b-input-group>
+                                        </b-col>
+                                    </b-row>
                                     <b-row align-h="end">
                                     </b-row>
                                     <invoice-list-in-total-invoice
