@@ -157,7 +157,8 @@
                             </b-row>
                             <b-row>
                                 <b-col class="text-right">
-                                    <b-button size="sm" variant="primary" class="mb-3" @click="totalInvoiceOpen();">
+                                    <b-button v-if="procName=='normal'" size="sm" variant="primary" class="mb-3"
+                                        @click="totalInvoiceOpen();">
                                         合計請求書
                                     </b-button>
                                 </b-col>
