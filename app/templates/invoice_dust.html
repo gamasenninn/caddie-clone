@@ -197,7 +197,7 @@
                                     </b-form-group>
                                 </b-col>
                             </b-row>
-                            <b-row>
+                            <b-row v-if="!setting.isMemoQuadrupleIndicate">
                                 <b-col sm>
                                 </b-col>
                                 <b-col sm>
@@ -207,6 +207,36 @@
                                     </b-form-group>
                                 </b-col>
                             </b-row>
+                            <div v-else>
+                                <b-row>
+                                    <b-col sm>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
+                                            :label="setting.memoLabel1" label-for="memo1" label-align="right">
+                                            <p class="text-left pl-2" id="memo1">{{invoice.memo1}}</p>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col sm>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
+                                            :label="setting.memoLabel2" label-for="memo2" label-align="right">
+                                            <p class="text-left pl-2" id="memo2">{{invoice.memo2}}</p>
+                                        </b-form-group>
+                                    </b-col>
+                                </b-row>
+                                <b-row>
+                                    <b-col sm>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
+                                            :label="setting.memoLabel3" label-for="memo3" label-align="right">
+                                            <p class="text-left pl-2" id="memo3">{{invoice.memo3}}</p>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col sm>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm"
+                                            :label="setting.memoLabel4" label-for="memo4" label-align="right">
+                                            <p class="text-left pl-2" id="memo4">{{invoice.memo4}}</p>
+                                        </b-form-group>
+                                    </b-col>
+                                </b-row>
+                            </div>
                             <b-row>
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="件名"

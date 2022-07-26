@@ -761,6 +761,10 @@ def invoice_create():
         isPaid=data.get('isPaid'),
         title=data.get('title')if data.get('title') else None,
         memo=data.get('memo')if data.get('memo') else None,
+        memo1=data.get('memo1')if data.get('memo1') else None,
+        memo2=data.get('memo2')if data.get('memo2') else None,
+        memo3=data.get('memo3')if data.get('memo3') else None,
+        memo4=data.get('memo4')if data.get('memo4') else None,
         remarks=data.get('remarks')if data.get('remarks') else None,
         tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
@@ -812,6 +816,10 @@ def invoice_update(id):
     invoice.isPaid = data.get('isPaid')
     invoice.title = data.get('title')if data.get('title') else None
     invoice.memo = data.get('memo')if data.get('memo') else None
+    invoice.memo1 = data.get('memo1')if data.get('memo1') else None
+    invoice.memo2 = data.get('memo2')if data.get('memo2') else None
+    invoice.memo3 = data.get('memo3')if data.get('memo3') else None
+    invoice.memo4 = data.get('memo4')if data.get('memo4') else None
     invoice.remarks = data.get('remarks')if data.get('remarks') else None
     invoice.tax = data.get('tax')
     invoice.isTaxExp = data.get('isTaxExp')
@@ -1313,6 +1321,10 @@ def quotation_create():
         isConvert=data.get('isConvert') if data.get('isConvert') else False,
         title=data.get('title')if data.get('title') else None,
         memo=data.get('memo')if data.get('memo') else None,
+        memo1=data.get('memo1')if data.get('memo1') else None,
+        memo2=data.get('memo2')if data.get('memo2') else None,
+        memo3=data.get('memo3')if data.get('memo3') else None,
+        memo4=data.get('memo4')if data.get('memo4') else None,
         remarks=data.get('remarks')if data.get('remarks') else None,
         tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
@@ -1364,6 +1376,10 @@ def quotation_update(id):
         'isConvert') if data.get('isConvert') else False
     quotation.title = data.get('title')if data.get('title') else None
     quotation.memo = data.get('memo')if data.get('memo') else None
+    quotation.memo1 = data.get('memo1')if data.get('memo1') else None
+    quotation.memo2 = data.get('memo2')if data.get('memo2') else None
+    quotation.memo3 = data.get('memo3')if data.get('memo3') else None
+    quotation.memo4 = data.get('memo4')if data.get('memo4') else None
     quotation.remarks = data.get('remarks')if data.get('remarks') else None
     quotation.tax = data.get('tax')
     quotation.isTaxExp = data.get('isTaxExp')
@@ -1990,6 +2006,15 @@ def setting_update(id):
     setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
     setting.defaultTax = data.get(
         'defaultTax')if data.get('defaultTax') else None
+    setting.isMemoQuadrupleIndicate = data.get('isMemoQuadrupleIndicate')
+    setting.memoLabel1 = data.get(
+        'memoLabel1') if data.get('memoLabel1') else None
+    setting.memoLabel2 = data.get(
+        'memoLabel2')if data.get('memoLabel2') else None
+    setting.memoLabel3 = data.get(
+        'memoLabel3')if data.get('memoLabel3') else None
+    setting.memoLabel4 = data.get(
+        'memoLabel4')if data.get('memoLabel4') else None
 
     newHistory = History(
         userName=current_user.id,
