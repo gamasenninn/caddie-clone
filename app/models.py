@@ -122,6 +122,10 @@ class Invoice(db.Model):
                        default=False, server_default=db.text('0'))
     title = db.Column(db.String)
     memo = db.Column(db.String)
+    memo1 = db.Column(db.String)
+    memo2 = db.Column(db.String)
+    memo3 = db.Column(db.String)
+    memo4 = db.Column(db.String)
     remarks = db.Column(db.String)
     tax = db.Column(db.Integer, nullable=False, default=10,
                     server_default=db.text('10'))
@@ -214,6 +218,10 @@ class Quotation(db.Model):
                           default=False, server_default=db.text('0'))
     title = db.Column(db.String)
     memo = db.Column(db.String)
+    memo1 = db.Column(db.String)
+    memo2 = db.Column(db.String)
+    memo3 = db.Column(db.String)
+    memo4 = db.Column(db.String)
     remarks = db.Column(db.String)
     tax = db.Column(db.Integer, nullable=False, default=10,
                     server_default=db.text('10'))
@@ -346,6 +354,12 @@ class Setting(db.Model):
     # 設定
     defaultTax = db.Column(db.Integer, nullable=False,
                            default=10, server_default=db.text('10'))
+    isMemoQuadrupleIndicate = db.Column(
+        db.Boolean, nullable=False, default=False)
+    memoLabel = db.Column(db.String)
+    memoLabe2 = db.Column(db.String)
+    memoLabe3 = db.Column(db.String)
+    memoLabe4 = db.Column(db.String)
     updatedAt = updatedAt = db.Column(
         db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
