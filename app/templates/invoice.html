@@ -1351,13 +1351,25 @@
                     },
                     totalInvoice() {
                         let checkedInvoices = [];
+                        let customer = {};
+                        let prePdfToalInoice = {};
+
                         this.invoicesInTotalInvoice.map(invoice => {
                             if (invoice.isChecked) {
                                 checkedInvoices.push(invoice);
+                                customer = this.customers.find(c => c.id == invoice.customerId);
                             }
                         });
-                        // ↓最終結果。これをPDF側に渡す？
-                        console.log(checkedInvoices);
+                        prePdfToalInoice = {
+                            totalBlling:this.amountInTotalInvoice.reduce((a,b)=>{return a+b},0),
+                            totalBasePrice:this.basePriceInTotalInvoice.reduce((a,b)=>{return a+b},0),
+                            totalTax:this.taxInTotalInvoice.reduce((a,b)=>{return a+b},0),
+                            invoices:checkedInvoices,
+                            customer: customer
+                        }
+
+                        // ↓最終結果。これをPDF側に渡す
+                        console.log(prePdfToalInoice);
                     },
                     // ----- 子コンポーネントからの値 -----
                     updateInvoices(invoices, searchInvoiceWord, isMore) {
