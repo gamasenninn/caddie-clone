@@ -1396,12 +1396,21 @@
                     },
                     totalInvoice() {
                         let checkedInvoices = [];
+                        let customerIds = [];
                         this.invoicesInTotalInvoice.map(invoice => {
                             if (invoice.isChecked) {
                                 checkedInvoices.push(invoice);
                             }
                         });
-                        // ↓最終結果。これをPDF側に渡す？
+                        checkedInvoices.map(invoice => {
+                            customerIds.push(invoice.customerId);
+                        });
+                        if (Array.from(new Set(customerIds)).length >= 2) {
+                            this.title = 'エラー';
+                            this.message = '一意の得意先のみ選択してください。';
+                            this.$bvModal.show('confirmModalDanger');
+                            return;
+                        }
                         console.log(checkedInvoices);
                     },
                     // ----- 子コンポーネントからの値 -----
