@@ -355,11 +355,11 @@ class Setting(db.Model):
     defaultTax = db.Column(db.Integer, nullable=False,
                            default=10, server_default=db.text('10'))
     isMemoQuadrupleIndicate = db.Column(
-        db.Boolean, nullable=False, default=False)
-    memoLabel = db.Column(db.String)
-    memoLabe2 = db.Column(db.String)
-    memoLabe3 = db.Column(db.String)
-    memoLabe4 = db.Column(db.String)
+        db.Boolean, nullable=False, default=False, server_default=db.text('0'))
+    memoLabel1 = db.Column(db.String)
+    memoLabel2 = db.Column(db.String)
+    memoLabel3 = db.Column(db.String)
+    memoLabel4 = db.Column(db.String)
     updatedAt = updatedAt = db.Column(
         db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
