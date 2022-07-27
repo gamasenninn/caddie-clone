@@ -391,10 +391,55 @@
                                     </b-form-group>
                                 </b-col>
                                 <b-col xl>
-                                    <b-form-group label-cols="2" label-cols-lg="2" label-size="sm" label="メモ"
-                                        label-for="メモ" label-align="right">
+                                    <b-form-group v-if="!setting.isMemoQuadrupleIndicate" label-cols="2"
+                                        label-cols-lg="2" label-size="sm" label="メモ" label-for="メモ" label-align="right">
                                         <b-form-textarea v-model="invoice.memo" size="sm" rows="3">
                                         </b-form-textarea>
+                                    </b-form-group>
+                                    <b-form-group v-else label-cols="2" label-cols-lg="2" label-size="sm" label="メモ"
+                                        label-for="メモ" label-align="right">
+                                        <b-card no-body style="padding: 15px 10px 0 0;">
+                                            <b-row>
+                                                <b-col>
+                                                    <b-form-group label-cols="4" label-cols-lg="4" label-size="sm"
+                                                        :label="setting.memoLabel1" label-for="memo1"
+                                                        label-align="right">
+                                                        <b-form-input v-model="invoice.memo1" id="memo1" size="sm"
+                                                            autocomplete="off">
+                                                        </b-form-input>
+                                                    </b-form-group>
+                                                </b-col>
+                                                <b-col>
+                                                    <b-form-group label-cols="4" label-cols-lg="4" label-size="sm"
+                                                        :label="setting.memoLabel2" label-for="memo2"
+                                                        label-align="right">
+                                                        <b-form-input v-model="invoice.memo2" id="memo2" size="sm"
+                                                            autocomplete="off">
+                                                        </b-form-input>
+                                                    </b-form-group>
+                                                </b-col>
+                                            </b-row>
+                                            <b-row>
+                                                <b-col>
+                                                    <b-form-group label-cols="4" label-cols-lg="4" label-size="sm"
+                                                        :label="setting.memoLabel3" label-for="memo3"
+                                                        label-align="right">
+                                                        <b-form-input v-model="invoice.memo3" id="memo3" size="sm"
+                                                            autocomplete="off">
+                                                        </b-form-input>
+                                                    </b-form-group>
+                                                </b-col>
+                                                <b-col>
+                                                    <b-form-group label-cols="4" label-cols-lg="4" label-size="sm"
+                                                        :label="setting.memoLabel4" label-for="memo4"
+                                                        label-align="right">
+                                                        <b-form-input v-model="invoice.memo4" id="memo4" size="sm"
+                                                            autocomplete="off">
+                                                        </b-form-input>
+                                                    </b-form-group>
+                                                </b-col>
+                                            </b-row>
+                                        </b-card>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -1353,6 +1398,16 @@
                         let checkedInvoices = [];
                         let customer = {};
                         let prePdfToalInoice = {};
+                        let customerIds = [];
+                        checkedInvoices.map(invoice => {
+                            customerIds.push(invoice.customerId);
+                        });
+                        if (Array.from(new Set(customerIds)).length >= 2) {
+                            this.title = 'エラー';
+                            this.message = '一意の得意先のみ選択してください。';
+                            this.$bvModal.show('confirmModalDanger');
+                            return;
+                        }
 
                         this.invoicesInTotalInvoice.map(invoice => {
                             if (invoice.isChecked) {

@@ -84,6 +84,10 @@
 | isPaid      | 入金済み       | boolean  |                                                           | 
 | title       | 件名           | text     |                                                           | 
 | memo        | メモ           | text     |  アプリ利用者に見えるもの                                 | 
+| memo1       | メモ1          | text     |  メモ４つモード利用時使用                                 | 
+| memo2       | メモ2          | text     |  メモ４つモード利用時使用                                 | 
+| memo3       | メモ3          | text     |  メモ４つモード利用時使用                                 | 
+| memo4       | メモ4          | text     |  メモ４つモード利用時使用                                 | 
 | remarks     | 備考           | text     |  印刷時に表示されるもの                                   |
 | tax         | 消費税         | integer   |                                                         |
 | isTaxExp    | 内税・外税     | boolean   |  内税・外税のチェック                                      | 
@@ -149,6 +153,10 @@
 | isConvert   | 変換済み       | boolean  | 請求書へ変換したタイミングでフラグを立てる                   | 
 | title       | 件名           | text     |                                                          | 
 | memo        | メモ           | text     | アプリ利用者に見えるもの                                 | 
+| memo1       | メモ1          | text     |  メモ４つモード利用時使用                                 | 
+| memo2       | メモ2          | text     |  メモ４つモード利用時使用                                 | 
+| memo3       | メモ3          | text     |  メモ４つモード利用時使用                                 | 
+| memo4       | メモ4          | text     |  メモ４つモード利用時使用                                 | 
 | remarks     | 備考           | text     | 印刷時に表示されるもの                                   | 
 | tax         | 消費税         | integer  |                                                         |
 | isTaxExp    | 内税・外税      | boolean  | 内税・外税のチェック                                     | 
@@ -270,4 +278,9 @@
 | isDisplayInvoiceStamp   | 印鑑請求書表示   | boolean     | 印刷時に表示するかどうか | 
 | isDisplayDeliveryStamp  | 印鑑納品書表示   | boolean     | 印刷時に表示するかどうか | 
 | defaultTax              | 初期消費税       | integer     | 請求・見積作成時に自動的に設定される消費税率 | 
+| isMemoQuadrupleIndicate | メモ4つ表示      | text        |  メモ４つ表示か通常表示か  | 
+| memoLabel1              | メモラベル1      | text        |  メモ４つモード利用時使用  | 
+| memoLabel2              | メモラベル2      | text        |  メモ４つモード利用時使用  | 
+| memoLabel3              | メモラベル3      | text        |  メモ４つモード利用時使用  | 
+| memoLabel4              | メモラベル4      | text        |  メモ４つモード利用時使用  | 
 | updatedAt               | 更新日時         | datetime    |                          | 
