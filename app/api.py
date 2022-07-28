@@ -468,6 +468,7 @@ def invoice_index_v1():
     req = request.args
     searchWord = req.get('search')
     moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
+    isCustomer = req.get('isCustomer') if req.get('isCustomer') else False
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
@@ -514,9 +515,9 @@ def invoice_index_v1():
         totalRecordCount = invoices_tmp.count()
         nowRecordCount = limit+offset
         isMore = True if nowRecordCount < totalRecordCount else False
-        return jsonify({'invoices': InvoiceSchema(many=True).dump(invoices), 'isMore': isMore})
+        return jsonify({'invoices': Invoice_CustomerSchema(many=True).dump(invoices), 'isMore': isMore}) if isCustomer == 'true' else jsonify({'invoices': InvoiceSchema(many=True).dump(invoices), 'isMore': isMore})
 
-    return jsonify(InvoiceSchema(many=True).dump(invoices))
+    return jsonify(Invoice_CustomerSchema(many=True).dump(invoices)) if isCustomer == 'true' else jsonify(InvoiceSchema(many=True).dump(invoices))
 
 
 @app.route('/v1/achievements', methods=['GET'])
