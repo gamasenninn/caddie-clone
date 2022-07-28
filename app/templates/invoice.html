@@ -1652,7 +1652,7 @@
                             customers = customers.filter(customer => customer.isHide === false);
                         if (this.isShowFavorite === true)
                             customers = customers.filter(customer => customer.isFavorite === true);
-                        customers = customers.filter(customer => (customer.customerName?.includes(this.searchCustomerWord) || String(customer.id)?.includes(this.searchCustomerWord) ||
+                        customers = customers.filter(customer => (customer.customerName?.includes(this.searchCustomerWord) || String(customer.anyNumber)?.includes(this.searchCustomerWord) ||
                             String(customer.customerKana)?.includes(this.searchCustomerWord)));
                         return customers;
                     },
