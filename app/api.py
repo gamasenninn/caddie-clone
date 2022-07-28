@@ -468,7 +468,7 @@ def invoice_index_v1():
     req = request.args
     searchWord = req.get('search')
     moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
-    isCustomer = req.get('isCustomer') if req.get('moreCheck') else False
+    isCustomer = req.get('isCustomer') if req.get('isCustomer') else False
     # テスト的に300に
     limit = int(req.get('limit')) if req.get('limit') else 300
     offset = int(req.get('offset')) if req.get('offset') else 0
