@@ -465,3 +465,12 @@ class AchievementPreviousYearSchema(Schema):
     applyDate = fields.Str()
     monthlySales_previousYear = fields.Int()
     monthlyProfit_previousYear = fields.Int()
+
+
+class Invoice_CustomerSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Invoice
+        include_fk = True
+    invoice_items = ma.Nested(Invoice_ItemSchema, many=True)
+    invoice_payments = ma.Nested(Invoice_PaymentSchema, many=True)
+    customer = ma.Nested(CustomerSchema, many=False)
