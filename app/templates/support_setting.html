@@ -1,0 +1,173 @@
+<% extends "head.html" %>
+    <% block content %>
+        <style>
+            .card-header {
+                background-color: #ccecf1;
+                font-size: 18px;
+            }
+        </style>
+
+        <div id="app" v-cloak>
+            <b-card class="fixed-top header" style="background: rgba(255,255,255,0.5);">
+                <b-row>
+                    <b-col></b-col>
+                    <b-col cols="11">
+                        <b-row>
+                            <b-col>
+                            </b-col>
+                            <b-col class="text-right">
+                                <b-button pill href="/setting-page">設定画面へ
+                                </b-button>
+                                <b-button pill href="/crescom-support-page">管理画面へ
+                                </b-button>
+                            </b-col>
+                            <!-- サイドバー -->
+                            <b-col cols="1" class="text-right">
+                                <sc-menu v-if="modeName!='mw'"></sc-menu>
+                            </b-col>
+                        </b-row>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+            </b-card>
+
+            <!-- 空行 -->
+            <b-row class="mb-5"></b-row>
+            <b-row class="mb-5"></b-row>
+
+            <div>
+                <b-row class="mt-5">
+                    <b-col></b-col>
+                    <b-col cols=11>
+                        <b-card border-variant="white" class="mb-3 text-center" header="ラベル設定"
+                            header-border-variant="light">
+                            <b-row>
+                                <b-col sm>
+                                    請求書・見積書のメモラベル変更
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ラベル１"
+                                        label-for="memoLabel1" label-align="right">
+                                        <b-form-input v-model="setting.memoLabel1" id="memoLabel1" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ラベル２"
+                                        label-for="memoLabel2" label-align="right">
+                                        <b-form-input v-model="setting.memoLabel2" id="memoLabel2" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ラベル３"
+                                        label-for="memoLabel3" label-align="right">
+                                        <b-form-input v-model="setting.memoLabel3" id="memoLabel3" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="ラベル４"
+                                        label-for="memoLabel4" label-align="right">
+                                        <b-form-input v-model="setting.memoLabel4" id="memoLabel4" size="sm">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ欄切替"
+                                        label-for="isMemoQuadrupleIndicate" label-align="right">
+                                        <b-form-checkbox v-model="setting.isMemoQuadrupleIndicate"></b-form-checkbox>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm></b-col>
+                            </b-row>
+                        </b-card>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+
+                <!-- 空行 -->
+                <b-row class="mb-5"></b-row>
+                <b-row class="mb-5"></b-row>
+                <b-row class="mb-5"></b-row>
+
+                <!-- 更新・取消ボタンのフッター -->
+                <b-card class="fixed-bottom footer"
+                    style="background: rgba(52,58,64,0);pointer-events:none;border: 0px;">
+                    <b-row>
+                        <b-col></b-col>
+                        <b-col></b-col>
+                        <b-col cols="4" class="text-right">
+                            <b-button variant="primary" class="mr-3" @click="bulkUpsert(setting);"
+                                style="box-shadow: 0 10px 25px 0 rgba(0,0,0,0.5); pointer-events:auto;">保存
+                            </b-button>
+                        </b-col>
+                    </b-row>
+                </b-card>
+
+                <!-- 確認モーダル -->
+                <confirm-modal :title="title" :message="message"></confirm-modal>
+
+            </div>
+
+        </div>
+
+        <script>
+            const router = new VueRouter({
+            });
+
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    setting: [],
+                    message: '',
+                    title: '',
+                },
+                methods: {
+                    getSetting: async function () {
+                        self = this;
+                        await axios.get("/setting")
+                            .then(function (response) {
+                                console.log(response);
+                                self.setting = response.data
+                            });
+                    },
+                    bulkUpsert(item) {
+                        this.updateSetting(item);
+                    },
+                    updateSetting: async function (item) {
+                        self = this;
+                        await axios.put("/setting/1", item)
+                            .then(function (response) {
+                                self.getSetting(self.setting);
+                                console.log(response);
+                                app.title = '更新';
+                                app.message = '保存しました。';
+                                app.$bvModal.show('confirmModal');
+                            });
+                    },
+                    showResultModal: function () {
+                        this.$bvModal.show('confirmModal');
+                    },
+                },
+                mounted: function () {
+                    this.getSetting();
+                    document.querySelector('title').textContent = 'サポート設定画面';
+                },
+                router,
+                computed: {
+                    modeName() {
+                        return localStorage.getItem('wMode');
+                    },
+
+                }
+            })
+        </script>
+
+        <% endblock %>
