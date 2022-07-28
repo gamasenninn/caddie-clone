@@ -1395,36 +1395,73 @@
                             this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true);
                     },
                     totalInvoice() {
+                        //let checkedInvoices = [];
                         let checkedInvoices = [];
+                        let checkedCustomers = [];
                         let customer = {};
-                        let prePdfToalInoice = {};
+                        let prePdfToalInoices = [];
                         let customerIds = [];
-                        checkedInvoices.map(invoice => {
-                            customerIds.push(invoice.customerId);
+
+                        this.invoicesInTotalInvoice.map(invoice => {
+
+                            if (invoice.isChecked) {
+                                ix = customerIds.indexOf(invoice.customerId);
+                                if (ix == -1) {
+                                    customerIds.push(invoice.customerId);
+                                    checkedInvoices.push([]);
+                                    ix = customerIds.length - 1
+                                }
+                                //console.log("ix:",ix,customerIds)
+                                checkedInvoices[ix].push(invoice);
+                                checkedCustomers[ix] = this.customers.find(c => c.id == invoice.customerId);
+                            }
                         });
-                        if (Array.from(new Set(customerIds)).length >= 2) {
+                        //console.log(checkedInvoices,checkedCustomers)
+                        if (checkedInvoices.length >= 2) {//通常=2、デバッグのときは値を大きくする
                             this.title = 'エラー';
                             this.message = '一意の得意先のみ選択してください。';
                             this.$bvModal.show('confirmModalDanger');
                             return;
                         }
-
-                        this.invoicesInTotalInvoice.map(invoice => {
-                            if (invoice.isChecked) {
-                                checkedInvoices.push(invoice);
-                                customer = this.customers.find(c => c.id == invoice.customerId);
+                        //顧客ごとに集計する
+                        customerIds.map((v, i) => {
+                            let totalBillings = [];
+                            let basePrices = [];
+                            let taxies = [];
+                            //請求を合算する
+                            checkedInvoices[i].map(invoice => {
+                                let subTotals = [];
+                                //if (invoice.isChecked) {
+                                    invoice.invoice_items.map(item => {
+                                        subTotals.push(parseInt(item.count * Math.round(item.price)));
+                                    });
+                                    const total = subTotals.reduce(function (sum, element) {
+                                        return sum + element;
+                                    }, 0);
+                                    if (invoice.isTaxExp) {
+                                        totalBillings.push(parseInt(total * (1 + invoice.tax / 100)));
+                                        basePrices.push(parseInt(total));
+                                        taxies.push(parseInt(total * (1 + invoice.tax / 100) - total));
+                                    }
+                                    else {
+                                        totalBillings.push(parseInt(total));
+                                        basePrices.push(parseInt(total / (1 + invoice.tax / 100)));
+                                        taxies.push(parseInt(total - total / (1 + invoice.tax / 100)));
+                                    }
+                                //}
+                            });
+                            pt = {
+                                invoices: checkedInvoices[i],
+                                customer: checkedCustomers[i],
+                                totalBillings: totalBillings,
+                                basePrices: basePrices,
+                                taxies: taxies                                
                             }
-                        });
-                        prePdfToalInoice = {
-                            totalBlling:this.amountInTotalInvoice.reduce((a,b)=>{return a+b},0),
-                            totalBasePrice:this.basePriceInTotalInvoice.reduce((a,b)=>{return a+b},0),
-                            totalTax:this.taxInTotalInvoice.reduce((a,b)=>{return a+b},0),
-                            invoices:checkedInvoices,
-                            customer: customer
-                        }
+                            prePdfToalInoices.push(pt)
 
+                        });
                         // ↓最終結果。これをPDF側に渡す
-                        console.log(prePdfToalInoice);
+                        console.log(prePdfToalInoices);
                     },
                     // ----- 子コンポーネントからの値 -----
                     updateInvoices(invoices, searchInvoiceWord, isMore) {
