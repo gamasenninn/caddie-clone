@@ -306,6 +306,16 @@ def csvDownloadPage():
     return redirect('/login')
 
 
+@app.route('/support-setting-page')
+@login_required
+def labelSettingPage():
+    checkUser = User.query.filter_by(name=current_user.id).first()
+    if checkUser:
+        if checkUser.role == "crescom_support":
+            return render_template('support_setting.html')
+    return redirect('/login')
+
+
 @app.route('/dust-select-page')
 @login_required
 def dustPage():
