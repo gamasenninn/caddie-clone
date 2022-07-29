@@ -245,8 +245,8 @@ function getPdfData(h, sum) {
                         "table_style": [["E", "('VALIGN', (0, 0), (-1, -1), 'TOP')"], ["NOP", "('GRID', (0, 0), (-1,-1), 0.25, colors.lightblue)"],
                         ]
                     } : {},
-                    h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,52*mm)"], "table": [[["P", h.accountHolderKana, "sm_l"]]], "col_widths": ["E", "(70*mm)"] } : {},
-                    h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,47*mm)"], "table": [[["P", h.accountHolder, "sm_l"]]], "col_widths": ["E", "(70*mm)"] } : {},
+                    h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,52*mm)"], "table": [[["P", h.accountHolderKana, "sm_l"]]], "col_widths": ["E", "(85*mm)"] } : {},
+                    h.mode == 'invoice' ? { "pos_xy": ["E", "(40*mm,47*mm)"], "table": [[["P", h.accountHolder, "sm_l"]]], "col_widths": ["E", "(85*mm)"] } : {},
                     // right side footer sum
                     h.mode != 'receipt' ? { "pos_xy": ["E", "(27*mm,194*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } : {},
                     h.mode != 'receipt' ? { "pos_xy": ["E", "(67*mm,194*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(24*mm)"] } : {},
