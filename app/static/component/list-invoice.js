@@ -238,3 +238,86 @@ Vue.component('invoice-list-payment', {
         },
     },
 })
+
+// 合計請求
+Vue.component('invoice-list-in-total-invoice', {
+    template: `
+    <div>
+        <b-table borderless responsive hover small id="invoice-in-modal-table" sort-by="ID" small label="Table Options"
+        :items=invoicesIndicateIndexInTotalInvoice :sort-by.sync="this.sortByInvoices" :sort-desc.sync="this.sortDesc" :fields="[
+        {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+        {  key: 'applyNumber', label: '請求番号', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'applyDate', label: '日付', thClass: 'th-apply-date text-center', tdClass: 'text-center', sortable: true },
+        {  key: 'customerAnyNumber', label: 'No.', thClass: 'th-customer-any-number text-center', tdClass: 'text-center', sortable: true },
+        {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
+        {  key: 'title', label: '件名', thClass: 'text-center', },
+        {  key: 'totalAmount', label: '請求金額', thClass: 'text-center', tdClass: 'text-right' },
+        {  key: 'isTotalCheck', label: '' },
+    ]" :tbody-tr-class="this.rowClass">
+            <template v-slot:cell(applyDate)="data">
+                {{formatDate(data.item.applyDate)}}
+            </template>
+            <template v-slot:cell(totalAmount)="data">
+                {{amountCalculation(data.item)|nf}}
+            </template>
+            <template v-slot:cell(isTotalCheck)="data">
+                <b-form-checkbox v-model="data.item.isChecked"></b-form-checkbox>
+            </template>
+        </b-table>
+    </div>
+    `,
+    props: {
+        invoicesIndicateIndexInTotalInvoice: Array,
+        sortByInvoices: String,
+        sortDesc: Boolean,
+    },
+    methods: {
+        rowClass: function (item, type) {
+            if (!item || type !== 'row') return
+            if (!item.id) return "d-none";
+        },
+        //日付カラム
+        formatDate(date) {
+            if (!!date) return moment(date).format("YYYY/MM/DD");
+        },
+        //請求金額カラム
+        amountCalculation(invoice) {
+            if (!invoice.invoice_items.length) return 0;
+            let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
+            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
+            return amount;
+        },
+    },
+})
+
+// 日付範囲検索コンポーネント
+let daySearchInTotalInvoices = Vue.component('day-search-in-total-invoice', {
+    template: `
+    <b-row align-h="end">
+        <div id="searchDayInTotalInvoice">
+            <b-form inline>
+                <label>日付</label>
+                <b-form-input v-model="daySearch.searchDayStartInTotalInvoice" id="searchDayStartInTotalInvoice" size="sm"
+                    class="mr-2 ml-2" autocomplete="off" type="date" @change="changeSearchDayStart">
+                </b-form-input>
+                ～
+                <b-form-input v-model="daySearch.searchDayEndInTotalInvoice" id="searchDayEndInTotalInvoice" size="sm"
+                    class="ml-2" autocomplete="off" type="date" @change="changeSearchDayEnd">
+                </b-form-input>
+            </b-form>
+        </div>
+    </b-row>
+    `,
+    data: {
+        searchDayStartInTotalInvoice: '',
+        searchDayEndInTotalInvoice: '',
+    },
+    methods: {
+        changeSearchDayStart() {
+            this.$emit('emit-day-start', daySearch.searchDayStartInTotalInvoice);
+        },
+        changeSearchDayEnd() {
+            this.$emit('emit-day-end', daySearch.searchDayEndInTotalInvoice);
+        }
+    }
+})

@@ -8,6 +8,10 @@
         <script src="../static//library/tingle.min.js"></script>
         <link rel="stylesheet" href="../static/library/tingle.css" type="text/css" />
 
+        <!-- vue-simple-suggest -->
+        <script src="../static/library/vue-simple-suggest.js"></script>
+        <link rel="stylesheet" href="../static/library/vue-simple-suggest.css" type="text/css">
+
         <!-- コンポーネント -->
         <script src="../static/component/list-invoice.js"></script>
 
@@ -150,6 +154,74 @@
                                 <b-col class="text-right">
                                     <sc-menu class="mb-3" v-if="modeName!='mw'"></sc-menu>
                                 </b-col>
+                            </b-row>
+                            <b-row>
+                                <b-col class="text-right">
+                                    <b-button v-if="procName=='normal'" size="sm" variant="primary" class="mb-3"
+                                        @click="totalInvoiceOpen();">
+                                        合計請求書
+                                    </b-button>
+                                </b-col>
+                                <b-modal ref="total-invoice-modal" size="xl" id="total-invoice-modal">
+                                    <day-search-in-total-invoice class="mr-0"
+                                        @emit-day-start="updateDayStartInTotalInvoice"
+                                        @emit-day-end="updateDayEndInTotalInvoice">
+                                    </day-search-in-total-invoice>
+                                    <b-row>
+                                        <b-col class="text-right">
+                                            <b-form-checkbox class="mr-3 mb-2" v-model="isUnPaymentCheck">未入金のみ表示
+                                            </b-form-checkbox>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col class="text-right">
+                                            <indicate-count :indicate-count="invoicesIndicateCountInTotalInvoice">
+                                            </indicate-count>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col>
+                                            <p>得意先を選択してください</p>
+                                        </b-col>
+                                        <b-col class="text-right mb-3">
+                                            <b-button @click="allCancelInTotalInvoice">全解除</b-button>
+                                            <b-button @click="allCheckedInTotalInvoice">全て選択</b-button>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row style="margin: auto;">
+                                        <b-col cols="11">
+                                            <vue-simple-suggest v-model="searchCustomerWordInTotalInvoice"
+                                                :list="customerNames" :filter-by-query="true"
+                                                placeholder="🔍　No. or 得意先名">
+                                            </vue-simple-suggest>
+                                        </b-col>
+                                        <b-col>
+                                            <b-button class="mt-1" variant="primary" @click="searchInTotalInvoiceModal">
+                                                検索
+                                            </b-button>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row align-h="end">
+                                    </b-row>
+                                    <invoice-list-in-total-invoice
+                                        :invoices-indicate-index-in-total-invoice="invoicesIndicateIndexInTotalInvoice"
+                                        :sort-by-invoices="sortByInvoices" :sort-desc="sortDesc">
+                                    </invoice-list-in-total-invoice>
+                                    <b-row align-h="end">
+                                        <b-button v-if="isMoreInTotalInvoice" variant="primary" size="sm" class="mr-3"
+                                            @click="showMoreInTotalInvoice">さらに表示
+                                        </b-button>
+                                    </b-row>
+                                    請求総額：{{eachTotal.billings}}
+                                    本体価格：{{eachTotal.basePrices}}
+                                    消費税額：{{eachTotal.taxies}}
+                                    <template #modal-footer>
+                                        <button v-b-modal.modal-close_visit class="btn btn-secondary m-1"
+                                            @click="$bvModal.hide('total-invoice-modal')">閉じる</button>
+                                        <button v-b-modal.modal-close_visit class="btn btn-primary m-1"
+                                            @click="totalInvoice">印刷</button>
+                                    </template>
+                                </b-modal>
                             </b-row>
                             <b-card border-variant="white" class="mb-3 text-center" :header="headerName"
                                 header-border-variant="light">
@@ -783,6 +855,7 @@
                     searchDayStart: '',             //請求書検索
                     searchDayEnd: '',               //請求書検索
                     isInvoicesShowAll: false,               //請求書検索
+                    isUnPaymentCheck: true,
                     invoicesIndicateCount: 0,       //請求書検索
                     invoicesIndicateAmount: 0,      //一覧表示中請求書の合計金額
                     searchItemWord: '',             //商品選択モーダル検索
@@ -803,6 +876,14 @@
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
                     isMore: false,
+                    searchCustomerWordInTotalInvoice: '',   //合計請求書専用
+                    invoicesInTotalInvoice: [],             //合計請求書専用
+                    customerNames: [],                      //合計請求書専用 | 再利用可
+                    isMoreInTotalInvoice: false,            //合計請求書専用
+                    offsetInTotalInvoice: 0,                //合計請求書専用
+                    searchDayStartInTotalInvoice: '',       //合計請求書専用
+                    searchDayEndInTotalInvoice: '',         //合計請求書専用
+                    invoicesIndicateCountInTotalInvoice: 0, //合計請求書専用
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -819,7 +900,7 @@
                 },
                 methods: {
                     // ---Invoices---
-                    getInvoices: async function (searchWord = '', offset = 0) {
+                    getInvoices: async function (searchWord = '', offset = 0, isTotalInvoice = false, isCustomer = false) {
                         self = this;
                         url = '/v1/invoices'
                         await axios.get(url, {
@@ -827,16 +908,28 @@
                                 search: searchWord,
                                 offset: offset,
                                 moreCheck: true,
+                                isCustomer: isCustomer
                             }
                         })
                             .then(function (response) {
                                 console.log(response);
                                 if (offset == 0) {
                                     self.offset = 0;
+                                    self.offsetInTotalInvoice = 0;
+                                    if (isTotalInvoice) {
+                                        self.invoicesInTotalInvoice = response.data.invoices;
+                                        self.isMoreInTotalInvoice = response.data.isMore;
+                                        return;
+                                    }
                                     self.invoices = response.data.invoices;
                                     self.isMore = response.data.isMore;
                                 }
                                 else {
+                                    if (isTotalInvoice) {
+                                        response.data.invoices.map(invoice => self.invoicesInTotalInvoice.push(invoice));
+                                        self.isMoreInTotalInvoice = response.data.isMore;
+                                        return;
+                                    }
                                     response.data.invoices.map(invoice => self.invoices.push(invoice));
                                     self.isMore = response.data.isMore;
                                 }
@@ -1036,6 +1129,11 @@
                             .then(function (response) {
                                 console.log(response);
                                 self.customers = response.data;
+                                let customerNames = [];
+                                self.customers.map(customer => {
+                                    customerNames.push(customer.customerName);
+                                    self.customerNames = [...customerNames];
+                                })
                             });
                     },
                     getCustomer: async function (item) {
@@ -1092,6 +1190,10 @@
                         // テスト的に300に
                         this.offset += 300;
                         this.getInvoices(this.searchInvoiceWord, this.offset);
+                    },
+                    showMoreInTotalInvoice: function () {
+                        this.offsetInTotalInvoice += 300;
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true);
                     },
                     coutFiles: function () {
                         self = this;
@@ -1265,6 +1367,91 @@
                         interval = row > 1 ? 0 : 5;
                         return "height: " + (26 * row + interval) + "px";
                     },
+                    searchInTotalInvoiceModal() {
+                        this.offsetInTotalInvoice = 0;
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true, true);
+                    },
+                    allCheckedInTotalInvoice() {
+                        const indicateInvoices = [...this.invoicesIndicateIndexInTotalInvoice];
+                        indicateInvoices.map(invoice => {
+                            const selectInvoice = this.invoicesInTotalInvoice.find(element => element.id === invoice.id);
+                            this.$set(selectInvoice, 'isChecked', true);
+                        });
+                    },
+                    allCancelInTotalInvoice() {
+                        this.invoicesInTotalInvoice.map(invoice => {
+                            this.$set(invoice, 'isChecked', false);
+                        });
+                    },
+                    totalInvoiceOpen() {
+                        this.$refs['total-invoice-modal'].show();
+                        if (!!this.searchCustomerWordInTotalInvoice)
+                            //顧客情報も合わせて読む isCustomer=true
+                            this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true, true);
+                    },
+                    totalInvoice() {
+                        let checkedInvoices = [];
+                        let customer = {};
+                        let prePdfToalInoices = [];
+                        let customerIds = [];
+
+                        this.invoicesInTotalInvoice.map(invoice => {
+
+                            if (invoice.isChecked) {
+                                ix = customerIds.indexOf(invoice.customerId);
+                                if (ix == -1) {
+                                    customerIds.push(invoice.customerId);
+                                    checkedInvoices.push([]);
+                                    ix = customerIds.length - 1
+                                }
+                                checkedInvoices[ix].push(invoice);
+                                //checkedCustomers[ix] = this.customers.find(c => c.id == invoice.customerId);
+                            }
+                        });
+                        //console.log(checkedInvoices,checkedCustomers)
+                        if (checkedInvoices.length >= 2) {//通常=2、デバッグのときは値を大きくする
+                            this.title = 'エラー';
+                            this.message = '一意の得意先のみ選択してください。';
+                            this.$bvModal.show('confirmModalDanger');
+                            return;
+                        }
+                        //顧客ごとに集計する
+                        customerIds.map((v, i) => {
+                            let totalBillings = [];
+                            let basePrices = [];
+                            let taxies = [];
+                            //請求を合算する
+                            checkedInvoices[i].map(invoice => {
+                                let subTotals = [];
+                                invoice.invoice_items.map(item => {
+                                    subTotals.push(parseInt(item.count * Math.round(item.price)));
+                                });
+                                const total = subTotals.reduce(function (sum, element) {
+                                    return sum + element;
+                                }, 0);
+                                if (invoice.isTaxExp) {
+                                    totalBillings.push(parseInt(total * (1 + invoice.tax / 100)));
+                                    basePrices.push(parseInt(total));
+                                    taxies.push(parseInt(total * (1 + invoice.tax / 100) - total));
+                                }
+                                else {
+                                    totalBillings.push(parseInt(total));
+                                    basePrices.push(parseInt(total / (1 + invoice.tax / 100)));
+                                    taxies.push(parseInt(total - total / (1 + invoice.tax / 100)));
+                                }
+                            });
+                            pt = {
+                                invoices: checkedInvoices[i],
+                                totalBillings: totalBillings,
+                                basePrices: basePrices,
+                                taxies: taxies
+                            }
+                            prePdfToalInoices.push(pt)
+
+                        });
+                        // ↓最終結果。これをPDF側に渡す
+                        console.log(prePdfToalInoices);
+                    },
                     // ----- 子コンポーネントからの値 -----
                     updateInvoices(invoices, searchInvoiceWord, isMore) {
                         this.invoices = invoices;
@@ -1276,6 +1463,12 @@
                     },
                     updateDayEnd(end) {
                         this.searchDayEnd = end;
+                    },
+                    updateDayStartInTotalInvoice(start) {
+                        this.searchDayStartInTotalInvoice = start;
+                    },
+                    updateDayEndInTotalInvoice(end) {
+                        this.searchDayEndInTotalInvoice = end;
                     },
                 },
                 mounted: function () {
@@ -1396,6 +1589,57 @@
                         this.invoicesIndicateCount = invoices.length;
                         this.invoicesIndicateAmount = amount;
                         return invoices;
+                    },
+                    invoicesIndicateIndexInTotalInvoice: function () {
+                        let invoices = this.invoicesInTotalInvoice;
+                        if (this.isUnPaymentCheck) {
+                            invoices = invoices.filter(invoice => invoice.isPaid === false);
+                        }
+                        if (this.searchDayStartInTotalInvoice != '' && this.searchDayEndInTotalInvoice == '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate >= this.searchDayStartInTotalInvoice);
+                        }
+                        if (this.searchDayStartInTotalInvoice == '' && this.searchDayEndInTotalInvoice != '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate <= this.searchDayEndInTotalInvoice);
+                        }
+                        if (this.searchDayStartInTotalInvoice != '' && this.searchDayEndInTotalInvoice != '') {
+                            invoices = invoices.filter(invoice => invoice.applyDate >= this.searchDayStartInTotalInvoice && invoice.applyDate <= this.searchDayEndInTotalInvoice);
+                        }
+                        this.invoicesIndicateCountInTotalInvoice = invoices.length;
+                        return invoices;
+                    },
+                    // 合計モーダル内
+                    // 選択された請求総額リスト
+                    eachTotal() {
+                        let invoices = [...this.invoicesInTotalInvoice];
+                        let totalBillings = [];
+                        let basePrices = [];
+                        let taxies = [];
+                        invoices.map(invoice => {
+                            let subTotals = [];
+                            if (invoice.isChecked) {
+                                invoice.invoice_items.map(item => {
+                                    subTotals.push(parseInt(item.count * Math.round(item.price)));
+                                });
+                                const total = subTotals.reduce(function (sum, element) {
+                                    return sum + element;
+                                }, 0);
+                                if (invoice.isTaxExp) {
+                                    totalBillings.push(parseInt(total * (1 + invoice.tax / 100)));
+                                    basePrices.push(parseInt(total));
+                                    taxies.push(parseInt(total * (1 + invoice.tax / 100) - total));
+                                }
+                                else {
+                                    totalBillings.push(parseInt(total));
+                                    basePrices.push(parseInt(total / (1 + invoice.tax / 100)));
+                                    taxies.push(parseInt(total - total / (1 + invoice.tax / 100)));
+                                }
+                            }
+                        });
+                        return {
+                            billings: totalBillings,
+                            basePrices: basePrices,
+                            taxies: taxies 
+                        }
                     },
                     // 得意先選択モーダルの検索機能
                     searchCustomers: function () {

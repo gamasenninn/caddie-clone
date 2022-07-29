@@ -225,7 +225,7 @@ function getPdfData(h, sum) {
                     // copy 
                     h.docClass == 'copy' ? { "pos_xy": ["E", "(95*mm,220*mm)"], "table": [[["P", "(控え)", "md_l_b"]]], "col_widths": ["E", "(30*mm)"] } : {},
                     // total area 
-                    h.mode == 'receipt' ? {} : { "pos_xy": ["E", "(40*mm,218*mm)"], "table": [[["P", h.title, "sm_l"]]], "col_widths": ["E", "(70*mm)"] },
+                    h.mode == 'receipt' ? {} : { "pos_xy": ["E", "(40*mm,218*mm)"], "table": [[["P", h.title, "sm_l"]]], "col_widths": ["E", "(110*mm)"] },
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(45*mm,209*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] } :
                         { "pos_xy": ["E", "(45*mm,208*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] },
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(33*mm,193*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(20*mm)"] } : {},
