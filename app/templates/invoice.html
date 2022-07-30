@@ -1389,7 +1389,7 @@
                             //顧客情報も合わせて読む isCustomer=true
                             this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true, true);
                     },
-                    totalInvoice() {
+                    async totalInvoice() {
                         let checkedInvoices = [];
                         let customer = {};
                         let prePdfToalInoices = [];
@@ -1451,6 +1451,14 @@
                         });
                         // ↓最終結果。これをPDF側に渡す
                         console.log(prePdfToalInoices);
+                        const mode = 'invoice';
+                        docClass =  'origin';
+                        const pdfData = getPdfDataTotalInvoice(mode, prePdfToalInoices[0], this.setting, docClass);
+                        await axios.post("/pdfmaker", pdfData)
+                            .then(function (response) {
+                                self.printPdf('/pdf/' + response.data);
+                            });
+
                     },
                     // ----- 子コンポーネントからの値 -----
                     updateInvoices(invoices, searchInvoiceWord, isMore) {
