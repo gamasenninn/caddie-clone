@@ -356,16 +356,11 @@ function getPdfDataTotalInvoice(mode, prePdfToalInoice, setting, docClass = 'ori
     sum.amountLabel = "小計";
     sum.taxLabel = "消費税";
     sum.totalLabel = "合計金額";
-    //sum.amount = sumInvoice.sum;
-    //sum.tax = sumInvoice.taxAmount;
-    //sum.total = sumInvoice.priceIncludingTax
-    //totalBillings: totalBillings,
-    //basePrices: basePrices,
-    //taxies: taxies
 
-    sum.amount = prePdfToalInoice.basePrices.reduce((a,b) => a+b,0);
-    sum.tax = prePdfToalInoice.taxies.reduce((a,b) => a+b,0);;
-    sum.total = prePdfToalInoice.totalBillings.reduce((a,b) => a+b,0);;
+    sum.amount = prePdfToalInoice.basePrices.reduce((a, b) => a + b, 0); //小計
+    sum.tax = prePdfToalInoice.taxies.reduce((a, b) => a + b, 0); //消費税分
+    sum.total = prePdfToalInoice.totalBillings.reduce((a, b) => a + b, 0); //全計
+
     h.memo = nvl(invoice.memo, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
     h.payee = !!setting.payee ? setting.payee.replace(/\n/g, '<br />') : ''
@@ -379,36 +374,33 @@ function getPdfDataTotalInvoice(mode, prePdfToalInoice, setting, docClass = 'ori
     h.stampHeight = setting.stampHeight ? setting.stampHeight : 50;
     const pdfData = getPdfDataTotal(h, sum);
     //console.log("pdfData:",pdfData)
-    if (mode == 'delivery') {
+    if (mode == 'delivery') { //note:modeで納品書は必要ないと思われるが、領収書は存在するか？
         if (!setting.isDisplayDeliveryLogo) pdfData.defPdf.header.drawImages = [];
         if (!setting.isDisplayDeliveryStamp) pdfData.defPdf.first_page.drawImages = [];
     } else {
         if (!setting.isDisplayInvoiceLogo) pdfData.defPdf.header.drawImages = [];
         if (!setting.isDisplayInvoiceStamp) pdfData.defPdf.first_page.drawImages = [];
     }
-    pdfData.data.bdata =[];
-    old_date ='';
-    for(let i of invoices){
-        i.invoice_items = i.invoice_items.map( j => ({...j,applyDate:i.applyDate}));
-        //i.invoice_items['applyDate'] = i.applyDate;
-        pdfData.data.bdata =  pdfData.data.bdata.concat(i.invoice_items);
+    pdfData.data.bdata = [];
+    invoices.sort((a,b)=>{ //日付でソートする
+        if(a.applyDate > b.applyDate) return 1
+        else if (a.applyDate < b.applyDate) return -1
+        else return 0
+    });
+    for (let i of invoices) {
+        i.invoice_items = i.invoice_items.map((j, ix) => ({
+            ...j,
+            applyDate: (ix ? "" : i.applyDate),
+            calcPrice: j.price * j.count,
+            itemName: (j.itemName ? j.itemName.replace(/\n/g, '<br />') : '')
+        }));
+        pdfData.data.bdata = pdfData.data.bdata.concat(i.invoice_items);
     };
-    console.log("bdata:",pdfData.data.bdata);
-    //invoices.map(inv => {
-    //    if (inv.invoice_items.length > 0) {
-    //        pdfData.data.bdata = inv.invoice_items;
-    //    }
-        //else {
-        //    pdfData.data.bdata = [{}];
-        //}    
-    //});
-    pdfData.data.bdata = pdfData.data.bdata.map(i => ({
-        ...i,
-        price: parseInt(i.price),
-        count: parseInt(i.count),
-        calcPrice: i.price * i.count,
-        itemName: (i.itemName ? i.itemName.replace(/\n/g, '<br />') : '')
-    }));
+    //データが空白のもは出力しない。ただし、日付ブレイクは空データでも出力する。
+    pdfData.data.bdata = pdfData.data.bdata.filter(i => {
+        return !!i.itemName || !!i.applyDate
+    });
+    console.log("bdata:", pdfData.data.bdata);
     return pdfData;
 
 }
