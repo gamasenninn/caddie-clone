@@ -1389,14 +1389,14 @@
                             //顧客情報も合わせて読む isCustomer=true
                             this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true, true);
                     },
-                    totalInvoice() {
+                    async totalInvoice() {
                         let checkedInvoices = [];
                         let customer = {};
                         let prePdfToalInoices = [];
                         let customerIds = [];
 
-                        this.invoicesInTotalInvoice.map(invoice => {
-
+                        //this.invoicesInTotalInvoice.map(invoice => {
+                        for(const invoice of this.invoicesInTotalInvoice){
                             if (invoice.isChecked) {
                                 ix = customerIds.indexOf(invoice.customerId);
                                 if (ix == -1) {
@@ -1407,8 +1407,8 @@
                                 checkedInvoices[ix].push(invoice);
                                 //checkedCustomers[ix] = this.customers.find(c => c.id == invoice.customerId);
                             }
-                        });
-                        //console.log(checkedInvoices,checkedCustomers)
+                        };
+                        console.log("checkedInvoices:",checkedInvoices)
                         if (checkedInvoices.length >= 2) {//通常=2、デバッグのときは値を大きくする
                             this.title = 'エラー';
                             this.message = '一意の得意先のみ選択してください。';
@@ -1416,14 +1416,14 @@
                             return;
                         }
                         //顧客ごとに集計する
-                        customerIds.map((v, i) => {
+                        customerIds.forEach((v, i) => {
                             let totalBillings = [];
                             let basePrices = [];
                             let taxies = [];
                             //請求を合算する
-                            checkedInvoices[i].map(invoice => {
+                            checkedInvoices[i].forEach(invoice => {
                                 let subTotals = [];
-                                invoice.invoice_items.map(item => {
+                                invoice.invoice_items.forEach(item => {
                                     subTotals.push(parseInt(item.count * Math.round(item.price)));
                                 });
                                 const total = subTotals.reduce(function (sum, element) {
@@ -1451,6 +1451,14 @@
                         });
                         // ↓最終結果。これをPDF側に渡す
                         console.log(prePdfToalInoices);
+                        const mode = 'invoice';
+                        docClass =  'origin';
+                        const pdfData = getPdfDataTotalInvoice(mode, prePdfToalInoices[0], this.setting, docClass);
+                        await axios.post("/pdfmaker", pdfData)
+                            .then(function (response) {
+                                self.printPdf('/pdf/' + response.data);
+                            });
+
                     },
                     // ----- 子コンポーネントからの値 -----
                     updateInvoices(invoices, searchInvoiceWord, isMore) {
