@@ -264,40 +264,43 @@
                                             </b-form-group>
                                         </b-col>
                                     </b-row>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="決算月"
-                                        label-for="closingMonth" label-align="right">
-                                        <b-form-select v-model="customer.closingMonth" :options="closingMonth"
-                                            size="sm">
-                                        </b-form-select>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
-                                        label-for="department" label-align="right">
-                                        <b-form-input v-model="customer.department" id="department" size="sm"
-                                            autocomplete="off">
-                                        </b-form-input>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="サイトURL"
-                                        label-for="url" label-align="right">
-                                        <b-form-input v-model="customer.url" id="url" size="sm" autocomplete="off">
-                                        </b-form-input>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
-                                        label-for="email" label-align="right">
-                                        <b-form-input v-model="customer.email" id="email" size="sm" autocomplete="off">
-                                        </b-form-input>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
-                                        label-for="representative" label-align="right">
-                                        <b-form-input v-model="customer.representative" id="representative" size="sm"
-                                            autocomplete="off">
-                                        </b-form-input>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
-                                        label-for="manager" label-align="right">
-                                        <b-form-input v-model="customer.manager" id="manager" size="sm"
-                                            autocomplete="off">
-                                        </b-form-input>
-                                    </b-form-group>
+                                    <div v-if="customer.customerCategory=='corporation'">
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="決算月"
+                                            label-for="closingMonth" label-align="right">
+                                            <b-form-select v-model="customer.closingMonth" :options="closingMonth"
+                                                size="sm">
+                                            </b-form-select>
+                                        </b-form-group>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
+                                            label-for="department" label-align="right">
+                                            <b-form-input v-model="customer.department" id="department" size="sm"
+                                                autocomplete="off">
+                                            </b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="サイトURL"
+                                            label-for="url" label-align="right">
+                                            <b-form-input v-model="customer.url" id="url" size="sm" autocomplete="off">
+                                            </b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="email"
+                                            label-for="email" label-align="right">
+                                            <b-form-input v-model="customer.email" id="email" size="sm"
+                                                autocomplete="off">
+                                            </b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="代表者名"
+                                            label-for="representative" label-align="right">
+                                            <b-form-input v-model="customer.representative" id="representative"
+                                                size="sm" autocomplete="off">
+                                            </b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="担当者"
+                                            label-for="manager" label-align="right">
+                                            <b-form-input v-model="customer.manager" id="manager" size="sm"
+                                                autocomplete="off">
+                                            </b-form-input>
+                                        </b-form-group>
+                                    </div>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="memo" label-align="right">
                                         <b-form-textarea v-model="customer.memo" size="sm" rows="4">
