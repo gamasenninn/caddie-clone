@@ -60,6 +60,5 @@
 - lodash
    - lodash:4.17.21
 
-- vue-simple-suggest
-   - vue-simple-suggest.js:1.11.2
-   - vue-simple-suggest.css:1.11.2
+- vue-simple-search-dropdown
+   - vue-simple-search-dropdown.min.js:1.0.1
