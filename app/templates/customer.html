@@ -169,17 +169,19 @@
                             </b-row>
                             <b-row>
                                 <b-col lg>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お客様区分"
+                                        label-for="customerCategory" label-align="right">
+                                        <b-form-radio-group required v-if="" v-model="customer.customerCategory"
+                                            id="customerCategory" :options="[
+                                            {  text: '法人', value: 'corporation' },
+                                            {  text: '個人', value: 'individual' },
+                                            ]"></b-form-radio-group>
+                                    </b-form-group>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="No.(必須)"
                                         label-for="anyNumber" label-align="right">
                                         <b-form-input v-model="customer.anyNumber" id="anyNumber" size="sm"
                                             :formatter="formatterNumberAll" autocomplete="off">
                                         </b-form-input>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="決算月"
-                                        label-for="closingMonth" label-align="right">
-                                        <b-form-select v-model="customer.closingMonth" :options="closingMonth"
-                                            size="sm">
-                                        </b-form-select>
                                     </b-form-group>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="得意先名"
                                         label-for="customerName" label-align="right">
@@ -202,12 +204,6 @@
                                             全角カナまたは英数字で入力してください。
                                         </b-form-invalid-feedback>
                                         <b-form-text id="input-live-help">※全角カナ・英数字で入力(例)jマート1</b-form-text>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
-                                        label-for="department" label-align="right">
-                                        <b-form-input v-model="customer.department" id="department" size="sm"
-                                            autocomplete="off">
-                                        </b-form-input>
                                     </b-form-group>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="郵便番号"
                                         label-for="postNumber" label-align="right">
@@ -239,6 +235,47 @@
                                             autocomplete="off">
                                         </b-form-input>
                                     </b-form-group>
+                                </b-col>
+                                <b-col lg>
+                                    <b-row>
+                                        <b-col lg>
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="お気に入り"
+                                                label-for="isFavorite" label-align="right">
+                                                <div v-if="customer.isFavorite===true">
+                                                    <a href="#"
+                                                        style="text-decoration: none;color:#fed11d;padding: 0 7px 0 0;"
+                                                        @click="changeIsFavorite(customer.isFavorite);">
+                                                        <b-icon icon="star-fill"></b-icon>
+                                                    </a>
+                                                </div>
+                                                <div v-else>
+                                                    <a href="#"
+                                                        style="text-decoration: none;color:#000000;padding: 0 7px 0 0;"
+                                                        @click="changeIsFavorite(customer.isFavorite);">
+                                                        <b-icon icon="star"></b-icon>
+                                                    </a>
+                                                </div>
+                                            </b-form-group>
+                                        </b-col>
+                                        <b-col lg>
+                                            <b-form-group label-cols="4" label-cols-lg="4" label-size="sm" label="非表示"
+                                                label-for="isHide" label-align="right">
+                                                <b-form-checkbox v-model="customer.isHide"></b-form-checkbox>
+                                            </b-form-group>
+                                        </b-col>
+                                    </b-row>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="決算月"
+                                        label-for="closingMonth" label-align="right">
+                                        <b-form-select v-model="customer.closingMonth" :options="closingMonth"
+                                            size="sm">
+                                        </b-form-select>
+                                    </b-form-group>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="部署"
+                                        label-for="department" label-align="right">
+                                        <b-form-input v-model="customer.department" id="department" size="sm"
+                                            autocomplete="off">
+                                        </b-form-input>
+                                    </b-form-group>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="サイトURL"
                                         label-for="url" label-align="right">
                                         <b-form-input v-model="customer.url" id="url" size="sm" autocomplete="off">
@@ -260,33 +297,6 @@
                                         <b-form-input v-model="customer.manager" id="manager" size="sm"
                                             autocomplete="off">
                                         </b-form-input>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お客様区分"
-                                        label-for="customerCategory" label-align="right">
-                                        <b-form-radio-group required v-if="" v-model="customer.customerCategory"
-                                            id="customerCategory" :options="[
-                                            {  text: '法人', value: 'corporation' },
-                                            {  text: '個人', value: 'individual' },
-                                            ]"></b-form-radio-group>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="非表示"
-                                        label-for="isHide" label-align="right">
-                                        <b-form-checkbox v-model="customer.isHide"></b-form-checkbox>
-                                    </b-form-group>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="お気に入り"
-                                        label-for="isFavorite" label-align="right">
-                                        <div v-if="customer.isFavorite===true">
-                                            <a href="#" style="text-decoration: none;color:#fed11d;padding: 0 7px 0 0;"
-                                                @click="changeIsFavorite(customer.isFavorite);">
-                                                <b-icon icon="star-fill"></b-icon>
-                                            </a>
-                                        </div>
-                                        <div v-else>
-                                            <a href="#" style="text-decoration: none;color:#000000;padding: 0 7px 0 0;"
-                                                @click="changeIsFavorite(customer.isFavorite);">
-                                                <b-icon icon="star"></b-icon>
-                                            </a>
-                                        </div>
                                     </b-form-group>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="メモ"
                                         label-for="memo" label-align="right">
