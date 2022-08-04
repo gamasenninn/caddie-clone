@@ -1208,7 +1208,7 @@
                     },
                     showMoreInTotalInvoice: function () {
                         this.offsetInTotalInvoice += 300;
-                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true);
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true,true);
                     },
                     coutFiles: function () {
                         self = this;
@@ -1385,7 +1385,7 @@
                     validateSelection(selection) {
                         this.selected = selection;
                         this.offsetInTotalInvoice = 0;
-                        this.getInvoices(this.selected.name, 0, true);
+                        this.getInvoices(this.selected.name, 0, true,true);
                     },
                     searchInTotalInvoiceModal() {
                         this.offsetInTotalInvoice = 0;
