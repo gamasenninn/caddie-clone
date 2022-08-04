@@ -34,6 +34,7 @@ jobs:
           flask db init
           flask db migrate
           flask db upgrade
+          python seeder.py
           cd ../tests
           python -m unittest -v
         env:
