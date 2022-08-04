@@ -1,0 +1,36 @@
+name: test_models
+on:
+  pull_request:
+    types: [opened, reopened]
+    paths:
+      - 'model.py'
+jobs:
+  test-of-models:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Flask
+          pip install flask_cors
+          pip install SQLAlchemy 
+          pip install Flask-SQLAlchemy 
+          pip install flask-marshmallow 
+          pip install marshmallow-sqlalchemy
+          pip install Flask-Migrate 
+          pip install Pillow 
+          pip install flask-login
+          pip install python-dateutil
+      - name: List files in the repository
+        run: |
+          ls -la ${{ github.workspace }}
+          echo "FLASK_APP ENV=$FLASK_APP"
+          python test.py
+        env:
+          FLASK_APP : models.py
