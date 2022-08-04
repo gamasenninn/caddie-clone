@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, reopened]
     paths:
-      - 'models.py'
+      - 'app/models.py'
 jobs:
   test-of-models:
     runs-on: ubuntu-latest
