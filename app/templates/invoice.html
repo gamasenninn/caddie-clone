@@ -8,9 +8,12 @@
         <script src="../static//library/tingle.min.js"></script>
         <link rel="stylesheet" href="../static/library/tingle.css" type="text/css" />
 
-        <!-- vue-simple-suggest -->
-        <script src="../static/library/vue-simple-suggest.js"></script>
-        <link rel="stylesheet" href="../static/library/vue-simple-suggest.css" type="text/css">
+        <!-- vue-simple-search-dropdown -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/vue-simple-search-dropdown@1.0.1/dist/vue-simple-search-dropdown.min.js"></script>
+        <script type="text/javascript">
+            Vue.use(Dropdown);
+        </script>
 
         <!-- コンポーネント -->
         <script src="../static/component/list-invoice.js"></script>
@@ -116,6 +119,22 @@
                 flex-wrap: wrap;
             }
 
+            .dropdown-input {
+                max-width: none !important;
+                min-width: none !important;
+                width: 100% !important;
+                height: 50px;
+                font-size: 20px !important;
+            }
+
+            .dropdown-content {
+                z-index: 2 !important;
+                max-width: none !important;
+                min-width: none !important;
+                width: 100% !important;
+                font-size: 25px !important;
+            }
+
             #dropdown-dropup__BV_button_ {
                 border-radius: 20px 0 0 20px;
             }
@@ -189,16 +208,11 @@
                                         </b-col>
                                     </b-row>
                                     <b-row style="margin: auto;">
-                                        <b-col cols="11">
-                                            <vue-simple-suggest v-model="searchCustomerWordInTotalInvoice"
-                                                :list="customerNames" :filter-by-query="true"
-                                                placeholder="🔍　No. or 得意先名">
-                                            </vue-simple-suggest>
-                                        </b-col>
                                         <b-col>
-                                            <b-button class="mt-1" variant="primary" @click="searchInTotalInvoiceModal">
-                                                検索
-                                            </b-button>
+                                            <Dropdown :options="customerNames" :disabled="false" name="zip-code"
+                                                id="customer-dropdown" :max-item="10" v-on:selected="validateSelection"
+                                                placeholder="Please select an option">
+                                            </Dropdown>
                                         </b-col>
                                     </b-row>
                                     <b-row align-h="end">
@@ -884,6 +898,7 @@
                     searchDayStartInTotalInvoice: '',       //合計請求書専用
                     searchDayEndInTotalInvoice: '',         //合計請求書専用
                     invoicesIndicateCountInTotalInvoice: 0, //合計請求書専用
+                    selected: { name: null, id: null },
                     fileId: '', //upload用ID
                     dicFiles: [],
                     form: {
@@ -1131,7 +1146,7 @@
                                 self.customers = response.data;
                                 let customerNames = [];
                                 self.customers.map(customer => {
-                                    customerNames.push(customer.customerName);
+                                    customerNames.push({ name: customer.customerName, id: customer.customerName });
                                     self.customerNames = [...customerNames];
                                 })
                             });
@@ -1193,7 +1208,7 @@
                     },
                     showMoreInTotalInvoice: function () {
                         this.offsetInTotalInvoice += 300;
-                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true);
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true,true);
                     },
                     coutFiles: function () {
                         self = this;
@@ -1367,6 +1382,11 @@
                         interval = row > 1 ? 0 : 5;
                         return "height: " + (26 * row + interval) + "px";
                     },
+                    validateSelection(selection) {
+                        this.selected = selection;
+                        this.offsetInTotalInvoice = 0;
+                        this.getInvoices(this.selected.name, 0, true,true);
+                    },
                     searchInTotalInvoiceModal() {
                         this.offsetInTotalInvoice = 0;
                         this.getInvoices(this.searchCustomerWordInTotalInvoice, 0, true, true);
@@ -1389,14 +1409,14 @@
                             //顧客情報も合わせて読む isCustomer=true
                             this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true, true);
                     },
-                    totalInvoice() {
+                    async totalInvoice() {
                         let checkedInvoices = [];
                         let customer = {};
                         let prePdfToalInoices = [];
                         let customerIds = [];
 
-                        this.invoicesInTotalInvoice.map(invoice => {
-
+                        //this.invoicesInTotalInvoice.map(invoice => {
+                        for (const invoice of this.invoicesInTotalInvoice) {
                             if (invoice.isChecked) {
                                 ix = customerIds.indexOf(invoice.customerId);
                                 if (ix == -1) {
@@ -1407,8 +1427,8 @@
                                 checkedInvoices[ix].push(invoice);
                                 //checkedCustomers[ix] = this.customers.find(c => c.id == invoice.customerId);
                             }
-                        });
-                        //console.log(checkedInvoices,checkedCustomers)
+                        };
+                        console.log("checkedInvoices:", checkedInvoices)
                         if (checkedInvoices.length >= 2) {//通常=2、デバッグのときは値を大きくする
                             this.title = 'エラー';
                             this.message = '一意の得意先のみ選択してください。';
@@ -1416,14 +1436,14 @@
                             return;
                         }
                         //顧客ごとに集計する
-                        customerIds.map((v, i) => {
+                        customerIds.forEach((v, i) => {
                             let totalBillings = [];
                             let basePrices = [];
                             let taxies = [];
                             //請求を合算する
-                            checkedInvoices[i].map(invoice => {
+                            checkedInvoices[i].forEach(invoice => {
                                 let subTotals = [];
-                                invoice.invoice_items.map(item => {
+                                invoice.invoice_items.forEach(item => {
                                     subTotals.push(parseInt(item.count * Math.round(item.price)));
                                 });
                                 const total = subTotals.reduce(function (sum, element) {
@@ -1451,6 +1471,14 @@
                         });
                         // ↓最終結果。これをPDF側に渡す
                         console.log(prePdfToalInoices);
+                        const mode = 'invoice';
+                        docClass = 'origin';
+                        const pdfData = getPdfDataTotalInvoice(mode, prePdfToalInoices[0], this.setting, docClass);
+                        await axios.post("/pdfmaker", pdfData)
+                            .then(function (response) {
+                                self.printPdf('/pdf/' + response.data);
+                            });
+
                     },
                     // ----- 子コンポーネントからの値 -----
                     updateInvoices(invoices, searchInvoiceWord, isMore) {
