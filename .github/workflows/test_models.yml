@@ -31,6 +31,8 @@ jobs:
         run: |
           ls -la ${{ github.workspace }}
           echo "FLASK_APP ENV=$FLASK_APP"
-          python test.py
+          flask db init
+          flask db migrate
+          flask db upgrade
         env:
           FLASK_APP : models.py
