@@ -286,6 +286,17 @@
                                     </b-form-group>
                                 </b-col>
                             </b-row>
+                            <b-row>
+                                <b-col sm>
+                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="コントラスト"
+                                        label-for="contrast" label-align="right">
+                                        <b-form-input type="number" max="128" min="-128" v-model="setting.contrast"
+                                            id="contrast" size="sm" :formatter="formatter_contrast">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm></b-col>
+                            </b-row>
                         </b-card>
                     </b-col>
                     <b-col></b-col>
@@ -395,6 +406,11 @@
                                 console.log(response);
                                 self.myUser = response.data;
                             });
+                    },
+                    formatter_contrast(value) {
+                        if (value > 128 || value < -128)
+                            return value > 128 ? 128 : -128;
+                        return value;
                     },
                 },
                 mounted: function () {
