@@ -354,8 +354,6 @@ class Setting(db.Model):
     # 設定
     defaultTax = db.Column(db.Integer, nullable=False,
                            default=10, server_default=db.text('10'))
-    contrast = db.Column(db.Integer, nullable=False,
-                                    default=0, server_default=db.text('0'))
     isMemoQuadrupleIndicate = db.Column(
         db.Boolean, nullable=False, default=False, server_default=db.text('0'))
     memoLabel1 = db.Column(db.String)

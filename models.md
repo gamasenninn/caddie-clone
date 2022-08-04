@@ -278,7 +278,6 @@
 | isDisplayInvoiceStamp   | 印鑑請求書表示   | boolean     | 印刷時に表示するかどうか | 
 | isDisplayDeliveryStamp  | 印鑑納品書表示   | boolean     | 印刷時に表示するかどうか | 
 | defaultTax              | 初期消費税       | integer     | 請求・見積作成時に自動的に設定される消費税率 | 
-| contrast                | コントラスト     | integer     |  ページ全体のコントラスト  | 
 | isMemoQuadrupleIndicate | メモ4つ表示      | text        |  メモ４つ表示か通常表示か  | 
 | memoLabel1              | メモラベル1      | text        |  メモ４つモード利用時使用  | 
 | memoLabel2              | メモラベル2      | text        |  メモ４つモード利用時使用  | 
