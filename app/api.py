@@ -2007,6 +2007,7 @@ def setting_update(id):
     setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
     setting.defaultTax = data.get(
         'defaultTax')if data.get('defaultTax') else None
+    setting.defaultTax = data.get('contrast')if data.get('contrast') else 0
     setting.isMemoQuadrupleIndicate = data.get('isMemoQuadrupleIndicate')
     setting.memoLabel1 = data.get(
         'memoLabel1') if data.get('memoLabel1') else None
