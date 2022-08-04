@@ -290,7 +290,7 @@
                                 <b-col sm>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="コントラスト"
                                         label-for="contrast" label-align="right">
-                                        <b-form-input type="number" max="128" min="-128" v-model="setting.contrast"
+                                        <b-form-input type="number" max="100" min="-100" v-model="setting.contrast"
                                             id="contrast" size="sm" :formatter="formatter_contrast">
                                         </b-form-input>
                                     </b-form-group>
@@ -386,9 +386,11 @@
                                 self.getSetting(self.setting);
                                 console.log(response);
                                 localStorage.setItem('isHideTabletMode', String(self.isHideTabletMode));
+                                localStorage.setItem('contrast', String(self.setting.contrast));
                                 app.title = '更新';
                                 app.message = '保存しました。';
                                 app.$bvModal.show('confirmModal');
+                                self.changeContrast();
                             });
                     },
                     getSetting: async function () {
@@ -408,16 +410,22 @@
                             });
                     },
                     formatter_contrast(value) {
-                        if (value > 128 || value < -128)
-                            return value > 128 ? 128 : -128;
+                        if (value > 100 || value < -100)
+                            return value > 0 ? 100 : -100;
                         return value;
                     },
+                    changeContrast() {
+                        const contrastValue = 100 + Number(localStorage.getItem('contrast'));
+                        document.querySelector('body').style = 'filter: saturate(' + String(contrastValue) + '%)';
+                    }
                 },
-                mounted: function () {
+                mounted: async function () {
                     this.getSetting();
                     this.getLoginUser();
                     if (localStorage.getItem('isHideTabletMode'))
                         this.isHideTabletMode = localStorage.getItem('isHideTabletMode');
+                    if (localStorage.getItem('contrast'))
+                        this.changeContrast();
                     document.querySelector('title').textContent = '各種情報設定';
                 },
                 router,
