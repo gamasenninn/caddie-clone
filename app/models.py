@@ -477,3 +477,4 @@ class Invoice_CustomerSchema(ma.SQLAlchemyAutoSchema):
 
 #models.pyのプルリクテスト二回目のテスト
 #ブランチ保護のテスト
+#プルリクをだして自己マージしてみるテスト
