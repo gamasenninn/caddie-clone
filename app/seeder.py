@@ -6,7 +6,7 @@ import sys
 import argparse
 
 
-def seeder(v):
+def seeder(v=False):
 
     models = [User, Customer, Item, Invoice,
               Invoice_Item, Invoice_Payment, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
