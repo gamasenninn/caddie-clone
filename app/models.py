@@ -476,4 +476,4 @@ class Invoice_CustomerSchema(ma.SQLAlchemyAutoSchema):
     customer = ma.Nested(CustomerSchema, many=False)
 
 #models.pyのプルリクテスト二回目のテスト
-#ブランチ保護のテスト
+#ブランチ保護のテスト２
