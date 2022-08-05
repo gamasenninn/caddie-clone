@@ -390,7 +390,6 @@
                                 app.title = '更新';
                                 app.message = '保存しました。';
                                 app.$bvModal.show('confirmModal');
-                                self.changeContrast();
                             });
                     },
                     getSetting: async function () {
@@ -414,20 +413,14 @@
                             return value > 0 ? 100 : -100;
                         return value;
                     },
-                    changeContrast() {
-                        const contrastValue = 100 + Number(localStorage.getItem('contrast'));
-                        document.querySelector('body').style = 'filter: saturate(' + String(contrastValue) + '%)';
-                    }
                 },
                 mounted: function () {
                     this.getSetting();
                     this.getLoginUser();
                     if (localStorage.getItem('isHideTabletMode'))
                         this.isHideTabletMode = localStorage.getItem('isHideTabletMode');
-                    if (localStorage.getItem('contrast')) {
+                    if (localStorage.getItem('contrast'))
                         this.contrast = localStorage.getItem('contrast');
-                        this.changeContrast();
-                    }
                     document.querySelector('title').textContent = '各種情報設定';
                 },
                 router,
