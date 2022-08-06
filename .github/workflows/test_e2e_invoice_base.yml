@@ -13,4 +13,4 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
-          working-directory: tests_e2e/cypress/e2e
+          working-directory: tests_e2e
