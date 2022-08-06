@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, reopened]
     paths:
-      - 'app/templates/invoice.html_xxxx'
+      - 'app/templates/invoice.html'
 jobs:
   Cypress-run:
     runs-on: ubuntu-latest
