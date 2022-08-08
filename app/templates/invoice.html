@@ -176,10 +176,10 @@
                             </b-row>
                             <b-row>
                                 <b-col class="text-right">
-                                    <!-- <b-button v-if="procName=='normal'" size="sm" variant="primary" class="mb-3"
+                                    <b-button v-if="procName=='normal'" size="sm" variant="primary" class="mb-3"
                                         @click="totalInvoiceOpen();">
                                         合計請求書
-                                    </b-button> -->
+                                    </b-button>
                                 </b-col>
                                 <b-modal ref="total-invoice-modal" size="xl" id="total-invoice-modal">
                                     <day-search-in-total-invoice class="mr-0"
@@ -1208,7 +1208,7 @@
                     },
                     showMoreInTotalInvoice: function () {
                         this.offsetInTotalInvoice += 300;
-                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true,true);
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true, true);
                     },
                     coutFiles: function () {
                         self = this;
@@ -1385,7 +1385,7 @@
                     validateSelection(selection) {
                         this.selected = selection;
                         this.offsetInTotalInvoice = 0;
-                        this.getInvoices(this.selected.name, 0, true,true);
+                        this.getInvoices(this.selected.name, 0, true, true);
                     },
                     searchInTotalInvoiceModal() {
                         this.offsetInTotalInvoice = 0;
