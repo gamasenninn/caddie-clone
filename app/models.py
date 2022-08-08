@@ -177,6 +177,22 @@ class Invoice_Payment(db.Model):
                           default=datetime.now, onupdate=datetime.now)
 
 
+class TotalInvoice(db.Model):
+
+    __tablename__ = 'total_invoices'
+
+    id = db.Column(db.Integer, primary_key=True)
+    totalInvoiceApplyNumber = db.Column(db.Integer)
+    applyNumbers = db.Column(db.String)
+    customerAnyNumber = db.Column(db.Integer)
+    issueDate = db.Column(db.Date)
+    title = db.Column(db.String)
+    filePath = db.Column(db.String)
+    createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updatedAt = db.Column(db.DateTime, nullable=False,
+                          default=datetime.now, onupdate=datetime.now)
+
+
 # 見積番号自動生成
 def edited_quotation_number():
 
@@ -397,6 +413,11 @@ class InvoiceSchema(ma.SQLAlchemyAutoSchema):
     invoice_payments = ma.Nested(Invoice_PaymentSchema, many=True)
 
 
+class TotalInvoiceSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = TotalInvoice
+
+
 class Quotation_ItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Quotation_Item
@@ -475,5 +496,5 @@ class Invoice_CustomerSchema(ma.SQLAlchemyAutoSchema):
     invoice_payments = ma.Nested(Invoice_PaymentSchema, many=True)
     customer = ma.Nested(CustomerSchema, many=False)
 
-#models.pyのプルリクテスト二回目のテスト
-#ブランチ保護のテスト２
+# models.pyのプルリクテスト二回目のテスト
+# ブランチ保護のテスト２
