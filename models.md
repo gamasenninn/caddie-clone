@@ -133,6 +133,22 @@
 
 <br>
 
+## TotalInvoices
+
+| 項目名                  | 和名              | タイプ   | 備考                            | 
+| ----------------------- | ---------------- | -------- | ------------------------------ | 
+| id                      | id               | integer  |                                | 
+| totalInvoiceApplyNumber | 合計請求番号      | integer  |                                | 
+| applyNumbers            | 請求番号連番      | string   | 選択された請求番号を複数持つ      | 
+| customerAnyNumber       | 得意先任意番号    | integer  | 選択された得意先番号を複数持つ    | 
+| issueDate               | 発行日            | date     |                                | 
+| title                   | 件名              | string   |                                | 
+| filePath                | PDFパス           | string   |                                | 
+| createdAt               | 作成日時          | datetime |                                | 
+| updatedAt               | 更新日時          | datetime |                                | 
+
+<br>
+
 ## Quotations
 
 | 項目名       | 和名           | タイプ    |  備考                                                     | 

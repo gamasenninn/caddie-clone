@@ -1146,6 +1146,116 @@ def invoice_payment_destroy(id):
     return jsonify({"result": "OK", "id": id, "data": ''})
 
 
+# 合計請求書(totalInvoices)
+@app.route('/v1/total-invoices', methods=['GET'])
+@app.route('/total-invoices', methods=['GET'])
+def total_Invoice_index():
+    totalInvoices = TotalInvoice.query.all()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='TotalInvoices',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(TotalInvoiceSchema(many=True).dump(totalInvoices))
+
+
+@app.route('/v1/total-invoice/<id>', methods=['GET'])
+@app.route('/total-invoice/<id>', methods=['GET'])
+def total_invoice_show(id):
+    totalInvoiceCount = TotalInvoice.query.filter(
+        TotalInvoice.id == id).count()
+    if totalInvoiceCount:
+        totalInvoice = TotalInvoice.query.filter(TotalInvoice.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='TotalInvoice',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
+        return jsonify(TotalInvoiceSchema().dump(totalInvoice))
+    else:
+        return jsonify([])
+
+
+@app.route('/v1/total-invoice', methods=['POST'])
+@app.route('/total-invoice', methods=['POST'])
+def total_invoice_create():
+    data = request.json
+    newTotalInvoice = TotalInvoice(
+        totalInvoiceApplyNumber=data.get('totalInvoiceApplyNumber')if data.get(
+            'totalInvoiceApplyNumber') else None,
+        applyNumbers=data.get('applyNumbers')if data.get(
+            'applyNumbers') else None,
+        customerAnyNumber=data.get('customerAnyNumber')if data.get(
+            'customerAnyNumber') else None,
+        issueDate=data.get('issueDate')if data.get('issueDate') else None,
+        title=data.get('title')if data.get('title') else None,
+        filePath=data.get('filePath')if data.get('filePath') else None,
+    )
+    db.session.add(newTotalInvoice)
+    db.session.commit()
+    id = newTotalInvoice.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Invoice',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/v1/total-invoice/<id>', methods=['PUT'])
+@app.route('/total-invoice/<id>', methods=['PUT'])
+def total_invoice_update(id):
+    data = request.json
+    totalInvoice = TotalInvoice.query.filter(TotalInvoice.id == id).one()
+    if not totalInvoice:
+        return jsonify({"result": "No Data", "id": id, "data": data})
+
+    totalInvoice.totalInvoiceApplyNumber = data.get(
+        'totalInvoiceApplyNumber')if data.get('totalInvoiceApplyNumber') else None
+    totalInvoice.applyNumbers = data.get(
+        'applyNumbers')if data.get('applyNumbers') else None
+    totalInvoice.customerAnyNumber = data.get(
+        'customerAnyNumber')if data.get('customerAnyNumber') else None
+    totalInvoice.issueDate = data.get(
+        'issueDate')if data.get('issueDate') else None
+    totalInvoice.title = data.get('title')if data.get('title') else None
+    totalInvoice.filePath = data.get(
+        'filePath')if data.get('filePath') else None
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='TotalInvoice',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/v1/total-invoice/<id>', methods=['DELETE'])
+@app.route('/total-invoice/<id>', methods=['DELETE'])
+def total_invoice_destroy(id):
+    totalInvoice = TotalInvoice.query.filter(TotalInvoice.id == id).delete()
+    newHistory = History(
+        userName=current_user.id,
+        modelName='TotalInvoice',
+        modelId=id,
+        action='delete'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ''})
+
+
 # 見積書(Quotations)
 @app.route('/v1/quotations', methods=['GET'])
 @app.route('/quotations', methods=['GET'])

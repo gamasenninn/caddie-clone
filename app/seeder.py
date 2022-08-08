@@ -9,7 +9,7 @@ import argparse
 def seeder(v=False):
 
     models = [User, Customer, Item, Invoice,
-              Invoice_Item, Invoice_Payment, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
+              Invoice_Item, Invoice_Payment, TotalInvoice, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
 
     for model in models:
         db.session.query(model).delete()
@@ -136,6 +136,24 @@ def seeder(v=False):
         print('----Invoice_Payments----')
         for invoice_payment in invoice_payments:
             print(invoice_payment.paymentAmount)
+
+    # ----- TotalInvoices -----
+    totalInvoices = [
+        TotalInvoice(totalInvoiceApplyNumber=220001,
+                     applyNumbers="220001", customerAnyNumber=1, issueDate=date(2022, 1, 1), title="合計請求書１", filePath=""),
+        TotalInvoice(totalInvoiceApplyNumber=220002,
+                     applyNumbers="220002", customerAnyNumber=2, issueDate=date(2022, 1, 1), title="合計請求書２", filePath=""),
+        TotalInvoice(totalInvoiceApplyNumber=220003,
+                     applyNumbers="220003", customerAnyNumber=3, issueDate=date(2022, 1, 1), title="合計請求書３", filePath=""),
+    ]
+    db.session.add_all(totalInvoices)
+    db.session.commit()
+
+    totalInvoices = TotalInvoice.query.all()
+    if v:
+        print('----TotalInvoices-----')
+        for totalInvoice in totalInvoices:
+            print(totalInvoice.totalInvoiceApplyNumber)
 
     # -----Quotations-----
     quotations = [
@@ -276,8 +294,10 @@ def seeder(v=False):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='seeder -- makeing test data for soho-caddie')
-    parser.add_argument('-v','--verbose', help='output data',action='store_true')
+    parser = argparse.ArgumentParser(
+        description='seeder -- makeing test data for soho-caddie')
+    parser.add_argument('-v', '--verbose',
+                        help='output data', action='store_true')
     args = parser.parse_args()
 
     seeder(v=args.verbose)
