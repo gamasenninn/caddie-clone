@@ -133,6 +133,11 @@
 
                 }
                 setInterval(polling_session, 30000)
+
+                $(function () {
+                    const contrastValue = 100 + Number(localStorage.getItem('contrast'));
+                    document.querySelector('html').style = 'filter: saturate(' + String(contrastValue) + '%)';
+                });
             </script>
 
 </body>
