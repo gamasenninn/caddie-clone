@@ -177,12 +177,33 @@ class Invoice_Payment(db.Model):
                           default=datetime.now, onupdate=datetime.now)
 
 
+# 合計請求番号自動生成
+def edited_total_invoice_number():
+
+    nowYearFormat = datetime.now().strftime('%y')
+    nowYear = datetime.now().year
+    yearStart = date(nowYear, 1, 1)
+    # 年末を含めてしまうのを防ぐ
+    yearEnd = date(nowYear+1, 1, 1)
+    maxNumberForYear = db.session.query(
+        func.max(TotalInvoice.totalInvoiceApplyNumber)).filter(TotalInvoice.createdAt >= yearStart, TotalInvoice.createdAt < yearEnd).first()[0]
+    if maxNumberForYear:
+        maxNumberForYear_s = str(maxNumberForYear)
+        maxApplyNumber_s = maxNumberForYear_s[2:]
+        maxApplyNumber = int(maxApplyNumber_s)
+        nextNumber = format(maxApplyNumber+1, '0>5')
+    else:
+        nextNumber = '00001'
+    return str(nowYearFormat) + str(nextNumber)
+
+
 class TotalInvoice(db.Model):
 
     __tablename__ = 'total_invoices'
 
     id = db.Column(db.Integer, primary_key=True)
-    totalInvoiceApplyNumber = db.Column(db.Integer)
+    totalInvoiceApplyNumber = db.Column(
+        db.Integer, default=edited_total_invoice_number)
     applyNumbers = db.Column(db.String)
     customerId = db.Column(db.Integer)
     issueDate = db.Column(db.Date)
