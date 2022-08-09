@@ -140,11 +140,11 @@ def seeder(v=False):
     # ----- TotalInvoices -----
     totalInvoices = [
         TotalInvoice(totalInvoiceApplyNumber=220001,
-                     applyNumbers="220001", customerAnyNumber=1, issueDate=date(2022, 1, 1), title="合計請求書１", filePath=""),
+                     applyNumbers="220001", customerAnyNumber=1, issueDate=date(2022, 1, 1), title="合計請求書１", fileName=""),
         TotalInvoice(totalInvoiceApplyNumber=220002,
-                     applyNumbers="220002", customerAnyNumber=2, issueDate=date(2022, 1, 1), title="合計請求書２", filePath=""),
+                     applyNumbers="220002", customerAnyNumber=2, issueDate=date(2022, 1, 1), title="合計請求書２", fileName=""),
         TotalInvoice(totalInvoiceApplyNumber=220003,
-                     applyNumbers="220003", customerAnyNumber=3, issueDate=date(2022, 1, 1), title="合計請求書３", filePath=""),
+                     applyNumbers="220003", customerAnyNumber=3, issueDate=date(2022, 1, 1), title="合計請求書３", fileName=""),
     ]
     db.session.add_all(totalInvoices)
     db.session.commit()

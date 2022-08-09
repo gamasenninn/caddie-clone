@@ -143,7 +143,7 @@
 | customerAnyNumber       | 得意先任意番号    | integer  | 選択された得意先番号を複数持つ    | 
 | issueDate               | 発行日            | date     |                                | 
 | title                   | 件名              | string   |                                | 
-| filePath                | PDFパス           | string   |                                | 
+| fileName                | PDFファイル名     | string   | 生成されたPDFのファイル名        | 
 | createdAt               | 作成日時          | datetime |                                | 
 | updatedAt               | 更新日時          | datetime |                                | 
 

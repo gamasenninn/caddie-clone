@@ -1192,9 +1192,10 @@ def total_invoice_create():
             'applyNumbers') else None,
         customerAnyNumber=data.get('customerAnyNumber')if data.get(
             'customerAnyNumber') else None,
-        issueDate=data.get('issueDate')if data.get('issueDate') else None,
+        issueDate=datetime.strptime(
+            data.get('issueDate'), "%Y-%m-%d") if data.get('issueDate') else None,
         title=data.get('title')if data.get('title') else None,
-        filePath=data.get('filePath')if data.get('filePath') else None,
+        fileName=data.get('fileName')if data.get('fileName') else None,
     )
     db.session.add(newTotalInvoice)
     db.session.commit()

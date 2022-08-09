@@ -187,7 +187,7 @@ class TotalInvoice(db.Model):
     customerAnyNumber = db.Column(db.Integer)
     issueDate = db.Column(db.Date)
     title = db.Column(db.String)
-    filePath = db.Column(db.String)
+    fileName = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
