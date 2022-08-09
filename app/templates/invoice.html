@@ -1435,11 +1435,16 @@
                             this.$bvModal.show('confirmModalDanger');
                             return;
                         }
+                        // POSTData
+                        let applyNumbers = '';
+                        let customerId = 0;
+                        let totalInvoiceData = {};
                         //顧客ごとに集計する
                         customerIds.forEach((v, i) => {
                             let totalBillings = [];
                             let basePrices = [];
                             let taxies = [];
+                            customerId = v;
                             //請求を合算する
                             checkedInvoices[i].forEach(invoice => {
                                 let subTotals = [];
@@ -1459,6 +1464,7 @@
                                     basePrices.push(parseInt(total / (1 + invoice.tax / 100)));
                                     taxies.push(parseInt(total - total / (1 + invoice.tax / 100)));
                                 }
+                                applyNumbers = applyNumbers + String(invoice.applyNumber) + ',';
                             });
                             pt = {
                                 invoices: checkedInvoices[i],
@@ -1477,8 +1483,18 @@
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data);
+                                totalInvoiceData.applyNumbers = applyNumbers;
+                                totalInvoiceData.customerId = customerId;
+                                // TODO:繋ぎこみ未完了
+                                totalInvoiceData.issueDate = '2022-01-01';
+                                totalInvoiceData.title = 'test';
+                                // -----
+                                totalInvoiceData.fileName = response.data;
+                                axios.post("/total-invoice", totalInvoiceData)
+                                    .then(function (response) {
+                                        console.log(response);
+                                    });
                             });
-
                     },
                     // ----- 子コンポーネントからの値 -----
                     updateInvoices(invoices, searchInvoiceWord, isMore) {
