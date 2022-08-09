@@ -1190,8 +1190,7 @@ def total_invoice_create():
             'totalInvoiceApplyNumber') else None,
         applyNumbers=data.get('applyNumbers')if data.get(
             'applyNumbers') else None,
-        customerAnyNumber=data.get('customerAnyNumber')if data.get(
-            'customerAnyNumber') else None,
+        customerId=data.get('customerId')if data.get('customerId') else None,
         issueDate=datetime.strptime(
             data.get('issueDate'), "%Y-%m-%d") if data.get('issueDate') else None,
         title=data.get('title')if data.get('title') else None,

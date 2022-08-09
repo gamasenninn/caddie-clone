@@ -184,7 +184,7 @@ class TotalInvoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     totalInvoiceApplyNumber = db.Column(db.Integer)
     applyNumbers = db.Column(db.String)
-    customerAnyNumber = db.Column(db.Integer)
+    customerId = db.Column(db.Integer)
     issueDate = db.Column(db.Date)
     title = db.Column(db.String)
     fileName = db.Column(db.String)
