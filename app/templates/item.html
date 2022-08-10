@@ -284,7 +284,7 @@
 
 
                         </b-card>
-                        <b-row>
+                        <b-row style="background-color: #F9F9F9;" class="pt-3">
                             <b-col md="3">
                                 <form action="upload-files/s/upload/items" class="dropzone" id="dropz">
                                     <input hidden type="text" name="fileId" v-model="item.itemCode">
@@ -294,7 +294,7 @@
                             </b-col>
                             <b-col>
                                 <div v-if="!dicFiles.length" class="mt-5">
-                                    ←クリックまたはドロップしてファイルをアップロード。
+                                    ←画像やメモを貼り付けて下さい。
                                 </div>
 
                                 <template v-if="uploadListMode=='list'">
@@ -327,14 +327,16 @@
                                 </template>
                             </b-col>
                             <b-col md="1">
-                                <b-button @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" variant="danger"><i
-                                        class="fas fa-trash-alt"></i>
+                                <b-button @click="deleteFiles(item.itemCode)" class="mr-2 mb-3" variant="danger"
+                                    v-b-tooltip.hover.top="'選択ファイル削除'"><i class="fas fa-trash-alt"></i>
                                 </b-button>
-                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
-                                    <b-icon icon="app"></b-icon>
+                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2"
+                                    v-b-tooltip.hover.bottom="'アイコン表示にする'">
+                                    <i class="fa-solid fa-image"></i>
                                 </b-button>
-                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
-                                    <b-icon icon="list-task"></b-icon>
+                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2"
+                                    v-b-tooltip.hover.bottom="'リスト表示にする'">
+                                    <i class="fa-solid fa-list"></i>
                                 </b-button>
                             </b-col>
                         </b-row>
