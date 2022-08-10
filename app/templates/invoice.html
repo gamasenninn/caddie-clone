@@ -657,7 +657,7 @@
                             </b-col>
                         </b-row>
                         <!-- アップロード機能　-->
-                        <b-row>
+                        <b-row style="background-color: #F9F9F9;" class="pt-3">
                             <b-col md="3">
                                 <form action="upload-files/s/upload/invoices" class="dropzone" id="dropz">
                                     <input hidden type="text" name="fileId" v-model="invoice.applyNumber">
@@ -667,7 +667,7 @@
                             </b-col>
                             <b-col>
                                 <div v-if="!dicFiles.length" class="mt-5">
-                                    ←クリックまたはドロップしてファイルをアップロード。
+                                    ←画像やメモを貼り付けて下さい。
                                 </div>
 
                                 <template v-if="uploadListMode=='list'">
@@ -701,14 +701,17 @@
                                 </template>
                             </b-col>
                             <b-col md="1">
-                                <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3" variant="danger">
+                                <b-button @click="deleteFiles(invoice.applyNumber)" class="mr-2 mb-3" variant="danger"
+                                    v-b-tooltip.hover.top="'選択ファイル削除'">
                                     <i class="fas fa-trash-alt"></i>
                                 </b-button>
-                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2">
-                                    <b-icon icon="app"></b-icon>
+                                <b-button v-if="uploadListMode=='list'" @click="uploadListMode='card'" class="mr-2"
+                                    v-b-tooltip.hover.bottom="'アイコン表示にする'">
+                                    <i class="fa-solid fa-image"></i>
                                 </b-button>
-                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2">
-                                    <b-icon icon="list-task"></b-icon>
+                                <b-button v-if="uploadListMode=='card'" @click="uploadListMode='list'" class="mr-2"
+                                    v-b-tooltip.hover.bottom="'リスト表示にする'">
+                                    <i class="fa-solid fa-list"></i>
                                 </b-button>
                             </b-col>
                         </b-row>
@@ -1208,7 +1211,7 @@
                     },
                     showMoreInTotalInvoice: function () {
                         this.offsetInTotalInvoice += 300;
-                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true,true);
+                        this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true, true);
                     },
                     coutFiles: function () {
                         self = this;
@@ -1385,7 +1388,7 @@
                     validateSelection(selection) {
                         this.selected = selection;
                         this.offsetInTotalInvoice = 0;
-                        this.getInvoices(this.selected.name, 0, true,true);
+                        this.getInvoices(this.selected.name, 0, true, true);
                     },
                     searchInTotalInvoiceModal() {
                         this.offsetInTotalInvoice = 0;
