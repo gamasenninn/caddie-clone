@@ -1288,6 +1288,9 @@
                     formatDate(date) {
                         if (!!date) return moment(date).format("YYYY/MM/DD");
                     },
+                    formatDateHyphen(date) {
+                        if (!!date) return moment(date).format("YYYY-MM-DD");
+                    },
                     //商品個数小数点以下切り捨て
                     formatter_count(value) {
                         return Math.floor(value);
@@ -1483,10 +1486,11 @@
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data);
+                                const today = this.formatDateHyphen(Date.now());
                                 totalInvoiceData.applyNumbers = applyNumbers;
                                 totalInvoiceData.customerId = customerId;
                                 // TODO:繋ぎこみ未完了
-                                totalInvoiceData.issueDate = '2022-01-01';
+                                totalInvoiceData.issueDate = today;
                                 totalInvoiceData.title = 'test';
                                 // -----
                                 totalInvoiceData.fileName = response.data;
