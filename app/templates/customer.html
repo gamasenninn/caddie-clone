@@ -480,6 +480,7 @@
                         self.customers.push({
                             isInsert: true,
                             customerKana: "",
+                            customerCategory: "corporation",
                         });
                         self.customer = self.customers.slice(-1)[0];
                         localStorage.setItem('customer', JSON.stringify(self.customer))
