@@ -7,6 +7,9 @@ on:
 #    types: [opened, reopened]
 #    paths:
 #      - 'app/templates/invoice.html_xxxx'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 jobs:
   Cypress-run:
     runs-on: ubuntu-latest
