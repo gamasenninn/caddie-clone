@@ -1,9 +1,12 @@
 name: test_e2e_invoice_base
 on:
-  pull_request:
-    types: [opened, reopened]
-    paths:
-      - 'app/templates/invoice.html_xxxx'
+  push:
+    branches: none
+#on:
+#  pull_request:
+#    types: [opened, reopened]
+#    paths:
+#      - 'app/templates/invoice.html_xxxx'
 jobs:
   Cypress-run:
     runs-on: ubuntu-latest
