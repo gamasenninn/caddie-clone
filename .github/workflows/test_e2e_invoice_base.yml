@@ -1,10 +1,10 @@
 name: test_e2e_invoice_base
-on:
-  push:
-    branches: none
 #on:
-#  pull_request:
-#    types: [opened, reopened]
+#  push:
+#    branches: none
+on:
+  pull_request:
+    types: [opened, reopened]
 #    paths:
 #      - 'app/templates/invoice.html_xxxx'
   # Allows you to run this workflow manually from the Actions tab
