@@ -38,7 +38,7 @@ jobs:
           flask db migrate
           flask db upgrade
           python seeder.py
-          python main.py
+          python main.py &
         env:
           FLASK_APP : models.py
         
