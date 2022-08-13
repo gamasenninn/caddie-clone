@@ -18,5 +18,5 @@ jobs:
         uses: actions/checkout@v2
       - name: Cypress run
         uses: cypress-io/github-action@v4
-        #with:
-        #  working-directory: tests_e2e/cypress
+        with:
+          working-directory: tests_e2e
