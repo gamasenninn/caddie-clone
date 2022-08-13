@@ -30,7 +30,7 @@ jobs:
           pip install Pillow 
           pip install flask-login
           pip install python-dateutil
-      - name: List files in the repository
+      - name: Flask Data Migration
         run: |
           cd app
           echo "FLASK_APP ENV=$FLASK_APP"
