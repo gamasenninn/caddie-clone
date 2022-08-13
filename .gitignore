@@ -15,3 +15,4 @@ app/static/component/customize/
 tests_e2e/cypress/videos/
 *.mp4
 tests_e2e/cypress/screenshots/
+tests_e2e/node_modules/
