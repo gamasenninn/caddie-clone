@@ -4,6 +4,7 @@ module.exports = {
       // implement node event listeners here
     },
     supportFile: false,
-    specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}'
+    specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
+    modifyObstructiveCode: false
   },
 };
