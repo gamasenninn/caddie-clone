@@ -1,4 +1,4 @@
-name: test_e2e_invoice_base
+name: test_e2e_docker
 #on:
 #  push:
 #    branches: none
