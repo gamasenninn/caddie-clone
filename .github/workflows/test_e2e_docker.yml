@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt install fonts-noto
-          docker run -d -it --name testdocker -p 5010:80 gamasenninn/scaddie
+          docker run -d -it --name testdocker -p 5010:80 -v /app:/app gamasenninn/scaddie
        
       - name: Cypress run
         uses: cypress-io/github-action@v4
