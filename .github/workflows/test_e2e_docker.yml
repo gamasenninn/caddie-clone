@@ -22,17 +22,17 @@ jobs:
           echo ${{ github.workspace }}/app
           docker run -d -it --name testdocker -p 5010:80 -v ${{ github.workspace }}/app:/app gamasenninn/scaddie
        
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          wait-on: "http://localhost:5010"
-          working-directory: tests_e2e
-          browser: chrome
-      - name: upload artifacts
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: cypress-videos upload
-          path: tests_e2e/cypress/videos
+##      - name: Cypress run
+#        uses: cypress-io/github-action@v4
+#        with:
+#          wait-on: "http://localhost:5010"
+#          working-directory: tests_e2e
+#          browser: chrome
+#      - name: upload artifacts
+#        uses: actions/upload-artifact@v2
+#        if: always()
+#        with:
+#          name: cypress-videos upload
+#          path: tests_e2e/cypress/videos
           
       - run: ls . -la
