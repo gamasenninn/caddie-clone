@@ -239,7 +239,7 @@ Vue.component('invoice-list-payment', {
     },
 })
 
-// 合計請求
+// 合計請求作成用請求一覧
 Vue.component('invoice-list-in-total-invoice', {
     template: `
     <div>
@@ -320,4 +320,45 @@ let daySearchInTotalInvoices = Vue.component('day-search-in-total-invoice', {
             this.$emit('emit-day-end', daySearch.searchDayEndInTotalInvoice);
         }
     }
+})
+
+// 合計請求参照一覧
+Vue.component('total-invoice-list', {
+    template: `
+    <div>
+        <b-table borderless responsive hover small id="invoice-in-modal-table" sort-by="ID" small label="Table Options"
+        :items="this.totalInvoicesIndicateIndex" :sort-by.sync="this.sortByTotalInvoices" :sort-desc.sync="this.sortDesc" :fields="[
+        {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+        {  key: 'totalInvoiceApplyNumber', label: '合計請求番号', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'issueDate', label: '発行日', thClass: 'text-center', tdClass: 'text-center', sortable: true },
+        {  key: 'title', label: '件名', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'printing', label: '印刷', thClass: 'text-center', tdClass: 'text-center' },
+    ]" :tbody-tr-class="this.rowClass">
+            <template v-slot:cell(issueDate)="data">
+                {{formatDate(data.item.issueDate)}}
+            </template>
+            <template v-slot:cell(printing)="data">
+                <b-button variant="primary" @click="getTotalInvoiceFile(data.item.fileName)">
+                    印刷
+                </b-button>
+            </template>
+        </b-table>
+    </div>
+    `,
+    props: {
+        totalInvoicesIndicateIndex: Array,
+        sortByTotalInvoices: String,
+        sortDesc: Boolean,
+        getTotalInvoiceFile: Function,
+    },
+    methods: {
+        rowClass: function (item, type) {
+            if (!item || type !== 'row') return
+            if (!item.id) return "d-none";
+        },
+        //日付カラム
+        formatDate(date) {
+            if (!!date) return moment(date).format("YYYY/MM/DD");
+        },
+    },
 })
