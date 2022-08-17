@@ -146,6 +146,7 @@
 | issueDate               | 発行日            | date     |                                | 
 | title                   | 件名              | string   |                                | 
 | fileName                | PDFファイル名     | string   | 生成されたPDFのファイル名        | 
+| isDelete                | 削除済み          | boolean  |  削除するのではなく、チェックする | 
 | createdAt               | 作成日時          | datetime |                                | 
 | updatedAt               | 更新日時          | datetime |                                | 
 

@@ -211,6 +211,7 @@ class TotalInvoice(db.Model):
     issueDate = db.Column(db.Date)
     title = db.Column(db.String)
     fileName = db.Column(db.String)
+    isDelete = db.Column(db.Boolean, nullable=False, default=False)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
