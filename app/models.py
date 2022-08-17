@@ -206,6 +206,8 @@ class TotalInvoice(db.Model):
         db.Integer, default=edited_total_invoice_number)
     applyNumbers = db.Column(db.String)
     customerId = db.Column(db.Integer)
+    customerName = db.Column(db.String)
+    customerAnyNumber = db.Column(db.Integer)
     issueDate = db.Column(db.Date)
     title = db.Column(db.String)
     fileName = db.Column(db.String)

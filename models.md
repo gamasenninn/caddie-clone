@@ -141,6 +141,8 @@
 | totalInvoiceApplyNumber | 合計請求番号      | integer  |                                | 
 | applyNumbers            | 請求番号連番      | string   | 選択された請求番号を複数持つ      | 
 | customerId              | 得意先ID          | integer  | FKでは無いので注意              | 
+| customerName            | 得意先名          | string   |                                | 
+| customerAnyNumber       | 得意先任意番号     | integer  |                                | 
 | issueDate               | 発行日            | date     |                                | 
 | title                   | 件名              | string   |                                | 
 | fileName                | PDFファイル名     | string   | 生成されたPDFのファイル名        | 

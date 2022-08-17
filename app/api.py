@@ -1191,6 +1191,10 @@ def total_invoice_create():
         applyNumbers=data.get('applyNumbers')if data.get(
             'applyNumbers') else None,
         customerId=data.get('customerId')if data.get('customerId') else None,
+        customerName=data.get('customerName')if data.get(
+            'customerName') else None,
+        customerAnyNumber=data.get('customerAnyNumber')if data.get(
+            'customerAnyNumber') else None,
         issueDate=datetime.strptime(
             data.get('issueDate'), "%Y-%m-%d") if data.get('issueDate') else None,
         title=data.get('title')if data.get('title') else None,
@@ -1222,6 +1226,10 @@ def total_invoice_update(id):
         'totalInvoiceApplyNumber')if data.get('totalInvoiceApplyNumber') else None
     totalInvoice.applyNumbers = data.get(
         'applyNumbers')if data.get('applyNumbers') else None
+    totalInvoice.customerId = data.get(
+        'customerId')if data.get('customerId') else None
+    totalInvoice.customerName = data.get(
+        'customerName')if data.get('customerName') else None
     totalInvoice.customerAnyNumber = data.get(
         'customerAnyNumber')if data.get('customerAnyNumber') else None
     totalInvoice.issueDate = data.get(
