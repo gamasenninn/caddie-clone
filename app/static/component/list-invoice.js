@@ -331,6 +331,8 @@ Vue.component('total-invoice-list', {
         {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
         {  key: 'totalInvoiceApplyNumber', label: '合計請求番号', thClass: 'text-center', tdClass: 'text-center' },
         {  key: 'issueDate', label: '発行日', thClass: 'text-center', tdClass: 'text-center', sortable: true },
+        {  key: 'customerAnyNumber', label: 'No.', thClass: 'th-customer-any-number text-center', tdClass: 'text-center', sortable: true },
+        {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
         {  key: 'title', label: '件名', thClass: 'text-center', tdClass: 'text-center' },
         {  key: 'printing', label: '印刷', thClass: 'text-center', tdClass: 'text-center' },
     ]" :tbody-tr-class="this.rowClass">
