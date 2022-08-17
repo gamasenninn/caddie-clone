@@ -188,7 +188,8 @@
                                 <b-modal ref="total-invoice-ref-modal" size="xl" id="total-invoice-ref-modal">
                                     <total-invoice-list :total-invoices-indicate-index="totalInvoices"
                                         :sort-by-total-invoices="sortByInvoices" :sort-desc="sortDesc"
-                                        :get-total-invoice-file="getTotalInvoiceFile">
+                                        :get-total-invoice-file="getTotalInvoiceFile"
+                                        :delete-total-invoice="deleteTotalInvoice">
                                     </total-invoice-list>
                                 </b-modal>
                                 <b-modal ref="total-invoice-modal" size="xl" id="total-invoice-modal">
@@ -1093,8 +1094,12 @@
                             });
                     },
                     deleteTotalInvoice: async function (item) {
-                        self=this;
-                        await axios.put()
+                        self = this;
+                        await axios.put('/total_invoice_delete/' + item.id)
+                            .then((response) => {
+                                console.log(response)
+                                self.getTotalInvoices();
+                            });
                     },
                     InvoiceAddRow: function () {
                         self = this;

@@ -346,7 +346,7 @@ Vue.component('total-invoice-list', {
                 </b-button>
             </template>
             <template v-slot:cell(delete)="data">
-                <b-button variant="primary" @click="">
+                <b-button variant="primary" @click="deleteTotalInvoice(data.item)">
                     削除
                 </b-button>
             </template>
