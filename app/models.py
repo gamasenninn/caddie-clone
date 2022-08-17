@@ -206,9 +206,13 @@ class TotalInvoice(db.Model):
         db.Integer, default=edited_total_invoice_number)
     applyNumbers = db.Column(db.String)
     customerId = db.Column(db.Integer)
+    customerName = db.Column(db.String)
+    customerAnyNumber = db.Column(db.Integer)
     issueDate = db.Column(db.Date)
     title = db.Column(db.String)
     fileName = db.Column(db.String)
+    isDelete = db.Column(db.Boolean, nullable=False,
+                         default=False, server_default=db.text('0'))
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)

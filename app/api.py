@@ -1150,10 +1150,25 @@ def invoice_payment_destroy(id):
 @app.route('/v1/total-invoices', methods=['GET'])
 @app.route('/total-invoices', methods=['GET'])
 def total_Invoice_index():
-    totalInvoices = TotalInvoice.query.all()
+    totalInvoices = TotalInvoice.query.filter(TotalInvoice.isDelete == False)
     newHistory = History(
         userName=current_user.id,
         modelName='TotalInvoices',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(TotalInvoiceSchema(many=True).dump(totalInvoices))
+
+
+@app.route('/v1/dust-total-invoices', methods=['GET'])
+@app.route('/dust-total-invoices', methods=['GET'])
+def dust_total_invoice_index():
+    totalInvoices = TotalInvoice.query.filter(TotalInvoice.isDelete == True)
+    newHistory = History(
+        userName=current_user.id,
+        modelName='TotalInvoice(dust)',
         modelId=None,
         action='gets'
     )
@@ -1191,6 +1206,10 @@ def total_invoice_create():
         applyNumbers=data.get('applyNumbers')if data.get(
             'applyNumbers') else None,
         customerId=data.get('customerId')if data.get('customerId') else None,
+        customerName=data.get('customerName')if data.get(
+            'customerName') else None,
+        customerAnyNumber=data.get('customerAnyNumber')if data.get(
+            'customerAnyNumber') else None,
         issueDate=datetime.strptime(
             data.get('issueDate'), "%Y-%m-%d") if data.get('issueDate') else None,
         title=data.get('title')if data.get('title') else None,
@@ -1222,6 +1241,10 @@ def total_invoice_update(id):
         'totalInvoiceApplyNumber')if data.get('totalInvoiceApplyNumber') else None
     totalInvoice.applyNumbers = data.get(
         'applyNumbers')if data.get('applyNumbers') else None
+    totalInvoice.customerId = data.get(
+        'customerId')if data.get('customerId') else None
+    totalInvoice.customerName = data.get(
+        'customerName')if data.get('customerName') else None
     totalInvoice.customerAnyNumber = data.get(
         'customerAnyNumber')if data.get('customerAnyNumber') else None
     totalInvoice.issueDate = data.get(
@@ -1241,19 +1264,20 @@ def total_invoice_update(id):
     return jsonify({"result": "OK", "id": id, "data": data})
 
 
-@app.route('/v1/total-invoice/<id>', methods=['DELETE'])
-@app.route('/total-invoice/<id>', methods=['DELETE'])
+@app.route('/v1/total_invoice_delete/<id>', methods=['PUT'])
+@app.route('/total_invoice_delete/<id>', methods=['PUT'])
 def total_invoice_destroy(id):
-    totalInvoice = TotalInvoice.query.filter(TotalInvoice.id == id).delete()
+    totalInvoice = TotalInvoice.query.filter(TotalInvoice.id == id).one()
+    totalInvoice.isDelete = True
     newHistory = History(
         userName=current_user.id,
         modelName='TotalInvoice',
         modelId=id,
-        action='delete'
+        action='put(dust)'
     )
     db.session.add(newHistory)
     db.session.commit()
-    return jsonify({"result": "OK", "id": id, "data": ''})
+    return jsonify({"result": "OK", "id": id, "data": ""})
 
 
 # 見積書(Quotations)
