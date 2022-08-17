@@ -1476,7 +1476,7 @@
                     async totalInvoicePrint() {
                         let checkedInvoices = [];
                         let customer = {};
-                        let prePdfToalInoices = [];
+                        let prePdfTotalInvoices = [];
                         let customerIds = [];
 
                         //this.invoicesInTotalInvoice.map(invoice => {
@@ -1536,20 +1536,21 @@
                                 basePrices: basePrices,
                                 taxies: taxies
                             }
-                            prePdfToalInoices.push(pt)
+                            prePdfTotalInvoices.push(pt)
 
                         });
                         // ↓最終結果。これをPDF側に渡す
-                        console.log(prePdfToalInoices);
                         const mode = 'invoice';
                         docClass = 'origin';
-                        const pdfData = getPdfDataTotalInvoice(mode, prePdfToalInoices[0], this.setting, docClass);
+                        const pdfData = getPdfDataTotalInvoice(mode, prePdfTotalInvoices[0], this.setting, docClass);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 self.printPdf('/pdf/' + response.data);
                                 const today = app.formatDateHyphen(Date.now());
                                 totalInvoiceData.applyNumbers = applyNumbers;
                                 totalInvoiceData.customerId = customerId;
+                                totalInvoiceData.customerName = prePdfTotalInvoices[0].invoices[0].customerName;
+                                totalInvoiceData.customerAnyNumber = prePdfTotalInvoices[0].invoices[0].customerAnyNumber;
                                 totalInvoiceData.issueDate = today;
                                 totalInvoiceData.title = app.totalInvoiceTitle;
                                 totalInvoiceData.fileName = response.data;
