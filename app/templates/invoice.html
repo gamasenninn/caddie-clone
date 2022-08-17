@@ -177,10 +177,20 @@
                             <b-row>
                                 <b-col class="text-right">
                                     <b-button v-if="procName=='normal'" size="sm" variant="primary" class="mb-3"
+                                        @click="totalInvoiceRefOpen();">
+                                        合計請求参照
+                                    </b-button>
+                                    <b-button v-if="procName=='normal'" size="sm" variant="primary" class="mb-3"
                                         @click="totalInvoiceOpen();">
                                         合計請求書
                                     </b-button>
                                 </b-col>
+                                <b-modal ref="total-invoice-ref-modal" size="xl" id="total-invoice-ref-modal">
+                                    <total-invoice-list :total-invoices-indicate-index="totalInvoices"
+                                        :sort-by-invoices="sortByInvoices" :sort-desc="sortDesc"
+                                        :get-total-invoice-file="getTotalInvoiceFile">
+                                    </total-invoice-list>
+                                </b-modal>
                                 <b-modal ref="total-invoice-modal" size="xl" id="total-invoice-modal">
                                     <day-search-in-total-invoice class="mr-0"
                                         @emit-day-start="updateDayStartInTotalInvoice"
@@ -905,6 +915,7 @@
                     isShowAll: false,        // trueの時、customer.isHide=falseのもののみindexに表示
                     isShowFavorite: false,
                     isMore: false,
+                    totalInvoices: [],                      //合計請求書専用
                     searchCustomerWordInTotalInvoice: '',   //合計請求書専用
                     invoicesInTotalInvoice: [],             //合計請求書専用
                     customerNames: [],                      //合計請求書専用 | 再利用可
@@ -914,6 +925,8 @@
                     searchDayEndInTotalInvoice: '',         //合計請求書専用
                     invoicesIndicateCountInTotalInvoice: 0, //合計請求書専用
                     totalInvoiceTitle: '',                  //合計請求書専用
+                    totalInvoicePdfFiles: [],               //合計請求書専用
+                    totalInvoicePdfFile: {},                //合計請求書専用
                     selected: { name: null, id: null },
                     fileId: '', //upload用ID
                     dicFiles: [],
@@ -965,6 +978,15 @@
                                     self.isMore = response.data.isMore;
                                 }
                             });
+                    },
+                    getTotalInvoices: async function () {
+                        self = this;
+                        url = '/v1/total-invoices';
+                        await axios.get(url)
+                            .then((response) => {
+                                console.log(response.data);
+                                self.totalInvoices = response.data;
+                            })
                     },
                     bulkUpsert: async function (item) {
                         if (!item.customerId) {
@@ -1340,6 +1362,21 @@
                             })
                         //return flen;
                     },
+                    getTotalInvoiceFile: async function (fileName) {
+                        self = this;
+                        url = "list-files/s/pdf"
+                        await axios.get(url)
+                            .then((response) => {
+                                console.log(response.data);
+                                self.totalInvoicePdfFiles = response.data;
+                                self.totalInvoicePdfFile = self.totalInvoicePdfFiles.find(element => element.filename === fileName);
+                            })
+                        console.log(self.totalInvoicePdfFile);
+                        if (!!self.totalInvoicePdfFile) {
+                            this.$refs['total-invoice-ref-modal'].hide();
+                            self.openViewer(self.totalInvoicePdfFile);
+                        }
+                    },
                     clearFileList: function () {
                         this.dicFiles = {};
                     },
@@ -1427,6 +1464,10 @@
                         if (!!this.searchCustomerWordInTotalInvoice)
                             //顧客情報も合わせて読む isCustomer=true
                             this.getInvoices(this.searchCustomerWordInTotalInvoice, this.offsetInTotalInvoice, true, true);
+                    },
+                    totalInvoiceRefOpen() {
+                        this.getTotalInvoices();
+                        this.$refs['total-invoice-ref-modal'].show();
                     },
                     totalInvoiceSubmit() {
                         totalInvoiceTitle = '';
