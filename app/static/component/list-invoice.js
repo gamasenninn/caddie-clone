@@ -335,6 +335,7 @@ Vue.component('total-invoice-list', {
         {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
         {  key: 'title', label: '件名', thClass: 'text-center', tdClass: 'text-center' },
         {  key: 'printing', label: '印刷', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'delete', label: '', thClass: 'text-center', tdClass: 'text-center' },
     ]" :tbody-tr-class="this.rowClass">
             <template v-slot:cell(issueDate)="data">
                 {{formatDate(data.item.issueDate)}}
@@ -344,14 +345,21 @@ Vue.component('total-invoice-list', {
                     印刷
                 </b-button>
             </template>
+            <template v-if="!isDeleteView" v-slot:cell(delete)="data">
+                <b-button variant="primary" @click="deleteTotalInvoice(data.item)">
+                    削除
+                </b-button>
+            </template>
         </b-table>
     </div>
     `,
     props: {
         totalInvoicesIndicateIndex: Array,
         sortByTotalInvoices: String,
+        isDeleteView: Boolean,
         sortDesc: Boolean,
         getTotalInvoiceFile: Function,
+        deleteTotalInvoice: Function,
     },
     methods: {
         rowClass: function (item, type) {

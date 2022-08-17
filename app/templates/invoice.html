@@ -186,9 +186,20 @@
                                     </b-button>
                                 </b-col>
                                 <b-modal ref="total-invoice-ref-modal" size="xl" id="total-invoice-ref-modal">
+                                    <b-col class="text-right">
+                                        <b-button v-if="isDeleteView" size="sm" variant="primary" class="mb-3"
+                                            @click="viewTotalInvoices">
+                                            合計請求参照
+                                        </b-button>
+                                        <b-button v-else size="sm" variant="primary" class="mb-3"
+                                            @click="viewDustTotalInvoices">
+                                            削除済み参照
+                                        </b-button>
+                                    </b-col>
                                     <total-invoice-list :total-invoices-indicate-index="totalInvoices"
-                                        :sort-by-total-invoices="sortByInvoices" :sort-desc="sortDesc"
-                                        :get-total-invoice-file="getTotalInvoiceFile">
+                                        :sort-by-total-invoices="sortByInvoices" :is-delete-view="isDeleteView"
+                                        :sort-desc="sortDesc" :get-total-invoice-file="getTotalInvoiceFile"
+                                        :delete-total-invoice="deleteTotalInvoice">
                                     </total-invoice-list>
                                 </b-modal>
                                 <b-modal ref="total-invoice-modal" size="xl" id="total-invoice-modal">
@@ -927,6 +938,7 @@
                     totalInvoiceTitle: '',                  //合計請求書専用
                     totalInvoicePdfFiles: [],               //合計請求書専用
                     totalInvoicePdfFile: {},                //合計請求書専用
+                    isDeleteView: false,                    //合計請求書専用
                     selected: { name: null, id: null },
                     fileId: '', //upload用ID
                     dicFiles: [],
@@ -982,6 +994,15 @@
                     getTotalInvoices: async function () {
                         self = this;
                         url = '/v1/total-invoices';
+                        await axios.get(url)
+                            .then((response) => {
+                                console.log(response.data);
+                                self.totalInvoices = response.data;
+                            })
+                    },
+                    getDustTotalInvoices: async function () {
+                        self = this;
+                        url = '/v1/dust-total-invoices';
                         await axios.get(url)
                             .then((response) => {
                                 console.log(response.data);
@@ -1090,6 +1111,14 @@
                                 console.log(response);
                                 self.invoice = '';
                                 self.getInvoices(self.searchInvoiceWord);
+                            });
+                    },
+                    deleteTotalInvoice: async function (item) {
+                        self = this;
+                        await axios.put('/total_invoice_delete/' + item.id)
+                            .then((response) => {
+                                console.log(response)
+                                self.getTotalInvoices();
                             });
                     },
                     InvoiceAddRow: function () {
@@ -1468,6 +1497,14 @@
                     totalInvoiceRefOpen() {
                         this.getTotalInvoices();
                         this.$refs['total-invoice-ref-modal'].show();
+                    },
+                    viewTotalInvoices() {
+                        this.isDeleteView = false;
+                        this.getTotalInvoices();
+                    },
+                    viewDustTotalInvoices() {
+                        this.isDeleteView = true;
+                        this.getDustTotalInvoices();
                     },
                     totalInvoiceSubmit() {
                         totalInvoiceTitle = '';
