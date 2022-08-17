@@ -186,6 +186,15 @@
                                     </b-button>
                                 </b-col>
                                 <b-modal ref="total-invoice-ref-modal" size="xl" id="total-invoice-ref-modal">
+                                    <b-col class="text-right">
+                                        <b-button size="sm" variant="primary" class="mb-3" @click="getTotalInvoices">
+                                            合計請求参照
+                                        </b-button>
+                                        <b-button size="sm" variant="primary" class="mb-3"
+                                            @click="getDustTotalInvoices">
+                                            削除済み参照
+                                        </b-button>
+                                    </b-col>
                                     <total-invoice-list :total-invoices-indicate-index="totalInvoices"
                                         :sort-by-total-invoices="sortByInvoices" :sort-desc="sortDesc"
                                         :get-total-invoice-file="getTotalInvoiceFile"
@@ -983,6 +992,15 @@
                     getTotalInvoices: async function () {
                         self = this;
                         url = '/v1/total-invoices';
+                        await axios.get(url)
+                            .then((response) => {
+                                console.log(response.data);
+                                self.totalInvoices = response.data;
+                            })
+                    },
+                    getDustTotalInvoices: async function () {
+                        self = this;
+                        url = '/v1/dust-total-invoices';
                         await axios.get(url)
                             .then((response) => {
                                 console.log(response.data);
