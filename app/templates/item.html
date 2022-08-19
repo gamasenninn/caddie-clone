@@ -464,10 +464,8 @@
                         self = this;
                         await axios.post("/v1/item", item)
                             .then(function (response) {
-                                Vue.set(self.item, 'id', response.data.id)
                                 self.item.isInsert = false;
-                                self.getItem(self.item);
-                                localStorage.setItem('item', JSON.stringify(self.item));
+                                Vue.set(self.item, 'id', response.data.id)
                                 app.title = '新規作成';
                                 app.message = '保存しました。';
                                 app.$bvModal.show('confirmModal');
@@ -479,6 +477,8 @@
                                 console.log(error);
                                 return;
                             });
+                        await self.getItem(self.item);
+                        localStorage.setItem('item', JSON.stringify(self.item));
                         self.oldItem = { ...self.item };
 
                     },

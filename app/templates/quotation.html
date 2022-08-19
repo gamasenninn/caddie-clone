@@ -846,11 +846,9 @@
                         }
                         if (!item.id) {
                             await this.insertQuotation(item);
-                            this.$bvModal.show('confirmModal');
                         }
                         else {
                             await this.updateQuotation(item);
-                            this.$bvModal.show('confirmModal');
                             item.quotation_items.sort(function (a, b) {
                                 return (a.rowNum < b.rowNum) ? -1 : 1;
                             });
@@ -864,30 +862,43 @@
                                 console.log(response);
                                 Vue.set(self.quotation, 'id', response.data.id)
                                 self.quotation.isInsert = false;
+                                self.title = '新規作成';
+                                self.message = '保存しました。';
+                                self.$bvModal.show('confirmModal');
+                            })
+                            .catch(function (error) {
+                                console.log(error.response.data.message);
+                                self.title = 'エラー';
+                                self.message = error.response.data.message;
+                                self.$bvModal.show('confirmModalDanger');
                             });
                         await self.getQuotation(self.quotation);
                         localStorage.setItem('quotation', JSON.stringify(self.quotation));
                         //self.countChanged = 0;
-                        app.title = '新規作成';
-                        app.message = '保存しました。';
                         self.oldQuotation = { ...self.quotation };
                     },
                     updateQuotation: async function (item) {
                         self = this;
                         await axios.put("/v1/quotation/" + item.id, item)
-                            .then(function (response) {
+                            .then(async function (response) {
                                 console.log(response);
+                                self.title = '更新';
+                                self.message = '保存しました。'
+                                self.$bvModal.show('confirmModal');
+                                await self.getQuotation(self.quotation);
+                            })
+                            .catch(function (error) {
+                                console.log(error.response.data.message);
+                                self.title = 'エラー';
+                                self.message = error.response.data.message;
+                                self.$bvModal.show('confirmModalDanger');
                             });
-                        await self.getQuotation(self.quotation);
                         self.quotation.quotation_items.sort(function (a, b) {
                             return (a.rowNum < b.rowNum) ? -1 : 1;
                         });
                         localStorage.setItem('quotation', JSON.stringify(self.quotation));
                         self.oldQuotation = { ...self.quotation };
                         //self.countChanged = 0;
-                        app.title = '更新';
-                        app.message = '保存しました。'
-
                     },
                     copyQuotation: async function (item) {
                         let quotationResource = JSON.stringify(item);

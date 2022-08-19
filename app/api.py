@@ -8,6 +8,7 @@ from dateutil import relativedelta
 from sqlalchemy import desc, or_, and_, extract, func
 from flask_login import current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import unicodedata
 
 
 _LIMIT_NUM = 100
@@ -772,6 +773,10 @@ def invoice_create():
         numberOfAttachments=data.get('numberOfAttachments'),
         invoice_items=newInvoiceItems,
     )
+
+    if get_east_asian_width_count(newInvoice.memo1) > 10 or get_east_asian_width_count(newInvoice.memo2) > 10 or get_east_asian_width_count(newInvoice.memo3) > 10 or get_east_asian_width_count(newInvoice.memo4) > 10:
+        return jsonify({"result": "error", "message": "全角文字は5文字以内、半角文字は10文字以内で入力してください。"}), 406
+
     db.session.add(newInvoice)
     db.session.commit()
     id = newInvoice.id
@@ -825,6 +830,9 @@ def invoice_update(id):
     invoice.tax = data.get('tax')
     invoice.isTaxExp = data.get('isTaxExp')
     invoice.numberOfAttachments = data.get('numberOfAttachments')
+
+    if get_east_asian_width_count(invoice.memo1) > 10 or get_east_asian_width_count(invoice.memo2) > 10 or get_east_asian_width_count(invoice.memo3) > 10 or get_east_asian_width_count(invoice.memo4) > 10:
+        return jsonify({"result": "error", "message": "全角文字は5文字以内、半角文字は10文字以内で入力してください。"}), 406
 
     if data.get('invoice_items'):
         update_list = []
@@ -1466,6 +1474,10 @@ def quotation_create():
         numberOfAttachments=data.get('numberOfAttachments'),
         quotation_items=newQuotationItems,
     )
+
+    if get_east_asian_width_count(newQuotation.memo1) > 10 or get_east_asian_width_count(newQuotation.memo2) > 10 or get_east_asian_width_count(newQuotation.memo3) > 10 or get_east_asian_width_count(newQuotation.memo4) > 10:
+        return jsonify({"result": "error", "message": "全角文字は5文字以内、半角文字は10文字以内で入力してください。"}), 406
+
     db.session.add(newQuotation)
     db.session.commit()
     id = newQuotation.id
@@ -1519,6 +1531,9 @@ def quotation_update(id):
     quotation.tax = data.get('tax')
     quotation.isTaxExp = data.get('isTaxExp')
     quotation.numberOfAttachments = data.get('numberOfAttachments')
+
+    if get_east_asian_width_count(quotation.memo1) > 10 or get_east_asian_width_count(quotation.memo2) > 10 or get_east_asian_width_count(quotation.memo3) > 10 or get_east_asian_width_count(quotation.memo4) > 10:
+        return jsonify({"result": "error", "message": "全角文字は5文字以内、半角文字は10文字以内で入力してください。"}), 406
 
     if data.get('quotation_items'):
         update_list = []
@@ -2181,6 +2196,20 @@ def history_index():
 def login_history_index():
     loginHistories = History.query.order_by(desc(History.id)).limit(_LIMIT_NUM)
     return jsonify(HistorySchema(many=True).dump(loginHistories))
+
+
+# 半角を１文字、全角を２文字として文字数カウントする関数
+def get_east_asian_width_count(text):
+    count = 0
+    if text == None:
+        count = 0
+    else:
+        for c in text:
+            if unicodedata.east_asian_width(c) in 'FWA':
+                count += 2
+            else:
+                count += 1
+    return count
 
 
 if __name__ == '__main__':
