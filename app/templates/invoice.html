@@ -995,11 +995,12 @@
                     updateInvoice: async function (item) {
                         self = this;
                         await axios.put("/v1/invoice/" + item.id, item)
-                            .then(function (response) {
+                            .then(async function (response) {
                                 console.log(response);
                                 self.title = '更新';
                                 self.message = '保存しました。';
                                 self.$bvModal.show('confirmModal');
+                                await self.getInvoice(self.invoice);
                             })
                             .catch(function (error) {
                                 console.log(error.response.data.message);
@@ -1007,7 +1008,6 @@
                                 self.message = error.response.data.message;
                                 self.$bvModal.show('confirmModalDanger');
                             });
-                        await self.getInvoice(self.invoice);
                         self.invoice.invoice_items.sort(function (a, b) {
                             return (a.rowNum < b.rowNum) ? -1 : 1;
                         });
