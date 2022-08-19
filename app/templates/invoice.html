@@ -186,16 +186,23 @@
                                     </b-button>
                                 </b-col>
                                 <b-modal ref="total-invoice-ref-modal" size="xl" id="total-invoice-ref-modal">
-                                    <b-col class="text-right">
-                                        <b-button v-if="isDeleteView" size="sm" variant="primary" class="mb-3"
-                                            @click="viewTotalInvoices">
-                                            合計請求参照
-                                        </b-button>
-                                        <b-button v-else size="sm" variant="primary" class="mb-3"
-                                            @click="viewDustTotalInvoices">
-                                            削除済み参照
-                                        </b-button>
-                                    </b-col>
+                                    <b-row>
+                                        <b-col>
+                                            <total-invoice-ref-search :totalInvoices="totalInvoices"
+                                                @emit-total-ref-invoices="updateTotalInvoices" />
+                                        </b-col>
+                                        <b-col class="text-right">
+                                            <b-button v-if="isDeleteView" size="sm" variant="primary" class="mb-3"
+                                                @click="viewTotalInvoices">
+                                                合計請求参照
+                                            </b-button>
+                                            <b-button v-else size="sm" variant="primary" class="mb-3"
+                                                @click="viewDustTotalInvoices">
+                                                削除済み参照
+                                            </b-button>
+
+                                        </b-col>
+                                    </b-row>
                                     <total-invoice-list :total-invoices-indicate-index="totalInvoices"
                                         :sort-by-total-invoices="sortByInvoices" :is-delete-view="isDeleteView"
                                         :sort-desc="sortDesc" :get-total-invoice-file="getTotalInvoiceFile"
@@ -931,6 +938,7 @@
                     isMore: false,
                     totalInvoices: [],                      //合計請求書専用
                     searchCustomerWordInTotalInvoice: '',   //合計請求書専用
+                    searchTotalInvoiceRefWord: '',          //合計請求書参照専用
                     invoicesInTotalInvoice: [],             //合計請求書専用
                     customerNames: [],                      //合計請求書専用 | 再利用可
                     isMoreInTotalInvoice: false,            //合計請求書専用
@@ -1605,6 +1613,10 @@
                         this.invoices = invoices;
                         this.searchInvoiceWord = searchInvoiceWord;
                         this.isMore = isMore;
+                    },
+                    updateTotalInvoices(totalInvoices, searchTotalInvoiceRefWord) {
+                        this.totalInvoices = totalInvoices;
+                        this.searchTotalInvoiceRefWord = searchTotalInvoiceRefWord;
                     },
                     updateDayStart(start) {
                         this.searchDayStart = start;

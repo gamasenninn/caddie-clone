@@ -322,6 +322,50 @@ let daySearchInTotalInvoices = Vue.component('day-search-in-total-invoice', {
     }
 })
 
+// 合計請求書参照検索コンポーネント
+var totalInvoiceRefSearch = Vue.component('total-invoice-ref-search', {
+    template: `
+    <b-input-group>
+        <b-form-input v-model="totalInvoiceRefSearch.searchTotalInvoiceRefWord" id="searchTotalInvoiceRefWord" size="sm"
+            placeholder="🔍　No. or 日付 or 得意先名">
+        </b-form-input>
+        <b-input-group-append>
+            <b-button variant="primary" size="sm" @click="this.searchTotalInvoiceRef">検索
+            </b-button>
+        </b-input-group-append>
+    </b-input-group>
+    `,
+    data: {
+        searchTotalInvoiceRefWord: '',
+    },
+    props: {
+        totalInvoices: Array,
+    },
+    methods: {
+        searchTotalInvoiceRef: function () {
+            this.getTotalInvoices(totalInvoiceRefSearch.searchTotalInvoiceRefWord);
+        },
+        getTotalInvoices: async function (searchWord = '') {
+            console.log('searchWord:', searchWord);
+            self = this;
+            url = '/v1/total-invoices';
+            await axios.get(url, {
+                params: {
+                    search: searchWord
+                }
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    totalInvoiceRefSearch.totalInvoices = response.data;
+                })
+            this.changeTotalInvoices();
+        },
+        changeTotalInvoices() {
+            this.$emit('emit-total-ref-invoices', totalInvoiceRefSearch.totalInvoices, totalInvoiceRefSearch.searchTotalInvoiceRefWord);
+        },
+    },
+})
+
 // 合計請求参照一覧
 Vue.component('total-invoice-list', {
     template: `
