@@ -962,11 +962,9 @@
                         }
                         if (!item.id) {
                             await this.insertInvoice(item);
-                            this.$bvModal.show('confirmModal');
                         }
                         else {
                             await this.updateInvoice(item);
-                            this.$bvModal.show('confirmModal');
                             item.invoice_items.sort(function (a, b) {
                                 return (a.rowNum < b.rowNum) ? -1 : 1;
                             });
@@ -980,11 +978,18 @@
                                 console.log(response);
                                 Vue.set(self.invoice, 'id', response.data.id)
                                 self.invoice.isInsert = false;
+                                self.title = '新規作成';
+                                self.message = '保存しました。';
+                                self.$bvModal.show('confirmModal');
+                            })
+                            .catch(function (error) {
+                                console.log(error.response.data.message);
+                                self.title = 'エラー';
+                                self.message = error.response.data.message;
+                                self.$bvModal.show('confirmModalDanger');
                             });
                         await self.getInvoice(self.invoice);
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                        app.title = '新規作成';
-                        app.message = '保存しました。';
                         self.oldInvoice = { ...self.invoice };
                     },
                     updateInvoice: async function (item) {
@@ -992,14 +997,21 @@
                         await axios.put("/v1/invoice/" + item.id, item)
                             .then(function (response) {
                                 console.log(response);
+                                self.title = '更新';
+                                self.message = '保存しました。';
+                                self.$bvModal.show('confirmModal');
+                            })
+                            .catch(function (error) {
+                                console.log(error.response.data.message);
+                                self.title = 'エラー';
+                                self.message = error.response.data.message;
+                                self.$bvModal.show('confirmModalDanger');
                             });
                         await self.getInvoice(self.invoice);
                         self.invoice.invoice_items.sort(function (a, b) {
                             return (a.rowNum < b.rowNum) ? -1 : 1;
                         });
                         localStorage.setItem('invoice', JSON.stringify(self.invoice));
-                        app.title = '更新';
-                        app.message = '保存しました。';
                         self.oldInvoice = { ...self.invoice };
                     },
                     upsertInvoicePayments: async function (item) {
