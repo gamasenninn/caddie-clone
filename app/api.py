@@ -1158,7 +1158,33 @@ def invoice_payment_destroy(id):
 @app.route('/v1/total-invoices', methods=['GET'])
 @app.route('/total-invoices', methods=['GET'])
 def total_Invoice_index():
-    totalInvoices = TotalInvoice.query.filter(TotalInvoice.isDelete == False)
+    req = request.args
+    searchWord = req.get('search')
+
+    if searchWord:
+        if len(searchWord) == 4:
+            totalInvoices = TotalInvoice.query.filter(and_(Invoice.isDelete == False, or_(
+                extract('year', TotalInvoice.issueDate) == searchWord, TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord,)))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == False, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month))))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == False, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month, extract('day', TotalInvoice.issueDate) == day))))
+        else:
+            totalInvoices = TotalInvoice.query.filter(
+                and_(TotalInvoice.isDelete == False, or_(TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord)))
+
+    else:
+        totalInvoices = TotalInvoice.query.filter(
+            TotalInvoice.isDelete == False)
     newHistory = History(
         userName=current_user.id,
         modelName='TotalInvoices',
