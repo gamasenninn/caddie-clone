@@ -389,7 +389,7 @@ Vue.component('total-invoice-list', {
                     印刷
                 </b-button>
             </template>
-            <template v-if="!isDeleteView" v-slot:cell(delete)="data">
+            <template v-slot:cell(delete)="data">
                 <b-button variant="primary" @click="deleteTotalInvoice(data.item)">
                     削除
                 </b-button>
@@ -400,7 +400,6 @@ Vue.component('total-invoice-list', {
     props: {
         totalInvoicesIndicateIndex: Array,
         sortByTotalInvoices: String,
-        isDeleteView: Boolean,
         sortDesc: Boolean,
         getTotalInvoiceFile: Function,
         deleteTotalInvoice: Function,
