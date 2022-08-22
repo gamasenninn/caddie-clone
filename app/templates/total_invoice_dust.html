@@ -69,7 +69,7 @@
                             <b-row align-h="end">
                                 <p class="mr-3">表示件数 {{ totalInvoicesIndicateCount }}件</p>
                             </b-row>
-                            <total-invoice-list :total-invoices-indicate-index="totalInvoices"
+                            <total-invoice-list :total-invoices-indicate-index="totalInvoices" :is-delete-button="false"
                                 :sort-by-total-invoices="sortByInvoices" :sort-desc="sortDesc"
                                 :get-total-invoice-file="getTotalInvoiceFile"
                                 :delete-total-invoice="deleteTotalInvoice">
