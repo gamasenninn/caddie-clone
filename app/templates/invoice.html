@@ -226,9 +226,6 @@
                                             @click="showMoreInTotalInvoice">さらに表示
                                         </b-button>
                                     </b-row>
-                                    請求総額：{{eachTotal.billings}}
-                                    本体価格：{{eachTotal.basePrices}}
-                                    消費税額：{{eachTotal.taxies}}
                                     <template #modal-footer>
                                         <button v-b-modal.modal-close_visit class="btn btn-secondary m-1"
                                             @click="$bvModal.hide('total-invoice-modal')">閉じる</button>
