@@ -1565,7 +1565,9 @@
                                 invoices: checkedInvoices[i],
                                 totalBillings: totalBillings,
                                 basePrices: basePrices,
-                                taxies: taxies
+                                taxies: taxies,
+                                totalInvoiceApplyNumber: 0
+
                             }
                             prePdfTotalInvoices.push(pt)
 
@@ -1573,7 +1575,6 @@
                         // ↓最終結果。これをPDF側に渡す
                         const mode = 'invoice';
                         docClass = 'origin';
-                        const pdfData = getPdfDataTotalInvoice(mode, prePdfTotalInvoices[0], this.setting, docClass);
                         const today = app.formatDateHyphen(Date.now());
                         totalInvoiceData.applyNumbers = applyNumbers;
                         totalInvoiceData.customerId = customerId;
@@ -1585,7 +1586,9 @@
                             .then(function (response) {
                                 console.log(response);
                                 totalInvoiceData.id = response.data.id;
-                            });
+                                prePdfTotalInvoices[0].totalInvoiceApplyNumber = response.data.data.totalInvoiceApplyNumber;
+                        });
+                        const pdfData = getPdfDataTotalInvoice(mode, prePdfTotalInvoices[0], this.setting, docClass);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
                                 console.log(response);
