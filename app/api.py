@@ -1260,7 +1260,9 @@ def total_invoice_create():
     )
     db.session.add(newHistory)
     db.session.commit()
-    return jsonify({"result": "OK", "id": id, "data": data})
+    registerTotalInvoice = TotalInvoice.query.order_by(
+        desc(TotalInvoice.id)).first()
+    return jsonify({"result": "OK", "id": id, "data": TotalInvoiceSchema().dump(registerTotalInvoice)})
 
 
 @app.route('/v1/total-invoice/<id>', methods=['PUT'])
@@ -1271,8 +1273,6 @@ def total_invoice_update(id):
     if not totalInvoice:
         return jsonify({"result": "No Data", "id": id, "data": data})
 
-    totalInvoice.totalInvoiceApplyNumber = data.get(
-        'totalInvoiceApplyNumber')if data.get('totalInvoiceApplyNumber') else None
     totalInvoice.applyNumbers = data.get(
         'applyNumbers')if data.get('applyNumbers') else None
     totalInvoice.customerId = data.get(
@@ -1281,11 +1281,11 @@ def total_invoice_update(id):
         'customerName')if data.get('customerName') else None
     totalInvoice.customerAnyNumber = data.get(
         'customerAnyNumber')if data.get('customerAnyNumber') else None
-    totalInvoice.issueDate = data.get(
-        'issueDate')if data.get('issueDate') else None
+    totalInvoice.issueDate = datetime.strptime(
+        data.get('issueDate'), "%Y-%m-%d")if data.get('issueDate') else None
     totalInvoice.title = data.get('title')if data.get('title') else None
-    totalInvoice.filePath = data.get(
-        'filePath')if data.get('filePath') else None
+    totalInvoice.fileName = data.get(
+        'fileName')if data.get('fileName') else None
 
     newHistory = History(
         userName=current_user.id,
