@@ -1201,6 +1201,9 @@ def total_Invoice_index():
 def dust_total_invoice_index():
     req = request.args
     searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
+    limit = int(req.get('limit')) if req.get('limit') else 100
+    offset = int(req.get('offset')) if req.get('offset') else 0
 
     if searchWord:
         if len(searchWord) == 4:
@@ -1226,6 +1229,12 @@ def dust_total_invoice_index():
         totalInvoices = TotalInvoice.query.filter(
             TotalInvoice.isDelete == True)
 
+    totalInvoices_tmp = totalInvoices
+    if offset:
+        totalInvoices = totalInvoices.offset(offset)
+    if limit:
+        totalInvoices = totalInvoices.limit(limit)
+
     newHistory = History(
         userName=current_user.id,
         modelName='TotalInvoice(dust)',
@@ -1234,6 +1243,13 @@ def dust_total_invoice_index():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = totalInvoices_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'invoices': TotalInvoiceSchema(many=True).dump(totalInvoices), 'isMore': isMore})
+
     return jsonify(TotalInvoiceSchema(many=True).dump(totalInvoices))
 
 
