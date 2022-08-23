@@ -1,0 +1,183 @@
+<% extends "head.html" %>
+    <% block content %>
+        <!-- print.js -->
+        <script src="../static/library/print.min.js"></script>
+        <link rel="stylesheet" href="../static/library/print.min.css" type="text/css" />
+
+        <!-- viewerとして使用-->
+        <script src="../static//library/tingle.min.js"></script>
+        <link rel="stylesheet" href="../static/library/tingle.css" type="text/css" />
+
+        <!-- コンポーネント -->
+        <script src="../static/component/list-invoice.js"></script>
+
+        <style>
+            .sm-mode {
+                display: none;
+            }
+
+            .pc-mode {
+                display: block;
+            }
+
+            @media screen and (max-width:690px) {
+                .sm-mode {
+                    display: block;
+                }
+
+                .pc-mode {
+                    display: none;
+                }
+            }
+
+            .card-header {
+                background-color: #ccecf1;
+                font-size: 18px;
+            }
+        </style>
+
+        <div id="app" v-cloak>
+            <!-- 一覧表示 -->
+            <div v-if="pageName=='index'">
+                <setting-header :mode-name="modeName"></setting-header>
+                <!-- 空行 -->
+                <b-row class="mb-5"></b-row>
+                <b-row class="mb-5"></b-row>
+
+                <b-row class="mt-1">
+                    <b-col></b-col>
+                    <b-col cols="11">
+                        <b-card border-variant="white" class="mb-3 text-center" header="削除済み合計請求書一覧"
+                            header-border-variant="light">
+                            <b-row>
+                                <b-col sm>
+                                    <b-input-group>
+                                        <b-form-input v-model="searchTotalInvoiceWord" id="searchTotalInvoiceWord"
+                                            size="sm" placeholder="🔍　日付 or 得意先名">
+                                        </b-form-input>
+                                        <b-input-group-append>
+                                            <!-- <b-button variant="primary" size="sm" @click="searchInvoice">検索
+                                            </b-button> -->
+                                        </b-input-group-append>
+                                    </b-input-group>
+                                </b-col>
+                                <b-col sm>
+                                </b-col>
+                                <b-col sm>
+                                </b-col>
+                            </b-row>
+                            <b-row align-h="end">
+                                <p class="mr-3">表示件数 {{ totalInvoicesIndicateCount }}件</p>
+                            </b-row>
+                            <total-invoice-list :total-invoices-indicate-index="totalInvoices" :is-delete-button="false"
+                                :sort-by-total-invoices="sortByInvoices" :sort-desc="sortDesc"
+                                :get-total-invoice-file="getTotalInvoiceFile"
+                                :delete-total-invoice="deleteTotalInvoice">
+                            </total-invoice-list>
+                            <b-row align-h="end">
+                                <!-- <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button> -->
+                            </b-row>
+                        </b-card>
+                    </b-col>
+                    <b-col></b-col>
+                </b-row>
+            </div>
+        </div>
+
+        <script src="static/component/def-pdf.js"></script>
+        <script>
+            Vue.filter('nf', function (val) {
+                return val.toLocaleString();
+            });
+
+            const router = new VueRouter({
+            })
+
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    sortByInvoices: 'id',
+                    sortDesc: true,
+                    searchTotalInvoiceWord: '',          //請求書検索
+                    totalInvoicesIndicateCount: 0,       //請求書検索
+                    totalInvoices: [],                   //全件invoice
+                    offset: 0,
+                    isMore: false,
+                },
+                methods: {
+                    getTotalInvoices: async function () {
+                        self = this;
+                        url = '/v1/dust-total-invoices';
+                        await axios.get(url)
+                            .then(function (response) {
+                                console.log(response);
+                                self.offset = 0;
+                                self.totalInvoices = response.data;
+                            });
+                    },
+                    getTotalInvoiceFile: async function (fileName) {
+                        self = this;
+                        url = "list-files/s/pdf"
+                        await axios.get(url)
+                            .then((response) => {
+                                console.log(response.data);
+                                self.totalInvoicePdfFiles = response.data;
+                                self.totalInvoicePdfFile = self.totalInvoicePdfFiles.find(element => element.filename === fileName);
+                            })
+                        console.log(self.totalInvoicePdfFile);
+                        if (!!self.totalInvoicePdfFile) {
+                            self.openViewer(self.totalInvoicePdfFile);
+                        }
+                    },
+                    deleteTotalInvoice: async function (item) {
+                        self = this;
+                        await axios.put('/total_invoice_delete/' + item.id)
+                            .then((response) => {
+                                console.log(response)
+                                self.getTotalInvoices();
+                            });
+                    },
+                    openViewer: function (f) {
+                        content = ''
+                        if (f.type == 'pdf') {
+                            content = "<div class='iframe-wrapper' ><iframe src=" + f.url + " frameborder='0'></iframe></div>"
+                        } else if (f.type == 'csv') {
+                            content = "このファイルはViwerでは開けません";
+                        } else {
+                            content = "<img src=" + f.url + " width='100%'>"
+                        }
+                        this.modal.setContent(content);
+                        this.modal.open();
+                    },
+                },
+                mounted: function () {
+                    this.getTotalInvoices();
+                    document.querySelector('title').textContent = '削除済み合計請求書管理';
+                    this.modal = new tingle.modal({
+                        footer: false,
+                        stickyFooter: false,
+                        closeMethods: ['overlay', 'button', 'escape'],
+                        closeLabel: "Close",
+                    });
+                },
+                router,
+                computed: {
+                    pageName() {
+                        if (this.$route.query.page == undefined) return 'index';
+                        return this.$route.query.page;
+                    },
+                    modeName() {
+                        return localStorage.getItem('wMode');
+                    },
+                },
+                watch: {
+                    $route(to, from) { // パラメータの変更でドロップゾーンを初期化するため
+                        this.routeFrom = from.query.page;
+                        this.routeTo = to.query.page;
+                    }
+                },
+            })
+
+        </script>
+
+        <% endblock %>
