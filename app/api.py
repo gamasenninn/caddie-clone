@@ -1199,7 +1199,33 @@ def total_Invoice_index():
 @app.route('/v1/dust-total-invoices', methods=['GET'])
 @app.route('/dust-total-invoices', methods=['GET'])
 def dust_total_invoice_index():
-    totalInvoices = TotalInvoice.query.filter(TotalInvoice.isDelete == True)
+    req = request.args
+    searchWord = req.get('search')
+
+    if searchWord:
+        if len(searchWord) == 4:
+            totalInvoices = TotalInvoice.query.filter(and_(Invoice.isDelete == True, or_(
+                extract('year', TotalInvoice.issueDate) == searchWord, TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord,)))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == True, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month))))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == True, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month, extract('day', TotalInvoice.issueDate) == day))))
+        else:
+            totalInvoices = TotalInvoice.query.filter(
+                and_(TotalInvoice.isDelete == True, or_(TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord)))
+    else:
+        totalInvoices = TotalInvoice.query.filter(
+            TotalInvoice.isDelete == True)
+
     newHistory = History(
         userName=current_user.id,
         modelName='TotalInvoice(dust)',

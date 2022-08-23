@@ -56,8 +56,8 @@
                                             size="sm" placeholder="🔍　日付 or 得意先名">
                                         </b-form-input>
                                         <b-input-group-append>
-                                            <!-- <b-button variant="primary" size="sm" @click="searchInvoice">検索
-                                            </b-button> -->
+                                            <b-button variant="primary" size="sm" @click="searchTotalInvoiceRef">検索
+                                            </b-button>
                                         </b-input-group-append>
                                     </b-input-group>
                                 </b-col>
@@ -105,10 +105,14 @@
                     isMore: false,
                 },
                 methods: {
-                    getTotalInvoices: async function () {
+                    getTotalInvoices: async function (searchWord = '') {
                         self = this;
                         url = '/v1/dust-total-invoices';
-                        await axios.get(url)
+                        await axios.get(url, {
+                            params: {
+                                search: searchWord
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
                                 self.offset = 0;
@@ -136,6 +140,9 @@
                                 console.log(response)
                                 self.getTotalInvoices();
                             });
+                    },
+                    searchTotalInvoiceRef: function () {
+                        this.getTotalInvoices(this.searchTotalInvoiceWord);
                     },
                     openViewer: function (f) {
                         content = ''
