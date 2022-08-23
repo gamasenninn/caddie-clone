@@ -56,8 +56,8 @@
                                             size="sm" placeholder="🔍　日付 or 得意先名">
                                         </b-form-input>
                                         <b-input-group-append>
-                                            <!-- <b-button variant="primary" size="sm" @click="searchInvoice">検索
-                                            </b-button> -->
+                                            <b-button variant="primary" size="sm" @click="searchTotalInvoiceRef">検索
+                                            </b-button>
                                         </b-input-group-append>
                                     </b-input-group>
                                 </b-col>
@@ -71,11 +71,10 @@
                             </b-row>
                             <total-invoice-list :total-invoices-indicate-index="totalInvoices" :is-delete-button="false"
                                 :sort-by-total-invoices="sortByInvoices" :sort-desc="sortDesc"
-                                :get-total-invoice-file="getTotalInvoiceFile"
-                                :delete-total-invoice="deleteTotalInvoice">
+                                :get-total-invoice-file="getTotalInvoiceFile" delete-total-invoice="">
                             </total-invoice-list>
                             <b-row align-h="end">
-                                <!-- <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button> -->
+                                <b-button v-if="isMore" variant="primary" size="sm" @click="showMore">さらに表示</b-button>
                             </b-row>
                         </b-card>
                     </b-col>
@@ -105,14 +104,26 @@
                     isMore: false,
                 },
                 methods: {
-                    getTotalInvoices: async function () {
+                    getTotalInvoices: async function (searchWord = '', offset = 0) {
                         self = this;
                         url = '/v1/dust-total-invoices';
-                        await axios.get(url)
+                        await axios.get(url, {
+                            params: {
+                                search: searchWord,
+                                offset: offset,
+                                moreCheck: true,
+                            }
+                        })
                             .then(function (response) {
                                 console.log(response);
-                                self.offset = 0;
-                                self.totalInvoices = response.data;
+                                if (offset == 0) {
+                                    self.offset = 0;
+                                    self.totalInvoices = response.data.invoices;
+                                    self.isMore = response.data.isMore;
+                                    return
+                                }
+                                response.data.invoices.map(invoice => self.totalInvoices.push(invoice));
+                                self.isMore = response.data.isMore;
                             });
                     },
                     getTotalInvoiceFile: async function (fileName) {
@@ -129,13 +140,12 @@
                             self.openViewer(self.totalInvoicePdfFile);
                         }
                     },
-                    deleteTotalInvoice: async function (item) {
-                        self = this;
-                        await axios.put('/total_invoice_delete/' + item.id)
-                            .then((response) => {
-                                console.log(response)
-                                self.getTotalInvoices();
-                            });
+                    searchTotalInvoiceRef: function () {
+                        this.getTotalInvoices(this.searchTotalInvoiceWord);
+                    },
+                    showMore: function () {
+                        this.offset += 100;
+                        this.getTotalInvoices(this.searchInvoiceWord, this.offset);
                     },
                     openViewer: function (f) {
                         content = ''

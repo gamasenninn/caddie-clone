@@ -1199,7 +1199,42 @@ def total_Invoice_index():
 @app.route('/v1/dust-total-invoices', methods=['GET'])
 @app.route('/dust-total-invoices', methods=['GET'])
 def dust_total_invoice_index():
-    totalInvoices = TotalInvoice.query.filter(TotalInvoice.isDelete == True)
+    req = request.args
+    searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
+    limit = int(req.get('limit')) if req.get('limit') else 100
+    offset = int(req.get('offset')) if req.get('offset') else 0
+
+    if searchWord:
+        if len(searchWord) == 4:
+            totalInvoices = TotalInvoice.query.filter(and_(Invoice.isDelete == True, or_(
+                extract('year', TotalInvoice.issueDate) == searchWord, TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord,)))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == True, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month))))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == True, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month, extract('day', TotalInvoice.issueDate) == day))))
+        else:
+            totalInvoices = TotalInvoice.query.filter(
+                and_(TotalInvoice.isDelete == True, or_(TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord)))
+    else:
+        totalInvoices = TotalInvoice.query.filter(
+            TotalInvoice.isDelete == True)
+
+    totalInvoices_tmp = totalInvoices
+    if offset:
+        totalInvoices = totalInvoices.offset(offset)
+    if limit:
+        totalInvoices = totalInvoices.limit(limit)
+
     newHistory = History(
         userName=current_user.id,
         modelName='TotalInvoice(dust)',
@@ -1208,6 +1243,13 @@ def dust_total_invoice_index():
     )
     db.session.add(newHistory)
     db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = totalInvoices_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'invoices': TotalInvoiceSchema(many=True).dump(totalInvoices), 'isMore': isMore})
+
     return jsonify(TotalInvoiceSchema(many=True).dump(totalInvoices))
 
 

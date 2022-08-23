@@ -346,7 +346,6 @@ var totalInvoiceRefSearch = Vue.component('total-invoice-ref-search', {
             this.getTotalInvoices(totalInvoiceRefSearch.searchTotalInvoiceRefWord);
         },
         getTotalInvoices: async function (searchWord = '') {
-            console.log('searchWord:', searchWord);
             self = this;
             url = '/v1/total-invoices';
             await axios.get(url, {
