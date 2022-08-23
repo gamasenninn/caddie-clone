@@ -1574,21 +1574,27 @@
                         const mode = 'invoice';
                         docClass = 'origin';
                         const pdfData = getPdfDataTotalInvoice(mode, prePdfTotalInvoices[0], this.setting, docClass);
+                        const today = app.formatDateHyphen(Date.now());
+                        totalInvoiceData.applyNumbers = applyNumbers;
+                        totalInvoiceData.customerId = customerId;
+                        totalInvoiceData.customerName = prePdfTotalInvoices[0].invoices[0].customerName;
+                        totalInvoiceData.customerAnyNumber = prePdfTotalInvoices[0].invoices[0].customerAnyNumber;
+                        totalInvoiceData.issueDate = today;
+                        totalInvoiceData.title = app.totalInvoiceTitle;
+                        await axios.post("/total-invoice", totalInvoiceData)
+                            .then(function (response) {
+                                console.log(response);
+                                totalInvoiceData.id = response.data.id;
+                            });
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
+                                console.log(response);
                                 self.printPdf('/pdf/' + response.data);
-                                const today = app.formatDateHyphen(Date.now());
-                                totalInvoiceData.applyNumbers = applyNumbers;
-                                totalInvoiceData.customerId = customerId;
-                                totalInvoiceData.customerName = prePdfTotalInvoices[0].invoices[0].customerName;
-                                totalInvoiceData.customerAnyNumber = prePdfTotalInvoices[0].invoices[0].customerAnyNumber;
-                                totalInvoiceData.issueDate = today;
-                                totalInvoiceData.title = app.totalInvoiceTitle;
                                 totalInvoiceData.fileName = response.data;
-                                axios.post("/total-invoice", totalInvoiceData)
-                                    .then(function (response) {
-                                        console.log(response);
-                                    });
+                            });
+                        await axios.put("/v1/total-invoice/" + totalInvoiceData.id, totalInvoiceData)
+                            .then(function (response) {
+                                console.log(response);
                             });
                     },
                     // ----- 子コンポーネントからの値 -----
