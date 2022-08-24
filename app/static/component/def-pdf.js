@@ -316,12 +316,12 @@ function getPdfData(h, sum) {
     }
 }
 //合算請求書
-function getPdfDataTotalInvoice(mode, prePdfToalInoice, setting, docClass = 'origin') {
+function getPdfDataTotalInvoice(mode, prePdfToalInvoice, setting, docClass = 'origin') {
     const h = {};
     const sum = {};
-    const invoice = prePdfToalInoice.invoices[0];
-    const invoices = prePdfToalInoice.invoices;
-    const customer = prePdfToalInoice.invoices[0].customer;
+    const invoice = prePdfToalInvoice.invoices[0];
+    const invoices = prePdfToalInvoice.invoices;
+    const customer = prePdfToalInvoice.invoices[0].customer;
 
     if (mode == 'receipt') {
         h.category = '領収書';
@@ -334,7 +334,8 @@ function getPdfDataTotalInvoice(mode, prePdfToalInoice, setting, docClass = 'ori
     h.docClass = docClass;
     h.customerName = nvl(invoice.customerName, '');
     h.honorificTitle = nvl(invoice.honorificTitle, '');
-    h.applyNumber = invoice.applyNumber;
+    //h.applyNumber = invoice.applyNumber;
+    h.applyNumber = prePdfToalInvoice.totalInvoiceApplyNumber; //合計請求書独自の請求番号
     if (docClass == 'nodate') {
         h.applyDate = "&nbsp;&nbsp; 年 &nbsp;&nbsp; 月 &nbsp;&nbsp; 日";
     } else {
@@ -357,9 +358,9 @@ function getPdfDataTotalInvoice(mode, prePdfToalInoice, setting, docClass = 'ori
     sum.taxLabel = "消費税";
     sum.totalLabel = "合計金額";
 
-    sum.amount = prePdfToalInoice.basePrices.reduce((a, b) => a + b, 0); //小計
-    sum.tax = prePdfToalInoice.taxies.reduce((a, b) => a + b, 0); //消費税分
-    sum.total = prePdfToalInoice.totalBillings.reduce((a, b) => a + b, 0); //全計
+    sum.amount = prePdfToalInvoice.basePrices.reduce((a, b) => a + b, 0); //小計
+    sum.tax = prePdfToalInvoice.taxies.reduce((a, b) => a + b, 0); //消費税分
+    sum.total = prePdfToalInvoice.totalBillings.reduce((a, b) => a + b, 0); //全計
 
     h.memo = nvl(invoice.memo, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
