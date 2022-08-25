@@ -727,6 +727,9 @@ def invoice_create():
                     cost=item.get('cost')if item.get('cost') else 0,
                     count=item.get('count')if item.get('count') else None,
                     unit=item.get('unit')if item.get('unit') else None,
+                    isReduced=data.get('Reduced'),
+                    reduced=data.get('reduced')if item.get(
+                        'reduced') else None,
                     remarks=item.get('remarks')if item.get(
                         'remarks') else None,
                 )

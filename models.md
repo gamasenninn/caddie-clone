@@ -100,21 +100,23 @@
 
 ## Invoice_Items
 
-| 項目名      | 和名     | タイプ    |  備考                   | 
-| ---------- | -------- | -------- |  ---------------------- | 
-| id         | id       | integer  |                         | 
-| invoiceId  | 請求書ID | integer  |  請求書テーブルと紐づく | 
-| itemId     | 商品ID   | integer  |  商品テーブルと紐づく   | 
-| rowNum     | 行番号   | integer  |  明細の並びを制御するため  | 
-| any        | 自由項目 | string   |  ユーザーが自由に書き込む参照項目      | 
-| itemName   | 商品名   | string   |  紐づいたものor入力 両対応できるように | 
-| price      | 値段     | integer  |  Itemsテーブルを参照可能             |
-| cost       | 原価     | integer  |  Itemsテーブルを参照可能             |
-| count      | 個数     | integer  |                         | 
-| unit       | 単位     | string   |  Unitテーブルを参照      | 
-| remarks    | 備考     | string   |                         | 
-| createdAt  | 作成日時 | datetime |                         | 
-| updatedAt  | 更新日時 | datetime |                         | 
+| 項目名        | 和名        | タイプ    |  備考                   | 
+| ----------   | --------    | -------- |  ---------------------- | 
+| id           | id          | integer  |                         | 
+| invoiceId    | 請求書ID    | integer  |  請求書テーブルと紐づく | 
+| itemId       | 商品ID      | integer  |  商品テーブルと紐づく   | 
+| rowNum       | 行番号      | integer  |  明細の並びを制御するため  | 
+| any          | 自由項目    | string   |  ユーザーが自由に書き込む参照項目      | 
+| itemName     | 商品名      | string   |  紐づいたものor入力 両対応できるように | 
+| price        | 値段        | integer  |  Itemsテーブルを参照可能             |
+| cost         | 原価        | integer  |  Itemsテーブルを参照可能             |
+| count        | 個数        | integer  |                         | 
+| unit         | 単位        | string   |  Unitテーブルを参照      | 
+| isReducedTax | 軽減税率適用 | boolean  |                         | 
+| reducedTax   | 軽減税率     | integer  |                         | 
+| remarks      | 備考         | string   |                         | 
+| createdAt    | 作成日時     | datetime |                         | 
+| updatedAt    | 更新日時     | datetime |                         | 
 
 <br>
 

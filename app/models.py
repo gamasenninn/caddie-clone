@@ -156,6 +156,9 @@ class Invoice_Item(db.Model):
     cost = db.Column(db.Integer)
     count = db.Column(db.Integer)
     unit = db.Column(db.String)
+    isReduced = db.Column(db.Boolean, nullable=False,
+                          default=False, server_default=db.text('0'))
+    reduced = db.Column(db.Integer)
     remarks = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
