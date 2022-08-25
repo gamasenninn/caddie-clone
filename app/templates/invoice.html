@@ -481,9 +481,9 @@
                           {  key: 'unit',   label: '単位', tdClass:'td-unit' },
                           {  key: 'price', label: '単価', tdClass:'td-price' },
                           {  key: 'amount', label: '金額' },
-                          {  key: 'detail', label: '詳細',class:'text-center' },
                           {  key: 'addRow', label: '追加',class:'text-center' },
                           {  key: 'delete', label: '削除',class:'text-center' },
+                          {  key: 'detail', label: '詳細',class:'text-center' },
                         ]">
 
                             <template v-slot:cell(any)="data">
@@ -571,8 +571,8 @@
                                 <div class="text-right">{{data.item.count*data.item.price|nf}}</div>
                             </template>
 
-                            <template v-slot:cell(detail)="data">
-                                <b-form-checkbox @change="data.toggleDetails"></b-form-checkbox>
+                            <template v-slot:cell(detail)="row">
+                                <b-icon v-if="row.toggleDetails" icon="caret-down-fill" @click="row.toggleDetails" />
                             </template>
 
                             <template #row-details="data">
@@ -1587,7 +1587,7 @@
                                 console.log(response);
                                 totalInvoiceData.id = response.data.id;
                                 prePdfTotalInvoices[0].totalInvoiceApplyNumber = response.data.data.totalInvoiceApplyNumber;
-                        });
+                            });
                         const pdfData = getPdfDataTotalInvoice(mode, prePdfTotalInvoices[0], this.setting, docClass);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
