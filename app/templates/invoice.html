@@ -481,6 +481,7 @@
                           {  key: 'unit',   label: '単位', tdClass:'td-unit' },
                           {  key: 'price', label: '単価', tdClass:'td-price' },
                           {  key: 'amount', label: '金額' },
+                          {  key: 'isReducedTax', label: '軽減税率',class:'text-center' },
                           {  key: 'addRow', label: '追加',class:'text-center' },
                           {  key: 'delete', label: '削除',class:'text-center' },
                           {  key: 'detail', label: '詳細',class:'text-center' },
@@ -570,7 +571,9 @@
                             <template v-slot:cell(amount)="data">
                                 <div class="text-right">{{data.item.count*data.item.price|nf}}</div>
                             </template>
-
+                            <template v-slot:cell(isReducedTax)="data">
+                                <b-form-checkbox v-model="data.item.isReduced" />
+                            </template>
                             <template v-slot:cell(detail)="row">
                                 <b-icon v-if="row.toggleDetails" icon="caret-down-fill" @click="row.toggleDetails" />
                             </template>
