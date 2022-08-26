@@ -90,6 +90,7 @@
 | memo4       | メモ4          | text     |  メモ４つモード利用時使用                                 | 
 | remarks     | 備考           | text     |  印刷時に表示されるもの                                   |
 | tax         | 消費税         | integer   |                                                         |
+| reduced     | 軽減税率       | integer   |                                                         |
 | isTaxExp    | 内税・外税     | boolean   |  内税・外税のチェック                                      | 
 | isDelete    | 削除済み       | boolean   |  請求書は削除するのではなく、これにチェックする               | 
 | numberOfAttachments | 添付数 | integer | 添付されたファイル数                                          | 

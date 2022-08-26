@@ -713,6 +713,7 @@ def invoice_create():
     newInvoiceItems = []
     defaultReducedTax = db.session.query(
         Setting.defaultReducedTax).filter(Setting.id == 1).one()[0]
+    orthopedicsDefaultReducedTax = defaultReducedTax if defaultReducedTax != '' else None
     if data.get('invoice_items'):
         for item in data.get('invoice_items'):
             if item.get('isDelete'):
@@ -771,6 +772,7 @@ def invoice_create():
         memo3=data.get('memo3')if data.get('memo3') else None,
         memo4=data.get('memo4')if data.get('memo4') else None,
         remarks=data.get('remarks')if data.get('remarks') else None,
+        reduced=orthopedicsDefaultReducedTax,
         tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
