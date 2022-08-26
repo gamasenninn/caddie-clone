@@ -96,15 +96,15 @@ def seeder(v=False):
     # -----Invoice_Items-----
     invoice_items = [
         Invoice_Item(id=1, invoiceId=1, itemId=1, rowNum=1, any='01',
-                     itemName='りんご', price=100, cost=50, count=5, unit="個", reduced=8, remarks='明細備考1'),
+                     itemName='りんご', price=100, cost=50, count=5, unit="個", remarks='明細備考1'),
         Invoice_Item(id=2, invoiceId=1, itemId=2, rowNum=2, any='02',
-                     itemName='鉛筆', price=20, cost=5, count=10, unit="本", reduced=8, remarks='明細備考2'),
+                     itemName='鉛筆', price=20, cost=5, count=10, unit="本", remarks='明細備考2'),
         Invoice_Item(id=3, invoiceId=2, itemId=2, rowNum=1, any='01',
-                     itemName='鉛筆', price=30, cost=5, count=15, unit="本", reduced=8, remarks='明細備考3'),
+                     itemName='鉛筆', price=30, cost=5, count=15, unit="本", remarks='明細備考3'),
         Invoice_Item(id=4, invoiceId=2, itemId=3, rowNum=2, any='02',
-                     itemName='ラジオ', price=1100, cost=300, count=2, unit="台", reduced=8, remarks='明細備考4'),
+                     itemName='ラジオ', price=1100, cost=300, count=2, unit="台", remarks='明細備考4'),
         Invoice_Item(id=5, invoiceId=3, itemId=1, rowNum=1, any='01',
-                     itemName='りんご', price=120, cost=50, count=30, unit="個", reduced=8, remarks='明細備考5'),
+                     itemName='りんご', price=120, cost=50, count=30, unit="個", remarks='明細備考5'),
     ]
     db.session.add_all(invoice_items)
     db.session.commit()
