@@ -78,11 +78,11 @@ def seeder(v=False):
     # -----Invoices-----
     invoices = [
         Invoice(customerId=1, customerName='○○株式会社', customerAnyNumber=10000, honorificTitle='御中', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', memo1='1990', memo2='TES-TES1', memo3='TES1', memo4='10000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', memo1='1990', memo2='TES-TES1', memo3='TES1', memo4='10000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=2, customerName="○○有限会社", customerAnyNumber=10001, honorificTitle='御中', department='部署2', manager='田中次郎', otherPartyManager='先方次郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', memo1='2000', memo2='TES-TES2', memo3='TES2', memo4='20000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', memo1='2000', memo2='TES-TES2', memo3='TES2', memo4='20000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=3, customerName="○○商事", customerAnyNumber=10002, honorificTitle='御中', department='部署3', manager='田中三郎', otherPartyManager='先方三郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', memo1='2010', memo2='TES-TES3', memo3='TES3', memo4='30000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', memo1='2010', memo2='TES-TES3', memo3='TES3', memo4='30000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
     ]
     db.session.add_all(invoices)
     db.session.commit()
