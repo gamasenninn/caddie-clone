@@ -113,7 +113,6 @@
 | count        | 個数        | integer  |                         | 
 | unit         | 単位        | string   |  Unitテーブルを参照      | 
 | isReduced    | 軽減税率適用 | boolean  |                         | 
-| reduced      | 軽減税率     | integer  |                         | 
 | remarks      | 備考         | string   |                         | 
 | createdAt    | 作成日時     | datetime |                         | 
 | updatedAt    | 更新日時     | datetime |                         | 
