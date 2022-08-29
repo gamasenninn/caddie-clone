@@ -1542,20 +1542,30 @@
                             let totalBillings = [];
                             let basePrices = [];
                             let taxies = [];
+                            let reduceTotalBillings = [];       //税込み(軽減)
+                            let reduceBasePrices = [];          //税抜き(軽減)
+                            let reduceTaxies = [];              //税(軽減)
                             customerId = v;
                             //請求を合算する
                             checkedInvoices[i].forEach(invoice => {
                                 let subTotals = [];
+                                let reduceSubTotals = [];
                                 invoice.invoice_items.forEach(item => {
-                                    subTotals.push(parseInt(item.count * Math.round(item.price)));
+                                    item.isReduced ? reduceSubTotals.push(parseInt(item.count * Math.round(item.price))) : subTotals.push(parseInt(item.count * Math.round(item.price)));
                                 });
                                 const total = subTotals.reduce(function (sum, element) {
+                                    return sum + element;
+                                }, 0);
+                                const reduceTotal = reduceSubTotals.reduce(function (sum, element) {
                                     return sum + element;
                                 }, 0);
                                 if (invoice.isTaxExp) {
                                     totalBillings.push(parseInt(total * (1 + invoice.tax / 100)));
                                     basePrices.push(parseInt(total));
                                     taxies.push(parseInt(total * (1 + invoice.tax / 100) - total));
+                                    reduceTotalBillings.push(parseInt(reduceTotal * (1 + invoice.reduced / 100)));
+                                    reduceBasePrices.push(parseInt(reduceTotal));
+                                    reduceTaxies.push(parseInt(reduceTotal * (1 + invoice.reduced / 100) - reduceTotal));
                                 }
                                 else {
                                     totalBillings.push(parseInt(total));
@@ -1569,11 +1579,12 @@
                                 totalBillings: totalBillings,
                                 basePrices: basePrices,
                                 taxies: taxies,
+                                reduceTotalBillings: reduceTotalBillings,
+                                reduceBasePrices: reduceBasePrices,
+                                reduceTaxies: reduceTaxies,
                                 totalInvoiceApplyNumber: 0
-
                             }
                             prePdfTotalInvoices.push(pt)
-
                         });
                         // ↓最終結果。これをPDF側に渡す
                         const mode = 'invoice';
