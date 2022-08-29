@@ -46,7 +46,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     sum.amount = sumInvoice.sum;
     sum.tax = sumInvoice.taxAmount;
     sum.total = sumInvoice.priceIncludingTax
-    h.memo = nvl(invoice.memo, '');
+    h.memo = nvl(invoice.remarks, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
     h.payee = !!setting.payee ? setting.payee.replace(/\n/g, '<br />') : ''
     h.accountHolderKana = nvl(setting.accountHolderKana);
@@ -108,7 +108,7 @@ function getPdfDataQuotation(quotation, setting, sumQuotation, customer) {
     sum.amount = sumQuotation.sum;
     sum.tax = sumQuotation.taxAmount;
     sum.total = sumQuotation.priceIncludingTax;
-    h.memo = nvl(quotation.memo, '');
+    h.memo = nvl(quotation.remarks, '');
     h.expiry = nvl(quotation.expiry, '');
     h.dayOfDelivery = nvl(quotation.dayOfDelivery, '');
     h.termOfSale = nvl(quotation.termOfSale, '');
@@ -361,7 +361,7 @@ function getPdfDataTotalInvoice(mode, prePdfToalInoice, setting, docClass = 'ori
     sum.tax = prePdfToalInoice.taxies.reduce((a, b) => a + b, 0); //消費税分
     sum.total = prePdfToalInoice.totalBillings.reduce((a, b) => a + b, 0); //全計
 
-    h.memo = nvl(invoice.memo, '');
+    h.memo = nvl(invoice.remarks, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
     h.payee = !!setting.payee ? setting.payee.replace(/\n/g, '<br />') : ''
     h.accountHolderKana = nvl(setting.accountHolderKana);
