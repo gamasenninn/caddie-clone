@@ -162,9 +162,10 @@ Vue.component('invoice-list', {
         //請求金額カラム
         amountCalculation(invoice) {
             if (!invoice.invoice_items.length) return 0;
-            let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
-            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
-            return amount;
+            let amount = invoice.invoice_items.filter(item => item.isReduced === false).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            let amountReduced = invoice.invoice_items.filter(item => item.isReduced === true).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100) + amountReduced * (1 + invoice.reduced / 100));
+            return amount + amountReduced;
         },
     },
 })
@@ -224,9 +225,10 @@ Vue.component('invoice-list-payment', {
         //請求金額カラム
         amountCalculation(invoice) {
             if (!invoice.invoice_items.length) return 0;
-            let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
-            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
-            return amount;
+            let amount = invoice.invoice_items.filter(item => item.isReduced === false).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            let amountReduced = invoice.invoice_items.filter(item => item.isReduced === true).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100) + amountReduced * (1 + invoice.reduced / 100));
+            return amount + amountReduced;
         },
         // 未入金額
         unpaidCalculation(invoice) {
@@ -283,9 +285,10 @@ Vue.component('invoice-list-in-total-invoice', {
         //請求金額カラム
         amountCalculation(invoice) {
             if (!invoice.invoice_items.length) return 0;
-            let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
-            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
-            return amount;
+            let amount = invoice.invoice_items.filter(item => item.isReduced === false).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            let amountReduced = invoice.invoice_items.filter(item => item.isReduced === true).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100) + amountReduced * (1 + invoice.reduced / 100));
+            return amount + amountReduced;
         },
     },
 })
