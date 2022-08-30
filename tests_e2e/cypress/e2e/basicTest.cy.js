@@ -42,9 +42,9 @@ describe('soho caddie basic test', () => {
     cy.get('.text-right > .btn-primary').click()
     cy.get('.close').click()
     // 合計金額を評価
-    cy.get('table:nth-child(1) tr ').eq(0).find('td').eq(1).should('contain','490,000')
-    cy.get('table:nth-child(1) tr ').eq(1).find('td').eq(1).should('contain','49,000')
-    cy.get('table:nth-child(1) tr ').eq(2).find('td').eq(1).should('contain','539,000')
+    cy.get(':nth-child(1) > #tdAmount').should('contain','490,000')
+    cy.get(':nth-child(2) > #tdAmount').should('contain','49,000')
+    cy.get(':nth-child(3) > #tdAmount').should('contain','539,000')
 
     // 印刷ボタン　押下
     cy.intercept({

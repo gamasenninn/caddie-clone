@@ -162,9 +162,10 @@ Vue.component('invoice-list', {
         //請求金額カラム
         amountCalculation(invoice) {
             if (!invoice.invoice_items.length) return 0;
-            let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
-            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
-            return amount;
+            let amount = invoice.invoice_items.filter(item => item.isReduced === false).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            let amountReduced = invoice.invoice_items.filter(item => item.isReduced === true).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100) + amountReduced * (1 + invoice.reduced / 100));
+            return amount + amountReduced;
         },
     },
 })
@@ -224,9 +225,10 @@ Vue.component('invoice-list-payment', {
         //請求金額カラム
         amountCalculation(invoice) {
             if (!invoice.invoice_items.length) return 0;
-            let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
-            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
-            return amount;
+            let amount = invoice.invoice_items.filter(item => item.isReduced === false).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            let amountReduced = invoice.invoice_items.filter(item => item.isReduced === true).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100) + amountReduced * (1 + invoice.reduced / 100));
+            return amount + amountReduced;
         },
         // 未入金額
         unpaidCalculation(invoice) {
@@ -239,7 +241,7 @@ Vue.component('invoice-list-payment', {
     },
 })
 
-// 合計請求
+// 合計請求作成用請求一覧
 Vue.component('invoice-list-in-total-invoice', {
     template: `
     <div>
@@ -283,9 +285,10 @@ Vue.component('invoice-list-in-total-invoice', {
         //請求金額カラム
         amountCalculation(invoice) {
             if (!invoice.invoice_items.length) return 0;
-            let amount = invoice.invoice_items.map(item => item.count * Math.round(item.price)).reduce((a, b) => a + b);
-            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100));
-            return amount;
+            let amount = invoice.invoice_items.filter(item => item.isReduced === false).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            let amountReduced = invoice.invoice_items.filter(item => item.isReduced === true).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+            if (invoice.isTaxExp === true) return Math.round(amount * (1 + invoice.tax / 100) + amountReduced * (1 + invoice.reduced / 100));
+            return amount + amountReduced;
         },
     },
 })
@@ -320,4 +323,98 @@ let daySearchInTotalInvoices = Vue.component('day-search-in-total-invoice', {
             this.$emit('emit-day-end', daySearch.searchDayEndInTotalInvoice);
         }
     }
+})
+
+// 合計請求書参照検索コンポーネント
+var totalInvoiceRefSearch = Vue.component('total-invoice-ref-search', {
+    template: `
+    <b-input-group>
+        <b-form-input v-model="totalInvoiceRefSearch.searchTotalInvoiceRefWord" id="searchTotalInvoiceRefWord" size="sm"
+            placeholder="🔍　No. or 日付 or 得意先名">
+        </b-form-input>
+        <b-input-group-append>
+            <b-button variant="primary" size="sm" @click="this.searchTotalInvoiceRef">検索
+            </b-button>
+        </b-input-group-append>
+    </b-input-group>
+    `,
+    data: {
+        searchTotalInvoiceRefWord: '',
+    },
+    props: {
+        totalInvoices: Array,
+    },
+    methods: {
+        searchTotalInvoiceRef: function () {
+            this.getTotalInvoices(totalInvoiceRefSearch.searchTotalInvoiceRefWord);
+        },
+        getTotalInvoices: async function (searchWord = '') {
+            self = this;
+            url = '/v1/total-invoices';
+            await axios.get(url, {
+                params: {
+                    search: searchWord
+                }
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    totalInvoiceRefSearch.totalInvoices = response.data;
+                })
+            this.changeTotalInvoices();
+        },
+        changeTotalInvoices() {
+            this.$emit('emit-total-ref-invoices', totalInvoiceRefSearch.totalInvoices, totalInvoiceRefSearch.searchTotalInvoiceRefWord);
+        },
+    },
+})
+
+// 合計請求参照一覧
+Vue.component('total-invoice-list', {
+    template: `
+    <div>
+        <b-table borderless responsive hover small id="invoice-in-modal-table" sort-by="ID" small label="Table Options"
+        :items="this.totalInvoicesIndicateIndex" :sort-by.sync="this.sortByTotalInvoices" :sort-desc.sync="this.sortDesc" :fields="[
+        {  key: 'id', thClass: 'd-none', tdClass: 'd-none' },
+        {  key: 'totalInvoiceApplyNumber', label: '合計請求番号', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'issueDate', label: '発行日', thClass: 'text-center', tdClass: 'text-center', sortable: true },
+        {  key: 'customerAnyNumber', label: 'No.', thClass: 'th-customer-any-number text-center', tdClass: 'text-center', sortable: true },
+        {  key: 'customerName', label: '得意先名', thClass: 'text-center', },
+        {  key: 'title', label: '件名', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'printing', label: '印刷', thClass: 'text-center', tdClass: 'text-center' },
+        {  key: 'delete', label: '', thClass: 'text-center', tdClass: 'text-center' },
+    ]" :tbody-tr-class="this.rowClass">
+            <template v-slot:cell(issueDate)="data">
+                {{formatDate(data.item.issueDate)}}
+            </template>
+            <template v-slot:cell(printing)="data">
+                <b-button variant="primary" @click="getTotalInvoiceFile(data.item.fileName)">
+                    印刷
+                </b-button>
+            </template>
+            <template v-if="isDeleteButton" v-slot:cell(delete)="data">
+                <b-button variant="primary" @click="deleteTotalInvoice(data.item)">
+                    削除
+                </b-button>
+            </template>
+        </b-table>
+    </div>
+    `,
+    props: {
+        totalInvoicesIndicateIndex: Array,
+        sortByTotalInvoices: String,
+        sortDesc: Boolean,
+        isDeleteButton: Boolean,
+        getTotalInvoiceFile: Function,
+        deleteTotalInvoice: Function,
+    },
+    methods: {
+        rowClass: function (item, type) {
+            if (!item || type !== 'row') return
+            if (!item.id) return "d-none";
+        },
+        //日付カラム
+        formatDate(date) {
+            if (!!date) return moment(date).format("YYYY/MM/DD");
+        },
+    },
 })

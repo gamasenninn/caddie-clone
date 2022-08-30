@@ -129,6 +129,8 @@ class Invoice(db.Model):
     remarks = db.Column(db.String)
     tax = db.Column(db.Integer, nullable=False, default=10,
                     server_default=db.text('10'))
+    reduced = db.Column(db.Integer, nullable=False, default=8,
+                        server_default=db.text('8'))
     isTaxExp = db.Column(db.Boolean, nullable=False, default=True)
     isDelete = db.Column(db.Boolean, nullable=False, default=False)
     numberOfAttachments = db.Column(
@@ -156,6 +158,8 @@ class Invoice_Item(db.Model):
     cost = db.Column(db.Integer)
     count = db.Column(db.Integer)
     unit = db.Column(db.String)
+    isReduced = db.Column(db.Boolean, nullable=False,
+                          default=False, server_default=db.text('0'))
     remarks = db.Column(db.String)
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
@@ -172,6 +176,47 @@ class Invoice_Payment(db.Model):
     paymentMethod = db.Column(db.String)
     paymentAmount = db.Column(db.Integer)
     remarks = db.Column(db.String)
+    createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updatedAt = db.Column(db.DateTime, nullable=False,
+                          default=datetime.now, onupdate=datetime.now)
+
+
+# 合計請求番号自動生成
+def edited_total_invoice_number():
+
+    nowYearFormat = datetime.now().strftime('%y')
+    nowYear = datetime.now().year
+    yearStart = date(nowYear, 1, 1)
+    # 年末を含めてしまうのを防ぐ
+    yearEnd = date(nowYear+1, 1, 1)
+    maxNumberForYear = db.session.query(
+        func.max(TotalInvoice.totalInvoiceApplyNumber)).filter(TotalInvoice.createdAt >= yearStart, TotalInvoice.createdAt < yearEnd).first()[0]
+    if maxNumberForYear:
+        maxNumberForYear_s = str(maxNumberForYear)
+        maxApplyNumber_s = maxNumberForYear_s[2:]
+        maxApplyNumber = int(maxApplyNumber_s)
+        nextNumber = format(maxApplyNumber+1, '0>5')
+    else:
+        nextNumber = '00001'
+    return str(nowYearFormat) + str(nextNumber)
+
+
+class TotalInvoice(db.Model):
+
+    __tablename__ = 'total_invoices'
+
+    id = db.Column(db.Integer, primary_key=True)
+    totalInvoiceApplyNumber = db.Column(
+        db.Integer, default=edited_total_invoice_number)
+    applyNumbers = db.Column(db.String)
+    customerId = db.Column(db.Integer)
+    customerName = db.Column(db.String)
+    customerAnyNumber = db.Column(db.Integer)
+    issueDate = db.Column(db.Date)
+    title = db.Column(db.String)
+    fileName = db.Column(db.String)
+    isDelete = db.Column(db.Boolean, nullable=False,
+                         default=False, server_default=db.text('0'))
     createdAt = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updatedAt = db.Column(db.DateTime, nullable=False,
                           default=datetime.now, onupdate=datetime.now)
@@ -354,6 +399,8 @@ class Setting(db.Model):
     # 設定
     defaultTax = db.Column(db.Integer, nullable=False,
                            default=10, server_default=db.text('10'))
+    defaultReducedTax = db.Column(db.Integer, nullable=False,
+                                  default=8, server_default=db.text('8'))
     isMemoQuadrupleIndicate = db.Column(
         db.Boolean, nullable=False, default=False, server_default=db.text('0'))
     memoLabel1 = db.Column(db.String)
@@ -395,6 +442,11 @@ class InvoiceSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
     invoice_items = ma.Nested(Invoice_ItemSchema, many=True)
     invoice_payments = ma.Nested(Invoice_PaymentSchema, many=True)
+
+
+class TotalInvoiceSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = TotalInvoice
 
 
 class Quotation_ItemSchema(ma.SQLAlchemyAutoSchema):
@@ -474,3 +526,6 @@ class Invoice_CustomerSchema(ma.SQLAlchemyAutoSchema):
     invoice_items = ma.Nested(Invoice_ItemSchema, many=True)
     invoice_payments = ma.Nested(Invoice_PaymentSchema, many=True)
     customer = ma.Nested(CustomerSchema, many=False)
+
+# models.pyのプルリクテスト二回目のテスト
+# ブランチ保護のテスト２

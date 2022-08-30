@@ -272,14 +272,26 @@
                         <b-card border-variant="white" class="mb-3 text-center" header="設定"
                             header-border-variant="light">
                             <b-row>
-                                <b-col sm>
-                                    <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="消費税"
-                                        label-for="defaultTax" label-align="right">
-                                        <b-form-input v-model="setting.defaultTax" id="defaultTax" size="sm">
-                                        </b-form-input>
-                                    </b-form-group>
+                                <b-col md>
+                                    <b-row>
+                                        <b-col md>
+                                            <b-form-group label-cols="4" label-cols-lg="3" label-size="sm" label="消費税"
+                                                label-for="defaultTax" label-align="right">
+                                                <b-form-input v-model="setting.defaultTax" id="defaultTax" size="sm">
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-col>
+                                        <b-col md>
+                                            <b-form-group label-cols="4" label-cols-lg="3" label-size="sm" label="軽減税率"
+                                                label-for="defaultReducedTax" label-align="right">
+                                                <b-form-input v-model="setting.defaultReducedTax" id="defaultReducedTax"
+                                                    size="sm">
+                                                </b-form-input>
+                                            </b-form-group>
+                                        </b-col>
+                                    </b-row>
                                 </b-col>
-                                <b-col sm>
+                                <b-col md>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="TBボタン非表示"
                                         label-for="isHideTabletMode" label-align="right">
                                         <b-form-checkbox v-model="isHideTabletMode"></b-form-checkbox>
@@ -287,7 +299,7 @@
                                 </b-col>
                             </b-row>
                             <b-row>
-                                <b-col sm>
+                                <b-col ms>
                                     <b-form-group label-cols="4" label-cols-lg="2" label-size="sm" label="コントラスト"
                                         label-for="contrast" label-align="right">
                                         <b-form-input type="number" max="100" min="-100" v-model="contrast"
@@ -295,7 +307,7 @@
                                         </b-form-input>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm></b-col>
+                                <b-col md></b-col>
                             </b-row>
                         </b-card>
                     </b-col>

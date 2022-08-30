@@ -711,6 +711,9 @@ def invoice_show(id):
 def invoice_create():
     data = request.json
     newInvoiceItems = []
+    defaultReducedTax = db.session.query(
+        Setting.defaultReducedTax).filter(Setting.id == 1).one()[0]
+    orthopedicsDefaultReducedTax = defaultReducedTax if defaultReducedTax != '' else 8
     if data.get('invoice_items'):
         for item in data.get('invoice_items'):
             if item.get('isDelete'):
@@ -727,6 +730,7 @@ def invoice_create():
                     cost=item.get('cost')if item.get('cost') else 0,
                     count=item.get('count')if item.get('count') else None,
                     unit=item.get('unit')if item.get('unit') else None,
+                    isReduced=item.get('isReduced'),
                     remarks=item.get('remarks')if item.get(
                         'remarks') else None,
                 )
@@ -768,6 +772,7 @@ def invoice_create():
         memo3=data.get('memo3')if data.get('memo3') else None,
         memo4=data.get('memo4')if data.get('memo4') else None,
         remarks=data.get('remarks')if data.get('remarks') else None,
+        reduced=orthopedicsDefaultReducedTax,
         tax=data.get('tax'),
         isTaxExp=data.get('isTaxExp'),
         numberOfAttachments=data.get('numberOfAttachments'),
@@ -1152,6 +1157,208 @@ def invoice_payment_destroy(id):
     db.session.add(newHistory)
     db.session.commit()
     return jsonify({"result": "OK", "id": id, "data": ''})
+
+
+# 合計請求書(totalInvoices)
+@app.route('/v1/total-invoices', methods=['GET'])
+@app.route('/total-invoices', methods=['GET'])
+def total_Invoice_index():
+    req = request.args
+    searchWord = req.get('search')
+
+    if searchWord:
+        if len(searchWord) == 4:
+            totalInvoices = TotalInvoice.query.filter(and_(Invoice.isDelete == False, or_(
+                extract('year', TotalInvoice.issueDate) == searchWord, TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord,)))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == False, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month))))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == False, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month, extract('day', TotalInvoice.issueDate) == day))))
+        else:
+            totalInvoices = TotalInvoice.query.filter(
+                and_(TotalInvoice.isDelete == False, or_(TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord)))
+
+    else:
+        totalInvoices = TotalInvoice.query.filter(
+            TotalInvoice.isDelete == False)
+    newHistory = History(
+        userName=current_user.id,
+        modelName='TotalInvoices',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify(TotalInvoiceSchema(many=True).dump(totalInvoices))
+
+
+@app.route('/v1/dust-total-invoices', methods=['GET'])
+@app.route('/dust-total-invoices', methods=['GET'])
+def dust_total_invoice_index():
+    req = request.args
+    searchWord = req.get('search')
+    moreCheck = req.get('moreCheck') if req.get('moreCheck') else False
+    limit = int(req.get('limit')) if req.get('limit') else 100
+    offset = int(req.get('offset')) if req.get('offset') else 0
+
+    if searchWord:
+        if len(searchWord) == 4:
+            totalInvoices = TotalInvoice.query.filter(and_(Invoice.isDelete == True, or_(
+                extract('year', TotalInvoice.issueDate) == searchWord, TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord,)))
+        elif len(searchWord) == 6:
+            year = searchWord[:4]
+            month = searchWord[4:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == True, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month))))
+        elif len(searchWord) == 8:
+            year = searchWord[:4]
+            month = searchWord[4:6]
+            day = searchWord[6:]
+            totalInvoices = TotalInvoice.query.filter(and_(TotalInvoice.isDelete == True, or_(
+                TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord, and_(
+                    extract('year', TotalInvoice.issueDate) == year, extract('month', TotalInvoice.issueDate) == month, extract('day', TotalInvoice.issueDate) == day))))
+        else:
+            totalInvoices = TotalInvoice.query.filter(
+                and_(TotalInvoice.isDelete == True, or_(TotalInvoice.customerName.like('%'+searchWord+'%'), TotalInvoice.customerAnyNumber == searchWord)))
+    else:
+        totalInvoices = TotalInvoice.query.filter(
+            TotalInvoice.isDelete == True)
+
+    totalInvoices_tmp = totalInvoices
+    if offset:
+        totalInvoices = totalInvoices.offset(offset)
+    if limit:
+        totalInvoices = totalInvoices.limit(limit)
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='TotalInvoice(dust)',
+        modelId=None,
+        action='gets'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+
+    if moreCheck:
+        totalRecordCount = totalInvoices_tmp.count()
+        nowRecordCount = limit+offset
+        isMore = True if nowRecordCount < totalRecordCount else False
+        return jsonify({'invoices': TotalInvoiceSchema(many=True).dump(totalInvoices), 'isMore': isMore})
+
+    return jsonify(TotalInvoiceSchema(many=True).dump(totalInvoices))
+
+
+@app.route('/v1/total-invoice/<id>', methods=['GET'])
+@app.route('/total-invoice/<id>', methods=['GET'])
+def total_invoice_show(id):
+    totalInvoiceCount = TotalInvoice.query.filter(
+        TotalInvoice.id == id).count()
+    if totalInvoiceCount:
+        totalInvoice = TotalInvoice.query.filter(TotalInvoice.id == id).first()
+        newHistory = History(
+            userName=current_user.id,
+            modelName='TotalInvoice',
+            modelId=id,
+            action='get')
+        db.session.add(newHistory)
+        db.session.commit()
+        return jsonify(TotalInvoiceSchema().dump(totalInvoice))
+    else:
+        return jsonify([])
+
+
+@app.route('/v1/total-invoice', methods=['POST'])
+@app.route('/total-invoice', methods=['POST'])
+def total_invoice_create():
+    data = request.json
+    newTotalInvoice = TotalInvoice(
+        totalInvoiceApplyNumber=data.get('totalInvoiceApplyNumber')if data.get(
+            'totalInvoiceApplyNumber') else None,
+        applyNumbers=data.get('applyNumbers')if data.get(
+            'applyNumbers') else None,
+        customerId=data.get('customerId')if data.get('customerId') else None,
+        customerName=data.get('customerName')if data.get(
+            'customerName') else None,
+        customerAnyNumber=data.get('customerAnyNumber')if data.get(
+            'customerAnyNumber') else None,
+        issueDate=datetime.strptime(
+            data.get('issueDate'), "%Y-%m-%d") if data.get('issueDate') else None,
+        title=data.get('title')if data.get('title') else None,
+        fileName=data.get('fileName')if data.get('fileName') else None,
+    )
+    db.session.add(newTotalInvoice)
+    db.session.commit()
+    id = newTotalInvoice.id
+    newHistory = History(
+        userName=current_user.id,
+        modelName='Invoice',
+        modelId=id,
+        action='post'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    registerTotalInvoice = TotalInvoice.query.order_by(
+        desc(TotalInvoice.id)).first()
+    return jsonify({"result": "OK", "id": id, "data": TotalInvoiceSchema().dump(registerTotalInvoice)})
+
+
+@app.route('/v1/total-invoice/<id>', methods=['PUT'])
+@app.route('/total-invoice/<id>', methods=['PUT'])
+def total_invoice_update(id):
+    data = request.json
+    totalInvoice = TotalInvoice.query.filter(TotalInvoice.id == id).one()
+    if not totalInvoice:
+        return jsonify({"result": "No Data", "id": id, "data": data})
+
+    totalInvoice.applyNumbers = data.get(
+        'applyNumbers')if data.get('applyNumbers') else None
+    totalInvoice.customerId = data.get(
+        'customerId')if data.get('customerId') else None
+    totalInvoice.customerName = data.get(
+        'customerName')if data.get('customerName') else None
+    totalInvoice.customerAnyNumber = data.get(
+        'customerAnyNumber')if data.get('customerAnyNumber') else None
+    totalInvoice.issueDate = datetime.strptime(
+        data.get('issueDate'), "%Y-%m-%d")if data.get('issueDate') else None
+    totalInvoice.title = data.get('title')if data.get('title') else None
+    totalInvoice.fileName = data.get(
+        'fileName')if data.get('fileName') else None
+
+    newHistory = History(
+        userName=current_user.id,
+        modelName='TotalInvoice',
+        modelId=id,
+        action='put'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": data})
+
+
+@app.route('/v1/total_invoice_delete/<id>', methods=['PUT'])
+@app.route('/total_invoice_delete/<id>', methods=['PUT'])
+def total_invoice_destroy(id):
+    totalInvoice = TotalInvoice.query.filter(TotalInvoice.id == id).one()
+    totalInvoice.isDelete = True
+    newHistory = History(
+        userName=current_user.id,
+        modelName='TotalInvoice',
+        modelId=id,
+        action='put(dust)'
+    )
+    db.session.add(newHistory)
+    db.session.commit()
+    return jsonify({"result": "OK", "id": id, "data": ""})
 
 
 # 見積書(Quotations)
@@ -2022,6 +2229,8 @@ def setting_update(id):
     setting.isDisplayDeliveryStamp = data.get('isDisplayDeliveryStamp')
     setting.defaultTax = data.get(
         'defaultTax')if data.get('defaultTax') else None
+    setting.defaultReducedTax = data.get(
+        'defaultReducedTax')if data.get('defaultReducedTax') else None
     setting.isMemoQuadrupleIndicate = data.get('isMemoQuadrupleIndicate')
     setting.memoLabel1 = data.get(
         'memoLabel1') if data.get('memoLabel1') else None

@@ -1,0 +1,59 @@
+name: test_e2e_invoice_base
+#on:
+#  push:
+#    branches: none
+on:
+  pull_request:
+    types: [opened, reopened]
+#    paths:
+#      - 'app/templates/invoice.html_xxxx'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  e2e-basic-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt install fonts-noto
+          python -m pip install --upgrade pip
+          pip install reportlab
+          pip install Flask
+          pip install flask_cors
+          pip install SQLAlchemy 
+          pip install Flask-SQLAlchemy 
+          pip install flask-marshmallow 
+          pip install marshmallow-sqlalchemy
+          pip install Flask-Migrate 
+          pip install Pillow 
+          pip install flask-login
+          pip install python-dateutil
+      - name: Server run and make test data
+        run: |
+          cd app
+          echo "FLASK_APP ENV=$FLASK_APP"
+          flask db init
+          flask db migrate
+          flask db upgrade
+          python seeder.py
+          python main.py &
+        env:
+          FLASK_APP : models.py
+        
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          wait-on: "http://localhost:5010"
+          working-directory: tests_e2e
+          browser: chrome
+      - name: upload artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos upload
+          path: tests_e2e/cypress/videos
+          
+      - run: ls . -la

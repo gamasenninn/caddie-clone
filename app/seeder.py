@@ -2,19 +2,20 @@ from datetime import date
 from app import db, app
 from models import *
 from werkzeug.security import generate_password_hash, check_password_hash
+import sys
+import argparse
 
 
-def seeder():
+def seeder(v=False):
 
     models = [User, Customer, Item, Invoice,
-              Invoice_Item, Invoice_Payment, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
+              Invoice_Item, Invoice_Payment, TotalInvoice, Quotation, Quotation_Item, Memo, Unit, Category, Maker, History, Setting]
 
     for model in models:
         db.session.query(model).delete()
         db.session.commit()
 
     # -----Users-----
-    print('----Users----')
     users = [
         User(id=1, anyNumber=1, anyName='田中太郎', name='tanaka_taro', password=generate_password_hash('password'),
              group='operator', role='crescom_support'),
@@ -27,11 +28,12 @@ def seeder():
     db.session.commit()
 
     users = User.query.all()
-    for user in users:
-        print(user.name)
+    if v:
+        print('----Users----')
+        for user in users:
+            print(user.name)
 
     # -------------Customers---------------
-    print('----Customers----')
     customers = [
         Customer(id=1, anyNumber=10000, closingMonth=4, customerName="○○株式会社", customerKana='カブシキガイシャ', honorificTitle='御中', department='部署名', postNumber='000-0000',
                  address='鹿沼市板荷', addressSub='000', telNumber='000-0000-0000', faxNumber='000-0000-0000', url='example.com',
@@ -50,11 +52,12 @@ def seeder():
     db.session.commit()
 
     customers = Customer.query.all()
-    for customer in customers:
-        print(customer.customerName)
+    if v:
+        print('----Customers----')
+        for customer in customers:
+            print(customer.customerName)
 
     # -----Items-----
-    print('----Items----')
     items = [
         Item(id=1, itemName='りんご', itemCode='11111', model='APP001', category='食料品', maker='apple青果店', supplier='A問屋', unit='個', basePrice=100,
              baseCost=50, isHide=False, memo='これはりんごのメモです', numberOfAttachments=0),
@@ -67,28 +70,30 @@ def seeder():
     db.session.commit()
 
     items = Item.query.all()
-    for item in items:
-        print(item.itemName)
+    if v:
+        print('----Items----')
+        for item in items:
+            print(item.itemName)
 
     # -----Invoices-----
-    print('----Invoices-----')
     invoices = [
         Invoice(customerId=1, customerName='○○株式会社', customerAnyNumber=10000, honorificTitle='御中', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', memo1='1990', memo2='TES-TES1', memo3='TES1', memo4='10000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', memo1='1990', memo2='TES-TES1', memo3='TES1', memo4='10000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=2, customerName="○○有限会社", customerAnyNumber=10001, honorificTitle='御中', department='部署2', manager='田中次郎', otherPartyManager='先方次郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', memo1='2000', memo2='TES-TES2', memo3='TES2', memo4='20000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', memo1='2000', memo2='TES-TES2', memo3='TES2', memo4='20000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=3, customerName="○○商事", customerAnyNumber=10002, honorificTitle='御中', department='部署3', manager='田中三郎', otherPartyManager='先方三郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', memo1='2010', memo2='TES-TES3', memo3='TES3', memo4='30000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', memo1='2010', memo2='TES-TES3', memo3='TES3', memo4='30000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
     ]
     db.session.add_all(invoices)
     db.session.commit()
 
     invoices = Invoice.query.all()
-    for invoice in invoices:
-        print(invoice.title)
+    if v:
+        print('----Invoices-----')
+        for invoice in invoices:
+            print(invoice.title)
 
     # -----Invoice_Items-----
-    print('----Invoice_Items----')
     invoice_items = [
         Invoice_Item(id=1, invoiceId=1, itemId=1, rowNum=1, any='01',
                      itemName='りんご', price=100, cost=50, count=5, unit="個", remarks='明細備考1'),
@@ -105,11 +110,12 @@ def seeder():
     db.session.commit()
 
     invoice_items = Invoice_Item.query.all()
-    for invoice_item in invoice_items:
-        print(invoice_item.count)
+    if v:
+        print('----Invoice_Items----')
+        for invoice_item in invoice_items:
+            print(invoice_item.count)
 
     # -----Invoice_Payments-----
-    print('----Invoice_Payments----')
     invoice_payments = [
         Invoice_Payment(invoiceId=1, paymentDate=date(2022, 1, 1),
                         paymentMethod='口座振込', paymentAmount=100, remarks="備考１"),
@@ -126,11 +132,30 @@ def seeder():
     db.session.commit()
 
     invoice_payments = Invoice_Payment.query.all()
-    for invoice_payment in invoice_payments:
-        print(invoice_payment.paymentAmount)
+    if v:
+        print('----Invoice_Payments----')
+        for invoice_payment in invoice_payments:
+            print(invoice_payment.paymentAmount)
+
+    # ----- TotalInvoices -----
+    totalInvoices = [
+        TotalInvoice(applyNumbers="2200001", customerId=1, customerName='○○株式会社', customerAnyNumber=10000,
+                     issueDate=date(2022, 1, 1), title="合計請求書１", fileName=""),
+        TotalInvoice(applyNumbers="2200002", customerId=2, customerName='○○有限会社', customerAnyNumber=10001,
+                     issueDate=date(2022, 1, 1), title="合計請求書２", fileName=""),
+        TotalInvoice(applyNumbers="2200003", customerId=3, customerName='○○商事', customerAnyNumber=10002,
+                     issueDate=date(2022, 1, 1), title="合計請求書３", fileName=""),
+    ]
+    db.session.add_all(totalInvoices)
+    db.session.commit()
+
+    totalInvoices = TotalInvoice.query.all()
+    if v:
+        print('----TotalInvoices-----')
+        for totalInvoice in totalInvoices:
+            print(totalInvoice.totalInvoiceApplyNumber)
 
     # -----Quotations-----
-    print('----Quotations----')
     quotations = [
         Quotation(customerId=1, customerName='○○株式会社', customerAnyNumber=10000, honorificTitle='御中', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), expiry='2週間以内',
                   dayOfDelivery='受注後1週間以内', termOfSale='御社決済条件にて', isConvert=False, title='○○株式会社への見積書', memo='これは見積書のメモです', memo1='1990', memo2='TES-TES1', memo3='TES1', memo4='10000', remarks='これは見積書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
@@ -143,11 +168,12 @@ def seeder():
     db.session.commit()
 
     quotations = Quotation.query.all()
-    for quotation in quotations:
-        print(quotation.title)
+    if v:
+        print('----Quotations----')
+        for quotation in quotations:
+            print(quotation.title)
 
     # -----Quotation_Items-----
-    print('----Quotation_Items----')
     quotation_items = [
         Quotation_Item(id=1, quotationId=1, itemId=1, rowNum=1, any='01',
                        itemName='りんご', price=100, cost=50, count=5, unit="個", remarks='明細備考1'),
@@ -164,11 +190,12 @@ def seeder():
     db.session.commit()
 
     quotation_items = Quotation_Item.query.all()
-    for quotation_item in quotation_items:
-        print(quotation_item.count)
+    if v:
+        print('----Quotation_Items----')
+        for quotation_item in quotation_items:
+            print(quotation_item.count)
 
     # -----Memos-----
-    print('----Memos----')
     memos = [
         Memo(id=1, title='メモのタイトル１', manager='担当者1',
              isFavorite=False, content='メモの内容１'),
@@ -181,11 +208,12 @@ def seeder():
     db.session.commit()
 
     memos = Memo.query.all()
-    for memo in memos:
-        print(memo.title)
+    if v:
+        print('----Memos----')
+        for memo in memos:
+            print(memo.title)
 
     # -----Units-----
-    print('----Units----')
     units = [
         Unit(id=1, unitName='個'),
         Unit(id=2, unitName='本'),
@@ -195,11 +223,12 @@ def seeder():
     db.session.commit()
 
     units = Unit.query.all()
-    for unit in units:
-        print(unit.unitName)
+    if v:
+        print('----Units----')
+        for unit in units:
+            print(unit.unitName)
 
     # -----Categories-----
-    print('----Categories----')
     categories = [
         Category(id=1, categoryName='食料品'),
         Category(id=2, categoryName='事務用品'),
@@ -209,11 +238,12 @@ def seeder():
     db.session.commit()
 
     categories = Category.query.all()
-    for category in categories:
-        print(category.categoryName)
+    if v:
+        print('----Categories----')
+        for category in categories:
+            print(category.categoryName)
 
     # -----Makers-----
-    print('----Makers----')
     makers = [
         Maker(id=1, makerName='apple青果店'),
         Maker(id=2, makerName='トンビ鉛筆'),
@@ -223,11 +253,12 @@ def seeder():
     db.session.commit()
 
     makers = Maker.query.all()
-    for maker in makers:
-        print(maker.makerName)
+    if v:
+        print('----Makers----')
+        for maker in makers:
+            print(maker.makerName)
 
     # -----History-----
-    print('----History----')
     history = [
         History(id=1, userName='tanaka_taro',
                 modelName='Customer', modelId=1, action='GET',),
@@ -240,24 +271,33 @@ def seeder():
     db.session.commit()
 
     histories = History.query.all()
-    for history in histories:
-        print(history.userName)
+    if v:
+        print('----History----')
+        for history in histories:
+            print(history.userName)
 
     # -----Setting-----
-    print('----Setting----')
     setting = [
         Setting(id=1, companyName='自社株式会社', registerNumber=1111111111111, representative='自社代表者', administrator='管理者太郎', postNumber='000-0000', address='宇都宮市北若松原',
                 telNumber='000-0000-0000', faxNumber='000-0000-0000', url='mypage.com',
                 email='mymail@co.jp', payee='テスト銀行　本店(999) 普通 9999999', accountHolder='自社株式会社', accountHolderKana='カ）ジシャ', logoFilePath='./static/asset/logo/logo2.jpg', logoHeight=100, logoWidth=100,
                 stampFilePath='./static/asset/stamp/inkan.png', stampHeight=100, stampWidth=100, isDisplayQuotationLogo=True, isDisplayInvoiceLogo=True, isDisplayDeliveryLogo=True,
-                isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True, defaultTax=10, isMemoQuadrupleIndicate=False, memoLabel1='年式', memoLabel2='型式', memoLabel3='型番', memoLabel4='走行距離',)
+                isDisplayQuotationStamp=True, isDisplayInvoiceStamp=True, isDisplayDeliveryStamp=True, defaultTax=10, defaultReducedTax=8, isMemoQuadrupleIndicate=False, memoLabel1='年式', memoLabel2='型式', memoLabel3='型番', memoLabel4='走行距離',)
     ]
     db.session.add_all(setting)
     db.session.commit()
 
     setting = Setting.query.all()
-    print(setting[0].companyName)
+    if v:
+        print('----Setting----')
+        print(setting[0].companyName)
 
 
 if __name__ == '__main__':
-    seeder()
+    parser = argparse.ArgumentParser(
+        description='seeder -- makeing test data for soho-caddie')
+    parser.add_argument('-v', '--verbose',
+                        help='output data', action='store_true')
+    args = parser.parse_args()
+
+    seeder(v=args.verbose)

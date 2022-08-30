@@ -328,6 +328,12 @@ def invoiceDustPage():
     return render_template('invoice_dust.html')
 
 
+@app.route('/total-invoice-dust-page')
+@login_required
+def totalInvoiceDustPage():
+    return render_template('total_invoice_dust.html')
+
+
 @app.route('/quotation-dust-page')
 @login_required
 def quotationDustPage():

@@ -90,6 +90,7 @@
 | memo4       | メモ4          | text     |  メモ４つモード利用時使用                                 | 
 | remarks     | 備考           | text     |  印刷時に表示されるもの                                   |
 | tax         | 消費税         | integer   |                                                         |
+| reduced     | 軽減税率       | integer   |                                                         |
 | isTaxExp    | 内税・外税     | boolean   |  内税・外税のチェック                                      | 
 | isDelete    | 削除済み       | boolean   |  請求書は削除するのではなく、これにチェックする               | 
 | numberOfAttachments | 添付数 | integer | 添付されたファイル数                                          | 
@@ -100,21 +101,22 @@
 
 ## Invoice_Items
 
-| 項目名      | 和名     | タイプ    |  備考                   | 
-| ---------- | -------- | -------- |  ---------------------- | 
-| id         | id       | integer  |                         | 
-| invoiceId  | 請求書ID | integer  |  請求書テーブルと紐づく | 
-| itemId     | 商品ID   | integer  |  商品テーブルと紐づく   | 
-| rowNum     | 行番号   | integer  |  明細の並びを制御するため  | 
-| any        | 自由項目 | string   |  ユーザーが自由に書き込む参照項目      | 
-| itemName   | 商品名   | string   |  紐づいたものor入力 両対応できるように | 
-| price      | 値段     | integer  |  Itemsテーブルを参照可能             |
-| cost       | 原価     | integer  |  Itemsテーブルを参照可能             |
-| count      | 個数     | integer  |                         | 
-| unit       | 単位     | string   |  Unitテーブルを参照      | 
-| remarks    | 備考     | string   |                         | 
-| createdAt  | 作成日時 | datetime |                         | 
-| updatedAt  | 更新日時 | datetime |                         | 
+| 項目名        | 和名        | タイプ    |  備考                   | 
+| ----------   | --------    | -------- |  ---------------------- | 
+| id           | id          | integer  |                         | 
+| invoiceId    | 請求書ID    | integer  |  請求書テーブルと紐づく | 
+| itemId       | 商品ID      | integer  |  商品テーブルと紐づく   | 
+| rowNum       | 行番号      | integer  |  明細の並びを制御するため  | 
+| any          | 自由項目    | string   |  ユーザーが自由に書き込む参照項目      | 
+| itemName     | 商品名      | string   |  紐づいたものor入力 両対応できるように | 
+| price        | 値段        | integer  |  Itemsテーブルを参照可能             |
+| cost         | 原価        | integer  |  Itemsテーブルを参照可能             |
+| count        | 個数        | integer  |                         | 
+| unit         | 単位        | string   |  Unitテーブルを参照      | 
+| isReduced    | 軽減税率適用 | boolean  |                         | 
+| remarks      | 備考         | string   |                         | 
+| createdAt    | 作成日時     | datetime |                         | 
+| updatedAt    | 更新日時     | datetime |                         | 
 
 <br>
 
@@ -130,6 +132,25 @@
 | remarks       | 備考       | string   |                                | 
 | createdAt     | 作成日時   | datetime |                                | 
 | updatedAt     | 更新日時   | datetime |                                | 
+
+<br>
+
+## TotalInvoices
+
+| 項目名                  | 和名              | タイプ   | 備考                            | 
+| ----------------------- | ---------------- | -------- | ------------------------------ | 
+| id                      | id               | integer  |                                | 
+| totalInvoiceApplyNumber | 合計請求番号      | integer  |                                | 
+| applyNumbers            | 請求番号連番      | string   | 選択された請求番号を複数持つ      | 
+| customerId              | 得意先ID          | integer  | FKでは無いので注意              | 
+| customerName            | 得意先名          | string   |                                | 
+| customerAnyNumber       | 得意先任意番号     | integer  |                                | 
+| issueDate               | 発行日            | date     |                                | 
+| title                   | 件名              | string   |                                | 
+| fileName                | PDFファイル名     | string   | 生成されたPDFのファイル名        | 
+| isDelete                | 削除済み          | boolean  |  削除するのではなく、チェックする | 
+| createdAt               | 作成日時          | datetime |                                | 
+| updatedAt               | 更新日時          | datetime |                                | 
 
 <br>
 
@@ -278,6 +299,7 @@
 | isDisplayInvoiceStamp   | 印鑑請求書表示   | boolean     | 印刷時に表示するかどうか | 
 | isDisplayDeliveryStamp  | 印鑑納品書表示   | boolean     | 印刷時に表示するかどうか | 
 | defaultTax              | 初期消費税       | integer     | 請求・見積作成時に自動的に設定される消費税率 | 
+| defaultReducedTax       | 初期軽減税率     | integer     |                        | 
 | isMemoQuadrupleIndicate | メモ4つ表示      | text        |  メモ４つ表示か通常表示か  | 
 | memoLabel1              | メモラベル1      | text        |  メモ４つモード利用時使用  | 
 | memoLabel2              | メモラベル2      | text        |  メモ４つモード利用時使用  | 
