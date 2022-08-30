@@ -386,7 +386,12 @@ function getPdfDataTotalInvoice(mode, prePdfToalInvoice, setting, docClass = 'or
     sum.amount = prePdfToalInvoice.basePrices.reduce((a, b) => a + b, 0); //小計
     sum.tax = prePdfToalInvoice.taxies.reduce((a, b) => a + b, 0); //消費税分
     sum.total = prePdfToalInvoice.totalBillings.reduce((a, b) => a + b, 0); //全計
-
+    //軽減税率対応
+    sum.reduceAmount = prePdfToalInvoice.reduceBasePrices.reduce((a, b) => a + b, 0); //小計
+    sum.reduceTax = prePdfToalInvoice.reduceTaxies.reduce((a, b) => a + b, 0); //消費税分
+    sum.reduceTotal = prePdfToalInvoice.reduceTotalBillings.reduce((a, b) => a + b, 0); //全計
+    //sum.total += sum.reduceTotal;
+    //
     h.memo = nvl(invoice.memo, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
     h.payee = !!setting.payee ? setting.payee.replace(/\n/g, '<br />') : ''
@@ -518,8 +523,8 @@ function getPdfDataTotal(h, sum) {
                     h.docClass == 'copy' ? { "pos_xy": ["E", "(95*mm,220*mm)"], "table": [[["P", "(控え)", "md_l_b"]]], "col_widths": ["E", "(30*mm)"] } : {},
                     // total area 
                     h.mode == 'receipt' ? {} : { "pos_xy": ["E", "(40*mm,218*mm)"], "table": [[["P", h.title, "sm_l"]]], "col_widths": ["E", "(110*mm)"] },
-                    h.mode == 'receipt' ? { "pos_xy": ["E", "(45*mm,209*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] } :
-                        { "pos_xy": ["E", "(45*mm,208*mm)"], "table": [[["PF", sum.total, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] },
+                    h.mode == 'receipt' ? { "pos_xy": ["E", "(45*mm,209*mm)"], "table": [[["PF", sum.total+sum.reduceTotal, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] } :
+                        { "pos_xy": ["E", "(45*mm,208*mm)"], "table": [[["PF", sum.total+sum.reduceTotal, "md_c_b", "￥{:,}-"]]], "col_widths": ["E", "(50*mm)"] },
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(33*mm,193*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(20*mm)"] } : {},
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(70*mm,193*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(20*mm)"] } : {},
                     h.mode == 'receipt' ? { "pos_xy": ["E", "(100*mm,193*mm)"], "table": [[["PF", h.taxrate, "sm_r", "{:}%"]]], "col_widths": ["E", "(20*mm)"] } : {},
@@ -543,6 +548,11 @@ function getPdfDataTotal(h, sum) {
                     h.mode != 'receipt' ? { "pos_xy": ["E", "(27*mm,194*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } : {},
                     h.mode != 'receipt' ? { "pos_xy": ["E", "(67*mm,194*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(24*mm)"] } : {},
                     h.mode != 'receipt' ? { "pos_xy": ["E", "(105*mm,194*mm)"], "table": [[["PF", sum.total, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } : {},
+                    //軽減税率対応出力
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(27*mm,187*mm)"], "table": [[["PF", sum.reduceAmount, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } : {},
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(67*mm,187*mm)"], "table": [[["PF", sum.reduceTax, "sm_r", "{:,}"]]], "col_widths": ["E", "(24*mm)"] } : {},
+                    h.mode != 'receipt' ? { "pos_xy": ["E", "(105*mm,187*mm)"], "table": [[["PF", sum.reduceTotal, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } : {},
+                    //
                     // under side footer
                     {
                         "pos_xy": ["E", "(19*mm,13*mm)"], "table": [[["P", h.memo, "sm_l"]]],
