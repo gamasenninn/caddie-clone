@@ -1346,8 +1346,13 @@
                         const sumInvoice = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
-                            priceIncludingTax: this.priceIncludingTax
+                            priceIncludingTax: this.priceIncludingTax,
+                            normalTaxAmount: this.taxCalculation+this.normalTax,
+                            normalTax: this.normalTax,
+                            reducedTaxAmount: this.reduceCalculation+this.reducedTax,
+                            reducedTax: this.reducedTax 
                         }
+                        console.log("sumInvoice:",sumInvoice)
                         const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, sumInvoice, this.customer, docClass);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {

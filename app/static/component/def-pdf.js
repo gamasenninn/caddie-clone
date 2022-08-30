@@ -45,7 +45,13 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     sum.totalLabel = "合計金額";
     sum.amount = sumInvoice.sum;
     sum.tax = sumInvoice.taxAmount;
-    sum.total = sumInvoice.priceIncludingTax
+    sum.total = sumInvoice.priceIncludingTax;
+    //税別集計
+    sum.normalTaxAmount = sumInvoice.normalTaxAmount;
+    sum.normalTax = sumInvoice.normalTax;
+    sum.reducedTaxAmount = sumInvoice.reducedTaxAmount;
+    sum.reducedTax = sumInvoice.reducedTax;
+    //
     h.memo = nvl(invoice.memo, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
     h.payee = !!setting.payee ? setting.payee.replace(/\n/g, '<br />') : ''
@@ -251,6 +257,25 @@ function getPdfData(h, sum) {
                     h.mode != 'receipt' ? { "pos_xy": ["E", "(27*mm,194*mm)"], "table": [[["PF", sum.amount, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } : {},
                     h.mode != 'receipt' ? { "pos_xy": ["E", "(67*mm,194*mm)"], "table": [[["PF", sum.tax, "sm_r", "{:,}"]]], "col_widths": ["E", "(24*mm)"] } : {},
                     h.mode != 'receipt' ? { "pos_xy": ["E", "(105*mm,194*mm)"], "table": [[["PF", sum.total, "sm_r", "{:,}"]]], "col_widths": ["E", "(26*mm)"] } : {},
+                    // 税率別表示
+                    h.mode != 'receipt' ? { 
+                        "pos_xy": ["E", "(135*mm,194*mm)"], 
+                        "table": [
+                            [
+                                ["P", "税率10%対象", "sm_l"],
+                                ["PF", sum.normalTaxAmount, "sm_r", "{:,}"],
+                                ["P", "税", "sm_l"],
+                                ["PF", sum.normalTax, "sm_r", "{:,}"]
+                            ],
+                            [
+                                ["P", "税率 8%対象", "sm_l"],
+                                ["PF", sum.reducedTaxAmount, "sm_r", "{:,}"],
+                                ["P", "税", "sm_l"],
+                                ["PF", sum.reducedTax, "sm_r", "{:,}"]
+                            ],
+                        ], 
+                        "col_widths": ["E", "(28*mm,18*mm,5*mm,15*mm)"] 
+                    } : {},
                     // under side footer
                     {
                         "pos_xy": ["E", "(19*mm,13*mm)"], "table": [[["P", h.memo, "sm_l"]]],
