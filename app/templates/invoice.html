@@ -1428,7 +1428,7 @@
                         });
                     }, //-- end upload functions
                     isDiffObject: function () {
-                        if (this.oldInvoice.length == 0 || this.invoice.length == 0) return false;
+                        if (this.invoice.length == 0) return false;
                         if (JSON.stringify(this.oldInvoice) === JSON.stringify(this.invoice)) return false;
                         else return true;
                     },
