@@ -1188,7 +1188,7 @@
                         });
                     }, //-- end upload functions
                     isDiffObject: function () {
-                        if (this.oldQuotation.length == 0 || this.quotation.length == 0) return false;
+                        if (this.quotation.length == 0) return false;
                         if (JSON.stringify(this.oldQuotation) === JSON.stringify(this.quotation)) return false;
                         else return true;
                     },

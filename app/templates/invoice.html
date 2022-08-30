@@ -644,6 +644,12 @@
                             </b-col>
                             <b-col md>
                                 <b-container style="max-width: 500px; margin-right: 0;">
+                                    <div style="margin-left: 100px;">
+                                        税率１０％対象 {{taxCalculation+normalTax}} 税 {{normalTax}}
+                                    </div>
+                                    <div style="margin-left: 100px;">
+                                        税率　８％対象 {{reduceCalculation+reducedTax}} 税 {{reducedTax}}
+                                    </div>
                                     <b-table-simple borderless>
                                         <b-tr>
                                             <b-td class="text-right" style="width: 100px;">小計</b-td>
@@ -1428,7 +1434,7 @@
                         });
                     }, //-- end upload functions
                     isDiffObject: function () {
-                        if (this.oldInvoice.length == 0 || this.invoice.length == 0) return false;
+                        if (this.invoice.length == 0) return false;
                         if (JSON.stringify(this.oldInvoice) === JSON.stringify(this.invoice)) return false;
                         else return true;
                     },

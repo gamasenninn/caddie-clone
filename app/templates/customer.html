@@ -579,7 +579,7 @@
                         return data;
                     },
                     isDiffObject: function () {
-                        if (this.oldCustomer.length == 0 || this.customer.length == 0) return false;
+                        if (this.customer.length == 0) return false;
                         if (JSON.stringify(this.oldCustomer) === JSON.stringify(this.customer)) return false;
                         else return true;
                     },
