@@ -644,6 +644,12 @@
                             </b-col>
                             <b-col md>
                                 <b-container style="max-width: 500px; margin-right: 0;">
+                                    <div style="margin-left: 100px;">
+                                        税率１０％対象 {{taxCalculation+normalTax}} 税 {{normalTax}}
+                                    </div>
+                                    <div style="margin-left: 100px;">
+                                        税率　８％対象 {{reduceCalculation+reducedTax}} 税 {{reducedTax}}
+                                    </div>
                                     <b-table-simple borderless>
                                         <b-tr>
                                             <b-td class="text-right" style="width: 100px;">小計</b-td>
