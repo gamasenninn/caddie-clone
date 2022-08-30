@@ -51,8 +51,7 @@ function getPdfDataInvoice(mode, invoice, setting, sumInvoice, customer, docClas
     sum.normalTax = sumInvoice.normalTax;
     sum.reducedTaxAmount = sumInvoice.reducedTaxAmount;
     sum.reducedTax = sumInvoice.reducedTax;
-    //
-    h.memo = nvl(invoice.memo, '');
+    h.memo = nvl(invoice.remarks, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
     h.payee = !!setting.payee ? setting.payee.replace(/\n/g, '<br />') : ''
     h.accountHolderKana = nvl(setting.accountHolderKana);
@@ -114,7 +113,7 @@ function getPdfDataQuotation(quotation, setting, sumQuotation, customer) {
     sum.amount = sumQuotation.sum;
     sum.tax = sumQuotation.taxAmount;
     sum.total = sumQuotation.priceIncludingTax;
-    h.memo = nvl(quotation.memo, '');
+    h.memo = nvl(quotation.remarks, '');
     h.expiry = nvl(quotation.expiry, '');
     h.dayOfDelivery = nvl(quotation.dayOfDelivery, '');
     h.termOfSale = nvl(quotation.termOfSale, '');
@@ -390,9 +389,7 @@ function getPdfDataTotalInvoice(mode, prePdfToalInvoice, setting, docClass = 'or
     sum.reduceAmount = prePdfToalInvoice.reduceBasePrices.reduce((a, b) => a + b, 0); //小計
     sum.reduceTax = prePdfToalInvoice.reduceTaxies.reduce((a, b) => a + b, 0); //消費税分
     sum.reduceTotal = prePdfToalInvoice.reduceTotalBillings.reduce((a, b) => a + b, 0); //全計
-    //sum.total += sum.reduceTotal;
-    //
-    h.memo = nvl(invoice.memo, '');
+    h.memo = nvl(invoice.remarks, '');
     h.deadLine = invoice.deadLine ? moment(nvl(invoice.deadLine, '')).format("YYYY年MM月DD日") : "";
     h.payee = !!setting.payee ? setting.payee.replace(/\n/g, '<br />') : ''
     h.accountHolderKana = nvl(setting.accountHolderKana);
