@@ -1547,9 +1547,9 @@
                         let totalInvoiceData = {};
                         //顧客ごとに集計する
                         customerIds.forEach((v, i) => {
-                            let totalBillings = [];
-                            let basePrices = [];
-                            let taxies = [];
+                            let totalBillings = [];             //税込み
+                            let basePrices = [];                //税抜き
+                            let taxies = [];                    //税
                             let reduceTotalBillings = [];       //税込み(軽減)
                             let reduceBasePrices = [];          //税抜き(軽減)
                             let reduceTaxies = [];              //税(軽減)
@@ -1595,6 +1595,7 @@
                                 reduceTaxies: reduceTaxies,
                                 totalInvoiceApplyNumber: 0
                             }
+                            console.log('PT:', pt);
                             prePdfTotalInvoices.push(pt)
                         });
                         // ↓最終結果。これをPDF側に渡す
