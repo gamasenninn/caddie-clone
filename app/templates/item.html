@@ -648,7 +648,7 @@
                     },
                     //---------変更があったかどうかをチェク。アラート ---------
                     isDiffObject: function () {
-                        if (this.oldItem.length == 0 || this.item.length == 0) return false;
+                        if (this.item.length == 0) return false;
                         if (JSON.stringify(this.oldItem) === JSON.stringify(this.item)) return false;
                         else return true;
                     },

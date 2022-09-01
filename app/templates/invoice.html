@@ -243,9 +243,6 @@
                                             @click="showMoreInTotalInvoice">さらに表示
                                         </b-button>
                                     </b-row>
-                                    請求総額：{{eachTotal.billings}}
-                                    本体価格：{{eachTotal.basePrices}}
-                                    消費税額：{{eachTotal.taxies}}
                                     <template #modal-footer>
                                         <button v-b-modal.modal-close_visit class="btn btn-secondary m-1"
                                             @click="$bvModal.hide('total-invoice-modal')">閉じる</button>
@@ -644,6 +641,12 @@
                             </b-col>
                             <b-col md>
                                 <b-container style="max-width: 500px; margin-right: 0;">
+                                    <div style="margin-left: 100px;">
+                                        税率１０％対象 {{taxCalculation+normalTax}} 税 {{normalTax}}
+                                    </div>
+                                    <div style="margin-left: 100px;">
+                                        税率　８％対象 {{reduceCalculation+reducedTax}} 税 {{reducedTax}}
+                                    </div>
                                     <b-table-simple borderless>
                                         <b-tr>
                                             <b-td class="text-right" style="width: 100px;">小計</b-td>
@@ -1340,8 +1343,13 @@
                         const sumInvoice = {
                             sum: this.sum,
                             taxAmount: this.taxAmount,
-                            priceIncludingTax: this.priceIncludingTax
+                            priceIncludingTax: this.priceIncludingTax,
+                            normalTaxAmount: this.taxCalculation+this.normalTax,
+                            normalTax: this.normalTax,
+                            reducedTaxAmount: this.reduceCalculation+this.reducedTax,
+                            reducedTax: this.reducedTax 
                         }
+                        console.log("sumInvoice:",sumInvoice)
                         const pdfData = getPdfDataInvoice(mode, this.invoice, this.setting, sumInvoice, this.customer, docClass);
                         await axios.post("/pdfmaker", pdfData)
                             .then(function (response) {
@@ -1428,7 +1436,7 @@
                         });
                     }, //-- end upload functions
                     isDiffObject: function () {
-                        if (this.oldInvoice.length == 0 || this.invoice.length == 0) return false;
+                        if (this.invoice.length == 0) return false;
                         if (JSON.stringify(this.oldInvoice) === JSON.stringify(this.invoice)) return false;
                         else return true;
                     },
@@ -1563,14 +1571,17 @@
                                     totalBillings.push(parseInt(total * (1 + invoice.tax / 100)));
                                     basePrices.push(parseInt(total));
                                     taxies.push(parseInt(total * (1 + invoice.tax / 100) - total));
-                                    reduceTotalBillings.push(parseInt(reduceTotal * (1 + invoice.tax / 100)));
+                                    reduceTotalBillings.push(parseInt(reduceTotal * (1 + invoice.reduced / 100)));
                                     reduceBasePrices.push(parseInt(reduceTotal));
-                                    reduceTaxies.push(parseInt(reduceTotal * (1 + invoice.tax / 100) - total));
+                                    reduceTaxies.push(parseInt(reduceTotal * (1 + invoice.reduced / 100) - reduceTotal));
                                 }
                                 else {
                                     totalBillings.push(parseInt(total));
                                     basePrices.push(parseInt(total / (1 + invoice.tax / 100)));
                                     taxies.push(parseInt(total - total / (1 + invoice.tax / 100)));
+                                    reduceTotalBillings.push(parseInt(reduceTotal));
+                                    reduceBasePrices.push(parseInt(reduceTotal / (1 + invoice.reduced / 100)));
+                                    reduceTaxies.push(parseInt(reduceTotal - reduceTotal / (1 + invoice.reduced / 100)));
                                 }
                                 applyNumbers = applyNumbers + String(invoice.applyNumber) + ',';
                             });
@@ -1583,11 +1594,9 @@
                                 reduceBasePrices: reduceBasePrices,
                                 reduceTaxies: reduceTaxies,
                                 totalInvoiceApplyNumber: 0
-
                             }
                             console.log('PT:', pt);
                             prePdfTotalInvoices.push(pt)
-
                         });
                         // ↓最終結果。これをPDF側に渡す
                         const mode = 'invoice';
@@ -1704,9 +1713,8 @@
                     // 逐次、数量＊単価の合計をする
                     sum: function () {
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
-                        let subTotal = this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * Math.round(invoice_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
-                        if (this.invoice.isTaxExp) return subTotal;
-                        return parseInt(subTotal / (1 + this.invoice.tax / 100));
+                        if (this.invoice.isTaxExp) return this.taxCalculation + this.reduceCalculation;
+                        return parseInt(this.taxCalculation / (1 + this.invoice.tax / 100) + (this.reduceCalculation / (1 + this.invoice.reduced / 100)));
                     },
                     // 入金合計額
                     paymentSum: function () {
@@ -1722,18 +1730,32 @@
                     //消費税総額
                     taxAmount: function () {
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
-                        if (this.invoice.isTaxExp)
-                            return Math.round(this.sum * (this.invoice.tax / 100));
-                        let subTotal = this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * Math.round(invoice_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
-                        return subTotal - this.sum;
+                        return this.normalTax + this.reducedTax;
                     },
                     //税込み総額
                     priceIncludingTax: function () {
                         if (typeof (this.invoice.invoice_items) == 'undefined') { return 0 } //初期立ち上がりでのエラー抑制
+                        return this.sum + this.taxAmount;
+                    },
+                    // 通常税率適用対象の小計
+                    taxCalculation: function () {
+                        return this.invoice.invoice_items.filter(item => item.isReduced == false).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                    },
+                    // 軽減税率適用対象の小計
+                    reduceCalculation: function () {
+                        return this.invoice.invoice_items.filter(item => item.isReduced == true).map(item => parseInt(item.count * Math.round(item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
+                    },
+                    // 通常税率適用の消費税
+                    normalTax: function () {
                         if (this.invoice.isTaxExp)
-                            return Math.round(this.sum * (1 + this.invoice.tax / 100));
-                        return this.invoice.invoice_items.map(invoice_item => parseInt(invoice_item.count * Math.round(invoice_item.price))).reduce(function (a, b) { return a + (isNaN(b) ? 0 : b) }, 0);
-                        // return this.sum;
+                            return Math.round(this.taxCalculation * (this.invoice.tax / 100));
+                        return Math.round(this.taxCalculation - (this.taxCalculation / (1 + this.invoice.tax / 100)));
+                    },
+                    // 軽減税率適用の消費税
+                    reducedTax: function () {
+                        if (this.invoice.isTaxExp)
+                            return Math.round(this.reduceCalculation * (this.invoice.reduced / 100));
+                        return Math.round(this.reduceCalculation - (this.reduceCalculation / (1 + this.invoice.reduced / 100)));
                     },
                     invoicesIndicateIndex: function () {
                         let invoices = this.invoices;

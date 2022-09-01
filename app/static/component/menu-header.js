@@ -43,6 +43,7 @@ Vue.component('setting-header', {
                             <b-button href="/maker-page">メーカー</b-button>
                             <b-button href="/unit-page">単位</b-button>
                             <b-button href="/dust-select-page">削除済み</b-button>
+                            <b-button href="https://mail-form.site/contact/soho-caddie">お問合わせ</b-button>
                         </b-col>
                         <b-col class="sm-mode">
                             <b-button href="/setting-page" v-b-tooltip.hover.top="'会社情報'">
@@ -62,6 +63,10 @@ Vue.component('setting-header', {
                             </b-button>
                             <b-button href="/dust-select-page" v-b-tooltip.hover.top="'削除済み参照'">
                                 <b-icon icon="file-earmark-x"></b-icon>
+                            </b-button>
+                            <b-button href="https://mail-form.site/contact/soho-caddie" 
+                                v-b-tooltip.hover.top="'お問い合わせ'">
+                                <b-img src="../static/images/icon/contact.png" style="width: 20px;"></b-img>
                             </b-button>
                         </b-col>
                         <b-col cols="2" class="text-right">

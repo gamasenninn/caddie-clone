@@ -78,11 +78,11 @@ def seeder(v=False):
     # -----Invoices-----
     invoices = [
         Invoice(customerId=1, customerName='○○株式会社', customerAnyNumber=10000, honorificTitle='御中', department='部署1', manager='田中太郎', otherPartyManager='先方太郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', memo1='1990', memo2='TES-TES1', memo3='TES1', memo4='10000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○株式会社への請求書', memo='これは請求書のメモです', memo1='1990', memo2='TES-TES1', memo3='TES1', memo4='10000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=2, customerName="○○有限会社", customerAnyNumber=10001, honorificTitle='御中', department='部署2', manager='田中次郎', otherPartyManager='先方次郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', memo1='2000', memo2='TES-TES2', memo3='TES2', memo4='20000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○有限会社への請求書', memo='これは請求書のメモです', memo1='2000', memo2='TES-TES2', memo3='TES2', memo4='20000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
         Invoice(customerId=3, customerName="○○商事", customerAnyNumber=10002, honorificTitle='御中', department='部署3', manager='田中三郎', otherPartyManager='先方三郎', applyDate=date(2022, 1, 1), deadLine=date(2022, 1, 1),
-                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', memo1='2010', memo2='TES-TES3', memo3='TES3', memo4='30000', remarks='これは請求書の備考です', tax=10, isTaxExp=True, numberOfAttachments=0),
+                paymentDate=date(2022, 1, 1), isPaid=False, title='○○商事への請求書', memo='これは請求書のメモです', memo1='2010', memo2='TES-TES3', memo3='TES3', memo4='30000', remarks='これは請求書の備考です', tax=10, reduced=8, isTaxExp=True, numberOfAttachments=0),
     ]
     db.session.add_all(invoices)
     db.session.commit()
@@ -96,15 +96,15 @@ def seeder(v=False):
     # -----Invoice_Items-----
     invoice_items = [
         Invoice_Item(id=1, invoiceId=1, itemId=1, rowNum=1, any='01',
-                     itemName='りんご', price=100, cost=50, count=5, unit="個", reduced=8, remarks='明細備考1'),
+                     itemName='りんご', price=100, cost=50, count=5, unit="個", remarks='明細備考1'),
         Invoice_Item(id=2, invoiceId=1, itemId=2, rowNum=2, any='02',
-                     itemName='鉛筆', price=20, cost=5, count=10, unit="本", reduced=8, remarks='明細備考2'),
+                     itemName='鉛筆', price=20, cost=5, count=10, unit="本", remarks='明細備考2'),
         Invoice_Item(id=3, invoiceId=2, itemId=2, rowNum=1, any='01',
-                     itemName='鉛筆', price=30, cost=5, count=15, unit="本", reduced=8, remarks='明細備考3'),
+                     itemName='鉛筆', price=30, cost=5, count=15, unit="本", remarks='明細備考3'),
         Invoice_Item(id=4, invoiceId=2, itemId=3, rowNum=2, any='02',
-                     itemName='ラジオ', price=1100, cost=300, count=2, unit="台", reduced=8, remarks='明細備考4'),
+                     itemName='ラジオ', price=1100, cost=300, count=2, unit="台", remarks='明細備考4'),
         Invoice_Item(id=5, invoiceId=3, itemId=1, rowNum=1, any='01',
-                     itemName='りんご', price=120, cost=50, count=30, unit="個", reduced=8, remarks='明細備考5'),
+                     itemName='りんご', price=120, cost=50, count=30, unit="個", remarks='明細備考5'),
     ]
     db.session.add_all(invoice_items)
     db.session.commit()
